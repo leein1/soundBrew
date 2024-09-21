@@ -1,24 +1,43 @@
-# Compiled class file
-*.class
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# BlueJ files
-*.ctxt
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Spring Boot 환경설정 파일 무시
+.env               # 환경 변수 파일 (DB, API Key 등 민감 정보 포함 가능)
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
 
 # MacOS에서 자동으로 생성되는 파일들 무시
 .DS_Store          # MacOS 탐색기에서 생성되는 메타데이터 파일
@@ -32,64 +51,15 @@ Icon?              # MacOS에서 아이콘 설정 시 생성되는 파일
 .Spotlight-V100    # Spotlight 검색 인덱스 관련 파일
 .VolumeIcon.icns   # MacOS에서 드라이브 아이콘 설정 시 생성되는 파일
 
+# Java 컴파일 및 빌드 후 생성되는 파일 무시
+*.class            # Java 컴파일 후 생성되는 클래스 파일
+*.jar              # Java 프로젝트 빌드 후 생성되는 JAR 파일
+*.war              # Java 웹 애플리케이션 아카이브 파일
+*.ear              # Java 엔터프라이즈 애플리케이션 아카이브 파일
+
 # 로그 및 임시 파일 무시
 *.log              # 애플리케이션 실행 시 생성되는 로그 파일
 *.tmp              # 임시 파일
 
-# IntelliJ IDEA 관련 파일 및 폴더 무시
-.idea/             # IntelliJ 프로젝트 설정 파일 폴더
-*.iws              # IntelliJ 워크스페이스 파일
-*.iml              # IntelliJ 모듈 파일
-*.ipr              # IntelliJ 프로젝트 파일
-out/               # IntelliJ에서 생성하는 빌드 산출물 폴더
-
-# 빌드 산출물 폴더 무시
-/target/           # Maven 빌드 시 생성되는 타겟 폴더
-/build/            # Gradle 빌드 시 생성되는 빌드 폴더
-
-# Spring Boot 환경설정 파일 무시
-.env               # 환경 변수 파일 (DB, API Key 등 민감 정보 포함 가능)
-
-# Maven 관련 파일 무시 (Wrapper 제외)
-.mvn               # Maven 관련 파일 폴더
-!.mvn/wrapper/maven-wrapper.jar  # Maven Wrapper는 포함 (자동 빌드 도구)
-
-# 편집기에서 생성되는 임시 파일 무시
-*.swp              # Vim 텍스트 편집기의 스왑 파일
-*.swo              # Vim에서 사용하는 스왑 파일
-*.bak              # 백업 파일
-*.orig             # 병합 충돌 시 원본 파일
-*.rej              # 패치 충돌 시 생성되는 파일
-*~                 # 텍스트 편집기 임시 파일
-
 # Lombok 관련 파일 무시
 .lombok/           # Lombok 라이브러리 사용 시 생성되는 파일
-
-# Node.js 의존성 폴더 무시 (프론트엔드 작업 시)
-/node_modules/     # Node.js 의존성 설치 폴더
-
-# Gradle 빌드 관련 폴더 무시
-.gradle/           # Gradle 빌드 시스템에서 생성하는 파일 및 폴더
-build/             # Gradle 빌드 산출물 폴더
-.gradle/**/*
-build/reports/**/*
-build/test-results/**/*
-build/resources/**/*
-
-# Maven 빌드 관련 폴더 무시
-.mvn/              # Maven 설정 파일 폴더
-target/            # Maven 빌드 산출물 폴더
-
-# 개발 환경 설정 및 IDE 관련 파일 무시
-.vscode/           # Visual Studio Code 설정 파일 폴더
-.env               # 환경 변수 파일
-.idea/             # IntelliJ IDEA 프로젝트 설정 폴더
-*.sublime-project  # Sublime Text 프로젝트 파일
-*.sublime-workspace # Sublime Text 워크스페이스 파일
-*.code-workspace   # Visual Studio Code 워크스페이스 파일
-
-# 테스트 커버리지 관련 파일 무시
-coverage/          # 테스트 커버리지 결과 폴더
-*.lcov             # LCov 포맷의 커버리지 결과 파일
-
-
