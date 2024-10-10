@@ -1,0 +1,628 @@
+/*
+
+색상 변수 추가
+모든 스타일에서 같은 색상을 적용하기 위함
+
+ */
+
+:root {
+    --background-color-light: #ffffff;
+    --background-color-light2: #e1e1e1;
+    --text-color-light: #000000;
+    --hover-color-light: #e2e2e2;
+
+    --background-color-dark: #333333;
+    --text-color-dark: #FFFFFF;
+
+    --background-color-dark2: #4d4d4d;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+/*전체적용 ----------------------------------------------------- */
+@font-face {
+    font-family: 'GodoM';
+    src: url('../fonts/GodoM.ttf');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* body ----------------------------------------------------- */
+
+
+html, body {
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+
+    font-family: 'GodoM';
+    -ms-overflow-style: none;
+
+    /* overflow: hidden; */
+}
+
+/* main ----------------------------------------------------- */
+
+.main {
+
+    display: flex;
+    /* border: #000000 1px;  */
+}
+
+/* sidebar ----------------------------------------------------- */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 100vh;
+    background-color: var(--background-color-light);
+    border-right: 1px solid #ddd;
+    z-index: 2;
+    overflow: hidden;
+    transition: width 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu {
+    /* border: 1px solid black; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+    transition: width 0.3s;
+    width: 100%;
+    height: 55px;
+
+}
+
+.menu-icon {
+    width: 40px;
+    height: 40px;
+
+}
+
+.profile {
+    /* border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 0; */
+
+    /* border: 1px solid black; */
+    /* background-color: var(--background-color-light); */
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px 0;
+    transition: width 0.3s;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.login-button {
+    display: none;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.sidebar-item {
+    /* border: 1px solid black; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+    transition: width 0.3s;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.sidebar-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.sidebar-text {
+    display: none;
+    white-space: nowrap;
+}
+
+.divider {
+    width: calc(100% - 20px);
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+.toggle-container{
+
+    /* border: 1px solid black; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0 10px 0;
+    transition: width 0.3s;
+    width: 100%;
+
+}
+
+.toggle-container img{
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    transition: opacity 3s ease, max-height 0s ease;
+
+}
+
+/* 체크박스를 숨김 */
+.darkMode-checkbox {
+    display: none;
+}
+
+/* 토글 버튼 배경 */
+.darkMode-label{
+    width: 60px;
+    height: 30px;
+    background-color: #ccc;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0 10px 0 10px;
+}
+
+/* 토글 버튼의 움직이는 원 */
+.darkMode-label::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.5s;
+}
+
+.darkMode-checkbox:checked + .darkMode-label{
+    background-color: #4CAF50; /* 토글이 켜진 상태일 때 배경색 */
+}
+
+.darkMode-checkbox:checked + .darkMode-label::before{
+    transform: translateX(30px); /* 토글이 오른쪽으로 이동 */
+}
+
+/* sidebar expanded ----------------------------------------------------- */
+
+.sidebar.expanded {
+    width: 300px;
+    overflow: scroll;
+}
+
+.sidebar.expanded .menu{
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+.sidebar.expanded .profile-image {
+    width: 120px;
+    height: 120px;
+}
+
+.sidebar.expanded .primary-button {
+    display: block;
+}
+
+.sidebar.expanded .sidebar-item {
+    justify-content: flex-start;
+    padding-left: 10px;
+}
+
+.sidebar.expanded .sidebar-text {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+
+.sidebar.expanded .toggle-container img{
+    opacity: 1;
+    visibility: visible;
+    max-height: 30px; /* 요소의 실제 높이에 맞춰 설정 */
+}
+/* article ----------------------------------------------------- */
+
+.article {
+
+    margin-left: 80px;
+    flex: 1;
+    overflow: hidden;
+    z-index: 0;
+    padding: 0 20px;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+    /* border: 1px solid black; */
+    z-index: 2;
+
+    height: 55px;
+    position: relative; /* sitename을 중앙에 배치하기 위한 기준 설정 */
+
+}
+
+.navigation-menu{
+    display: none; /* 플렉스 박스로 변경 */
+    align-items: center; /* navigation-menu 내부 요소 세로 중앙 정렬 */
+    justify-content: center; /* 필요에 따라 수평 정렬 추가 */
+    cursor: pointer;
+    height: 40px;
+    margin-right: auto;
+
+}
+
+.navigation-menu-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0; /* 상하 여백 제거 */
+    display: block; /* 이미지 블록 레벨로 설정 */
+    object-fit: contain; /* 이미지를 컨테이너에 맞추어 잘림 없이 유지 */
+}
+
+.sitename {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+.user {
+    /* border: 1px solid black; */
+    margin-left: auto; /* 우측 정렬 */
+    cursor: pointer;
+}
+
+.searchbar {
+    /* background-color: #ffffff; */
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.searchbar-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.searchbar-container input {
+    /* border: 1px solid #000000; */
+    outline: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: 100%;
+    font-size: 16px;
+    padding-left: 50px;
+}
+
+.searchbar-container .searchbar-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.content {
+    /* background-color: aquamarine; */
+    /* background-color: var(--background-color-light); */
+    /* color: var(--text-color-light); */
+}
+/* footer ----------------------------------------------------- */
+
+.footer {
+    background-color: #ffc0c0;
+}
+
+/* pagination ----------------------------------------------------- */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    border: 1px solid black;
+}
+
+.page-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px; /* 버튼의 크기 */
+    height: 40px; /* 버튼의 크기 */
+    margin: 0 4px;
+    text-decoration: none;
+    /* color: #5F6368; */
+    border: 1px solid #ddd;
+    border-radius: 50%; /* 원 모양을 위한 설정 */
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 14px; /* 글씨 크기 */
+}
+
+.page-link:hover {
+    background-color: #e0e0e0;
+    color: #000;
+}
+
+.page-link.active {
+    background-color: #005da0;
+    color: #fff;
+    border: 1px solid #ddd;
+}
+
+
+
+
+/* media query ----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .sidebar.expanded {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .navigation-menu {
+        display: flex; /* 플렉스 박스로 표시 */
+    }
+
+    .article {
+        margin-left: 0;
+    }
+}
+
+/* button ----------------------------------------------------- */
+.none-display {
+    display: none;
+}
+
+.primary-button {
+    /* display: none; */
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.primary-button:hover {
+    background-color: #0056b3;
+}
+
+.secondary-button {
+
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6c757d; /* 회색 */
+    color: white;
+    cursor: pointer;
+}
+
+.secondary-button:hover {
+    background-color: #5a6268; /* 짙은 회색 */
+}
+
+.danger-button {
+
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #dc3545; /* 빨간색 */
+    color: white;
+    cursor: pointer;
+}
+
+.danger-button:hover {
+    background-color: #c82333; /* 짙은 빨간색 */
+}
+
+/* Que Bar ------------------------------------------------------ */
+.music-player {
+    position: fixed;
+    bottom: -100px;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: var(--background-color-light2);
+    /* color: var(--text-color-light); */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 100px;
+    transition: bottom 0.3s;
+    z-index: 3;
+}
+
+.music-player.visible {
+    bottom: 0;
+}
+
+/* 그룹화된 섹션 */
+.music-player-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 1. 앨범이미지, 곡정보, 시작버튼 */
+.player-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.music-player-img img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.music-player-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.music-player-info-title {
+    font-weight: bold;
+}
+
+.music-player-info-writer {
+    font-size: 12px;
+    color: rgb(187, 185, 185);
+}
+
+.music-player-play {
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+/* 2. 러닝타임, 웨이브파형 */
+.player-middle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.music-player-time {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.music-player-waveform {
+    font-size: 12px;
+    color: rgb(187, 185, 185);
+}
+
+/* 3. 다운로드, 좋아요 */
+.player-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.music-player-download img,
+.music-player-favorite img,
+.music-player-copy img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+.music-player-volume {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    position: relative;
+}
+
+.volume-slider {
+    width: 100px;
+    margin-left: 10px;
+    background-color: #444;
+    border-radius: 5px;
+    height: 10px;
+}
+.copy-notification {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #444;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 4;
+}
+/* media query - Que Bar -------------------------------------------------- */
+@media (max-width: 768px) {
+    .music-player {
+        padding-left: 0px;
+        height: 80px;
+    }
+    .music-player-img img {
+        display: none;
+    }
+    .music-player-play img{
+        width: 32px;
+        height: 32px;
+    }
+    .music-player-time {
+        margin-left: 10px;
+        font-size: 16px;
+    }
+    .player-middle .music-player-waveform {
+        display: none; /* 모바일에서 웨이브폼 숨기기 */
+    }
+
+    .music-player-volume img {
+        display: none; /* 모바일에서 볼륨 아이콘 숨기기 */
+    }
+
+    .music-player-slider {
+        margin-left: 0; /* 슬라이더를 볼륨 아이콘과 겹치지 않게 하기 */
+    }
+}
+
+
+
+
+

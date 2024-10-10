@@ -35,14 +35,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    //  테스트시 lombok 사용을 위한 라이브러리 설정
+    //테스트시 lombok 사용을 위한 라이브러리 설정
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    //    thymeleaf 레이아웃을 위한 라이브러리
+    //thymeleaf 레이아웃을 위한 라이브러리
     implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.1.0'
 
-    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    //https://mvnrepository.com/artifact/org.modelmapper/modelmapper
     implementation 'org.modelmapper:modelmapper:3.1.0'
 
     //서버에서 검증 후 등록하는 방식을 위한 validation
