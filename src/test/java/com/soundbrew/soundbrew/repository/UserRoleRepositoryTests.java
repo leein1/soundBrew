@@ -18,7 +18,7 @@ public class UserRoleRepositoryTests {
     void testInsert(){
         UserRoleId userRoleId = UserRoleId.builder()
                 .role_id(3)
-                .user_id(1)
+                .user_id(11)
                 .build();
 
         UserRole userRole = UserRole.builder()
