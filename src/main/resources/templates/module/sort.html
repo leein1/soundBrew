@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- sort css -->
+    <div th:fragment="sortCssModule">
+        <link href="css/music.css" rel="stylesheet">
+    </div>
+</head>
+<body>
+
+    <!-- sort body -->
+    <div th:fragment="sortModule">
+        <div class="music-sort">
+            <span class="music-sort-left" id="sortKeyword">정렬
+                <img src="images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정렬" id="sortIcon">
+            </span>
+            <!-- 정렬 드롭다운 -->
+            <div class="music-sort-menu" id="musicSortMenu">
+                <ul>
+                    <li data-sort="download">다운로드순</li>
+                    <li data-sort="name">이름순</li>
+                    <li data-sort="length">길이순</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+    <!-- sort js -->
+    <div th:fragment="sortJsModule">
+        <script src="js/sort.js"></script>
+    </div>
+</html>

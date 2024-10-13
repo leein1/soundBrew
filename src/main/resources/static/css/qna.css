@@ -1,0 +1,73 @@
+
+.content{
+    /* border: 1px solid black; */
+}
+
+.content-header{
+    /* border: 1px solid black;  */
+    margin-top: 20px;
+    height: 50px;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.content-body{
+    /* border: 1px solid black;  */
+
+}
+
+.question-list{
+    /* border: 1px solid black;  */
+    display: flex;
+}
+
+.frequently-list , .additional-list{
+    /* border: 1px solid black;  */
+    width: 50%;
+    padding: 40px;
+}
+
+.frequently-list > li , .additional-list > li{
+    /* border: 1px solid black;  */
+    border-radius: 100px;
+    width: 100%;
+    padding: 20px;
+    margin-top: 40px;
+    list-style: none;
+
+    /* 새로 추가된 스타일 */
+    display: flex; /* 플렉스 박스로 전환 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: space-between; /* 양 끝 정렬 */
+}
+
+
+.frequently-list > li:hover , .additional-list > li:hover{
+    background-color: rgb(227, 227, 227);
+}
+
+.question-title {
+    padding: 10px 20px;
+    border: 2px solid rgb(165, 165, 165); /* 아웃라인 */
+    border-radius: 20px; /* 곡률 추가 */
+    display: inline-block; /* 텍스트 주변에만 스타일 적용 */
+    margin-bottom: 20px; /* 여백 추가 */
+    font-weight: bold; /* 텍스트 강조 */
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+   .question-list{
+    flex-direction: column;
+   }
+
+   .frequently-list{
+    width: 100%;
+   }
+
+   .additional-list{
+    width: 100%;
+   }
+}
+

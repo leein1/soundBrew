@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음악 업로드 페이지</title>
+    <link th:href="@{/css/music.css}" rel="stylesheet">
+    <link th:href="@{/css/music-upload.css}" rel="stylesheet">
+    
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>음악 업로드 페이지</h1>
+
+    <!-- Step 1: 싱글 or 앨범 선택 -->
+    <div id="type-step" class="step visible">
+
+        <h2>싱글인지 앨범인지 선택해주세요.</h2>
+        <div class="select-div">
+            <select id="group-type">
+                <option value="single">싱글</option>
+                <option value="album">앨범</option>
+            </select>
+            <button id="next-step" onclick="nextStep(1)" >
+                <img src="images/arrow_forward_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="next">
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 2: 그룹 이름, 이미지, 설명 -->
+    <div id="group-info-step" class="step">
+        <h2>앨범의 이름을 정해주세요.</h2>
+        <input type="text" id="group-name" placeholder="그룹 이름">
+
+        <h2>앨범 이미지를 업로드해주세요.</h2>
+        <label for="group-image" class="file-upload-label">
+            <img src="images/upload_file_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="Upload File">
+        </label>
+        <input type="file" id="group-image" >
+
+
+        <h2>앨범 설명을 작성해주세요.</h2>
+        <textarea id="group-description" placeholder="곡 설명"></textarea>
+
+        <button id="next-step" onclick="nextStep(2)" >
+            <img src="images/arrow_forward_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="next">
+        </button>
+    </div>
+
+    <!-- Step 3: 곡 제목 입력 -->
+    <div id="group-song-step" class="step">
+        <h2>곡 제목을 입력해주세요.</h2>
+        <input type="text" id="song-title" placeholder="곡 제목">
+        <h2>업로드할 곡 파일을 선택해주세요.</h2>
+
+        <label for="file-upload" class="file-upload-label">
+            <img src="images/upload_file_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="Upload File">
+        </label>
+        <input type="file" id="file-upload" style="display:none;">
+
+        <h2>곡 설명을 작성해주세요.</h2>
+        <textarea id="song-description" placeholder="곡 설명"></textarea>
+
+        <button id="next-step" onclick="nextStep(3)" >
+            <img src="images/arrow_forward_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="next">
+        </button>
+    </div>
+
+    <!-- Step 6: 태그 선택 -->
+    <div id="tag-step" class="step">
+        <h2>곡에 적절한 태그를 선택해주세요.</h2>
+
+        <!-- Major Category Buttons -->
+        <div class="select-div">
+            <a onclick="showTagPopup('instrument')" style="cursor: pointer;">
+                <img src="images/new_label_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="tag">악기
+            </a>
+
+            <a onclick="showTagPopup('mood')" style="cursor: pointer;">
+                <img src="images/new_label_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="tag">분위기
+            </a>
+
+            <a onclick="showTagPopup('genre')" style="cursor: pointer;">
+                <img src="images/new_label_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="tag">장르
+            </a>
+        </div>
+
+        <!-- Selected Tags Display Area -->
+        <div id="selected-tags" style="margin-top: 20px;">
+            <h3>선택한 태그:</h3>
+            <ul id="tag-list"></ul>
+        </div>
+
+        <!-- Next Button to proceed to next step -->
+        <button id="next-step" onclick="nextStep(4); uploadSongPush();" >
+            <img src="images/arrow_forward_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="next">
+        </button>
+    </div>
+
+    <!-- Popup for Tag Selection -->
+    <div id="tag-popup" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closeTagPopup()">×</span>
+            <h2>태그 선택</h2>
+            <input type="text" id="tag-search" placeholder="검색..." oninput="searchTags()">
+            <div id="popup-tags" class="tag-select"></div>
+            <button onclick="applyTags()" >
+                <img src="images/arrow_forward_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="next">
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 7: 최종 확인 -->
+    <div id="submit-step" class="step">
+        <h2>최종적으로 작성한 정보를 확인해주세요.</h2>
+        <div id="song-info-list"></div>
+        <button id="check-upload" onclick="renderSongs()"><img src="images/visibility_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="확인">확인하기</button>
+        <button id="add-more-songs" onclick="addMoreSongs()" style="display: none;"><img src="images/add_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="추가">추가하기</button>
+        <button id="upload-button" onclick="confirm()"><img src="images/arrow_forward_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="next">업로드</button>
+        
+    </div>
+</div>
+</body>
+<th:block layout:fragment="script">
+    <script th:src="@{/js/tagStates.js}"></script>
+    <script th:src="@{/js/music-upload.js}"></script>
+</th:block>
+</html>
