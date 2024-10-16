@@ -16,7 +16,7 @@ public class UserSubscriptionRepositoryTests {
     @Test
     public void testInsert(){
         UserSubscription userSubscription = UserSubscription.builder()
-                .user_id(11)
+                .user_id(2)
                 .subscription_id(1)
                 .build();
 //        log.info("user_id: {}, subscription_id: {}", userSubscription.getUser_id(), userSubscription.getSubscription_id());

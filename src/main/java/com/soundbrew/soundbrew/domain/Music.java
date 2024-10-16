@@ -5,12 +5,14 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(of = {"title", "user_id"})
 @Entity
 public class Music extends BaseEntity{
 
@@ -33,8 +35,8 @@ public class Music extends BaseEntity{
     @Column(length=500, nullable = false)
     private String description;
 
+    @OneToMany(mappedBy = "music")
+    private List<MusicInstrumentTag> musicInstrumentTag ; // 태그와의 관계 추가
 
-    // BassEntity 상속, 및 create_date 없으니 확인해볼것.
-    //private LocalDateTime create_date;
 
 }

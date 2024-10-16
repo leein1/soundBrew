@@ -11,10 +11,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class AlbumMusicId implements Serializable {
-    private int album_id;
-
-    private int user_id;
-
+public class MusicInstrumentTagId implements Serializable {
     private int music_id;
+    private int instrument_tag_id;
+
 }

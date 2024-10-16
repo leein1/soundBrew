@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -28,10 +30,6 @@ public class Album extends BaseEntity {
 
     @Column(length = 500)
     private String description;
-
-    // BaseEntity 클래스 상속
-    //** create_date는 가지지 않는데, 문제 없는가? **
-    //private LocalDateTime create_date;
 
 
 }
