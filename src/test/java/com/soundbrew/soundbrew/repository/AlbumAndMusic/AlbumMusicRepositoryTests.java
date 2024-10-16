@@ -20,49 +20,56 @@ public class AlbumMusicRepositoryTests {
     @Autowired
     private AlbumMusicRepository musicRepository;
 
-
     @Test
     @Transactional
-    // join 해서 원하는 내용만 건지기
-    // 음악 1개 선택을 위한 테스트
-    void findCustomSearch() {
-        AlbumMusicId amId = AlbumMusicId.builder()
-                .album_id(11)
-                .music_id(1) // 예시로 5번 음악을 조회
-                .user_id(2)
-                .build();
+        // album_id
+        // 앨범 1개 선택을 위한 테스트
+    void albumIdSearchTest() {
+        int albumId = 11;
+        List<AlbumMusicDto> test =  musicRepository.albumIdSearch(albumId);
 
-        AlbumMusicDto foundAlbumMusicDto = musicRepository.joinAlbumMusic(amId);
         log.info("==========================================");
-        log.info(foundAlbumMusicDto);
+        log.info(test.toString());
         log.info("==========================================");
     }
 
-    @Test
-    @Transactional
     //조인해서 정보 다 들고오기
     // sound List를 위한 테스트
+    @Test
+    @Transactional
     void findCustomSearchAll() {
         List<AlbumMusicDto> foundAlbumMusicDto = musicRepository.findAllAlbumMusic();
+
         log.info("==========================================");
         log.info(foundAlbumMusicDto);
         log.info("==========================================");
     }
 
+    // user_id(artist)
+    // 아티스트 1명 선택을 위한 테스트
     @Test
     @Transactional
-    // 정보 삽입
-    // insert 중 한부분
-    void insert(){
-        AlbumMusicId id = AlbumMusicId.builder()
-                .music_id(1)
-                .album_id(1)
-                .user_id(1)
-                .build();
+    void artistIdSearchTest(){
+        int userId = 2;
+        List<AlbumMusicDto> test = musicRepository.artistIdSearch(userId);
 
-
+        log.info("==========================================");
+        log.info(test);
+        log.info("==========================================");
     }
 
+    // music_id
+    // 음악 1개 선택을 위한 테스트
+    @Test
+    @Transactional
+    void musicIdSearchTest(){
+        int musicId=1;
+        List<AlbumMusicDto> test = musicRepository.musicIdSearch(musicId);
+
+        log.info("==========================================");
+        log.info(test);
+        log.info("==========================================");
+    }
 
 
 }

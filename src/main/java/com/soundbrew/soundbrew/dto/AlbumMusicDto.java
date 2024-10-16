@@ -21,6 +21,9 @@ public class AlbumMusicDto {
     private String music_description;
     private String user_name;
     private String instrument_tag_name;
+    private String mood_tag_name;
+    private String genre_tag_name;
+
 
 
 }

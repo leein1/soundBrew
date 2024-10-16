@@ -38,5 +38,11 @@ public class Music extends BaseEntity{
     @OneToMany(mappedBy = "music")
     private List<MusicInstrumentTag> musicInstrumentTag ; // 태그와의 관계 추가
 
+    @OneToMany(mappedBy = "music")
+    private List<MusicMoodTag> musicMoodTag ; // 태그와의 관계 추가
+//
+    @OneToMany(mappedBy = "music")
+    private List<MusicGenreTag> musicGenreTag ; // 태그와의 관계 추가
+
 
 }
