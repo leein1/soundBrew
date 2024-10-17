@@ -18,19 +18,20 @@ public class MusicRepositoryTests {
 
     @Test
     void testInsert(){
-        IntStream.rangeClosed(1,10).forEach(a -> {
+
             Music music = Music.builder()
-                    .title("Tornado"+a)
-                    .file_path("/file/test/music_path_test_"+a)
+                    .title("fury")
+                    .file_path("/file/test/music_path_test_hello_fury")
                     .price(3)
-                    .description("Jonsi의 풍성한 곡 편성이 돋보이는 곡 입니다. 갈수록 곡이 풍성하고 격정적입니다.")
+                    .description("Jonsi의 fury 팔세토가 돋보입니다.")
                     .user_id(2)
+                    .sound_type("music")
                     .build();
 
             Music showLog = musicRepository.save(music);
 
             log.info(showLog);
-        });
+
     }
 
     @Test

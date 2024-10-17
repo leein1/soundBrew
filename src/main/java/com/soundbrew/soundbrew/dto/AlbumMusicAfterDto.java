@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
-public class AlbumMusicDto {
+public class AlbumMusicAfterDto{
 
     private int album_id;
     private String album_name;
@@ -21,10 +23,8 @@ public class AlbumMusicDto {
     private int price;
     private String music_description;
     private String user_name;
-    private String instrument_tag_name;
-    private String mood_tag_name;
-    private String genre_tag_name;
-
-
+    private List<String> instrument_tag_name;
+    private List<String> mood_tag_name;
+    private List<String> genre_tag_name;
 
 }

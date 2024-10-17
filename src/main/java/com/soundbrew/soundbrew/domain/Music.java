@@ -35,6 +35,9 @@ public class Music extends BaseEntity{
     @Column(length=500, nullable = false)
     private String description;
 
+    @Column(nullable = false)
+    private String sound_type;
+
     @OneToMany(mappedBy = "music")
     private List<MusicInstrumentTag> musicInstrumentTag ; // 태그와의 관계 추가
 
