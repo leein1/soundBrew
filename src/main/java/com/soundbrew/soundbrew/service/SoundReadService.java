@@ -1,9 +1,11 @@
 package com.soundbrew.soundbrew.service;
 
-import com.soundbrew.soundbrew.repository.AlbumMusicRepository;
+import com.soundbrew.soundbrew.dto.SoundReqeustDto;
+import com.soundbrew.soundbrew.repository.sound.AlbumMusicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RequiredArgsConstructor
@@ -22,14 +24,14 @@ public class SoundReadService {
     // parameter : album_id
     // result : album, artist, music, tag
     public void albumSearch(@RequestParam("album_id")int albumId, Model model){
-//        model.addAttribute(albumMusicRepository.)
     }
+
 
     // artist 검색
     // parameter : user_id (artist)
     // result : album, artist, music, tag
-    public void artistSearch(@RequestParam("user_id")int userId, Model model){
-
+    public void artistSearch(@ModelAttribute SoundReqeustDto soundReqeustDto, Model model){
+        model.addAttribute(albumMusicRepository.search(soundReqeustDto));
     }
 
     // song 검색

@@ -1,11 +1,9 @@
-package com.soundbrew.soundbrew.domain;
+package com.soundbrew.soundbrew.domain.sound;
 
+import com.soundbrew.soundbrew.domain.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(of = {"title", "user_id"})
 @Entity
-public class Music extends BaseEntity{
+public class Music extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)

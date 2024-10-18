@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.domain;
+package com.soundbrew.soundbrew.domain.sound;
 
 import lombok.*;
 
@@ -10,9 +10,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @ToString
 @Entity
-public class MusicGenreTag {
+public class MusicMoodTag {
     @EmbeddedId
-    private MusicGenreTagId id;
+    private MusicMoodTagId id;
 
     @ManyToOne
     @MapsId("music_id")
@@ -20,7 +20,7 @@ public class MusicGenreTag {
     private Music music;
 
     @ManyToOne
-    @MapsId("genre_tag_id")
-    @JoinColumn(name = "genre_tag_id")
-    private GenreTag genreTag;
+    @MapsId("mood_tag_id")
+    @JoinColumn(name = "mood_tag_id")
+    private MoodTag moodTag;
 }

@@ -1,13 +1,10 @@
-package com.soundbrew.soundbrew.repository.AlbumAndMusic;
+package com.soundbrew.soundbrew.repository.sound;
 
-import com.soundbrew.soundbrew.domain.Music;
-import com.soundbrew.soundbrew.repository.MusicRepository;
+import com.soundbrew.soundbrew.domain.sound.Music;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.stream.IntStream;
 
 @SpringBootTest
 @Log4j2

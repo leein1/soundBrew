@@ -1,8 +1,7 @@
-package com.soundbrew.soundbrew.repository;
+package com.soundbrew.soundbrew.repository.sound;
 
-import com.soundbrew.soundbrew.domain.InstrumentTag;
-import com.soundbrew.soundbrew.domain.MusicInstrumentTag;
-import com.soundbrew.soundbrew.domain.MusicInstrumentTagId;
+import com.soundbrew.soundbrew.domain.sound.MusicInstrumentTag;
+import com.soundbrew.soundbrew.domain.sound.MusicInstrumentTagId;
 import com.soundbrew.soundbrew.dto.MusicInstrumentTagDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

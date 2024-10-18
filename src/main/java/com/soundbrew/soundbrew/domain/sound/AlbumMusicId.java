@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.domain;
+package com.soundbrew.soundbrew.domain.sound;
 
 import lombok.*;
 
@@ -11,8 +11,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class MusicInstrumentTagId implements Serializable {
-    private int music_id;
-    private int instrument_tag_id;
+public class AlbumMusicId implements Serializable {
+    private int album_id;
 
+    private int user_id;
+
+    private int music_id;
 }

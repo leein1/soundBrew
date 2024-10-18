@@ -1,11 +1,8 @@
-package com.soundbrew.soundbrew.repository.AlbumAndMusic;
+package com.soundbrew.soundbrew.repository.sound;
 
-import com.soundbrew.soundbrew.domain.Music;
-import com.soundbrew.soundbrew.domain.MusicInstrumentTag;
-import com.soundbrew.soundbrew.domain.MusicInstrumentTagId;
+import com.soundbrew.soundbrew.domain.sound.MusicInstrumentTag;
+import com.soundbrew.soundbrew.domain.sound.MusicInstrumentTagId;
 import com.soundbrew.soundbrew.dto.MusicInstrumentTagDto;
-import com.soundbrew.soundbrew.repository.MusicInstrumentTagRepository;
-import com.soundbrew.soundbrew.repository.MusicRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @SpringBootTest
 @Log4j2

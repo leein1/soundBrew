@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.domain;
+package com.soundbrew.soundbrew.domain.sound;
 
 import lombok.*;
 
