@@ -54,4 +54,12 @@ public class User extends BaseEntity {
 //    BaseEntity 클래스를 상속
 //    LocalDateTime modify_date;
 //    LocalDateTime create_date;
+
+    public void update(String name, String nickname, String password, String phonenumber, String email) {
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.phonenumber = phonenumber;
+        this.email = email;
+    }
 }

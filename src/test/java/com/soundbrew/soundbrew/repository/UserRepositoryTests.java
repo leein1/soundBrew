@@ -5,7 +5,11 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.datatransfer.Clipboard;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -19,7 +23,7 @@ public class UserRepositoryTests {
     @Test
     public void testInsert(){
 
-        IntStream.rangeClosed(1,1).forEach(i ->{
+        IntStream.rangeClosed(14,14).forEach(i ->{
             User user = User.builder()
                     .subscription_id(1)
                     .name("user_" + i)
@@ -31,8 +35,57 @@ public class UserRepositoryTests {
 
             User result = userRepository.save(user);
 
-            log.info("user_id"+result.getUser_id());
+            log.info("user_id : "+result.getUser_id());
         });
+    }
+
+    @Test
+    public void testSelect(){
+
+        int user_id = 11;
+
+        Optional<User> result = userRepository.findById(user_id);
+
+        User user= result.orElseThrow();
+
+        log.info(user);
+    }
+
+    @Transactional
+    @Test
+    public void testUpdate(){
+
+        int user_id = 11;
+
+        Optional<User> result = userRepository.findById(user_id);
+
+        User user = result.orElseThrow();
+
+        user.update("dong"
+                ,"2in1"
+                ,"1234"
+                , "010-7106-0745"
+                ,"inwon.test@test.com");
+
+//        User afterUpdate = userRepository.save(user);
+
+//        log.info("user_name : "+afterUpdate.getName());
+    }
+
+    @Test
+    public void testDelete(){
+
+        int user_id = 13;
+
+        userRepository.deleteById(user_id);
+
+        Optional<User> result = userRepository.findById(user_id);
+
+        if(result.isEmpty()){
+            log.info("user_id : " + user_id + " has been deleted");
+        } else {
+            log.warn("user_id : " + user_id + " still exists");
+        }
     }
 
 }

@@ -2,17 +2,14 @@ package com.soundbrew.soundbrew.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.security.Identity;
+import javax.persistence.*;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Entity
 public class Role {
 
     @Id
@@ -21,4 +18,8 @@ public class Role {
 
     @Column(nullable = false)
     private String role_type;
+
+    public void change(String role_type){
+        this.role_type = role_type;
+    }
 }
