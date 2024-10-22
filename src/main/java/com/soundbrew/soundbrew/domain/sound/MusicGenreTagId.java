@@ -12,7 +12,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Embeddable
 public class MusicGenreTagId implements Serializable {
-    private int music_id;
-    private int music_genre_tag;
+    private int musicId;
+    private int genreTagId;
 }
 

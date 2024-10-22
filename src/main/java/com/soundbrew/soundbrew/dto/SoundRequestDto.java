@@ -1,7 +1,6 @@
 package com.soundbrew.soundbrew.dto;
 
 import lombok.*;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -10,13 +9,17 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @Builder
-public class SoundReqeustDto {
+@Setter
+public class SoundRequestDto {
     private String nickname;
     private Integer musicId;
     private Integer albumId;
-    private List<String> instTags;
-    private List<String> moodTags;
-    private List<String> genreTags;
-    private Pageable pageable;
+    private List<String> instrument;
+    private List<String> mood;
+    private List<String> genre;
+
+    private String keyword;
+
+    //태그, 검색어 조건 넣기
 
 }

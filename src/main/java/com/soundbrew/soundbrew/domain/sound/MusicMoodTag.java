@@ -15,12 +15,12 @@ public class MusicMoodTag {
     private MusicMoodTagId id;
 
     @ManyToOne
-    @MapsId("music_id")
-    @JoinColumn(name = "music_id")
+    @MapsId("musicId")
+    @JoinColumn(name = "musicId")
     private Music music;
 
     @ManyToOne
-    @MapsId("mood_tag_id")
-    @JoinColumn(name = "mood_tag_id")
+    @MapsId("moodTagId")
+    @JoinColumn(name = "moodTagId")
     private MoodTag moodTag;
 }

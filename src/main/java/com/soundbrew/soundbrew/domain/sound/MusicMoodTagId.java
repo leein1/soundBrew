@@ -12,6 +12,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Embeddable
 public class MusicMoodTagId implements Serializable {
-    private int music_id;
-    private int music_mood_tag;
+    private int musicId;
+    private int moodTagId;
 }

@@ -31,7 +31,7 @@ public class UserRepositoryTests {
 
             User result = userRepository.save(user);
 
-            log.info("user_id"+result.getUser_id());
+            log.info("user_id"+result.getUserId());
         });
     }
 

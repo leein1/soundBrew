@@ -5,6 +5,10 @@ import com.soundbrew.soundbrew.domain.sound.AlbumMusicId;
 import com.soundbrew.soundbrew.repository.custom.AlbumMusicRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AlbumMusicRepository extends JpaRepository<AlbumMusic, AlbumMusicId>, AlbumMusicRepositoryCustom {
+import java.util.List;
 
+public interface AlbumMusicRepository extends JpaRepository<AlbumMusic, AlbumMusicId>, AlbumMusicRepositoryCustom {
+    List<AlbumMusic> findByIdAlbumId(int album);
+    List<AlbumMusic> findByIdMusicId(int music);
+    List<AlbumMusic> findByIdUserId(int user);
 }

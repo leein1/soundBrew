@@ -10,15 +10,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString(of = {"mood_tag_id", "mood_tag_name"})
+@ToString(of = {"moodTagId", "moodTagName"})
 public class MoodTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int mood_tag_id;
+    private int moodTagId;
 
     @Column(nullable = false)
-    private String mood_tag_name;
+    private String moodTagName;
 
-    @OneToMany(mappedBy = "moodTag")
+    @OneToMany(mappedBy = "moodTag", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MusicMoodTag> musicMoodTag;
+
+    public void update(String moodTagName){
+        this.moodTagName = moodTagName;
+    }
 }

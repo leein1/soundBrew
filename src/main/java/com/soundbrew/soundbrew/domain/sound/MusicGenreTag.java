@@ -15,12 +15,12 @@ public class MusicGenreTag {
     private MusicGenreTagId id;
 
     @ManyToOne
-    @MapsId("music_id")
-    @JoinColumn(name = "music_id")
+    @MapsId("musicId")
+    @JoinColumn(name = "musicId")
     private Music music;
 
     @ManyToOne
-    @MapsId("genre_tag_id")
-    @JoinColumn(name = "genre_tag_id")
+    @MapsId("genreTagId")
+    @JoinColumn(name = "genreTagId")
     private GenreTag genreTag;
 }

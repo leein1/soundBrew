@@ -10,9 +10,9 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class MusicInstrumentTagDto {
-    private int music_id;
+    private int musicId;
     private String title;
     private String description;
-    private int instrument_tag_id;
-    private String instrument_tag_name;
+    private int instrumentTagId;
+    private String instrumentTagName;
 }

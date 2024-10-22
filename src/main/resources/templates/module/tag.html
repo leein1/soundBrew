@@ -11,27 +11,35 @@
     </div>
 </head>
 <body>
-
+<!--th:text="${tag.instrument_tag_name}"  값 자체는 잘 넘어옴 ㅇㅇ-->
     <!-- tag body -->
-    <div th:fragment="tagModule">
-        <div class="music-tag-sort">
-            <div class="music-tag-sort-list">
-                <img src="images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
-                <span class="music-tag-sort-toggle" data-target="instrument">악기</span>
-                <img src="images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
-                <span class="music-tag-sort-toggle" data-target="mood">분위기</span>
-                <img src="images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
-                <span class="music-tag-sort-toggle" data-target="genre">장르</span>
-                <img src="images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
+<div th:fragment="tagModule">
+    <div class="music-tag-sort">
+        <div class="music-tag-sort-list">
+            <img src="images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
+
+            <!-- 악기 태그 버튼 -->
+            <span class="music-tag-sort-toggle" data-target="instrument">악기</span>
+            <img src="images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
+            <div class="tag-section" id="instrument-section">
             </div>
-            <div class="music-tag-display"></div>
+
+            <!-- 분위기 태그 버튼 -->
+            <span class="music-tag-sort-toggle" data-target="mood">분위기</span>
+            <img src="images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
+            <div class="tag-section" id="mood-section">
+            </div>
+
+            <!-- 장르 태그 버튼 -->
+            <span class="music-tag-sort-toggle" data-target="genre">장르</span>
+            <img src="images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
+            <div class="tag-section" id="genre-section">
+            </div>
         </div>
+        <div class="music-tag-display"></div>
     </div>
+</div>
 </body>
 
-    <!-- tag js -->
-    <div th:fragment="tagJsModule">
-        <script src="js/tagStates.js"></script>
-        <script src="js/tag.js"></script>
-    </div>
+
 </html>

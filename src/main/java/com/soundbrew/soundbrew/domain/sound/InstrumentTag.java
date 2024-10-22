@@ -10,16 +10,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString(of = {"instrument_tag_id", "instrument_tag_name"})
+@ToString(of = {"instrumentTagId", "instrumentTagName"})
 public class InstrumentTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int instrument_tag_id;
+    private int instrumentTagId;
 
     @Column(nullable = false)
-    private String instrument_tag_name;
+    private String instrumentTagName;
 
-    @OneToMany(mappedBy = "instrumentTag")
+    @OneToMany(mappedBy = "instrumentTag", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MusicInstrumentTag> musicInstrumentTag;
+
+    public void update(String instrumentTagName){
+        this.instrumentTagName = instrumentTagName;
+    }
 }

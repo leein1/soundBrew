@@ -15,19 +15,23 @@ public class Album extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int album_id;
+    private int albumId;
 
     @Column(nullable = false)
-    private int user_id;
+    private int userId;
 
     @Column(length = 255, nullable = false)
-    private String album_name;
+    private String albumName;
 
     @Column(length = 255)
-    private String album_art_path;
+    private String albumArtPath;
 
     @Column(length = 500)
     private String description;
 
+    public void update(String albumName, String description){
+        this.albumName = albumName;
+        this.description = description;
+    }
 
 }

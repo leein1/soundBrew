@@ -12,9 +12,9 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Embeddable
 public class AlbumMusicId implements Serializable {
-    private int album_id;
+    private int albumId;
 
-    private int user_id;
+    private int userId;
 
-    private int music_id;
+    private int musicId;
 }

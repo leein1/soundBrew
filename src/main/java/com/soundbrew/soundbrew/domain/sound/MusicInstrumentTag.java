@@ -16,12 +16,12 @@ public class MusicInstrumentTag {
     private MusicInstrumentTagId id;
 
     @ManyToOne
-    @MapsId("music_id")
-    @JoinColumn(name = "music_id")
+    @MapsId("musicId")
+    @JoinColumn(name = "musicId")
     private Music music;
 
     @ManyToOne
-    @MapsId("instrument_tag_id")
-    @JoinColumn(name = "instrument_tag_id")
+    @MapsId("instrumentTagId")
+    @JoinColumn(name = "instrumentTagId")
     private InstrumentTag instrumentTag;
 }

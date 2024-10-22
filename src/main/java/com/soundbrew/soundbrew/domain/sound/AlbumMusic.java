@@ -16,17 +16,17 @@ public class AlbumMusic {
     private AlbumMusicId id;
 
     @ManyToOne
-    @MapsId("album_id")  // AlbumMusicId의 albumId를 매핑
-    @JoinColumn(name = "album_id")
+    @MapsId("albumId")  // AlbumMusicId의 albumId를 매핑
+    @JoinColumn(name = "albumId")
     private Album album;
 
     @ManyToOne
-    @MapsId("music_id")  // AlbumMusicId의 musicId를 매핑
-    @JoinColumn(name = "music_id")
+    @MapsId("musicId")  // AlbumMusicId의 musicId를 매핑
+    @JoinColumn(name = "musicId")
     private Music music;
 
     @ManyToOne
-    @MapsId("user_id")   // AlbumMusicId의 userId를 매핑
-    @JoinColumn(name = "user_id")
+    @MapsId("userId")   // AlbumMusicId의 userId를 매핑
+    @JoinColumn(name = "userId")
     private User user;    // User 엔티티를 참조하는 필드 추가
 }

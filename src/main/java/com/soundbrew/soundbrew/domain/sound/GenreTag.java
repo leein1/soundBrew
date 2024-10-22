@@ -10,15 +10,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString(of = {"genre_tag_id", "genre_tag_name"})
+@ToString(of = {"genreTagId", "genreTagName"})
 public class GenreTag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int genre_tag_id;
+    private int genreTagId;
 
     @Column(nullable = false)
-    private String genre_tag_name;
+    private String genreTagName;
 
-    @OneToMany(mappedBy = "genreTag")
+    @OneToMany(mappedBy = "genreTag", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MusicGenreTag> musicGenreTag;
+
+    public void update(String genreTagName){
+        this.genreTagName = genreTagName;
+    }
 }

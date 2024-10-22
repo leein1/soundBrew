@@ -2,6 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout.html}">
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        const musicTags = {
+            instTags: [[${inst_tags}]],
+            moodTags: [[${mood_tags}]],
+            genreTags: [[${genre_tags}]]
+        };
+    </script>
+    <!-- module js -->
+    <script th:src="@{/js/tag.js}"></script>
+    <script th:src="@{/js/sort.js}"></script>
+    <!--  page js  -->
+    <script th:src="@{/js/music.js}"></script>
+</th:block>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,25 +24,18 @@
     <link th:href="@{/css/music.css}" rel="stylesheet">
 
 </head>
+
 <body>
     <div layout:fragment="content">
         <div class="content-header">
             <!-- tag body -->
-            <div th:insert="~{module/tag :: tagModule}"></div>
+            <div th:insert="~{module/tag :: tagModule(inst_tags=${inst_tags}, mood_tags=${mood_tags}, genre_tags=${genre_tags}, test = ${test})}"></div>
+
             <!-- sort body -->
             <div th:insert="~{module/sort :: sortModule}"></div>
         </div>
         <!-- music body -->
-    <div th:insert="~{module/music :: musicModule}"></div>
+    <div th:insert="~{module/music :: musicModule(${sounds})}"></div>
     </div>
 </body>
-
-<th:block layout:fragment="script">
-    <!-- module js -->
-    <script th:src="@{/js/tagStates.js}"></script>
-    <script th:src="@{/js/tag.js}"></script>
-    <script th:src="@{/js/sort.js}"></script>
-    <!--  page js  -->
-    <script th:src="@{/js/music.js}"></script>
-</th:block>
 </html>
