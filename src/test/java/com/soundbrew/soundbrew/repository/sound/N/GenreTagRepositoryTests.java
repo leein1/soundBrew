@@ -39,6 +39,13 @@ public class GenreTagRepositoryTests {
         assertFalse(genreTagRepository.existsById(genreTag.getGenreTagId()));
     }
 
+    @Test
+    @Transactional
+    void name(){
+        GenreTag result = genreTagRepository.findByGenreTagName("rock").orElseThrow();
+        assertEquals("rock", result.getGenreTagName());
+    }
+
 
     @Test
     @Transactional

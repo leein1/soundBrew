@@ -1,9 +1,6 @@
 package com.soundbrew.soundbrew.repository.sound.M;
 
-import com.soundbrew.soundbrew.domain.sound.GenreTag;
-import com.soundbrew.soundbrew.domain.sound.Music;
-import com.soundbrew.soundbrew.domain.sound.MusicGenreTag;
-import com.soundbrew.soundbrew.domain.sound.MusicGenreTagId;
+import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.repository.sound.GenreTagRepository;
 import com.soundbrew.soundbrew.repository.sound.MusicGenreTagRepository;
 import com.soundbrew.soundbrew.repository.sound.MusicRepository;
@@ -227,7 +224,45 @@ public class MusicGenreTagTests {
         resultList.forEach(result -> result.getId());
     }
 
+    @Transactional
+    @Test
+    void deleteByMusicId() {
+        // 미리 값을 생성하고 저장
+        GenreTag genreTag = GenreTag.builder()
+                .genreTagName("ponk")
+                .build();
+        genreTagRepository.save(genreTag);
 
+        Music music = Music.builder()
+                .title("fury")
+                .filePath("/file/test/music_path_test_hello_fury")
+                .price(3)
+                .description("Jonsi의 fury 팔세토가 돋보입니다.")
+                .userId(2)
+                .soundType("music")
+                .build();
+        musicRepository.save(music);
+
+        // 복합키 생성
+        musicGenreTagId = MusicGenreTagId.builder()
+                .musicId(music.getMusicId())
+                .genreTagId(genreTag.getGenreTagId())
+                .build();
+
+        MusicGenreTag musicGenreTag = MusicGenreTag.builder()
+                .id(musicGenreTagId)
+                .music(music)
+                .genreTag(genreTag)
+                .build();
+
+        musicGenreTagRepository.save(musicGenreTag);
+
+        // musicId로 연결된 태그들 삭제
+        musicGenreTagRepository.deleteByIdMusicId(music.getMusicId());
+
+        // 삭제 후 태그가 존재하지 않는지 확인
+        assertFalse(musicGenreTagRepository.existsById(musicGenreTagId));
+    }
 
 
 }

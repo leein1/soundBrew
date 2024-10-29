@@ -10,4 +10,5 @@ import java.util.List;
 public interface MusicMoodTagRepository extends JpaRepository<MusicMoodTag, MusicMoodTagId> {
     List<MusicMoodTag> findByIdMusicId(int musicId);
     List<MusicMoodTag> findByIdMoodTagId(int moodTagId);
+    void deleteByIdMusicId(int musicId);
 }

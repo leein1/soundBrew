@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     
-    <link href="css/layout.css" rel="stylesheet">
-    <link href="css/darkmode.css" rel="stylesheet">
-    <link href="css/common.css" rel="stylesheet">
+    <link th:href="@{/css/layout.css}" rel="stylesheet">
+    <link th:href="@{/css/darkmode.css}" rel="stylesheet">
+    <link th:href="@{/css/common.css}" rel="stylesheet">
 <!--    <link href="css/album.css" rel="stylesheet">-->
 <!--    <link href="css/album-list.css" rel="stylesheet">-->
 <!--    <link href="css/artist.css" rel="stylesheet">-->
@@ -22,43 +22,43 @@
 
         <div class="sidebar">
             <div class="menu">
-                <img class="menu-icon" src="images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                <img class="menu-icon" th:src="@{/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
             </div>
 
             <hr class="divider">
             
             <div class="profile">
-                <img src="images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="User Profile" class="profile-image">
+                <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
                 <button class="primary-button none-display">로그인</button>
             </div>
 
             <hr class="divider">
 
             <div class="sidebar-item">
-                <img class="sidebar-icon" src="images/home_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                <img class="sidebar-icon" th:src="@{/images/home_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 <span class="sidebar-text">홈</span>
             </div>
             <div class="sidebar-item">
-                <img class="sidebar-icon" src="images/music_note_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                <img class="sidebar-icon" th:src="@{/images/music_note_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 <span class="sidebar-text">곡</span>
             </div>
             <div class="sidebar-item">
-                <img class="sidebar-icon" src="images/graphic_eq_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                <img class="sidebar-icon" th:src="@{/images/graphic_eq_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 <span class="sidebar-text">효과음</span>
             </div>
 
             <hr class="divider">
             
             <div class="sidebar-item">
-                <img class="sidebar-icon" src="images/help_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                <img class="sidebar-icon" th:src="@{/images/help_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 <span class="sidebar-text">문의</span>
             </div>
 
             <div class="toggle-container">
-                <img src="images/light_mode_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                <img th:src="@{/images/light_mode_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 <input type="checkbox" id="darkModeToggle" class="darkMode-checkbox">
                 <label for="darkModeToggle" class="darkMode-label"></label>
-                <img src="images/dark_mode_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                <img th:src="@{/images/dark_mode_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 </label>
             </div>
         </div> <!-- end sidebar -->
@@ -67,7 +67,7 @@
             
             <div class="navigation">
                 <div class="navigation-menu">
-                    <img class="navigation-menu-icon" src="images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                    <img class="navigation-menu-icon" th:src="@{/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 </div>
                 <div class="sitename font-size-small">사이트이름</div>
                 <div class="user">회원가입</div>
@@ -76,7 +76,7 @@
             <div class="searchbar">
                 <div class="searchbar-container">
                     <span class="searchbar-icon">
-                        <img src="images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="Search Icon">
+                        <img th:src="@{/images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="Search Icon">
                     </span>
                     <input type="text" placeholder="검색...">
                 </div>
@@ -113,7 +113,7 @@
         <!-- 1. 앨범이미지, 곡정보, 시작버튼 -->
         <div class="player-left">
             <div class="music-player-img">
-                <img src="images/library_add_check_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg" alt="앨범이미지">
+                <img th:src="@{/images/library_add_check_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg}" alt="앨범이미지">
             </div>
 
             <div class="music-player-info">
@@ -122,7 +122,7 @@
             </div>
 
             <div class="music-player-play" id="playButton">
-                <img src="images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="플레이">
+                <img th:src="@{/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="플레이">
             </div>
         </div><!-- end player-left -->
 
@@ -140,7 +140,7 @@
         <!-- 3. 다운로드, 좋아요, 음량, 복사 -->
         <div class="player-right">
             <div class="music-player-volume">
-                <img src="images/volume_up_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="볼륨">
+                <img th:src="@{/images/volume_up_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="볼륨">
             </div>
 
             <div class="music-player-slider">
@@ -148,15 +148,15 @@
             </div>
 
             <div class="music-player-download">
-                <img src="images/download_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg" alt="다운로드">
+                <img th:src="@{/images/download_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg}" alt="다운로드">
             </div>
 
             <div class="music-player-favorite">
-                <img src="images/heart_plus_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg" alt="좋아요">
+                <img th:src="@{/images/heart_plus_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg}" alt="좋아요">
             </div>
 
             <div class="music-player-copy">
-                <img src="images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="링크복사" id="copyLinkButton">
+                <img th:src="@{/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="링크복사" id="copyLinkButton">
             </div>
 
             <div class="copy-notification" id="copyNotification">링크가 복사되었습니다!</div>
@@ -164,13 +164,13 @@
     </div><!-- end music-player -->
 
     <!-- 다크모드 js -->
-    <script src="js/darkmode.js"></script>
+    <script th:src="@{/js/darkmode.js}"></script>
 
     <!-- 사이드바 확장 js -->
-    <script src="js/sidebarExpand.js"></script>
+    <script th:src="@{/js/sidebarExpand.js}"></script>
 
     <!-- 뮤직 플레이어 js -->
-    <script src="js/musicPlayer.js"></script>
+    <script th:src="@{js/musicPlayer.js}"></script>
 <th:block layout:fragment="script">
 
 </th:block>

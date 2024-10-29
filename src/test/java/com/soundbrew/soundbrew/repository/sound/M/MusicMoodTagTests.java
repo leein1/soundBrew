@@ -35,7 +35,7 @@ public class MusicMoodTagTests {
 
     @Test
     @Transactional
-    void insert(){
+    void insert() {
         MoodTag moodTag = MoodTag.builder()
                 .moodTagName("sad")
                 .build();
@@ -58,10 +58,10 @@ public class MusicMoodTagTests {
                 .build();
 
         MusicMoodTag musicMoodTag = MusicMoodTag.builder()
-                    .id(musicMoodTagId)
-                    .music(music)
-                    .moodTag(moodTag)
-                    .build();
+                .id(musicMoodTagId)
+                .music(music)
+                .moodTag(moodTag)
+                .build();
 
         musicMoodTagRepository.save(musicMoodTag);
 
@@ -72,7 +72,7 @@ public class MusicMoodTagTests {
 
     @Test
     @Transactional
-    void delete(){
+    void delete() {
         MoodTag moodTag = MoodTag.builder()
                 .moodTagName("sad")
                 .build();
@@ -108,7 +108,7 @@ public class MusicMoodTagTests {
 
     @Test
     @Transactional
-    void List(){
+    void List() {
         MoodTag moodTag = MoodTag.builder()
                 .moodTagName("sad")
                 .build();
@@ -143,7 +143,7 @@ public class MusicMoodTagTests {
 
     @Test
     @Transactional
-    void music(){
+    void music() {
         MoodTag moodTag = MoodTag.builder()
                 .moodTagName("sad")
                 .build();
@@ -180,7 +180,7 @@ public class MusicMoodTagTests {
 
     @Test
     @Transactional
-    void tagId(){
+    void tagId() {
         MoodTag moodTag = MoodTag.builder()
                 .moodTagName("sad")
                 .build();
@@ -213,5 +213,44 @@ public class MusicMoodTagTests {
 
         List<MusicMoodTag> result = musicMoodTagRepository.findByIdMoodTagId(1);
         result.forEach(value -> value.getId());
+    }
+
+    @Test
+    @Transactional
+    void musidIdDelete() {
+        MoodTag moodTag = MoodTag.builder()
+                .moodTagName("sad")
+                .build();
+
+        moodTagRepository.save(moodTag);
+
+        Music music = Music.builder()
+                .title("fury")
+                .filePath("/file/test/music_path_test_hello_fury")
+                .price(3)
+                .description("Jonsi의 fury 팔세토가 돋보입니다.")
+                .userId(2)
+                .soundType("music")
+                .build();
+        musicRepository.save(music);
+
+        musicMoodTagId = MusicMoodTagId.builder()
+                .musicId(music.getMusicId())
+                .moodTagId(moodTag.getMoodTagId())
+                .build();
+
+        MusicMoodTag musicMoodTag = MusicMoodTag.builder()
+                .id(musicMoodTagId)
+                .music(music)
+                .moodTag(moodTag)
+                .build();
+
+        musicMoodTagRepository.save(musicMoodTag);
+        musicMoodTagRepository.deleteByIdMusicId(music.getMusicId());
+
+        // 삭제 후 태그가 존재하지 않는지 확인
+        assertFalse(musicMoodTagRepository.existsById(musicMoodTagId));
+
+
     }
 }

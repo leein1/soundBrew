@@ -17,15 +17,15 @@
         <div class="content-body">
             <div th:each="sound : ${sounds}" class="music-item">
                 <div class="music-item-left">
-                    <img th:src="${sound.album_art_path}" alt="앨범 이미지" class="music-album-img">
+                    <img th:src="${sound.albumArtPath}" alt="앨범 이미지" class="music-album-img">
 
                     <div class="music-play-btn">
                         <img src="images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                     </div>
 
                     <div class="music-info">
-                        <h3 th:text="${sound.user_name}">Jonsi</h3>
-                        <p th:text="${sound.album_name}">Go</p>
+                        <h3 th:text="${sound.userName}">Jonsi</h3>
+                        <p th:text="${sound.albumName}">Go</p>
                     </div>
 
                     <div class="music-info-time">
@@ -35,7 +35,7 @@
 
                 <div class="music-item-center">
                     <div class="music-info-tag">
-                        <span th:text="${sound.instrument_tag_name}">피아노</span><span th:text="${sound.mood_tag_name}">행복</span><span th:text="${sound.genre_tag_name}"></span>
+                        <span th:text="${sound.instrumentTagName}">피아노</span><span th:text="${sound.moodTagName}">행복</span><span th:text="${sound.genreTagName}"></span>
                     </div>
                 </div>
 

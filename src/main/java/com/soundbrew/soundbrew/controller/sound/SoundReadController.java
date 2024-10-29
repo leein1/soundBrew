@@ -1,5 +1,6 @@
-package com.soundbrew.soundbrew.controller;
+package com.soundbrew.soundbrew.controller.sound;
 
+import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
 import com.soundbrew.soundbrew.service.sound.SoundSearchService;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
+// #1. request dto 에서 요청에 해당하는 파라미터가 매핑이 되고, 값이 있는지 확인을 해보는 것.
+// #2. 서비스에서 나온 결과들을 적절하게 model에 태우는 것.
 @Controller
 public class SoundReadController {
     @Autowired
@@ -42,11 +46,19 @@ public class SoundReadController {
     // "1개의 앨범을 select, +해당 앨범의 곡 목록 나열" - soundSearch , "그 아티스트의 다른 앨범" - 서치(아티스트 id)
     @GetMapping("/sound/album")
     public String getAlbumOne(@ModelAttribute SoundSearchRequestDto soundSearchRequestDto, Model model) {
+        // 파라미터 null 검사
+        if(soundSearchRequestDto.getNickname() == null){
+            return "null";
+        }
+        // 페이징 필요없음.
         Pageable pageable = null;
 
         SoundSearchFilterDto albums = soundSearchService.soundSearch(soundSearchRequestDto, pageable);
-        model.addAttribute("album", albums.getSoundSearchResultDto().get(0));
         model.addAttribute("sounds", albums.getSoundSearchResultDto());
+
+        AlbumDto albumDto = soundSearchService.readAlbumByArtistName(soundSearchRequestDto.getNickname());
+        model.addAttribute("otherAlbum", albumDto);
+
         return "sound/album-list";
     }
 
@@ -81,5 +93,10 @@ public class SoundReadController {
     public String getMusicUpload(@ModelAttribute SoundSearchRequestDto soundSearchRequestDto,
                                  Model model){
         return "sound/music-upload";
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        return "sound/test";
     }
 }

@@ -14,13 +14,13 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <div class="content-header">
+        <div class="content-header" th:with="album=${album}">
             <div class="content-header-info">
-                <img class="album-image" src="images/sample-album-imge.png" alt="Album Image">
+                <img class="album-image" th:src="${album.albumArtPath}" alt="Album Image">
                 <div class="album-info">
-                    <div class="album-title font-size-large">Album Name</div>
+                    <div class="album-title font-size-large" th:text="${album.albumName}">Album Name</div>
                     <div class="artist-name font-size-medium">
-                        <span>Artist</span> <a href="/artist/jonsi" class="artist-link">Jonsi</a>
+                        <span>Artist</span> <a th:text="${album.userName}" th:href="@{/artist/{artistName}(artistName=${album.userName})}" class="artist-link">Jonsi</a>
                     </div>
                     <div class="album-info-reaction">
                         <button class="btn album-btn">Play album</button>
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="album-info-text">
-                <p class="album-description">
+                <p class="album-description" th:text="${album.albumDescription}">
                     Inspired by the deep, solid sound of Melodic Techno, ‘Fleck’ offers you a sample album of extensive, room quivering ideas and immediate inspiration for your new tracks.<br><br>
                     This collection runs extremely heavy with analogue gear, over 90% of the sound sources are created on analogue synthesizers and vintage drum machines. This dedication to the retro sound ensures a sonic palette that surpasses your production beliefs. ‘Fleck - Melodic Techno’ nods at key producers including Tale Of Us, Mathame, Colyn, Fideles, and Dizharmonia. You’ll find content inspired by these legendary figures that can be used straight out the box for immediate impact or edit, manipulate and warp till your heart's content. The diverse 700+ Melodic Techno sample library ensures you’ll have what you need in the studio when you need it.<br><br>
                     ‘Fleck - Melodic Techno’ has been intricately designed to give you the tools you need in today's Techno world. Take them for a spin, we know you’ll be happy and your studio running at 100% will be tickled pink too.
@@ -41,7 +41,7 @@
              <div th:insert="~{module/album :: albumModule}"></div>
         </div>
         <!-- 음악 리스트 모듈 -->
-        <div th:insert="~{module/music :: musicModule}"></div>
+        <div th:insert="~{module/music :: musicModule(${sounds})}"></div>
     </div>
 
 <th:block layout:fragment="script">

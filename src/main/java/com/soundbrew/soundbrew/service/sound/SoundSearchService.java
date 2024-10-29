@@ -1,9 +1,10 @@
 package com.soundbrew.soundbrew.service.sound;
 
-import com.soundbrew.soundbrew.dto.SoundServiceDto;
-import com.soundbrew.soundbrew.dto.SoundRepositoryDto;
-import com.soundbrew.soundbrew.dto.SoundRequestDto;
-import com.soundbrew.soundbrew.repository.sound.AlbumMusicRepository;
+import com.soundbrew.soundbrew.dto.sound.AlbumDto;
+import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
+import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
+import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
+import com.soundbrew.soundbrew.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,25 +16,37 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
-public class SoundReadService {
+public class SoundSearchService {
     @Autowired
-    private AlbumMusicRepository albumMusicRepository;
+    private AlbumMusicService albumMusicService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AlbumService albumService;
 
-    // 검색
-    // parameter : SoundRequestDto, page
-    public SoundServiceDto soundSearch(SoundRequestDto soundRequestDto, Pageable pageable){
-        List<SoundRepositoryDto> before = albumMusicRepository.search(soundRequestDto, pageable);
+    public SoundSearchFilterDto soundSearch(SoundSearchRequestDto soundSearchRequestDto, Pageable pageable){
+        List<SoundSearchResultDto> before = albumMusicService.readTatal(soundSearchRequestDto,pageable);
 
-        List<SoundRepositoryDto> afterSearch = replaceCommaWithSpace(before);
-        SoundServiceDto after = replaceTagsToArray(before);
+        SoundSearchFilterDto after = replaceTagsToArray(before);
+        List<SoundSearchResultDto> afterSearch = replaceCommaWithSpace(before);
 
-        after.setSoundRepositoryDto(afterSearch);
+        after.setSoundSearchResultDto(afterSearch);
         return after;
     }
 
+    public AlbumDto readAlbumByArtistName(String nickName){
+        int userid = userRepository.findByNickname(nickName).orElseThrow();
+
+        return albumService.readAlbumWithUserId(userid);
+    }
+
+    public AlbumDto readAlbum(){
+        return albumService.readAlbum();
+    }
+
     // ","로 이어진 태그문자열을 " " 로 바꾸어 프론트에서 예쁘게 보이기 위한 재단
-    public List<SoundRepositoryDto> replaceCommaWithSpace(List<SoundRepositoryDto> sounds) {
-        for (SoundRepositoryDto sound : sounds) {
+    public List<SoundSearchResultDto> replaceCommaWithSpace(List<SoundSearchResultDto> sounds) {
+        for (SoundSearchResultDto sound : sounds) {
             if(sound.getInstrumentTagName()!=null){
                 String replaceInstTags = sound.getInstrumentTagName().replace(",", " ");
                 sound.setInstrumentTagName(replaceInstTags);
@@ -51,13 +64,13 @@ public class SoundReadService {
     }
 
     //  태그를 분리하고 중복 제거
-    public SoundServiceDto replaceTagsToArray(List<SoundRepositoryDto> sounds) {
-        SoundServiceDto afterTags = new SoundServiceDto();
+    public SoundSearchFilterDto replaceTagsToArray(List<SoundSearchResultDto> sounds) {
+        SoundSearchFilterDto afterTags = new SoundSearchFilterDto();
         Set<String> instTagSet = new HashSet<>();
         Set<String> moodTagSet = new HashSet<>();
         Set<String> genreTagSet = new HashSet<>();
 
-        for (SoundRepositoryDto sound : sounds) {
+        for (SoundSearchResultDto sound : sounds) {
             // Instrument tags 처리
             if (sound.getInstrumentTagName() != null) {
                 // Split by space as well as commas, to ensure tags are separated correctly
@@ -97,6 +110,8 @@ public class SoundReadService {
 
         return afterTags;
     }
+
+
 
 
 

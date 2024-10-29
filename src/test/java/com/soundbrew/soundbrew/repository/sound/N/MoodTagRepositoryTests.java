@@ -36,6 +36,13 @@ public class MoodTagRepositoryTests {
         assertFalse(moodTagRepository.existsById(moodTag.getMoodTagId()));
     }
 
+    @Test
+    @Transactional
+    void name(){
+        MoodTag result =  moodTagRepository.findByMoodTagName("sad").orElseThrow();
+
+        assertEquals("sad", result.getMoodTagName());
+    }
 
     @Test
     @Transactional

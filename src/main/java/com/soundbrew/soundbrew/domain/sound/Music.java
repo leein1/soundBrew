@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -38,10 +39,10 @@ public class Music extends BaseEntity {
     private String soundType;
 
     @OneToMany(mappedBy = "music", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MusicInstrumentTag> musicInstrumentTag ; // 태그와의 관계 추가
+    private List<MusicInstrumentTag> musicInstrumentTag; // 태그와의 관계 추가
 
     @OneToMany(mappedBy = "music" ,cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MusicMoodTag> musicMoodTag ; // 태그와의 관계 추가
+    private List<MusicMoodTag> musicMoodTag ;// 태그와의 관계 추가
 //
     @OneToMany(mappedBy = "music", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MusicGenreTag> musicGenreTag ; // 태그와의 관계 추가

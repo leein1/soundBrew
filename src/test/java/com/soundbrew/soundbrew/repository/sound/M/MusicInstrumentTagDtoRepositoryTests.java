@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Log4j2
-public class MusicInstrumentTagRepositoryTests {
+public class MusicInstrumentTagDtoRepositoryTests {
 
     @Autowired
     private MusicInstrumentTagRepository musicInstrumentTagRepository;

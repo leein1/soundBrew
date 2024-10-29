@@ -11,4 +11,5 @@ import java.util.List;
 public interface MusicGenreTagRepository extends JpaRepository<MusicGenreTag, MusicGenreTagId> {
     List<MusicGenreTag> findByIdMusicId(int musicId);
     List<MusicGenreTag> findByIdGenreTagId(int moodTagId);
+    void deleteByIdMusicId(int musicId);
 }

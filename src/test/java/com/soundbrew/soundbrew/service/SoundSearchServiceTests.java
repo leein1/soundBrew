@@ -1,10 +1,10 @@
 package com.soundbrew.soundbrew.service;
 
-import com.soundbrew.soundbrew.dto.SoundRequestDto;
-import com.soundbrew.soundbrew.dto.SoundRepositoryDto;
-import com.soundbrew.soundbrew.dto.SoundServiceDto;
+import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
+import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
 import com.soundbrew.soundbrew.repository.custom.AlbumMusicRepositoryCustomImpl;
-import com.soundbrew.soundbrew.service.sound.SoundReadService;
+import com.soundbrew.soundbrew.service.sound.SoundSearchService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Log4j2
-public class SoundReadServiceTests {
+public class SoundSearchServiceTests {
 
     @Autowired
-    private SoundReadService soundReadService;
+    private SoundSearchService soundSearchService;
 
     @Autowired
     private AlbumMusicRepositoryCustomImpl musicRepository;
@@ -31,13 +31,13 @@ public class SoundReadServiceTests {
     void testSoundSearchWithTagsAndPagination() {
         // Given
         Pageable pageable = PageRequest.of(0, 2);
-        SoundRequestDto requestDto = new SoundRequestDto();
+        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
         requestDto.setInstrument(Arrays.asList("piano", "guitar"));
         requestDto.setMood(Arrays.asList("happy"));
         requestDto.setGenre(Arrays.asList("rock"));
 
         // When
-        SoundServiceDto result = soundReadService.soundSearch(requestDto, pageable);
+        SoundSearchFilterDto result = soundSearchService.soundSearch(requestDto, pageable);
 
         // Then (실제로 데이터 있냐 없냐에 따라 assert"True" or "False"
         assertNotNull(result);
@@ -52,11 +52,11 @@ public class SoundReadServiceTests {
     void testSoundSearchWithAlbumId() {
         // Given
         Pageable pageable = PageRequest.of(0, 2);
-        SoundRequestDto requestDto = new SoundRequestDto();
+        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
         requestDto.setAlbumId(11);
 
         // When
-        SoundServiceDto result = soundReadService.soundSearch(requestDto, pageable);
+        SoundSearchFilterDto result = soundSearchService.soundSearch(requestDto, pageable);
 
         // Then
         assertNotNull(result);
@@ -66,15 +66,15 @@ public class SoundReadServiceTests {
     @Test
     void testReplaceCommaWithSpace() {
         // Given
-        SoundRepositoryDto soundDto = new SoundRepositoryDto();
+        SoundSearchResultDto soundDto = new SoundSearchResultDto();
         soundDto.setInstrumentTagName("piano,guitar");
         soundDto.setMoodTagName("happy,calm");
         soundDto.setGenreTagName("rock,pop");
 
-        List<SoundRepositoryDto> soundList = Arrays.asList(soundDto);
+        List<SoundSearchResultDto> soundList = Arrays.asList(soundDto);
 
         // When
-        List<SoundRepositoryDto> result = soundReadService.replaceCommaWithSpace(soundList);
+        List<SoundSearchResultDto> result = soundSearchService.replaceCommaWithSpace(soundList);
 
         // Then
         assertEquals("piano guitar", result.get(0).getInstrumentTagName());
@@ -87,15 +87,15 @@ public class SoundReadServiceTests {
     @Test
     void testReplaceTagsToArray() {
         // Given
-        SoundRepositoryDto soundDto = new SoundRepositoryDto();
+        SoundSearchResultDto soundDto = new SoundSearchResultDto();
         soundDto.setInstrumentTagName("piano,guitar");
         soundDto.setMoodTagName("happy,calm");
         soundDto.setGenreTagName("rock,pop");
 
-        List<SoundRepositoryDto> soundList = Arrays.asList(soundDto);
+        List<SoundSearchResultDto> soundList = Arrays.asList(soundDto);
 
         // When
-        SoundServiceDto result = soundReadService.replaceTagsToArray(soundList);
+        SoundSearchFilterDto result = soundSearchService.replaceTagsToArray(soundList);
 
         // Then
         assertTrue(result.getInstTag().contains("piano"));

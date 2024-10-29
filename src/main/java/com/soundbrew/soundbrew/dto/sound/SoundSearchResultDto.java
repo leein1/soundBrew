@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.dto;
+package com.soundbrew.soundbrew.dto.sound;
 
 import lombok.*;
 

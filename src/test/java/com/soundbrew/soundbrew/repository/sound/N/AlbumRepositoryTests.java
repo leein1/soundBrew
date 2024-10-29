@@ -1,9 +1,11 @@
 package com.soundbrew.soundbrew.repository.sound.N;
 
 import com.soundbrew.soundbrew.domain.sound.Album;
+import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import com.soundbrew.soundbrew.repository.sound.AlbumRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -22,17 +24,19 @@ public class AlbumRepositoryTests {
     @Test
     @Transactional
     void testCreate(){
-        Album album = Album.builder()
+        AlbumDto dto = AlbumDto.builder()
                 .userId(2)
                 .albumName("Test_album_no.1")
                 .albumArtPath("/test/test/path")
                 .description("test album description")
                 .build();
+        ModelMapper modelMapper = new ModelMapper();
+        Album vo = modelMapper.map(dto, Album.class);
 
-        Album showLog = albumRepository.save(album);
-        assertEquals("Test_album_no.1",album.getAlbumName());
-        assertEquals("/test/test/path",album.getAlbumArtPath());
-        assertEquals("test album description",album.getDescription());
+        Album showLog = albumRepository.save(vo);
+        assertEquals("Test_album_no.1",showLog.getAlbumName());
+        assertEquals("/test/test/path",showLog.getAlbumArtPath());
+        assertEquals("test album description",showLog.getDescription());
 
         log.info(showLog);
     }
