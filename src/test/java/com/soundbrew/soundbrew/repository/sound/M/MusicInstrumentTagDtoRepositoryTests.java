@@ -1,7 +1,6 @@
 package com.soundbrew.soundbrew.repository.sound.M;
 
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.MusicInstrumentTagDto;
 import com.soundbrew.soundbrew.repository.sound.InstrumentTagRepository;
 import com.soundbrew.soundbrew.repository.sound.MusicInstrumentTagRepository;
 import com.soundbrew.soundbrew.repository.sound.MusicRepository;
@@ -64,6 +63,43 @@ public class MusicInstrumentTagRepositoryTests {
         log.info("=======");
         log.info(musicInstrumentTag.toString());
         log.info("=======");
+    }
+
+    @Transactional
+    @Test
+    void deleteByMusicId() {
+        InstrumentTag instrumentTag = InstrumentTag.builder()
+                .instrumentTagName("viola")
+                .build();
+        instrumentTagRepository.save(instrumentTag);
+
+        Music music = Music.builder()
+                .title("fury")
+                .filePath("/file/test/music_path_test_hello_fury")
+                .price(3)
+                .description("Jonsi의 fury 팔세토가 돋보입니다.")
+                .userId(2)
+                .soundType("music")
+                .build();
+        musicRepository.save(music);
+
+        MusicInstrumentTagId musicInstrumentTagId = MusicInstrumentTagId.builder()
+                .musicId(music.getMusicId())
+                .instrumentTagId(instrumentTag.getInstrumentTagId())
+                .build();
+
+        MusicInstrumentTag musicInstrumentTag = MusicInstrumentTag.builder()
+                .id(musicInstrumentTagId)
+                .music(music)
+                .instrumentTag(instrumentTag)
+                .build();
+        musicInstrumentTagRepository.save(musicInstrumentTag);
+
+        // musicId로 연결된 태그들 삭제
+        musicInstrumentTagRepository.deleteByIdMusicId(music.getMusicId());
+
+        // 삭제 후 태그가 존재하지 않는지 확인
+        assertFalse(musicInstrumentTagRepository.existsById(musicInstrumentTagId));
     }
 
     @Transactional

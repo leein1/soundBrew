@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Setter
-public class SoundRequestDto {
+public class SoundSearchRequestDto {
     private String nickname;
     private Integer musicId;
     private Integer albumId;
@@ -19,7 +19,6 @@ public class SoundRequestDto {
     private List<String> genre;
 
     private String keyword;
-
     //태그, 검색어 조건 넣기
 
 }

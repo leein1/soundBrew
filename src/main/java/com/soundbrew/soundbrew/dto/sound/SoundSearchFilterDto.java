@@ -10,8 +10,8 @@ import java.util.Set;
 @ToString
 @AllArgsConstructor
 @Setter
-public class SoundServiceDto {
-    private List<SoundRepositoryDto> soundRepositoryDto;
+public class SoundSearchFilterDto {
+    private List<SoundSearchResultDto> soundSearchResultDto;
     private Set<String> instTag;
     private Set<String> moodTag;
     private Set<String> genreTag;

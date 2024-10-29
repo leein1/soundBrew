@@ -4,6 +4,7 @@ import com.soundbrew.soundbrew.dto.SoundRequestDto;
 import com.soundbrew.soundbrew.dto.SoundRepositoryDto;
 import com.soundbrew.soundbrew.dto.SoundServiceDto;
 import com.soundbrew.soundbrew.repository.custom.AlbumMusicRepositoryCustomImpl;
+import com.soundbrew.soundbrew.service.sound.SoundReadService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Log4j2
-public class SoundServiceTest {
+public class SoundReadServiceTests {
 
     @Autowired
-    private SoundService soundService;
+    private SoundReadService soundReadService;
 
     @Autowired
     private AlbumMusicRepositoryCustomImpl musicRepository;
@@ -36,7 +37,7 @@ public class SoundServiceTest {
         requestDto.setGenre(Arrays.asList("rock"));
 
         // When
-        SoundServiceDto result = soundService.soundSearch(requestDto, pageable);
+        SoundServiceDto result = soundReadService.soundSearch(requestDto, pageable);
 
         // Then (실제로 데이터 있냐 없냐에 따라 assert"True" or "False"
         assertNotNull(result);
@@ -55,7 +56,7 @@ public class SoundServiceTest {
         requestDto.setAlbumId(11);
 
         // When
-        SoundServiceDto result = soundService.soundSearch(requestDto, pageable);
+        SoundServiceDto result = soundReadService.soundSearch(requestDto, pageable);
 
         // Then
         assertNotNull(result);
@@ -73,7 +74,7 @@ public class SoundServiceTest {
         List<SoundRepositoryDto> soundList = Arrays.asList(soundDto);
 
         // When
-        List<SoundRepositoryDto> result = soundService.replaceCommaWithSpace(soundList);
+        List<SoundRepositoryDto> result = soundReadService.replaceCommaWithSpace(soundList);
 
         // Then
         assertEquals("piano guitar", result.get(0).getInstrumentTagName());
@@ -94,7 +95,7 @@ public class SoundServiceTest {
         List<SoundRepositoryDto> soundList = Arrays.asList(soundDto);
 
         // When
-        SoundServiceDto result = soundService.replaceTagsToArray(soundList);
+        SoundServiceDto result = soundReadService.replaceTagsToArray(soundList);
 
         // Then
         assertTrue(result.getInstTag().contains("piano"));

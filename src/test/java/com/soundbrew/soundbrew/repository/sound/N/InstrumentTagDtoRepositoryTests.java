@@ -37,6 +37,14 @@ public class InstrumentTagRepositoryTests {
         assertFalse(instrumentTagRepository.existsById(instrumentTag.getInstrumentTagId()));
     }
 
+    @Test
+    @Transactional
+    void name(){
+        InstrumentTag result = instrumentTagRepository.findByInstrumentTagName("snare").orElseThrow();
+
+        assertEquals("snare", result.getInstrumentTagName());
+    }
+
 
     @Test
     @Transactional

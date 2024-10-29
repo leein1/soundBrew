@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.dto.SoundServiceDto;
 import com.soundbrew.soundbrew.dto.SoundRepositoryDto;
@@ -15,7 +15,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
-public class SoundService {
+public class SoundReadService {
     @Autowired
     private AlbumMusicRepository albumMusicRepository;
 
