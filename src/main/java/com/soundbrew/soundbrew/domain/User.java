@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.domain;
 
+import com.soundbrew.soundbrew.dto.UserDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,10 +16,10 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int user_id;
+    private int userId;
 
     @Column(nullable = false)
-    private int subscription_id;
+    private int subscriptionId;
 
     @Column(length = 15, nullable = false)
     private String name;
@@ -43,10 +44,10 @@ public class User extends BaseEntity {
 
 //  이메일 인증 default false라 null해도 됨
     @Column(nullable = true)
-    private boolean email_verified;
+    private boolean emailVerified;
 
     @Column(nullable = true)
-    private  String profile_image_path;
+    private  String profileImagePath;
 
     @Column(nullable = true)
     private LocalDate birth;
@@ -61,5 +62,22 @@ public class User extends BaseEntity {
         this.password = password;
         this.phonenumber = phonenumber;
         this.email = email;
+    }
+
+    public User toEntity(UserDTO userDTO){
+        User user = User.builder()
+                .userId(userDTO.getUserId())
+                .subscriptionId(userDTO.getSubscriptionId())
+                .name(userDTO.getName())
+                .nickname(userDTO.getNickname())
+                .password(userDTO.getPassword())
+                .phonenumber(userDTO.getPhonenumber())
+                .email(userDTO.getEmail())
+                .emailVerified(userDTO.isEmailVerified())
+                .profileImagePath(userDTO.getProfileImagePath())
+                .birth(userDTO.getBirth())
+                .build();
+
+        return user;
     }
 }

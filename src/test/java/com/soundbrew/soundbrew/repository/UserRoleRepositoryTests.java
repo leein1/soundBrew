@@ -1,8 +1,11 @@
 package com.soundbrew.soundbrew.repository;
 
+import com.soundbrew.soundbrew.domain.Role;
+import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.UserRole;
 import com.soundbrew.soundbrew.domain.UserRoleId;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 @SpringBootTest
 @Log4j2
@@ -19,11 +23,67 @@ public class UserRoleRepositoryTests {
     @Autowired
     private UserRoleRepository userRoleRepository;
 
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Autowired
+//    private RoleRepository roleRepository;
+//
+//    @BeforeEach
+//    void testInsert2(){
+////        유저 생성
+//
+//        User user = User.builder()
+//                .user_id(17)
+//                .subscription_id(4)
+//                .name("user_" + 17)
+//                .nickname("u_" + 17)
+//                .password("password_" + 17)
+//                .phonenumber("010-" + 17)
+//                .email(17 + "_insert_test@test.com")
+//                .build();
+//
+//        User userResult = userRepository.save(user);
+//
+//        log.info("user_id : "+userResult.getUser_id());
+//
+//
+////      역할 생성
+//        Role role = Role.builder()
+//                .role_id(11)
+//                .role_type("TEST")
+//                .build();
+//
+//        Role roleResult = roleRepository.save(role);
+//
+//        log.info(roleResult);
+//
+////      복합키 생성 후 인서트
+//        UserRoleId userRoleId = UserRoleId.builder()
+//                .roleId(roleResult.getRole_id())
+//                .userId(userResult.getUser_id())
+//                .build();
+//
+//        UserRole userRole = UserRole.builder()
+//                .id(userRoleId)
+//                .build();
+//
+//        UserRole afterInsert = userRoleRepository.save(userRole);
+//    }
+
+
+
+
+
+
+
+
+
     @Test
     void testInsert(){
         UserRoleId userRoleId = UserRoleId.builder()
                 .roleId(4)
-                .userId(11)
+                .userId(16)
                 .build();
 
         UserRole userRole = UserRole.builder()
@@ -38,7 +98,7 @@ public class UserRoleRepositoryTests {
     @Test
     public void testSelect(){
 
-        int userId = 11;
+        int userId = 16;
         int roleid = 4;
 
         UserRoleId userRoleId = UserRoleId.builder()
@@ -110,7 +170,7 @@ public class UserRoleRepositoryTests {
     public void testDelete(){
 
         int userId = 11;
-        int roleId = 5;
+        int roleId = 4;
 
         UserRoleId userRoleId = UserRoleId.builder()
                 .roleId(roleId)

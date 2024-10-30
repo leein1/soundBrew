@@ -15,19 +15,27 @@ public class Subscription extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int subscription_id;
+    private int subscriptionId;
 
     @Column(nullable = false)
-    private String subscription_type;
+    private String subscriptionName;
 
     @Column(nullable = false)
-    private int subscription_price;
+    private int subscriptionPrice;
 
     @Column(nullable = false)
-    private int credit_per_month;
+    private int creditPerMonth;
 
 //    BaseEntity 상속으로 생략
 //    private LocalDateTime create_date;
 //
 //    private LocalDateTime modify_date;
+
+    public void updatePrice(int SubscriptionPrice){
+        this.subscriptionPrice = SubscriptionPrice;
+    }
+
+    public void updateCreditPerMonth(int creditPerMonth){
+        this.creditPerMonth = creditPerMonth;
+    }
 }

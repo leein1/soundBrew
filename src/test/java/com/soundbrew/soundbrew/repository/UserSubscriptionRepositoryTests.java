@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @SpringBootTest
 @Log4j2
 public class UserSubscriptionRepositoryTests {
@@ -13,11 +16,15 @@ public class UserSubscriptionRepositoryTests {
     @Autowired
     private UserSubscriptionRepository userSubscriptionRepository;
 
+
+//    실제 서비스에서는 회원이 구독을 했을때
+//    user 테이블에서 subscription_id 컬럼을 수정 한 후
+//    user_subscription 테이블에 insert해야 한다
     @Test
     public void testInsert(){
         UserSubscription userSubscription = UserSubscription.builder()
-                .user_id(11)
-                .subscription_id(1)
+                .user_id(16)
+                .subscription_id(4)
                 .build();
 //        log.info("user_id: {}, subscription_id: {}", userSubscription.getUser_id(), userSubscription.getSubscription_id());
         UserSubscription result = userSubscriptionRepository.save(userSubscription);
@@ -27,6 +34,25 @@ public class UserSubscriptionRepositoryTests {
                 + "|"
                 + userSubscription.getSubscription_id()
         );
+
+    }
+
+//    회원 정보를 찾기 위해 입력해야할 필드 정해야 할것 같음.
+    @Test
+    public void testFindById(){
+        int userId = 16;
+
+        Optional<UserSubscription> result = userSubscriptionRepository.findById(userId);
+        UserSubscription userSubscription = result.orElseThrow(
+                () -> new NoSuchElementException("해당 userId(" + userId + ")에 대한 UserSubscription을 찾을 수 없습니다.")
+        );
+        log.info(userSubscription.toString());
+    }
+
+
+//    삭제 정책 필요!!! 어떤 필드를 입력받아 삭제할것인지 논의 필요
+    @Test
+    public void testDelete(){
 
     }
 

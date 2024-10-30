@@ -23,9 +23,9 @@ public class UserRepositoryTests {
     @Test
     public void testInsert(){
 
-        IntStream.rangeClosed(14,14).forEach(i ->{
+        IntStream.rangeClosed(100,100).forEach(i ->{
             User user = User.builder()
-                    .subscription_id(1)
+                    .subscriptionId(4)
                     .name("user_" + i)
                     .nickname("u_" + i)
                     .password("password_" + i)
@@ -35,7 +35,7 @@ public class UserRepositoryTests {
 
             User result = userRepository.save(user);
 
-            log.info("user_id : "+result.getUser_id());
+            log.info("user_id : "+result.getUserId());
         });
     }
 
@@ -75,7 +75,7 @@ public class UserRepositoryTests {
     @Test
     public void testDelete(){
 
-        int user_id = 13;
+        int user_id = 11;
 
         userRepository.deleteById(user_id);
 
