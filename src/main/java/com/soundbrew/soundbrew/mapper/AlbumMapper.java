@@ -4,7 +4,7 @@ import com.soundbrew.soundbrew.domain.sound.Album;
 import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import org.springframework.stereotype.Component;
 
-import static com.soundbrew.soundbrew.service.util.FilteringUtil.filteringWord;
+import static com.soundbrew.soundbrew.service.util.FilteringUtil.filteringTrim;
 
 @Component
 public class AlbumMapper {
@@ -14,8 +14,8 @@ public class AlbumMapper {
                 .albumId(albumDto.getAlbumId())
                 .userId(albumDto.getUserId())
                 .albumArtPath(albumDto.getAlbumArtPath())
-                .albumName(filteringWord(albumDto.getAlbumName(), "앨범"))
-                .description(filteringWord(albumDto.getDescription(), "기본"))
+                .albumName(filteringTrim(albumDto.getAlbumName()))
+                .description(filteringTrim(albumDto.getDescription()))
                 .build();
     }
 
@@ -23,7 +23,7 @@ public class AlbumMapper {
         return AlbumDto.builder()
                 .albumId(album.getAlbumId())
                 .userId(album.getUserId())
-                .albumName(album.getAlbumName())
+                .albumName(filteringTrim(album.getAlbumName()))
                 .albumArtPath(album.getAlbumArtPath())
                 .description(album.getDescription())
                 .build();

@@ -4,7 +4,8 @@ import com.soundbrew.soundbrew.domain.sound.Album;
 import lombok.Builder;
 import lombok.Data;
 
-import static com.soundbrew.soundbrew.service.util.FilteringUtil.filteringWord;
+import static com.soundbrew.soundbrew.service.util.FilteringUtil.filteringTrim;
+
 
 @Data
 @Builder
@@ -33,8 +34,8 @@ public class AlbumDto {
 
 //    첫번째 filtering 방법 - Dto에서 필터링 메서드 생성 후 호출.
     public void filterFields() {
-        this.albumName = filteringWord(this.albumName, "앨범");
-        this.description = filteringWord(this.description, "앨범");
+        this.albumName = filteringTrim(this.albumName);
+        this.description = filteringTrim(this.description);
     }
 
 }

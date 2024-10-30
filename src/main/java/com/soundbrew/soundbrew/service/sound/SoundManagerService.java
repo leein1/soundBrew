@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-import static com.soundbrew.soundbrew.service.util.FilteringUtil.filteringWord;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +44,8 @@ public class SoundManagerService {
 //        (...)
 
         // 두번째방법 - 서비스에서 직접 값 변환 - 값 변환 코드가 많아짐
-//        albumDto.setAlbumName(filteringWord(albumDto.getAlbumName(),"앨범"));
-//        albumDto.setDescription(filteringWord(albumDto.getDescription(),"null"));
+//        albumDto.setAlbumName(filteringTrim(albumDto.getAlbumName()));
+//        albumDto.setDescription(filteringTrim(albumDto.getDescription()));
 //        (...)
 
         //추가적인 작업
