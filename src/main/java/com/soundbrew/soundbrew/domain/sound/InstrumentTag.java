@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.domain.sound;
 
+import com.soundbrew.soundbrew.dto.sound.TagNameDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,4 +27,8 @@ public class InstrumentTag {
     public void update(String instrumentTagName){
         this.instrumentTagName = instrumentTagName;
     }
+
+//    public void update(TagNameDto tagNameDto){
+//        this.instrumentTagName = tagNameDto.getAfterName();
+//    }
 }

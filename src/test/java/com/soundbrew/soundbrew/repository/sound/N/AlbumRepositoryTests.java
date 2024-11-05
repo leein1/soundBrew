@@ -30,10 +30,9 @@ public class AlbumRepositoryTests {
                 .albumArtPath("/test/test/path")
                 .description("test album description")
                 .build();
-        ModelMapper modelMapper = new ModelMapper();
-        Album vo = modelMapper.map(dto, Album.class);
+        Album vo = dto.toEntity();
 
-        Album showLog = albumRepository.save(vo);
+        Album showLog = albumRepository.saveAndFlush(vo);
         assertEquals("Test_album_no.1",showLog.getAlbumName());
         assertEquals("/test/test/path",showLog.getAlbumArtPath());
         assertEquals("test album description",showLog.getDescription());

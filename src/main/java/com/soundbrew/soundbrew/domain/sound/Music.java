@@ -53,4 +53,10 @@ public class Music extends BaseEntity {
         this.soundType = soundType;
     }
 
+//    public void update(Music music){
+//        this.title = music.getTitle();
+//        this.description = music.getDescription();
+//        this.soundType = music.getSoundType();
+//    }
+
 }

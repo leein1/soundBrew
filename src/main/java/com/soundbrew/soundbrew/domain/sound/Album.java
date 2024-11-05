@@ -34,4 +34,9 @@ public class Album extends BaseEntity {
         this.description = description;
     }
 
+//    public void update(Album album){
+//        this.albumName = album.albumName;
+//        this.description = album.description;
+//    }
+
 }

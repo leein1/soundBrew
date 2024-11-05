@@ -1,10 +1,8 @@
 package com.soundbrew.soundbrew.service.sound;
 
-import com.soundbrew.soundbrew.dto.sound.AlbumDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.UserRepository;
+import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,98 +21,57 @@ public class SoundSearchService {
     private UserRepository userRepository;
     @Autowired
     private AlbumService albumService;
+    @Autowired
+    private MusicService musicService;
+    @Autowired
+    private InstrumentTagService instrumentTagService;
+    @Autowired
+    private MoodTagService moodTagService;
+    @Autowired
+    private GenreTagService genreTagService;
+
+    @Autowired
+    private SoundProcessor soundProcessor;
 
     public SoundSearchFilterDto soundSearch(SoundSearchRequestDto soundSearchRequestDto, Pageable pageable){
-        List<SoundSearchResultDto> before = albumMusicService.readTatal(soundSearchRequestDto,pageable);
+        List<SoundSearchResultDto> before = albumMusicService.readTotal(soundSearchRequestDto,pageable);
 
-        SoundSearchFilterDto after = replaceTagsToArray(before);
-        List<SoundSearchResultDto> afterSearch = replaceCommaWithSpace(before);
+        // 태그들을 배열화 해서 화면 상단 태그버튼 보이게끔 생성
+        SoundSearchFilterDto after = soundProcessor.replaceTagsToArray(before);
+        // 태그에 ","를 빼서 이쁘게 보이기
+        List<SoundSearchResultDto> afterSearch = soundProcessor.replaceCommaWithSpace(before);
 
+        // 프로세싱한 두개 하나로 합쳐서 보내기
         after.setSoundSearchResultDto(afterSearch);
         return after;
     }
 
-    public AlbumDto readAlbumByArtistName(String nickName){
+    // for manager
+    public List<AlbumDto> readAlbumByArtistName(String nickName){
         int userid = userRepository.findByNickname(nickName).orElseThrow();
 
         return albumService.readAlbumWithUserId(userid);
     }
 
+    // for manager
+    public List<MusicDto> readMusicByArtistName(String nickName){
+        int userid = userRepository.findByNickname(nickName).orElseThrow();
+
+        return musicService.readMusicWithUserId(userid);
+    }
+
+    // for admin
     public AlbumDto readAlbum(){
         return albumService.readAlbum();
     }
 
-    // ","로 이어진 태그문자열을 " " 로 바꾸어 프론트에서 예쁘게 보이기 위한 재단
-    public List<SoundSearchResultDto> replaceCommaWithSpace(List<SoundSearchResultDto> sounds) {
-        for (SoundSearchResultDto sound : sounds) {
-            if(sound.getInstrumentTagName()!=null){
-                String replaceInstTags = sound.getInstrumentTagName().replace(",", " ");
-                sound.setInstrumentTagName(replaceInstTags);
-            }
-            if(sound.getMoodTagName()!=null){
-                String replaceMoodTags = sound.getMoodTagName().replace("," , " ");
-                sound.setMoodTagName(replaceMoodTags);
-            }
-            if(sound.getGenreTagName()!=null){
-                String replaceGenreTags = sound.getGenreTagName().replace(","," ");
-                sound.setGenreTagName(replaceGenreTags);
-            }
-        }
-        return sounds;
-    }
+    // for admin
+    public List<MusicDto> readMusic(){ return musicService.readMusic(); }
 
-    //  태그를 분리하고 중복 제거
-    public SoundSearchFilterDto replaceTagsToArray(List<SoundSearchResultDto> sounds) {
-        SoundSearchFilterDto afterTags = new SoundSearchFilterDto();
-        Set<String> instTagSet = new HashSet<>();
-        Set<String> moodTagSet = new HashSet<>();
-        Set<String> genreTagSet = new HashSet<>();
-
-        for (SoundSearchResultDto sound : sounds) {
-            // Instrument tags 처리
-            if (sound.getInstrumentTagName() != null) {
-                // Split by space as well as commas, to ensure tags are separated correctly
-                String[] instTags = sound.getInstrumentTagName().split("[, ]+");
-                for (String tag : instTags) {
-                    if (!tag.isEmpty()) {
-                        instTagSet.add(tag.trim()); // Add only non-empty trimmed tags
-                    }
-                }
-            }
-
-            // Mood tags 처리
-            if (sound.getMoodTagName() != null) {
-                String[] moodTags = sound.getMoodTagName().split("[, ]+");
-                for (String tag : moodTags) {
-                    if (!tag.isEmpty()) {
-                        moodTagSet.add(tag.trim());
-                    }
-                }
-            }
-
-            // Genre tags 처리
-            if (sound.getGenreTagName() != null) {
-                String[] genreTags = sound.getGenreTagName().split("[, ]+");
-                for (String tag : genreTags) {
-                    if (!tag.isEmpty()) {
-                        genreTagSet.add(tag.trim());
-                    }
-                }
-            }
-        }
-
-        // Save the sets to the SoundServiceDto
-        afterTags.setInstTag(instTagSet);
-        afterTags.setMoodTag(moodTagSet);
-        afterTags.setGenreTag(genreTagSet);
-
-        return afterTags;
-    }
-
-
-
-
-
-
-
+    // for admin (tag #1)
+    public MoodTagDto readMoodTag(){ return moodTagService.readMoodTag(); }
+    // for admin (tag #2)
+    public GenreTagDto readGenreTag(){ return genreTagService.readGenreTag();}
+    // for admin (tag #3)
+    public InstrumentTagDto readInstTag(){ return instrumentTagService.readInstrumentTag();}
 }

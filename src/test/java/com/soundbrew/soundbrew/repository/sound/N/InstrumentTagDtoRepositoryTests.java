@@ -2,6 +2,8 @@ package com.soundbrew.soundbrew.repository.sound.N;
 
 import com.soundbrew.soundbrew.domain.sound.GenreTag;
 import com.soundbrew.soundbrew.domain.sound.InstrumentTag;
+import com.soundbrew.soundbrew.dto.sound.AlbumDto;
+import com.soundbrew.soundbrew.dto.sound.TagNameDto;
 import com.soundbrew.soundbrew.repository.sound.InstrumentTagRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AlbumService {
@@ -19,18 +20,23 @@ public class AlbumService {
         return albumRepository.save(album);
     }
 
-    public void updateAlbum(Album album, AlbumDto albumDto){
-        album.update(albumDto.getAlbumName(), albumDto.getDescription());
+    public void updateAlbum(int albumId, AlbumDto albumDto){
+        Album modify = albumRepository.findById(albumId).orElseThrow();
+        modify.update(albumDto.getAlbumName(), albumDto.getDescription());
     }
 
     public void deleteAlbum(int albumId){
         albumRepository.deleteById(albumId);
     }
 
-    public AlbumDto readAlbumWithUserId(int userId){
+    public List<AlbumDto> readAlbumWithUserId(int userId){
         List<Album> result = albumRepository.findByUserId(userId).orElseThrow();
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(result, AlbumDto.class);
+
+        List<AlbumDto> albumDtos = result.stream()
+                .map(album -> modelMapper.map(album, AlbumDto.class))
+                .collect(Collectors.toList());
+        return albumDtos;
     }
 
     public AlbumDto readAlbum(){
@@ -38,5 +44,6 @@ public class AlbumService {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(result, AlbumDto.class);
     }
+
 
 }

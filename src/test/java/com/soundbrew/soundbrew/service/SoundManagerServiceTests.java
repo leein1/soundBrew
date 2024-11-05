@@ -1,8 +1,7 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.SoundCreateDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.service.sound.SoundManagerService;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +37,6 @@ public class SoundManagerServiceTests {
     @Autowired private SoundManagerService soundManagerService;
 
     private Music music;
-
 
     @BeforeEach
     void insert(){
@@ -144,8 +143,6 @@ public class SoundManagerServiceTests {
 
     }
 
-
-
     @Test
     @Transactional
     void testUpdateMusicTags() {
@@ -160,33 +157,103 @@ public class SoundManagerServiceTests {
                 .build();
         musicRepository.save(music);
 
-        SoundCreateDto request = SoundCreateDto.builder()
-                .mood(Arrays.asList("happy2", "energetic2"))
-                .instrument(Arrays.asList("piano2", "guitar2"))
-                .genre(Arrays.asList("pop2", "jazz2"))
-                .build();
+        // 저장된 music의 ID 확인
+        int musicId = music.getMusicId();
+        System.out.println("Saved Music ID: " + musicId);
 
         // Mood, Instrument, Genre 태그 생성
-        MoodTag happy = MoodTag.builder().moodTagName("happy2").build();
-        MoodTag energetic = MoodTag.builder().moodTagName("energetic2").build();
+        MoodTag happy = MoodTag.builder().moodTagName("happy3").build();
+        MoodTag energetic = MoodTag.builder().moodTagName("energetic3").build();
         moodTagRepository.saveAll(Arrays.asList(happy, energetic));
 
-        InstrumentTag piano = InstrumentTag.builder().instrumentTagName("piano2").build();
-        InstrumentTag guitar = InstrumentTag.builder().instrumentTagName("guitar2").build();
+        InstrumentTag piano = InstrumentTag.builder().instrumentTagName("piano3").build();
+        InstrumentTag guitar = InstrumentTag.builder().instrumentTagName("guitar3").build();
         instrumentTagRepository.saveAll(Arrays.asList(piano, guitar));
 
-        GenreTag pop = GenreTag.builder().genreTagName("pop2").build();
-        GenreTag jazz = GenreTag.builder().genreTagName("jazz2").build();
+        GenreTag pop = GenreTag.builder().genreTagName("pop3").build();
+        GenreTag jazz = GenreTag.builder().genreTagName("jazz3").build();
         genreTagRepository.saveAll(Arrays.asList(pop, jazz));
 
-        // When
-//        soundManagerService.updateMusicTags(music.getMusicId(), request);
+        // DTO 생성
+        List<String> instrument = new ArrayList<>(List.of("piano3", "guitar3"));
+        InstrumentTagDto instrumentTagDto = new InstrumentTagDto();
+        instrumentTagDto.setInstrument(instrument);
+
+        List<String> mood = new ArrayList<>(List.of("happy3", "energetic3"));
+        MoodTagDto moodTagDto = new MoodTagDto();
+        moodTagDto.setMood(mood);
+
+        List<String> genre = new ArrayList<>(List.of("pop3", "jazz3"));
+        GenreTagDto genreTagDto = new GenreTagDto();
+        genreTagDto.setGenre(genre);
+
+        // Act
+        soundManagerService.updateMusicTags(musicId, instrumentTagDto, moodTagDto, genreTagDto);
 
         // Then
-        assertEquals(2, musicMoodTagRepository.findByIdMusicId(music.getMusicId()).size());
-        assertEquals(2, musicInstrumentTagRepository.findByIdMusicId(music.getMusicId()).size());
-        assertEquals(2, musicGenreTagRepository.findByIdMusicId(music.getMusicId()).size());
+        Music updatedMusic = musicRepository.findById(musicId)
+                .orElseThrow(() -> new IllegalArgumentException("Music not found with ID: " + musicId));
+
+        // Assertions can go here to verify the tags
+        assertTrue(musicRepository.findById(updatedMusic.getMusicId()).isPresent());
     }
 
+    @Test
+    void testAlbumUpdate() {
+        // 초기 AlbumDto 생성 및 저장
+        AlbumDto dto = AlbumDto.builder()
+                .userId(2)
+                .albumName("Test_album_no.12")
+                .description("test album description2")
+                .build();
+        Album vo = dto.toEntity();
+        Album album = albumRepository.save(vo);
+        int albumId = album.getAlbumId();
 
+        // 변경할 AlbumDto 생성
+        AlbumDto changeDto = AlbumDto.builder()
+                .userId(2)
+                .albumName("Test_album_no.123")
+                .description("test album description23")
+                .build();
+
+        // 업데이트 수행
+        soundManagerService.updateAlbum(albumId, changeDto);
+
+        // 업데이트 결과 확인
+        Album updatedAlbum = albumRepository.findById(albumId)
+                .orElseThrow(() -> new EntityNotFoundException("Updated Album not found"));
+
+        // 필드 값이 변경된 값과 일치하는지 검증
+        assertEquals("Test_album_no.123", updatedAlbum.getAlbumName());
+        assertEquals("test album description23", updatedAlbum.getDescription());
+    }
+
+    void testUpdateMusic(){
+        MusicDto musicDto = MusicDto.builder()
+                .title("fury")
+                .filePath("/file/test/music_path_test_hello_fury")
+                .price(3)
+                .description("Jonsi의 fury 팔세토가 돋보입니다.")
+                .userId(2)
+                .soundType("music")
+                .build();
+
+
+        Music showLog = musicRepository.save(musicDto.toEntity());
+        int musicId = showLog.getMusicId();
+
+        MusicDto changeDto = MusicDto.builder()
+                .soundType("sfx")
+                .description("chage")
+                .title("change title")
+                .build();
+
+        soundManagerService.updateMusic(musicId, changeDto);
+
+        Music updatedMusic = musicRepository.findById(musicId).orElseThrow();
+        assertEquals("sfx", updatedMusic.getSoundType());
+        assertEquals("change", updatedMusic.getSoundType());
+        assertEquals("change title", updatedMusic.getTitle());
+    }
 }

@@ -1,9 +1,11 @@
 package com.soundbrew.soundbrew.dto.sound;
 
 import com.soundbrew.soundbrew.domain.sound.Music;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class MusicDto {
     private int musicId;
     private int userId;

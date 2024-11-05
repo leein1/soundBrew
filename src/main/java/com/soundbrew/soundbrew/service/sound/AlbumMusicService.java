@@ -29,7 +29,7 @@ public class AlbumMusicService {
         albumMusicRepository.save(albumMusic);
     }
 
-    public List<SoundSearchResultDto> readTatal(SoundSearchRequestDto soundSearchRequestDto, Pageable pageable){
+    public List<SoundSearchResultDto> readTotal(SoundSearchRequestDto soundSearchRequestDto, Pageable pageable){
         List<SoundSearchResultDto> before = albumMusicRepository.search(soundSearchRequestDto, pageable);
         return before;
     }

@@ -5,6 +5,7 @@ import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
 import com.soundbrew.soundbrew.repository.custom.AlbumMusicRepositoryCustomImpl;
 import com.soundbrew.soundbrew.service.sound.SoundSearchService;
+import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Log4j2
 public class SoundSearchServiceTests {
+    @Autowired
+    private SoundProcessor soundProcessor;
 
     @Autowired
     private SoundSearchService soundSearchService;
@@ -74,7 +77,7 @@ public class SoundSearchServiceTests {
         List<SoundSearchResultDto> soundList = Arrays.asList(soundDto);
 
         // When
-        List<SoundSearchResultDto> result = soundSearchService.replaceCommaWithSpace(soundList);
+        List<SoundSearchResultDto> result = soundProcessor.replaceCommaWithSpace(soundList);
 
         // Then
         assertEquals("piano guitar", result.get(0).getInstrumentTagName());
@@ -95,7 +98,7 @@ public class SoundSearchServiceTests {
         List<SoundSearchResultDto> soundList = Arrays.asList(soundDto);
 
         // When
-        SoundSearchFilterDto result = soundSearchService.replaceTagsToArray(soundList);
+        SoundSearchFilterDto result = soundProcessor.replaceTagsToArray(soundList);
 
         // Then
         assertTrue(result.getInstTag().contains("piano"));

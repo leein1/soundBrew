@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.domain.sound;
 
+import com.soundbrew.soundbrew.dto.sound.TagNameDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,4 +26,8 @@ public class MoodTag {
     public void update(String moodTagName){
         this.moodTagName = moodTagName;
     }
+
+//    public void update(TagNameDto tagNameDto){
+//        this.moodTagName = tagNameDto.getAfterName();
+//    }
 }

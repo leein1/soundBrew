@@ -1,8 +1,10 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
+import com.soundbrew.soundbrew.dto.sound.GenreTagDto;
+import com.soundbrew.soundbrew.dto.sound.InstrumentTagDto;
+import com.soundbrew.soundbrew.dto.sound.MoodTagDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
-import com.soundbrew.soundbrew.repository.UserRepository;
 import com.soundbrew.soundbrew.repository.sound.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,12 +27,10 @@ class SoundAdminServiceTests {
     @Autowired private GenreTagRepository genreTagRepository;
     @Autowired private MoodTagRepository moodTagRepository;
     @Autowired private AlbumRepository albumRepository;
-    @Autowired private UserRepository userRepository;
 
     @Autowired private MusicInstrumentTagRepository musicInstrumentTagRepository;
     @Autowired private MusicMoodTagRepository musicMoodTagRepository;
     @Autowired private MusicGenreTagRepository musicGenreTagRepository;
-    @Autowired private AlbumMusicRepository albumMusicRepository;
 
     @Autowired private SoundAdminService soundAdminService;
     private Music music;
@@ -140,37 +140,20 @@ class SoundAdminServiceTests {
 
     }
 
-    @Test
-    void changeSpelling() {
-        String before = "rack";
-
-        GenreTag genreTag3 = GenreTag.builder()
-                .genreTagName("rack")
-                .build();
-        genreTagRepository.save(genreTag3);
-
-        SoundSearchRequestDto dto = new SoundSearchRequestDto();
-        dto.setGenre(List.of("chagetestest"));
-        soundAdminService.updateTagSpelling(before,dto);
-
-        assertEquals("chagetestest", dto.getGenre().get(0));
-    }
-
 //    @Test
-//    void testDeleteTag() {
-//        MoodTag deleteTest = MoodTag.builder()
-//                .moodTagName("crazy")
+//    void changeSpelling() {
+//        String before = "rack";
+//
+//        GenreTag genreTag3 = GenreTag.builder()
+//                .genreTagName("rack")
 //                .build();
-//        moodTagRepository.save(deleteTest);
+//        genreTagRepository.save(genreTag3);
 //
-//        String request = deleteTest.getMoodTagName();
-//        SoundRequestDto requestDto = SoundRequestDto.builder()
-//                .mood(Collections.singletonList(request))
-//                .build();
+//        SoundSearchRequestDto dto = new SoundSearchRequestDto();
+//        dto.setGenre(List.of("chagetestest"));
+//        soundAdminService.updateTagSpelling(before,dto);
 //
-//        soundAdminService.deleteTag(requestDto);
-//
-//        assertFalse(moodTagRepository.existsById(deleteTest.getMoodTagId()));
+//        assertEquals("chagetestest", dto.getGenre().get(0));
 //    }
 
     @Test
@@ -210,4 +193,65 @@ class SoundAdminServiceTests {
         // Then
         assertTrue(musicRepository.findById(music.getMusicId()).isEmpty());
     }
+
+    @Test
+    void testUpdateInstTagSpelling(){
+        InstrumentTag instrumentTag = InstrumentTag.builder()
+                .instrumentTagName("snaretest")
+                .build();
+        instrumentTagRepository.save(instrumentTag);
+        assertEquals("snaretest",instrumentTag.getInstrumentTagName());
+
+        soundAdminService.updateInstrumentTagSpelling("snaretest", "snarechange");
+        assertEquals("snarechange",instrumentTag.getInstrumentTagName());
+    }
+    @Test
+    void testUpdateMoodTagSpelling(){
+        MoodTag moodTag = MoodTag.builder()
+                .moodTagName("specialsad")
+                .build();
+        moodTagRepository.save(moodTag);
+        assertEquals("specialsad", moodTag.getMoodTagName());
+
+        soundAdminService.updateMoodTagSpelling("specialsad","specialchange");
+        assertEquals("specialchange", moodTag.getMoodTagName());
+    }
+    @Test
+    void testUpdateGenreTagSpelling(){
+        GenreTag genreTag = GenreTag.builder()
+                .genreTagName("dreampop")
+                .build();
+        genreTagRepository.save(genreTag);
+        assertEquals("dreampop", genreTag.getGenreTagName());
+
+        soundAdminService.updateGenreTagSpelling("dreampop", "dreamrnb");
+        assertEquals("dreamrnb", genreTag.getGenreTagName());
+    }
+
+    @Test
+    void testInstCreateTest(){
+        InstrumentTagDto instrumentTagDto= new InstrumentTagDto();
+        instrumentTagDto.setInstrument(List.of("specialviolin"));
+
+        soundAdminService.createInstTag(instrumentTagDto);
+
+        assertTrue(instrumentTagRepository.findByInstrumentTagName("specialviolin").isPresent());
+    }
+    @Test
+    void testMoodCreateTest(){
+        MoodTagDto moodTag = new MoodTagDto();
+        moodTag.setMood(List.of("specialhappy"));
+
+        soundAdminService.createMoodTag(moodTag);
+        assertTrue(moodTagRepository.findByMoodTagName("specialhappy").isPresent());
+    }
+    @Test
+    void testGenreCreateTest(){
+        GenreTagDto genreTagDto = new GenreTagDto();
+        genreTagDto.setGenre(List.of("specialPop"));
+
+        soundAdminService.createGenreTag(genreTagDto);
+        assertTrue(genreTagRepository.findByGenreTagName("specialPop").isPresent());
+    }
+
 }
