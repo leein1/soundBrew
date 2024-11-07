@@ -3,6 +3,7 @@ package com.soundbrew.soundbrew.controller.sound;
 import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
+import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
 import com.soundbrew.soundbrew.service.sound.SoundSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -54,13 +55,23 @@ public class SoundSearchController {
         soundSearchRequestDto.setAlbumId(albumId);
         Pageable pageable = null; // 페이징 필요없음
 
+        // 1. 받은 albumid로 검색
         SoundSearchFilterDto albums = soundSearchService.soundSearch(soundSearchRequestDto, pageable);
+        // 2. 1개를 담은 album 만들어두기 (album)
+        SoundSearchResultDto album = albums.getSoundSearchResultDto().isEmpty() ? null : albums.getSoundSearchResultDto().get(0);
+        // 3. 그리고 album에 있는 username(artist name)을 토대로 아티스트의 다른 앨범 목록도 준비해서 넘기기 (otherAlbums)
+        List<AlbumDto> albumDto = soundSearchService.readAlbumByArtistName(album.getUserName());
+
+        // album list
+        model.addAttribute("otherAlbums", albumDto);
+        //album one
+        model.addAttribute("album", album);
+        // music list
         model.addAttribute("sounds", albums.getSoundSearchResultDto());
 
-        List<AlbumDto> albumDto = soundSearchService.readAlbumByArtistName(soundSearchRequestDto.getNickname());
-        model.addAttribute("otherAlbums", albumDto);
+        //album, albums,
 
-        return "sound/album-list";
+        return "sound/album-one(미완성)";
     }
 
     // 1. 1명의 아티스트를 select, +해당 가수의 곡 목록 나열 2. 그 아티스트의 앨범들.
@@ -74,12 +85,12 @@ public class SoundSearchController {
 
         SoundSearchFilterDto artist = soundSearchService.soundSearch(soundSearchRequestDto,pageable);
         model.addAttribute("artist", artist.getSoundSearchResultDto());
-        return "sound/artist-one";
+        return "artist-one(미완성)";
     }
 
     // 1개의 음악을 select
     // parameter : music_id
-    @GetMapping(" /sounds/musics/{musicId}")
+    @GetMapping("/sounds/musics/{musicId}")
     public String getSoundOne(@PathVariable("musicId")int musicId, Model model){
         // 파라미터 사전 준비
         SoundSearchRequestDto soundSearchRequestDto = new SoundSearchRequestDto();
@@ -91,7 +102,7 @@ public class SoundSearchController {
         model.addAttribute("instTags", sound.getInstTag());
         model.addAttribute("moodTags", sound.getMoodTag());
         model.addAttribute("genreTags", sound.getGenreTag());
-        return "sound/sound";
+        return "sound(미완성)";
     }
 
 }

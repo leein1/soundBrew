@@ -6,10 +6,7 @@ import com.soundbrew.soundbrew.dto.sound.MoodTagDto;
 import com.soundbrew.soundbrew.service.sound.SoundAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class SoundAdminController {
@@ -18,50 +15,50 @@ public class SoundAdminController {
 
     // 앨범 지우기
     @DeleteMapping("/admin/albums/{albumId}")
-    public String deleteAlbum(@ModelAttribute int albumId){
+    public String deleteAlbum(@PathVariable("albumId") int albumId){
         // 권한 확인
 
         soundAdminService.deleteAlbum(albumId);
 
-        return "";
+        return "empty";
     }
 
     // 음악 지우기
     @DeleteMapping("/admin/musics/{musicId}")
-    public String deleteMusic(@ModelAttribute int MusicId){
+    public String deleteMusic(@PathVariable("musicId") int MusicId){
         // 권한 확인
 
         soundAdminService.deleteMusic(MusicId);
 
-        return "";
+        return "empty";
     }
 
     // 인스트루먼트 태그 이름 바꾸기
     @PatchMapping("/admin/tags/instruments")
-    public String changeInstSpelling(@ModelAttribute String beforeName, @ModelAttribute String afterName){
+    public String changeInstSpelling(@ModelAttribute("beforeName") String beforeName, @ModelAttribute("afterName") String afterName){
         // 프로세서, 벨리데이터
 
         soundAdminService.updateInstrumentTagSpelling(beforeName,afterName);
 
-        return "";
+        return "empty";
     }
 
     // 무드 태그 이름 바꾸기
     @PatchMapping("/admin/tags/moods")
-    public String changeMoodSpelling(@ModelAttribute String beforeName, @ModelAttribute String afterName){
+    public String changeMoodSpelling(@ModelAttribute("beforeName") String beforeName, @ModelAttribute("afterName") String afterName){
         // 프로세서, 벨리데이터
 
         soundAdminService.updateGenreTagSpelling(beforeName,afterName);
-        return "";
+        return "empty";
     }
 
     // 장르 태그 이름 바꾸기
     @PatchMapping("/admin/tags/genres")
-    public String changeGenreSpelling(@ModelAttribute String beforeName, @ModelAttribute String afterName){
+    public String changeGenreSpelling(@ModelAttribute("beforeName") String beforeName, @ModelAttribute("afterName") String afterName){
         // 프로세서, 벨리데이터
 
         soundAdminService.updateGenreTagSpelling(beforeName,afterName);
-        return "";
+        return "empty";
     }
 
     // 인스트루먼트 태그 만들기
@@ -70,7 +67,7 @@ public class SoundAdminController {
         // 프로세서, 벨리데이터
 
         soundAdminService.createInstTag(instrumentTagDto);
-        return "";
+        return "empty";
     }
 
     // 무드 태그 이름 만들기
@@ -79,7 +76,7 @@ public class SoundAdminController {
         // 프로세서, 벨리데이터
 
         soundAdminService.createMoodTag(moodTagDto);
-        return "";
+        return "empty";
     }
 
     // 장르 태그 이름 만들기
@@ -88,6 +85,6 @@ public class SoundAdminController {
         // 프로세서, 벨리데이터
 
         soundAdminService.createGenreTag(genreTagDto);
-        return "";
+        return "empty";
     }
 }

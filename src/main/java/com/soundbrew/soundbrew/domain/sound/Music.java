@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(of = {"title", "userId"})
 @Entity
+@Setter
 public class Music extends BaseEntity {
 
     @Id
@@ -47,6 +48,8 @@ public class Music extends BaseEntity {
     @OneToMany(mappedBy = "music", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MusicGenreTag> musicGenreTag ; // 태그와의 관계 추가
 
+    @OneToMany(mappedBy = "music", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<AlbumMusic> albumMusics = new ArrayList<>();
     public void update(String title, String description, String soundType){
         this.title = title;
         this.description = description;

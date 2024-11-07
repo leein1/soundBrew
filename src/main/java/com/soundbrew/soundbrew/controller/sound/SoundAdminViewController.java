@@ -21,7 +21,7 @@ public class SoundAdminViewController {
     @GetMapping("/admin")
     public String getAdminPage(){
 
-        return "";
+        return "admin/sounds/admin-sounds";
     }
 
     // 태그들 보기 (이름변경, 태그 추가)
@@ -33,7 +33,7 @@ public class SoundAdminViewController {
         model.addAttribute("moodTags",soundSearchService.readMoodTag());
 
 
-        return "";
+        return "admin/sounds/admin-tags";
     }
 
     // 앨범들 보기 (보면 get앨범 페이지로 이동하거나, 옆의 삭제 버튼 눌러서 삭제 기능 있음)
@@ -42,7 +42,7 @@ public class SoundAdminViewController {
         // 앨범을 가져오는 서비스 메서드 호출(다른 정보는 필요없음) ** 모든 정보
         model.addAttribute("albums", soundSearchService.readAlbum());
 
-        return "";
+        return "admin/sounds/admin-albums";
     }
 
     // 음악들 보기 (...)
@@ -51,6 +51,6 @@ public class SoundAdminViewController {
         // 음악을 가져오는 서비스 메서드 호출( 다른정보는 필요없) ** 모든 정보
         model.addAttribute("sounds", soundSearchService.readMusic());
 
-        return "";
+        return "admin/sounds/admin-musics";
     }
 }

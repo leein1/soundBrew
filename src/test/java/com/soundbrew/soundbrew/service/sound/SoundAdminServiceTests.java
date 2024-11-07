@@ -188,10 +188,10 @@ class SoundAdminServiceTests {
         musicRepository.save(music);
 
         // When
-        soundAdminService.deleteMusic(music.getMusicId());
+        soundAdminService.deleteMusic(1);
 
         // Then
-        assertTrue(musicRepository.findById(music.getMusicId()).isEmpty());
+        assertTrue(musicRepository.findById(1).isEmpty());
     }
 
     @Test

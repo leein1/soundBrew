@@ -3,6 +3,7 @@ package com.soundbrew.soundbrew.dto.sound;
 import com.soundbrew.soundbrew.domain.sound.Album;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data

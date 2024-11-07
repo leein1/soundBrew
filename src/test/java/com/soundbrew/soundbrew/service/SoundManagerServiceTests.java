@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -229,6 +230,7 @@ public class SoundManagerServiceTests {
         assertEquals("test album description23", updatedAlbum.getDescription());
     }
 
+    @Test
     void testUpdateMusic(){
         MusicDto musicDto = MusicDto.builder()
                 .title("fury")
@@ -245,7 +247,7 @@ public class SoundManagerServiceTests {
 
         MusicDto changeDto = MusicDto.builder()
                 .soundType("sfx")
-                .description("chage")
+                .description("change")
                 .title("change title")
                 .build();
 
@@ -253,7 +255,8 @@ public class SoundManagerServiceTests {
 
         Music updatedMusic = musicRepository.findById(musicId).orElseThrow();
         assertEquals("sfx", updatedMusic.getSoundType());
-        assertEquals("change", updatedMusic.getSoundType());
+        assertEquals("change", updatedMusic.getDescription());
         assertEquals("change title", updatedMusic.getTitle());
     }
+
 }
