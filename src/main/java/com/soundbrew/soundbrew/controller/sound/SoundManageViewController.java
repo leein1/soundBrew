@@ -17,7 +17,7 @@ public class SoundManageViewController {
     @GetMapping("/manage")
     public String getManagePage(){
 
-        return "sound/manage/manage-sounds(미완성)";
+        return "sound/manage/manage-main";
     }
 
     // 앨범들 보기 (보면 get앨범 페이지로 이동하거나, 옆의 삭제 버튼 눌러서 삭제 기능 있음)
@@ -26,9 +26,9 @@ public class SoundManageViewController {
         // 앨범을 가져오는 서비스 메서드 호출(다른 정보는 필요없음) ** 본인꺼만.**
 
         // 개인정보를 가저오는 내부 메서드(ex. 쿠키 토큰 등,)
-        String myName = "kimtest";
-        model.addAttribute("myAlbums",soundSearchService.readAlbumByArtistName(myName));
-        return "sound/manage/manage-albums(미완성)";
+        String myName = "u_1";
+//        model.addAttribute("myAlbums",soundSearchService.readAlbumByArtistName(myName));
+        return "sound/manage/manage-albums";
     }
 
     // 음악들 보기 (...)
@@ -40,13 +40,13 @@ public class SoundManageViewController {
         String myName = "kimtest";
 
         model.addAttribute("mySounds",soundSearchService.readMusicByArtistName(myName));
-        return "sound/manage/manage-musics(미완성)";
+        return "sound/manage/manage-musics";
     }
 
     // 음원 업로드 페이지
     @GetMapping("/manage/uploads")
     public String getMusicUpload(@ModelAttribute SoundSearchRequestDto soundSearchRequestDto,
                                  Model model){
-        return "sound/manage/manage-uploads(미완성)";
+        return "sound/manage/manage-uploads";
     }
 }

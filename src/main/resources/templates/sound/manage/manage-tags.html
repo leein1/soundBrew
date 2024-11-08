@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<th:block layout:fragment="script">
+    <!-- 해당 페이지 전용 js-->
+    <script th:src="@{/js/manage-tags.js}"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link th:href="@{/css/manage-tags.css}" rel="stylesheet">
+</head>
+
+<body>
+<div class="content">
+    <div class="content-header">Manage Information</div>
+    <div class="content-body">
+        <h3>앨범 정보 수정</h3>
+        <table class="table-container">
+            <tr>
+                <th>ID</th>
+                <th>아티스트</th>
+                <th>타이틀</th>
+                <th>악기 태그</th>
+                <th>무드 태그</th>
+                <th>장르 태그</th>
+                <th>수정일</th>
+                <th>작업</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Jonsi</td>
+                <td>My Album Title</td>
+                <td>
+                    <span class="current-value" data-field="instTags">Guitar, Piano</span>
+                    <button class="tag-search-button" onclick="openTagModal('instrument')">태그 찾기</button>
+                </td>
+                <td>
+                    <span class="current-value" data-field="moodTags">Happy, Chill</span>
+                    <button class="tag-search-button" onclick="openTagModal('mood')">태그 찾기</button>
+                </td>
+                <td>
+                    <span class="current-value" data-field="genreTags">Rock, Jazz</span>
+                    <button class="tag-search-button" onclick="openTagModal('genre')">태그 찾기</button>
+                </td>
+                <td>2024-01-10</td>
+                <td>
+                    <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
+                    <button class="apply-button" onclick="applyChanges(this, 1)">적용</button>
+                    <button class="cancel-button" onclick="cancelChanges(this)">취소</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- 모달 -->
+<div id="tagModal" class="modal">
+    <div class="modal-content">
+        <h3>태그 선택</h3>
+        <div id="tagList"></div>
+        <button onclick="closeTagModal()">확인</button>
+        <button onclick="cancelTagSelection()">취소</button>
+    </div>
+</div>
+
+
+</body>
+</html>

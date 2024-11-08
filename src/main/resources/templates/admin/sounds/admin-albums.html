@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<th:block layout:fragment="script">
+    <!-- 해당 페이지 전용 js-->
+    <script th:src="@{/js/admin-albums.js}"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Albums</title>
+</head>
+
+<body>
+    <div class="content">
+        <div class="content-header">Admin Albums</div>
+        <div class="content-body">
+            <!-- Table for Album Management -->
+            <h3>앨범 관리</h3>
+            <table class="table-container">
+                <tr>
+                    <th>ID</th>
+                    <th>아티스트</th>
+                    <th>타이틀</th>
+                    <th>앨범 설명</th>
+                    <th>업로드일</th>
+                    <th>수정일</th>
+                    <th>작업</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Jonsi</td>
+                    <td>My Album Title</td>
+                    <td>My Album Description</td>
+                    <td>2024-01-10</td>
+                    <td>2024-01-10</td>
+                    <td>
+                        <!-- Delete button -->
+                        <button class="delete-button" onclick="confirmDelete(1)">삭제</button>
+                    </td>
+                </tr>
+                <!-- Repeat rows as needed -->
+            </table>
+        </div>
+    </div>
+</body>
+
+<!-- Additional JS scripts -->
+<script src="/static/js/darkmode.js"></script>
+<script src="/static/js/sidebarExpand.js"></script>
+<script src="/static/js/musicPlayer.js"></script>
+</html>

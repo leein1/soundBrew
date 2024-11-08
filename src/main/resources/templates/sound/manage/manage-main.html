@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link th:href="@{/css/manage-main.css}" rel="stylesheet">
+</head>
+
+<body>
+    <div layout:fragment="content">
+    <div class="content-header">
+        Sounds Manage
+    </div>
+    <div class="content-body">
+        <div class="question-list">
+            <div class="frequently-list">
+                <span class="question-title">Sounds Manage</span>
+                <div><span class="sub-text">아티스트를 위한 음원 등록, 등록했던 앨범과 음원 정보 수정하기</span></div>
+                <li>
+                    <span class="main-text">음원 업로드</span><br>
+                    <span class="sub-text">Album, Music, Instrument Tag, Mood Tag, Genre Tag</span>
+                    <img src="../images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                </li>
+                <li>
+                    <span class="main-text">앨범 정보 수정</span><br>
+                    <span class="sub-text">Title, Description</span>
+                    <img src="../images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                </li>
+                <li>
+                    <span class="main-text">음원 정보 수정</span><br>
+                    <span class="sub-text">Title, Description, soundType</span>
+                    <img src="../images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                </li>
+                <li>
+                    <span class="main-text">태그 정보 수정</span><br>
+                    <span class="sub-text">Instrument Tag, Mood Tag, Genre Tag</span>
+                    <img src="../images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                </li>
+            </div>
+
+        </div>
+    </div>
+    </div><!-- end article -->
+</body>
+<!-- 다크모드 js -->
+<script src="/static/js/darkmode.js"></script>
+<!-- 사이드바 확장 js -->
+<script src="/static/js/sidebarExpand.js"></script>
+<!-- 뮤직 플레이어 js -->
+<script src="/static/js/musicPlayer.js"></script>
+</html>
