@@ -1,17 +1,13 @@
 package com.soundbrew.soundbrew.controller.sound;
 
-import com.soundbrew.soundbrew.domain.sound.Music;
 import com.soundbrew.soundbrew.dto.sound.*;
-import com.soundbrew.soundbrew.service.sound.SoundManagerService;
-import org.junit.jupiter.api.BeforeEach;
+import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
@@ -27,18 +23,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SoundManageControllerTest {
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private WebApplicationContext context;
 
-    @MockBean
-    private SoundManagerService soundManagerService;
-
     @Test
+    @Transactional
     void createSound() throws Exception {
         AlbumDto albumDto = AlbumDto.builder()
                 .userId(2)
-                .albumName("Test_album_no.1")
+                .albumName("Test_albm_no.1")
                 .albumArtPath("/test/test/path")
                 .description("test album description")
                 .build();
@@ -52,19 +45,15 @@ class SoundManageControllerTest {
                 .soundType("music")
                 .build();
 
-        InstrumentTagDto instrumentTagDto = new InstrumentTagDto();
-        instrumentTagDto.setInstrument(List.of("guitar","piano"));
-        MoodTagDto moodTagDto = new MoodTagDto();
-        moodTagDto.setMood(List.of("happy","sad"));
-        GenreTagDto genreTagDto = new GenreTagDto();
-        genreTagDto.setGenre(List.of("rock"));
+        TagsDto tagsDto = new TagsDto();
+        tagsDto.setInstrument(List.of("guitar","piano"));
+        tagsDto.setMood(List.of("happy","sad"));
+        tagsDto.setGenre(List.of("rock"));
 
         mockMvc.perform(post("/manage/sounds")
                         .flashAttr("albumDto", albumDto)
                         .flashAttr("musicDto",musicDto)
-                        .flashAttr("instrumentTagDto",instrumentTagDto)
-                        .flashAttr("moodTagDto",moodTagDto)
-                        .flashAttr("genreTagDto",genreTagDto)
+                        .flashAttr("tagsDto", tagsDto)
                 )
                 .andDo(print())
                 .andExpect(status().isOk()) // 예상되는 상태 코드
@@ -91,8 +80,8 @@ class SoundManageControllerTest {
     void updateMusic() throws Exception {
         // 업데이트할 데이터 준비
         MusicDto musicDto = MusicDto.builder()
-                .title("Updated Music Title")
-                .description("Updated description of the music")
+                .title("Updated Music Title2")
+                .description("Updated description of the music2")
                 .soundType("sfx")
                 .build();
 
@@ -105,21 +94,16 @@ class SoundManageControllerTest {
     }
 
     @Test
+    @Transactional
     void updateMusicTags() throws Exception {
-        InstrumentTagDto instrumentTagDto = new InstrumentTagDto();
-        instrumentTagDto.setInstrument(List.of("newGuitar", "newPiano"));
+        TagsDto tagsDto = new TagsDto();
+        tagsDto.setInstrument(List.of("guitar", "piano"));
+        tagsDto.setMood(List.of("energetic2"));
+        tagsDto.setGenre(List.of("ballad"));
 
-        MoodTagDto moodTagDto = new MoodTagDto();
-        moodTagDto.setMood(List.of("energetic", "calm"));
-
-        GenreTagDto genreTagDto = new GenreTagDto();
-        genreTagDto.setGenre(List.of("electronic", "jazz"));
-
-        mockMvc.perform(post("/manage/musics/1/tags")
+        mockMvc.perform(post("/manage/musics/11/tags")
                         .flashAttr("musicId", 1)
-                        .flashAttr("instrumentTagDto", instrumentTagDto)
-                        .flashAttr("moodTagDto", moodTagDto)
-                        .flashAttr("genreTagDto", genreTagDto))
+                        .flashAttr("tagsDto", tagsDto))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("empty"));

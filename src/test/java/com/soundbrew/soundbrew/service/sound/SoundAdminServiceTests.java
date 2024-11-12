@@ -1,11 +1,10 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.sound.GenreTagDto;
-import com.soundbrew.soundbrew.dto.sound.InstrumentTagDto;
-import com.soundbrew.soundbrew.dto.sound.MoodTagDto;
+import com.soundbrew.soundbrew.dto.sound.TagsDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
 import com.soundbrew.soundbrew.repository.sound.*;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,16 +31,18 @@ class SoundAdminServiceTests {
     @Autowired private MusicMoodTagRepository musicMoodTagRepository;
     @Autowired private MusicGenreTagRepository musicGenreTagRepository;
 
-    @Autowired private SoundAdminService soundAdminService;
+    @Autowired private SoundServiceImpl soundService;
+    @Autowired private TagsServiceImpl tagsService;
+
     private Music music;
 
     @BeforeEach
     void insert(){
         //컨트롤러에서 넘어온 리퀘스트
         SoundSearchRequestDto request = SoundSearchRequestDto.builder()
-                .mood(new ArrayList<>(Arrays.asList("sad", "sadtest")))                   // Mood 태그 추가
-                .instrument(new ArrayList<>(Arrays.asList("snare", "snaretest2")))  // Instrument 태그 추가
-                .genre(new ArrayList<>(Arrays.asList("rock", "rocktest")))                   // Genre 태그 추가
+                .mood(new ArrayList<>(Arrays.asList("sadservice", "sadtestservice")))                   // Mood 태그 추가
+                .instrument(new ArrayList<>(Arrays.asList("snareservice", "snaretest2service")))  // Instrument 태그 추가
+                .genre(new ArrayList<>(Arrays.asList("rockservice", "rocktestservice")))                   // Genre 태그 추가
                 .build();
 
         //음악
@@ -57,29 +58,29 @@ class SoundAdminServiceTests {
 
         //태그들
         MoodTag moodTag = MoodTag.builder()
-                .moodTagName("sad")
+                .moodTagName("sadservice")
                 .build();
         moodTagRepository.save(moodTag);
         MoodTag moodTag2 = MoodTag.builder()
-                .moodTagName("sadtest")
+                .moodTagName("sadtestservice")
                 .build();
         moodTagRepository.save(moodTag2);
 
         InstrumentTag instrumentTag = InstrumentTag.builder()
-                .instrumentTagName("snare")
+                .instrumentTagName("snareservice")
                 .build();
         instrumentTagRepository.save(instrumentTag);
         InstrumentTag instrumentTag2 = InstrumentTag.builder()
-                .instrumentTagName("snaretest2")
+                .instrumentTagName("snaretest2service")
                 .build();
         instrumentTagRepository.save(instrumentTag2);
 
         GenreTag genreTag= GenreTag.builder()
-                .genreTagName("rock")
+                .genreTagName("rockservice")
                 .build();
         genreTagRepository.save(genreTag);
         GenreTag genreTag2= GenreTag.builder()
-                .genreTagName("rocktest")
+                .genreTagName("rocktestservice")
                 .build();
         genreTagRepository.save(genreTag2);
 
@@ -161,14 +162,14 @@ class SoundAdminServiceTests {
         // Given
         Album album = Album.builder()
                 .userId(2)
-                .albumName("Test_album_no.1")
+                .albumName("Test_abum_no.1")
                 .albumArtPath("/test/test/path")
                 .description("test album description")
                 .build();
         albumRepository.save(album);
 
         // When
-        soundAdminService.deleteAlbum(album.getAlbumId());
+        soundService.deleteAlbum(album.getAlbumId());
 
         // Then
         assertTrue(albumRepository.findById(album.getAlbumId()).isEmpty());
@@ -188,7 +189,7 @@ class SoundAdminServiceTests {
         musicRepository.save(music);
 
         // When
-        soundAdminService.deleteMusic(1);
+        soundService.deleteMusic(1);
 
         // Then
         assertTrue(musicRepository.findById(1).isEmpty());
@@ -202,7 +203,7 @@ class SoundAdminServiceTests {
         instrumentTagRepository.save(instrumentTag);
         assertEquals("snaretest",instrumentTag.getInstrumentTagName());
 
-        soundAdminService.updateInstrumentTagSpelling("snaretest", "snarechange");
+        tagsService.updateInstrumentTagSpelling("snaretest", "snarechange");
         assertEquals("snarechange",instrumentTag.getInstrumentTagName());
     }
     @Test
@@ -213,7 +214,7 @@ class SoundAdminServiceTests {
         moodTagRepository.save(moodTag);
         assertEquals("specialsad", moodTag.getMoodTagName());
 
-        soundAdminService.updateMoodTagSpelling("specialsad","specialchange");
+        tagsService.updateMoodTagSpelling("specialsad","specialchange");
         assertEquals("specialchange", moodTag.getMoodTagName());
     }
     @Test
@@ -224,33 +225,33 @@ class SoundAdminServiceTests {
         genreTagRepository.save(genreTag);
         assertEquals("dreampop", genreTag.getGenreTagName());
 
-        soundAdminService.updateGenreTagSpelling("dreampop", "dreamrnb");
+        tagsService.updateGenreTagSpelling("dreampop", "dreamrnb");
         assertEquals("dreamrnb", genreTag.getGenreTagName());
     }
 
     @Test
     void testInstCreateTest(){
-        InstrumentTagDto instrumentTagDto= new InstrumentTagDto();
-        instrumentTagDto.setInstrument(List.of("specialviolin"));
+        TagsDto tagsDto = new TagsDto();
+        tagsDto.setInstrument(List.of("specialviolin"));
 
-        soundAdminService.createInstTag(instrumentTagDto);
+        tagsService.createInstTag(tagsDto);
 
         assertTrue(instrumentTagRepository.findByInstrumentTagName("specialviolin").isPresent());
     }
     @Test
     void testMoodCreateTest(){
-        MoodTagDto moodTag = new MoodTagDto();
-        moodTag.setMood(List.of("specialhappy"));
+        TagsDto tagsDto = new TagsDto();
+        tagsDto.setMood(List.of("specialhappy"));
 
-        soundAdminService.createMoodTag(moodTag);
+        tagsService.createMoodTag(tagsDto);
         assertTrue(moodTagRepository.findByMoodTagName("specialhappy").isPresent());
     }
     @Test
     void testGenreCreateTest(){
-        GenreTagDto genreTagDto = new GenreTagDto();
-        genreTagDto.setGenre(List.of("specialPop"));
+        TagsDto tagsDto = new TagsDto();
+        tagsDto.setGenre(List.of("specialPop"));
 
-        soundAdminService.createGenreTag(genreTagDto);
+        tagsService.createGenreTag(tagsDto);
         assertTrue(genreTagRepository.findByGenreTagName("specialPop").isPresent());
     }
 

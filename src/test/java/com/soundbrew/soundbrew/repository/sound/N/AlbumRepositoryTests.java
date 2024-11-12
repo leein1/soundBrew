@@ -26,14 +26,14 @@ public class AlbumRepositoryTests {
     void testCreate(){
         AlbumDto dto = AlbumDto.builder()
                 .userId(2)
-                .albumName("Test_album_no.1")
+                .albumName("Test_album_no.12")
                 .albumArtPath("/test/test/path")
                 .description("test album description")
                 .build();
         Album vo = dto.toEntity();
 
         Album showLog = albumRepository.saveAndFlush(vo);
-        assertEquals("Test_album_no.1",showLog.getAlbumName());
+        assertEquals("Test_album_no.12",showLog.getAlbumName());
         assertEquals("/test/test/path",showLog.getAlbumArtPath());
         assertEquals("test album description",showLog.getDescription());
 
@@ -45,6 +45,12 @@ public class AlbumRepositoryTests {
         int albumId = 11;
 
         Album showLog = albumRepository.findById(albumId).orElse(null);
+
+        log.info(showLog.getCreate_date());log.info(showLog.getCreate_date());log.info(showLog.getCreate_date());log.info(showLog.getCreate_date());log.info(showLog.getCreate_date());
+
+
+
+
 
         log.info(showLog);
     }

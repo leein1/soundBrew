@@ -1,17 +1,17 @@
 package com.soundbrew.soundbrew.controller.sound;
 
 import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
-import com.soundbrew.soundbrew.service.sound.SoundSearchService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
+@AllArgsConstructor
 public class SoundManageViewController {
-    @Autowired
-    private SoundSearchService soundSearchService;
+    private final SoundServiceImpl soundService;
 
     // 관리페이지 호출(qna페이지 처럼 항목들로 주르륵)
     @GetMapping("/manage")
@@ -27,7 +27,7 @@ public class SoundManageViewController {
 
         // 개인정보를 가저오는 내부 메서드(ex. 쿠키 토큰 등,)
         String myName = "u_1";
-//        model.addAttribute("myAlbums",soundSearchService.readAlbumByArtistName(myName));
+        model.addAttribute("myAlbums",soundService.readAlbumByArtistName(myName));
         return "sound/manage/manage-albums";
     }
 
@@ -39,7 +39,7 @@ public class SoundManageViewController {
         // 개인정보를 가져오는 내부 메서드(ex. 쿠키 토큰 등)
         String myName = "kimtest";
 
-        model.addAttribute("mySounds",soundSearchService.readMusicByArtistName(myName));
+        model.addAttribute("mySounds",soundService.readMusicByArtistName(myName));
         return "sound/manage/manage-musics";
     }
 

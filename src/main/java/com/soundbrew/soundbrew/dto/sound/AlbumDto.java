@@ -1,12 +1,18 @@
 package com.soundbrew.soundbrew.dto.sound;
 
+import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.sound.Album;
+import com.soundbrew.soundbrew.domain.sound.AlbumMusic;
+import com.soundbrew.soundbrew.domain.sound.AlbumMusicId;
+import com.soundbrew.soundbrew.domain.sound.Music;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class AlbumDto {
     private int albumId;
@@ -23,4 +29,5 @@ public class AlbumDto {
                 .description(this.description)
                 .build();
     }
+
 }

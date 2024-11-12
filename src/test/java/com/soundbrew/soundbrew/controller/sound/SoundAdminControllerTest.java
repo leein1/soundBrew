@@ -1,17 +1,18 @@
 package com.soundbrew.soundbrew.controller.sound;
 
 import com.soundbrew.soundbrew.dto.sound.GenreTagDto;
-import com.soundbrew.soundbrew.dto.sound.InstrumentTagDto;
+import com.soundbrew.soundbrew.dto.sound.TagsDto;
 import com.soundbrew.soundbrew.dto.sound.MoodTagDto;
-import com.soundbrew.soundbrew.service.sound.SoundAdminService;
+import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
+import com.soundbrew.soundbrew.service.sound.TagsServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.mockito.Mockito.times;
@@ -23,13 +24,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class SoundAdminControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private SoundAdminService soundAdminService;
+    private TagsServiceImpl soundAdminService;
 
     @Test
     void deleteAlbum() throws Exception {
@@ -42,7 +44,7 @@ public class SoundAdminControllerTest {
 
     @Test
     void deleteMusic() throws Exception {
-        mockMvc.perform(delete("/admin/musics/251")
+        mockMvc.perform(delete("/admin/musics/277")
                         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -52,12 +54,12 @@ public class SoundAdminControllerTest {
     @Test
     void changeInstSpelling() throws Exception {
         mockMvc.perform(patch("/admin/tags/instruments")
-                        .flashAttr("beforeName", "oldInstrument")
-                        .flashAttr("afterName", "newInstrument"))
+                        .flashAttr("beforeName", "newInstrument")
+                        .flashAttr("afterName", "newrealInstrument"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("empty"));
-        verify(soundAdminService, times(1)).updateInstrumentTagSpelling("oldInstrument", "newInstrument");
+        verify(soundAdminService, times(1)).updateInstrumentTagSpelling("newInstrument", "newrealInstrument");
     }
 
     @Test
@@ -82,11 +84,11 @@ public class SoundAdminControllerTest {
 
     @Test
     void makeInstTag() throws Exception {
-        InstrumentTagDto instrumentTagDto = new InstrumentTagDto();
-        instrumentTagDto.setInstrument(List.of("newInstrument"));
+        TagsDto tagsDto = new TagsDto();
+        tagsDto.setInstrument(List.of("newreadInstrument"));
 
         mockMvc.perform(post("/admin/tags/instruments")
-                        .flashAttr("instrumentTagDto", instrumentTagDto))
+                        .flashAttr("tagsDto", tagsDto))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("empty"));
@@ -94,11 +96,11 @@ public class SoundAdminControllerTest {
 
     @Test
     void makeMoodTag() throws Exception {
-        MoodTagDto moodTagDto = new MoodTagDto();
-        moodTagDto.setMood(List.of("newMood"));
+        TagsDto tagsDto = new TagsDto();
+        tagsDto.setMood(List.of("newMood"));
 
         mockMvc.perform(post("/admin/tags/moods")
-                        .flashAttr("moodTagDto", moodTagDto))
+                        .flashAttr("tagsDto", tagsDto))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("empty"));
@@ -110,7 +112,7 @@ public class SoundAdminControllerTest {
         genreTagDto.setGenre(List.of("newGenre"));
 
         mockMvc.perform(post("/admin/tags/genres")
-                        .flashAttr("genreTagDto", genreTagDto))
+                        .flashAttr("tagsDto", genreTagDto))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("empty"));

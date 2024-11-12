@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sound Test</title>
+</head>
+<body>
+<h1>Sound Test</h1>
+<!-- 음원 스트리밍 테스트를 위한 오디오 플레이어 -->
+<audio id="audioPlayer" controls>
+    <source src="/stream/test-sound" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const audio = document.getElementById("audioPlayer");
+
+        // 재생 버튼 클릭 시 콘솔에 메시지를 출력합니다.
+        audio.addEventListener("play", () => {
+            console.log("Audio is playing...");
+        });
+
+        // 일시 정지 버튼 클릭 시 메시지를 출력합니다.
+        audio.addEventListener("pause", () => {
+            console.log("Audio is paused.");
+        });
+    });
+</script>
+</body>
+</html>

@@ -42,7 +42,7 @@
         <!-- 앨범 모듈 -->
         <div  th:insert="~{module/album::albumModule}"></div>
         <!-- 곡 리스트 모듈 -->
-        <div th:insert="~{module/music::musicModule}"></div>
+        <div th:insert="~{module/music :: musicModule(${sounds})}"></div>
     </div>
 </div>
 

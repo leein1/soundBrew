@@ -1,24 +1,25 @@
 package com.soundbrew.soundbrew.controller.sound;
 
-import com.soundbrew.soundbrew.dto.sound.GenreTagDto;
-import com.soundbrew.soundbrew.dto.sound.InstrumentTagDto;
-import com.soundbrew.soundbrew.dto.sound.MoodTagDto;
-import com.soundbrew.soundbrew.service.sound.SoundAdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.soundbrew.soundbrew.dto.sound.TagsDto;
+import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
+import com.soundbrew.soundbrew.service.sound.TagsServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@AllArgsConstructor
 public class SoundAdminController {
-    @Autowired
-    private SoundAdminService soundAdminService;
+    private final SoundServiceImpl soundService;
+    private final TagsServiceImpl tagsService;
+
 
     // 앨범 지우기
     @DeleteMapping("/admin/albums/{albumId}")
     public String deleteAlbum(@PathVariable("albumId") int albumId){
         // 권한 확인
 
-        soundAdminService.deleteAlbum(albumId);
+        soundService.deleteAlbum(albumId);
 
         return "empty";
     }
@@ -28,7 +29,7 @@ public class SoundAdminController {
     public String deleteMusic(@PathVariable("musicId") int MusicId){
         // 권한 확인
 
-        soundAdminService.deleteMusic(MusicId);
+        soundService.deleteMusic(MusicId);
 
         return "empty";
     }
@@ -38,7 +39,7 @@ public class SoundAdminController {
     public String changeInstSpelling(@ModelAttribute("beforeName") String beforeName, @ModelAttribute("afterName") String afterName){
         // 프로세서, 벨리데이터
 
-        soundAdminService.updateInstrumentTagSpelling(beforeName,afterName);
+        tagsService.updateInstrumentTagSpelling(beforeName,afterName);
 
         return "empty";
     }
@@ -48,7 +49,7 @@ public class SoundAdminController {
     public String changeMoodSpelling(@ModelAttribute("beforeName") String beforeName, @ModelAttribute("afterName") String afterName){
         // 프로세서, 벨리데이터
 
-        soundAdminService.updateGenreTagSpelling(beforeName,afterName);
+        tagsService.updateMoodTagSpelling(beforeName,afterName);
         return "empty";
     }
 
@@ -57,34 +58,34 @@ public class SoundAdminController {
     public String changeGenreSpelling(@ModelAttribute("beforeName") String beforeName, @ModelAttribute("afterName") String afterName){
         // 프로세서, 벨리데이터
 
-        soundAdminService.updateGenreTagSpelling(beforeName,afterName);
+        tagsService.updateGenreTagSpelling(beforeName,afterName);
         return "empty";
     }
 
     // 인스트루먼트 태그 만들기
     @PostMapping("/admin/tags/instruments")
-    public String makeInstTag(@ModelAttribute InstrumentTagDto instrumentTagDto){
+    public String makeInstTag(@ModelAttribute TagsDto tagsDto){
         // 프로세서, 벨리데이터
 
-        soundAdminService.createInstTag(instrumentTagDto);
+        tagsService.createInstTag(tagsDto);
         return "empty";
     }
 
     // 무드 태그 이름 만들기
     @PostMapping("/admin/tags/moods")
-    public String makeMoodTag(@ModelAttribute MoodTagDto moodTagDto){
+    public String makeMoodTag(@ModelAttribute TagsDto tagsDto){
         // 프로세서, 벨리데이터
 
-        soundAdminService.createMoodTag(moodTagDto);
+        tagsService.createMoodTag(tagsDto);
         return "empty";
     }
 
     // 장르 태그 이름 만들기
     @PostMapping("/admin/tags/genres")
-    public String makeGenreTag(@ModelAttribute GenreTagDto genreTagDto){
+    public String makeGenreTag(@ModelAttribute TagsDto tagsDto){
         // 프로세서, 벨리데이터
 
-        soundAdminService.createGenreTag(genreTagDto);
+        tagsService.createGenreTag(tagsDto);
         return "empty";
     }
 }

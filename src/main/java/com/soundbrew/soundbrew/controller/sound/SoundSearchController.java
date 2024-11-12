@@ -4,8 +4,8 @@ import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
-import com.soundbrew.soundbrew.service.sound.SoundSearchService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -21,9 +21,9 @@ import java.util.List;
 // #1. request dto 에서 요청에 해당하는 파라미터가 매핑이 되고, 값이 있는지 확인을 해보는 것.
 // #2. 서비스에서 나온 결과들을 적절하게 model에 태우는 것.
 @Controller
+@AllArgsConstructor
 public class SoundSearchController {
-    @Autowired
-    private SoundSearchService soundSearchService;
+    private final SoundServiceImpl soundService;
 
     // sounds list
     // parameter : soundType(music, sfx), paging, *keyword, *tag
@@ -35,7 +35,7 @@ public class SoundSearchController {
                                Model model){
         Pageable pageable = PageRequest.of(page, size);
 
-        SoundSearchFilterDto sounds = soundSearchService.soundSearch(soundSearchRequestDto, pageable);
+        SoundSearchFilterDto sounds = soundService.soundSearch(soundSearchRequestDto, pageable);
 
         model.addAttribute("sounds", sounds.getSoundSearchResultDto());
         model.addAttribute("instTags", sounds.getInstTag());
@@ -56,11 +56,11 @@ public class SoundSearchController {
         Pageable pageable = null; // 페이징 필요없음
 
         // 1. 받은 albumid로 검색
-        SoundSearchFilterDto albums = soundSearchService.soundSearch(soundSearchRequestDto, pageable);
+        SoundSearchFilterDto albums = soundService.soundSearch(soundSearchRequestDto, pageable);
         // 2. 1개를 담은 album 만들어두기 (album)
         SoundSearchResultDto album = albums.getSoundSearchResultDto().isEmpty() ? null : albums.getSoundSearchResultDto().get(0);
         // 3. 그리고 album에 있는 username(artist name)을 토대로 아티스트의 다른 앨범 목록도 준비해서 넘기기 (otherAlbums)
-        List<AlbumDto> albumDto = soundSearchService.readAlbumByArtistName(album.getUserName());
+        List<AlbumDto> albumDto = soundService.readAlbumByArtistName(album.getUserName());
 
         // album list
         model.addAttribute("otherAlbums", albumDto);
@@ -71,7 +71,7 @@ public class SoundSearchController {
 
         //album, albums,
 
-        return "sound/album-one(미완성)";
+        return "sound/album-one";
     }
 
     // 1. 1명의 아티스트를 select, +해당 가수의 곡 목록 나열 2. 그 아티스트의 앨범들.
@@ -83,9 +83,11 @@ public class SoundSearchController {
         soundSearchRequestDto.setNickname(nickname);
         Pageable pageable= null; // 페이징 필요없 ( 1개 선택)
 
-        SoundSearchFilterDto artist = soundSearchService.soundSearch(soundSearchRequestDto,pageable);
+        SoundSearchFilterDto artist = soundService.soundSearch(soundSearchRequestDto,pageable);
         model.addAttribute("artist", artist.getSoundSearchResultDto());
-        return "artist-one(미완성)";
+        // music list
+        model.addAttribute("sounds", artist.getSoundSearchResultDto());
+        return "sound/artist-one";
     }
 
     // 1개의 음악을 select
@@ -97,12 +99,12 @@ public class SoundSearchController {
         soundSearchRequestDto.setMusicId(musicId);
         Pageable pageable = null; // 페이징 필요없 ( 1개 선택)
 
-        SoundSearchFilterDto sound = soundSearchService.soundSearch(soundSearchRequestDto,pageable);
+        SoundSearchFilterDto sound = soundService.soundSearch(soundSearchRequestDto,pageable);
         model.addAttribute("sound" , sound.getSoundSearchResultDto());
         model.addAttribute("instTags", sound.getInstTag());
         model.addAttribute("moodTags", sound.getMoodTag());
         model.addAttribute("genreTags", sound.getGenreTag());
-        return "sound(미완성)";
+        return "sound/sound";
     }
 
 }

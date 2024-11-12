@@ -1,34 +1,31 @@
 package com.soundbrew.soundbrew.controller.sound;
 
 import com.soundbrew.soundbrew.dto.sound.*;
-import com.soundbrew.soundbrew.service.sound.SoundManagerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
+import com.soundbrew.soundbrew.service.sound.TagsServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.transaction.Transactional;
-
 @Controller
+@AllArgsConstructor
 public class SoundManageController {
-    @Autowired
-    private SoundManagerService soundManagerService;
-
+    private final SoundServiceImpl soundService;
+    private final TagsServiceImpl tagsService;
     //생성
     @PostMapping("/manage/sounds")
     public String createSound(@ModelAttribute("albumDto") AlbumDto albumDto,
                               @ModelAttribute("musicDto") MusicDto musicDto,
-                              @ModelAttribute("instrumentTagDto") InstrumentTagDto instrumentTagDto,
-                              @ModelAttribute("moodTagDto") MoodTagDto moodTagDto,
-                              @ModelAttribute("genreTagDto") GenreTagDto genreTagDto){
+                              @ModelAttribute("tagsDto") TagsDto tagsDto){
         // 적절하게 프로세서, 벨리데이터
 
         // userid가져오기
 
         // 파일(이미지) 저장도 있어야함.
-        soundManagerService.createSound(2,albumDto,musicDto,instrumentTagDto,moodTagDto,genreTagDto);
+        soundService.createSound(2,albumDto,musicDto, tagsDto);
         return "empty";
     }
 
@@ -38,17 +35,17 @@ public class SoundManageController {
         // 적절하게 프로세서, 벨리데이터
 
         // 앨범 이미지도 수정가능하다면, 이미지 관련 저장도 있어야함
-        soundManagerService.updateAlbum(albumId,albumDto);
+        soundService.updateAlbum(albumId,albumDto);
 
         return "empty";
     }
 
     // 음원 정보 업데이트 (타이틀, 설명, 음원타입)
     @PatchMapping("/manage/musics/{musicId}")
-    public String updateMusic(@PathVariable("musicId") int musicId, @ModelAttribute("musidDto") MusicDto musicDto){
+    public String updateMusic(@PathVariable("musicId") int musicId, @ModelAttribute("musicDto") MusicDto musicDto){
         // 적절하게 프로세서, 벨리데이터
 
-        soundManagerService.updateMusic(musicId,musicDto);
+//        soundService.updateMusic(musicId,musicDto);
 
         return "empty";
     }
@@ -56,11 +53,8 @@ public class SoundManageController {
     // 태그 연결 업데이트
     @PostMapping("/manage/musics/{musicId}/tags")
     public String updateMusicTags(@PathVariable("musicId") int musicId,
-                                  @ModelAttribute("instrumentTagDto") InstrumentTagDto instrumentTagDto,
-                                  @ModelAttribute("moodTagDto") MoodTagDto moodTagDto,
-                                  @ModelAttribute("genreTagDto") GenreTagDto genreTagDto){
-
-        soundManagerService.updateMusicTags(musicId,instrumentTagDto,moodTagDto,genreTagDto);
+                                  @ModelAttribute("tagsDto") TagsDto tagsDto){
+        tagsService.updateSoundTags(musicId, tagsDto);
 
         return "empty";
     }
