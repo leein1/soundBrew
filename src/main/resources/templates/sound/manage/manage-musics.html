@@ -15,7 +15,7 @@
 
     
 <body>
-    <div class="content">
+    <div class="content" layout:fragment="content">
         <div class="content-header">Manage Information</div>
         <div class="content-body">
             <!-- Table for Album Information Modification -->
@@ -31,35 +31,40 @@
                     <th>수정일</th>
                     <th>작업</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Jonsi</td>
+                <th:block th:if="${mySounds.present}">
+                <tr th:each="sound : ${mySounds.get()}">
+                    <td th:text="${sound.musicId}">1</td>
+                    <td th:text="${sound.userId}">Jonsi</td>
                     <td>
-                        <span class="current-value" data-field="musicTitle">My Album Title</span>
-                        <input type="text" class="editable-field" data-field="musicTitle" value="My m Title">
+                        <span class="current-value" data-field="musicTitle" th:text="${sound.title}">My Album Title</span>
+                        <input type="text" class="editable-field" data-field="musicTitle" th:text="${sound.title}">
                     </td>
                     <td>
-                        <span class="current-value" data-field="musicDescription">My Album Description</span>
-                        <input type="text" class="editable-field" data-field="musicDescription" value="My m Description">
+                        <span class="current-value" data-field="musicDescription" th:text="${sound.description}">My Album Description</span>
+                        <input type="text" class="editable-field" data-field="musicDescription" th:text="${sound.description}">
                     </td>
                     <td>
-                        <span class="current-value" data-field="soundType">sound</span>
+                        <span class="current-value" data-field="soundType" th:text="${sound.soundType}">sound</span>
                         <div class="editable-field" data-field="soundType">
                             <label>
-                                <input type="radio" name="soundType" value="sound" checked> Sound
+                                <input type="radio" name="soundType" value="sound" checked> sound
                             </label>
                             <label>
-                                <input type="radio" name="soundType" value="sfx"> SFX
+                                <input type="radio" name="soundType" value="sfx"> sfx
                             </label>
                         </div>
                     </td>
-                    <td>2024-01-10</td>
-                    <td>2024-01-10</td>
+                    <td th:text="${#temporals.format(sound.create_date, 'yyyy-MM-dd')}">2024-01-10</td>
+                    <td th:text="${#temporals.format(sound.modify_date, 'yyyy-MM-dd')}">2024-01-10</td>
                     <td>
                         <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                        <button class="apply-button" onclick="applyChanges(this, 1)">적용</button>
+                        <button class="apply-button" onclick="applyChanges(this, [[${sound.musicId}]])">적용</button>
                         <button class="cancel-button" onclick="cancelChanges(this)">취소</button>
                     </td>
+                </tr>
+                </th:block>
+                <tr th:if="${!mySounds.present}">
+                    <td colspan="7">음원이 없습니다.</td>
                 </tr>
             </table>
         </div>

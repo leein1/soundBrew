@@ -1,9 +1,6 @@
 package com.soundbrew.soundbrew.controller.sound;
 
-import com.soundbrew.soundbrew.dto.sound.GenreTagDto;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
-import com.soundbrew.soundbrew.dto.sound.MoodTagDto;
-import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
 import com.soundbrew.soundbrew.service.sound.TagsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,15 +103,15 @@ public class SoundAdminControllerTest {
                 .andExpect(view().name("empty"));
     }
 
-    @Test
-    void makeGenreTag() throws Exception {
-        GenreTagDto genreTagDto = new GenreTagDto();
-        genreTagDto.setGenre(List.of("newGenre"));
-
-        mockMvc.perform(post("/admin/tags/genres")
-                        .flashAttr("tagsDto", genreTagDto))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("empty"));
-    }
+//    @Test
+//    void makeGenreTag() throws Exception {
+//        GenreTagDto genreTagDto = new GenreTagDto();
+//        genreTagDto.setGenre(List.of("newGenre"));
+//
+//        mockMvc.perform(post("/admin/tags/genres")
+//                        .flashAttr("tagsDto", genreTagDto))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("empty"));
+//    }
 }

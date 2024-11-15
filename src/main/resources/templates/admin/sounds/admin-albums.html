@@ -10,10 +10,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Albums</title>
+    <link th:href="@{/css/admin-albums.css}" rel="stylesheet">
 </head>
 
 <body>
-    <div class="content">
+    <div class="content" layout:fragment="content">
         <div class="content-header">Admin Albums</div>
         <div class="content-body">
             <!-- Table for Album Management -->
@@ -28,19 +29,24 @@
                     <th>수정일</th>
                     <th>작업</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Jonsi</td>
-                    <td>My Album Title</td>
-                    <td>My Album Description</td>
-                    <td>2024-01-10</td>
-                    <td>2024-01-10</td>
+                <th:block th:if="${albums.present}">
+                <tr th:each="album : ${albums.get()}">
+                    <td th:text="${album.albumId}">1</td>
+                    <td th:text="${album.userId}">Jonsi</td>
+                    <td th:text="${album.albumName}">My Album Title</td>
+                    <td th:text="${album.description}">My Album Description</td>
+                    <td th:text="${#temporals.format(album.create_date ,'yyyy-MM-dd')}">2024-01-10</td>
+                    <td th:text="${#temporals.format(album.modify_date, 'yyyy-MM-dd')}">2024-01-10</td>
                     <td>
                         <!-- Delete button -->
-                        <button class="delete-button" onclick="confirmDelete(1)">삭제</button>
+                        <button class="delete-button" onclick="confirmDelete([[${album.albumId}]])">삭제</button>
                     </td>
                 </tr>
                 <!-- Repeat rows as needed -->
+                </th:block>
+                <tr th:if="${!albums.present}">
+                    <td colspan="7">앨범이 없습니다.</td>
+                </tr>
             </table>
         </div>
     </div>

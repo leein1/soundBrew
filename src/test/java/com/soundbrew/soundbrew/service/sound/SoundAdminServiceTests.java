@@ -4,7 +4,6 @@ import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
 import com.soundbrew.soundbrew.repository.sound.*;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

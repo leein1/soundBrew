@@ -17,16 +17,14 @@ public class SoundAdminViewController {
     @GetMapping("/admin")
     public String getAdminPage(){
 
-        return "admin/sounds/admin-sounds";
+        return "admin/sounds/admin-main";
     }
 
     // 태그들 보기 (이름변경, 태그 추가)
     @GetMapping("/admin/tags")
     public String getAdminTagPage(Model model){
         // 악기, 무드, 장르 태그들을 가져오는 서비스 메서드 호출
-        model.addAttribute("instTags",tagsService.readInstTag());
-        model.addAttribute("genreTags",tagsService.readGenreTag());
-        model.addAttribute("moodTags",tagsService.readMoodTag());
+        model.addAttribute("tags",tagsService.readTags());
 
 
         return "admin/sounds/admin-tags";

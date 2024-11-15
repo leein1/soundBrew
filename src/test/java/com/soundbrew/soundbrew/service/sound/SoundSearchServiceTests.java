@@ -4,7 +4,6 @@ import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
 import com.soundbrew.soundbrew.service.util.SoundProcessor;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,7 +36,7 @@ public class SoundSearchServiceTests {
         requestDto.setGenre(Arrays.asList("rock"));
 
         // When
-        SoundSearchFilterDto result = soundService.soundSearch(requestDto, pageable);
+        Optional<SoundSearchFilterDto> result = soundService.soundSearch(requestDto, pageable);
 
         // Then (실제로 데이터 있냐 없냐에 따라 assert"True" or "False"
         log.info(result);
@@ -52,10 +52,10 @@ public class SoundSearchServiceTests {
         requestDto.setAlbumId(11);
 
         // When
-        SoundSearchFilterDto result = soundService.soundSearch(requestDto, pageable);
+        Optional<SoundSearchFilterDto> result = soundService.soundSearch(requestDto, pageable);
 
         // Then
-        assertNotNull(result);
+        assertNotNull(result.get());
         log.info("Tested soundSearch with albumId = 11.");
     }
 

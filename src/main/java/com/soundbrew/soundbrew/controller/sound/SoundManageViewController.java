@@ -1,17 +1,23 @@
 package com.soundbrew.soundbrew.controller.sound;
 
+import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
 import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
+import com.soundbrew.soundbrew.service.sound.TagsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 @AllArgsConstructor
 public class SoundManageViewController {
     private final SoundServiceImpl soundService;
+    private final TagsServiceImpl tagsService;
 
     // 관리페이지 호출(qna페이지 처럼 항목들로 주르륵)
     @GetMapping("/manage")
@@ -28,6 +34,9 @@ public class SoundManageViewController {
         // 개인정보를 가저오는 내부 메서드(ex. 쿠키 토큰 등,)
         String myName = "u_1";
         model.addAttribute("myAlbums",soundService.readAlbumByArtistName(myName));
+        // 서비스 호출후,
+        // Optional.empty가 올 수 있는 경우라면, -> 사용자가 원치않은 결과를 받을때
+        //if(){원치않은 결과 유도} 이후 {제대로 유도}
         return "sound/manage/manage-albums";
     }
 
@@ -37,7 +46,7 @@ public class SoundManageViewController {
         // 음악을 가져오는 서비스 메서드 호출( 다른정보는 필요없) ** 본인꺼만.**
 
         // 개인정보를 가져오는 내부 메서드(ex. 쿠키 토큰 등)
-        String myName = "kimtest";
+        String myName = "u_1";
 
         model.addAttribute("mySounds",soundService.readMusicByArtistName(myName));
         return "sound/manage/manage-musics";
@@ -49,4 +58,13 @@ public class SoundManageViewController {
                                  Model model){
         return "sound/manage/manage-uploads";
     }
+
+    @GetMapping("/manage/tags")
+    public String getMyTagChange(Model model){
+        String myName = "u_1";
+
+
+        return "sound/manage/manage-tags";
+    }
+
 }

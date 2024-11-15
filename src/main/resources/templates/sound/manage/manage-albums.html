@@ -22,31 +22,36 @@
             <table class="table-container">
                 <tr>
                     <th>ID</th>
-                    <th>아티스트</th>
+                    <th>아티스트Id</th>
                     <th>타이틀</th>
                     <th>앨범 설명</th>
                     <th>업로드일</th>
                     <th>수정일</th>
                     <th>작업</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Jonsi</td>
-                    <td>
-                        <span class="current-value" data-field="albumTitle">My Album Title</span>
-                        <input type="text" class="editable-field" data-field="albumTitle" value="My Album Title">
-                    </td>
-                    <td>
-                        <span class="current-value" data-field="albumDescription">My Album Description</span>
-                        <input type="text" class="editable-field" data-field="albumDescription" value="My Album Description">
-                    </td>
-                    <td>2024-01-10</td>
-                    <td>2024-01-10</td>
-                    <td>
-                        <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                        <button class="apply-button" onclick="applyChanges(this, 1)">적용</button>
-                        <button class="cancel-button" onclick="cancelChanges(this)">취소</button>
-                    </td>
+                <th:block th:if="${myAlbums.present}">
+                    <tr th:each="album : ${myAlbums.get()}">
+                        <td th:text="${album.albumId}">1</td>
+                        <td th:text="${album.userId}">Jonsi</td>
+                        <td>
+                            <span class="current-value" data-field="albumTitle" th:text="${album.albumName}">My Album Title</span>
+                            <input type="text" class="editable-field" data-field="albumTitle" th:value="${album.albumName}">
+                        </td>
+                        <td>
+                            <span class="current-value" data-field="albumDescription" th:text="${album.description}">My Album Description</span>
+                            <input type="text" class="editable-field" data-field="albumDescription" th:value="${album.description}">
+                        </td>
+                        <td th:text="${#temporals.format(album.create_date, 'yyyy-MM-dd')}">2024-01-10</td>
+                        <td th:text="${#temporals.format(album.modify_date, 'yyyy-MM-dd')}">2024-01-10</td>
+                        <td>
+                            <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
+                            <button class="apply-button" onclick="applyChanges(this, [[${album.albumId}]])">적용</button>
+                            <button class="cancel-button" onclick="cancelChanges(this)">취소</button>
+                        </td>
+                    </tr>
+                </th:block>
+                <tr th:if="${!myAlbums.present}">
+                    <td colspan="7">앨범이 없습니다.</td>
                 </tr>
             </table>
         </div>

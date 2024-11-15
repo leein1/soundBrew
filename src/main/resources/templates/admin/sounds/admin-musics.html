@@ -10,10 +10,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Albums</title>
+    <link th:href="@{/css/admin-musics.css}" rel="stylesheet">
 </head>
 
 <body>
-    <div class="content">
+    <div class="content" layout:fragment="content">
         <div class="content-header">Admin Musics</div>
         <div class="content-body">
             <!-- Table for Album Management -->
@@ -29,21 +30,27 @@
                     <th>수정일</th>
                     <th>작업</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Jonsi</td>
-                    <td>My M Title</td>
-                    <td>My M Description</td>
-                    <td>sound</td>
-                    <td>2024-01-10</td>
-                    <td>2024-01-10</td>
+                <th:block th:if="${sounds.present}">
+                <tr th:each="sound : ${sounds.get()}">
+                    <td th:text="${sound.musicId}">1</td>
+                    <td th:text="${sound.userId}">Jonsi</td>
+                    <td th:text="${sound.title}">My M Title</td>
+                    <td th:text="${sound.description}">My M Description</td>
+                    <td th:text="${sound.soundType}">sound</td>
+                    <td th:text="${#temporals.format(sound.create_date, 'yyyy-MM-dd')}">2024-01-10</td>
+                    <td th:text="${#temporals.format(sound.modify_date, 'yyyy-MM-dd')}">2024-01-10</td>
                     <td>
                         <!-- Delete button -->
-                        <button class="delete-button" onclick="confirmDelete(1)">삭제</button>
+                        <button class="delete-button" onclick="confirmDelete([[${sound.musicId}]])">삭제</button>
                     </td>
                 </tr>
                 <!-- Repeat rows as needed -->
+                </th:block>
+                <tr th:if="${!sounds.present}">
+                    <td colspan="7">음원이 없습니다.</td>
+                </tr>
             </table>
+
         </div>
     </div>
 </body>

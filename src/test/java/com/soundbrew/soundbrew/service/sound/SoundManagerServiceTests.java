@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -142,6 +143,18 @@ public class SoundManagerServiceTests {
         assertTrue(musicMoodTagRepository.findByIdMusicId(music.getMusicId()).isEmpty());
         assertTrue(musicGenreTagRepository.findByIdMusicId(music.getMusicId()).isEmpty());
 
+    }
+
+    @Test
+    public void testReadAlbumByArtistName_WithNonExistingArtist() {
+        // given
+        String nickname = "nonExistingNickname";
+
+        // when
+        Optional<List<AlbumDto>> albums = soundService.readAlbumByArtistName(nickname);
+
+        // then
+        assertFalse(albums.isPresent(), "Albums should not be present for non-existing artist");
     }
 
     @Test

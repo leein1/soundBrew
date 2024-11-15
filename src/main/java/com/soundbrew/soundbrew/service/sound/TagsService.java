@@ -1,20 +1,19 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.Music;
-import com.soundbrew.soundbrew.dto.sound.GenreTagDto;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
-import com.soundbrew.soundbrew.dto.sound.MoodTagDto;
+
+import java.util.Optional;
 
 public interface TagsService {
-    public void createInstTag(TagsDto tagsDto);
+    void createInstTag(TagsDto tagsDto);
     void createMoodTag(TagsDto tagsDto);
     void createGenreTag(TagsDto tagsDto);
-    public void updateInstrumentTagSpelling(String beforeName, String afterName);
-    public void updateMoodTagSpelling(String beforeName, String afterName);
-    public void updateGenreTagSpelling(String beforeName, String afterName);
-    public MoodTagDto readMoodTag();
-    public GenreTagDto readGenreTag();
-    public TagsDto readInstTag();
+    void updateInstrumentTagSpelling(String beforeName, String afterName);
+    void updateMoodTagSpelling(String beforeName, String afterName);
+    void updateGenreTagSpelling(String beforeName, String afterName);
+    Optional<TagsDto> readTags();
+    Optional<?> readTagsByArtistName(String userName);
     void updateSoundTags(int musicId, TagsDto tagsDto);
     void createSoundTags(Music music, TagsDto tagsDto);
 }

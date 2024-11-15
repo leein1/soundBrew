@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AlbumDto {
+public class AlbumDto extends BaseEntityDto{
     private int albumId;
     private int userId;
     private String albumName;
@@ -29,5 +29,4 @@ public class AlbumDto {
                 .description(this.description)
                 .build();
     }
-
 }

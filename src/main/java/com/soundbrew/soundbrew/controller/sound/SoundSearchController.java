@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 
 // #1. request dto 에서 요청에 해당하는 파라미터가 매핑이 되고, 값이 있는지 확인을 해보는 것.
@@ -35,12 +36,12 @@ public class SoundSearchController {
                                Model model){
         Pageable pageable = PageRequest.of(page, size);
 
-        SoundSearchFilterDto sounds = soundService.soundSearch(soundSearchRequestDto, pageable);
+        Optional<SoundSearchFilterDto> sounds = soundService.soundSearch(soundSearchRequestDto, pageable);
 
-        model.addAttribute("sounds", sounds.getSoundSearchResultDto());
-        model.addAttribute("instTags", sounds.getInstTag());
-        model.addAttribute("moodTags", sounds.getMoodTag());
-        model.addAttribute("genreTags", sounds.getGenreTag());
+        model.addAttribute("sounds", sounds.get().getSoundSearchResultDto());
+        model.addAttribute("instTags", sounds.get().getInstTag());
+        model.addAttribute("moodTags", sounds.get().getMoodTag());
+        model.addAttribute("genreTags", sounds.get().getGenreTag());
 
         return "sound/music-list";
     }
@@ -56,18 +57,18 @@ public class SoundSearchController {
         Pageable pageable = null; // 페이징 필요없음
 
         // 1. 받은 albumid로 검색
-        SoundSearchFilterDto albums = soundService.soundSearch(soundSearchRequestDto, pageable);
+        Optional<SoundSearchFilterDto> albums = soundService.soundSearch(soundSearchRequestDto, pageable);
         // 2. 1개를 담은 album 만들어두기 (album)
-        SoundSearchResultDto album = albums.getSoundSearchResultDto().isEmpty() ? null : albums.getSoundSearchResultDto().get(0);
+        SoundSearchResultDto album = albums.get().getSoundSearchResultDto().isEmpty() ? null : albums.get().getSoundSearchResultDto().get(0);
         // 3. 그리고 album에 있는 username(artist name)을 토대로 아티스트의 다른 앨범 목록도 준비해서 넘기기 (otherAlbums)
-        List<AlbumDto> albumDto = soundService.readAlbumByArtistName(album.getUserName());
+        Optional<List<AlbumDto>> albumDto = soundService.readAlbumByArtistName(album.getUserName());
 
         // album list
         model.addAttribute("otherAlbums", albumDto);
         //album one
         model.addAttribute("album", album);
         // music list
-        model.addAttribute("sounds", albums.getSoundSearchResultDto());
+        model.addAttribute("sounds", albums.get().getSoundSearchResultDto());
 
         //album, albums,
 
@@ -83,10 +84,10 @@ public class SoundSearchController {
         soundSearchRequestDto.setNickname(nickname);
         Pageable pageable= null; // 페이징 필요없 ( 1개 선택)
 
-        SoundSearchFilterDto artist = soundService.soundSearch(soundSearchRequestDto,pageable);
-        model.addAttribute("artist", artist.getSoundSearchResultDto());
+        Optional<SoundSearchFilterDto> artist = soundService.soundSearch(soundSearchRequestDto,pageable);
+        model.addAttribute("artist", artist.get().getSoundSearchResultDto());
         // music list
-        model.addAttribute("sounds", artist.getSoundSearchResultDto());
+        model.addAttribute("sounds", artist.get().getSoundSearchResultDto());
         return "sound/artist-one";
     }
 
@@ -99,11 +100,11 @@ public class SoundSearchController {
         soundSearchRequestDto.setMusicId(musicId);
         Pageable pageable = null; // 페이징 필요없 ( 1개 선택)
 
-        SoundSearchFilterDto sound = soundService.soundSearch(soundSearchRequestDto,pageable);
-        model.addAttribute("sound" , sound.getSoundSearchResultDto());
-        model.addAttribute("instTags", sound.getInstTag());
-        model.addAttribute("moodTags", sound.getMoodTag());
-        model.addAttribute("genreTags", sound.getGenreTag());
+        Optional<SoundSearchFilterDto> sound = soundService.soundSearch(soundSearchRequestDto,pageable);
+        model.addAttribute("sound" , sound.get().getSoundSearchResultDto());
+        model.addAttribute("instTags", sound.get().getInstTag());
+        model.addAttribute("moodTags", sound.get().getMoodTag());
+        model.addAttribute("genreTags", sound.get().getGenreTag());
         return "sound/sound";
     }
 
