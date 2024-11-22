@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA User Example</title>
+</head>
+<body>
+<div id="app">
+    <h1>User Info</h1>
+    <p id="user-name">Loading...</p>
+    <p id="user-email"></p>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    // API에서 사용자 데이터 가져오기
+    fetch('/api/users/me')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch user data");
+            }
+            return response.json();
+        })
+        .then(user => {
+            // 데이터를 HTML 요소에 렌더링
+            document.getElementById("user-name").textContent = `Name: ${user.name}`;
+            document.getElementById("user-email").textContent = `Email: ${user.email}`;
+        })
+        .catch(error => {
+            console.error("Error fetching user data:", error);
+            document.getElementById("user-name").textContent = "Failed to load user data.";
+        });
+});
+
+</script>
+</body>
+</html>

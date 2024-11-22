@@ -3,7 +3,6 @@ package com.soundbrew.soundbrew.service.sound;
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.sound.*;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +42,7 @@ public class SoundManagerServiceTests {
     @BeforeEach
     void insert(){
         //컨트롤러에서 넘어온 리퀘스트
-        SoundSearchRequestDto request = SoundSearchRequestDto.builder()
+        SearchRequestDto request = SearchRequestDto.builder()
                 .mood(new ArrayList<>(Arrays.asList("sadservice", "sadtestservice")))                   // Mood 태그 추가
                 .instrument(new ArrayList<>(Arrays.asList("snareservice", "snaretest2service")))  // Instrument 태그 추가
                 .genre(new ArrayList<>(Arrays.asList("rockservice", "rocktestservice")))                   // Genre 태그 추가
@@ -269,4 +268,17 @@ public class SoundManagerServiceTests {
         assertEquals("change title", updatedMusic.getTitle());
     }
 
+    @Test
+    @Transactional
+    void getTagsList() {
+        // Given: 테스트할 음악 ID 리스트
+        List<Integer> musicIds = List.of(11, 12, 280);
+
+        // When: 서비스 메서드 호출
+        List<MusicTagsDto> result = tagsService.getMusicTagsByIds(musicIds);
+
+        log.info("========================================");
+        log.info(result.toString());
+        log.info("========================================");
+    }
 }

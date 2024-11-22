@@ -1,8 +1,8 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
+import com.soundbrew.soundbrew.dto.sound.SearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
 import com.soundbrew.soundbrew.repository.sound.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ class SoundAdminServiceTests {
     @BeforeEach
     void insert(){
         //컨트롤러에서 넘어온 리퀘스트
-        SoundSearchRequestDto request = SoundSearchRequestDto.builder()
+        SearchRequestDto request = SearchRequestDto.builder()
                 .mood(new ArrayList<>(Arrays.asList("sadservice", "sadtestservice")))                   // Mood 태그 추가
                 .instrument(new ArrayList<>(Arrays.asList("snareservice", "snaretest2service")))  // Instrument 태그 추가
                 .genre(new ArrayList<>(Arrays.asList("rockservice", "rocktestservice")))                   // Genre 태그 추가
@@ -149,7 +149,7 @@ class SoundAdminServiceTests {
 //                .build();
 //        genreTagRepository.save(genreTag3);
 //
-//        SoundSearchRequestDto dto = new SoundSearchRequestDto();
+//        SearchRequestDto dto = new SearchRequestDto();
 //        dto.setGenre(List.of("chagetestest"));
 //        soundAdminService.updateTagSpelling(before,dto);
 //

@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.service.util;
 
-import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
+import com.soundbrew.soundbrew.dto.sound.SearchResponseDto;
+import com.soundbrew.soundbrew.dto.sound.SearchResultDto;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -12,8 +12,8 @@ import java.util.Set;
 public class SoundProcessor extends StringProcessorImpl{
 
     // ","로 이어진 태그문자열을 " " 로 바꾸어 프론트에서 예쁘게 보이기 위한 재단
-    public List<SoundSearchResultDto> replaceCommaWithSpace(List<SoundSearchResultDto> sounds) {
-        for (SoundSearchResultDto sound : sounds) {
+    public List<SearchResultDto> replaceCommaWithSpace(List<SearchResultDto> sounds) {
+        for (SearchResultDto sound : sounds) {
             if(sound.getInstrumentTagName()!=null){
                 String replaceInstTags = sound.getInstrumentTagName().replace(",", " ");
                 sound.setInstrumentTagName(replaceInstTags);
@@ -31,13 +31,13 @@ public class SoundProcessor extends StringProcessorImpl{
     }
 
     //  태그를 분리하고 중복 제거
-    public SoundSearchFilterDto replaceTagsToArray(List<SoundSearchResultDto> sounds) {
-        SoundSearchFilterDto afterTags = new SoundSearchFilterDto();
+    public SearchResponseDto replaceTagsToArray(List<SearchResultDto> sounds) {
+        SearchResponseDto afterTags = new SearchResponseDto();
         Set<String> instTagSet = new HashSet<>();
         Set<String> moodTagSet = new HashSet<>();
         Set<String> genreTagSet = new HashSet<>();
 
-        for (SoundSearchResultDto sound : sounds) {
+        for (SearchResultDto sound : sounds) {
             // Instrument tags 처리
             if (sound.getInstrumentTagName() != null) {
                 // Split by space as well as commas, to ensure tags are separated correctly

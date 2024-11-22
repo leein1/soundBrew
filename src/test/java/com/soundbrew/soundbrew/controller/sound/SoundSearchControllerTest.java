@@ -1,6 +1,6 @@
 package com.soundbrew.soundbrew.controller.sound;
 
-import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.SearchRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,7 +19,7 @@ class SoundSearchControllerTest {
 
     @Test
     void getMusicList() throws Exception {
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setNickname("u_1");
 
         mockMvc.perform(get("/sounds")

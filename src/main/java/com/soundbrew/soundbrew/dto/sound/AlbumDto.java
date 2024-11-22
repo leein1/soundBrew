@@ -1,10 +1,7 @@
 package com.soundbrew.soundbrew.dto.sound;
 
-import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.sound.Album;
-import com.soundbrew.soundbrew.domain.sound.AlbumMusic;
-import com.soundbrew.soundbrew.domain.sound.AlbumMusicId;
-import com.soundbrew.soundbrew.domain.sound.Music;
+import com.soundbrew.soundbrew.dto.BaseEntityDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AlbumDto extends BaseEntityDto{
+public class AlbumDto extends BaseEntityDto {
     private int albumId;
     private int userId;
     private String albumName;

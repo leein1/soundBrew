@@ -12,8 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Log4j2
@@ -236,6 +235,19 @@ public class MusicTagsDtoRepositoryTests {
 
         List<MusicInstrumentTag> result = musicInstrumentTagRepository.findByIdInstrumentTagId(1);
         result.forEach(value -> value.getId());
+    }
+
+
+    @Test
+    @Transactional
+    void testFindByMusicIds() {
+        // 테스트 대상: 음악 ID 102에 대한 태그 검색
+        List<MusicInstrumentTag> result = musicInstrumentTagRepository.findByIdMusicId(12);
+
+
+        // 검색 결과 검증
+        log.info(result.toString());
+        log.info(result);
     }
 
 }

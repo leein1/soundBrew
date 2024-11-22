@@ -2,7 +2,6 @@ package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.sound.Album;
-import com.soundbrew.soundbrew.domain.sound.AlbumMusic;
 import com.soundbrew.soundbrew.domain.sound.Music;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.UserRepository;
@@ -16,13 +15,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.soundbrew.soundbrew.dto.sound.SoundFactory.albumMusicToEntity;
+import static com.soundbrew.soundbrew.dto.JoinTableBuilderFactory.albumMusicToEntity;
 
 @Service
 @AllArgsConstructor
@@ -49,12 +47,12 @@ public class SoundServiceImpl implements SoundService{
     }
 
     @Override
-    public Optional<SoundSearchFilterDto> soundSearch(SoundSearchRequestDto soundSearchRequestDto, Pageable pageable) {
-        List<SoundSearchResultDto> before = albumMusicRepository.search(soundSearchRequestDto, pageable);
+    public Optional<SearchResponseDto> soundSearch(SearchRequestDto searchRequestDto, Pageable pageable) {
+        List<SearchResultDto> before = albumMusicRepository.search(searchRequestDto, pageable);
         //process
-        SoundSearchFilterDto after = soundProcessor.replaceTagsToArray(before);
-        List<SoundSearchResultDto> afterSearch = soundProcessor.replaceCommaWithSpace(before);
-        after.setSoundSearchResultDto(afterSearch);
+        SearchResponseDto after = soundProcessor.replaceTagsToArray(before);
+        List<SearchResultDto> afterSearch = soundProcessor.replaceCommaWithSpace(before);
+        after.setSearchResultDto(afterSearch);
 
         return Optional.of(after);
     }
@@ -86,23 +84,19 @@ public class SoundServiceImpl implements SoundService{
                 .map(music -> modelMapper.map( music,MusicDto.class))
                 .collect(Collectors.toList()));
     }
-
+//===
     @Override
     public Optional<List<AlbumDto>> readAlbum() {
-        List<Album> albums = albumRepository.findAll();
-        ModelMapper modelMapper = new ModelMapper();
-
-        return albums.isEmpty() ? Optional.empty():
-                Optional.of(albums.stream()
-                .map(album -> modelMapper.map(album, AlbumDto.class))
-                .collect(Collectors.toList()));
+            List<Album> albums = albumRepository.findAll();
+            return albums.isEmpty() ? Optional.empty() :
+                    Optional.of(albums.stream()
+                            .map(album -> modelMapper.map(album, AlbumDto.class))
+                            .collect(Collectors.toList()));
     }
 
     @Override
     public Optional<List<MusicDto>> readMusic() {
         List<Music> music = musicRepository.findAll();
-        ModelMapper modelMapper = new ModelMapper();
-
         return music.isEmpty() ? Optional.empty():
                 Optional.of(music.stream()
                 .map(result -> modelMapper.map(result, MusicDto.class))

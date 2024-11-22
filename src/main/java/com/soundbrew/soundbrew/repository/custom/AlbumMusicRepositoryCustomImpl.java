@@ -2,8 +2,8 @@ package com.soundbrew.soundbrew.repository.custom;
 
 import com.soundbrew.soundbrew.domain.*;
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.SearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.SearchResultDto;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -18,10 +18,10 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
     private EntityManager entityManager;
 
     @Override
-    public List<SoundSearchResultDto> search(SoundSearchRequestDto soundSearchRequestDto, Pageable pageable) {
+    public List<SearchResultDto> search(SearchRequestDto searchRequestDto, Pageable pageable) {
         //선언
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<SoundSearchResultDto> query = cb.createQuery(SoundSearchResultDto.class);
+        CriteriaQuery<SearchResultDto> query = cb.createQuery(SearchResultDto.class);
 
         //조인
         Root<AlbumMusic> root = query.from(AlbumMusic.class);
@@ -37,13 +37,13 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
 
         //조건
         List<Predicate> predicates = new ArrayList<>();
-        if (soundSearchRequestDto.getNickname() != null) {predicates.add(cb.equal(userJoin.get("nickname"), soundSearchRequestDto.getNickname()));}
-        if (soundSearchRequestDto.getMusicId() != null) { predicates.add(cb.equal(musicJoin.get("musicId"), soundSearchRequestDto.getMusicId()));}
-        if (soundSearchRequestDto.getAlbumId() != null) { predicates.add(cb.equal(albumJoin.get("albumId"), soundSearchRequestDto.getAlbumId()));}
+        if (searchRequestDto.getNickname() != null) {predicates.add(cb.equal(userJoin.get("nickname"), searchRequestDto.getNickname()));}
+        if (searchRequestDto.getMusicId() != null) { predicates.add(cb.equal(musicJoin.get("musicId"), searchRequestDto.getMusicId()));}
+        if (searchRequestDto.getAlbumId() != null) { predicates.add(cb.equal(albumJoin.get("albumId"), searchRequestDto.getAlbumId()));}
         // keyword로 검색도 구현해줘야함 ex) soundRequest.getKeyword로 predicates.add(cb.equal(...("music_name")) .....
 
         //쿼리선택
-        query.select(cb.construct(SoundSearchResultDto.class,
+        query.select(cb.construct(SearchResultDto.class,
                 albumJoin.get("albumId"),albumJoin.get("albumName"),albumJoin.get("albumArtPath"),albumJoin.get("description")
                 ,musicJoin.get("musicId"),musicJoin.get("title"),musicJoin.get("filePath"),musicJoin.get("price"),musicJoin.get("description")
                 ,userJoin.get("nickname")
@@ -61,33 +61,33 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 userJoin.get("nickname"));
 
         // FIND_IN_SET 함수는 GROUP_CONCAT된 문자열 내에서 특정 태그가 존재하는지 검사함 즉, 모든 instTags가 포함된 곡만 필터링
-        if (soundSearchRequestDto.getInstrument() != null && !soundSearchRequestDto.getInstrument().isEmpty()) {
+        if (searchRequestDto.getInstrument() != null && !searchRequestDto.getInstrument().isEmpty()) {
             List<Predicate> havingPredicates = new ArrayList<>();
-            for (String tag : soundSearchRequestDto.getInstrument()) {
+            for (String tag : searchRequestDto.getInstrument()) {
                 havingPredicates.add(cb.gt(cb.function("FIND_IN_SET", Integer.class, cb.literal(tag),
                         cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, instrumentTagJoin.get("instrumentTagName")))), 0));
             }
             query.having(cb.and(havingPredicates.toArray(new Predicate[0])));
         }
 
-        if (soundSearchRequestDto.getMood() != null && !soundSearchRequestDto.getMood().isEmpty()){
+        if (searchRequestDto.getMood() != null && !searchRequestDto.getMood().isEmpty()){
             List<Predicate> havingPredicates = new ArrayList<>();
-            for (String tag : soundSearchRequestDto.getMood()){
+            for (String tag : searchRequestDto.getMood()){
                 havingPredicates.add(cb.gt(cb.function("FIND_IN_SET", Integer.class, cb.literal(tag),
                         cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, moodTagJoin.get("moodTagName")))), 0));
             }
         }
 
-        if(soundSearchRequestDto.getGenre() != null && !soundSearchRequestDto.getGenre().isEmpty()){
+        if(searchRequestDto.getGenre() != null && !searchRequestDto.getGenre().isEmpty()){
             List<Predicate> havingPredicates = new ArrayList<>();
-            for ( String tag : soundSearchRequestDto.getGenre()){
+            for ( String tag : searchRequestDto.getGenre()){
                 havingPredicates.add(cb.gt(cb.function("FIND_IN_SET", Integer.class, cb.literal(tag),
                         cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, genreTagJoin.get("genreTagName")))),0));
             }
         }
 //        query.orderBy(cb.asc(musicJoin.get("music_id")));
 
-        TypedQuery<SoundSearchResultDto> typedQuery = entityManager.createQuery(query);
+        TypedQuery<SearchResultDto> typedQuery = entityManager.createQuery(query);
 
         if(pageable !=null){
             typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());

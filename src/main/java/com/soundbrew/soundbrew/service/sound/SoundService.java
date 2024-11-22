@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface SoundService {
     void createSound(int checkedUserId, AlbumDto albumDto, MusicDto musicDto, TagsDto tagsDto);
     // soundSearchRequestDto에 따른 음원 검색 (total)
-    Optional<SoundSearchFilterDto> soundSearch(SoundSearchRequestDto soundSearchRequestDto, Pageable pageable);
+    Optional<SearchResponseDto> soundSearch(SearchRequestDto searchRequestDto, Pageable pageable);
     // nickName 아티스트의 앨범들 들고오기(아티스트의 다른 앨범 가져오기)
     Optional<List<AlbumDto>> readAlbumByArtistName(String nickName);
     // nickName 아티스트의 음원 보기
@@ -21,6 +21,7 @@ public interface SoundService {
     Optional<List<AlbumDto>> readAlbum();
     // userId 회원의 수정할 음원 검색 (music 만)
     Optional<List<MusicDto>> readMusic();
+
 
     // albumId 앨범 수정
     void updateAlbum(int albumId, AlbumDto albumDto);

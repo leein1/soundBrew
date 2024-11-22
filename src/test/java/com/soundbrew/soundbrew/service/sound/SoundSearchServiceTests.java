@@ -1,8 +1,8 @@
 package com.soundbrew.soundbrew.service.sound;
 
-import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchFilterDto;
+import com.soundbrew.soundbrew.dto.sound.SearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.SearchResultDto;
+import com.soundbrew.soundbrew.dto.sound.SearchResponseDto;
 import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -30,13 +30,13 @@ public class SoundSearchServiceTests {
     void testSoundSearchWithTagsAndPagination() {
         // Given
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setInstrument(Arrays.asList("piano", "guitar"));
         requestDto.setMood(Arrays.asList("happy"));
         requestDto.setGenre(Arrays.asList("rock"));
 
         // When
-        Optional<SoundSearchFilterDto> result = soundService.soundSearch(requestDto, pageable);
+        Optional<SearchResponseDto> result = soundService.soundSearch(requestDto, pageable);
 
         // Then (실제로 데이터 있냐 없냐에 따라 assert"True" or "False"
         log.info(result);
@@ -48,11 +48,11 @@ public class SoundSearchServiceTests {
     void testSoundSearchWithAlbumId() {
         // Given
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setAlbumId(11);
 
         // When
-        Optional<SoundSearchFilterDto> result = soundService.soundSearch(requestDto, pageable);
+        Optional<SearchResponseDto> result = soundService.soundSearch(requestDto, pageable);
 
         // Then
         assertNotNull(result.get());
@@ -62,15 +62,15 @@ public class SoundSearchServiceTests {
     @Test
     void testReplaceCommaWithSpace() {
         // Given
-        SoundSearchResultDto soundDto = new SoundSearchResultDto();
+        SearchResultDto soundDto = new SearchResultDto();
         soundDto.setInstrumentTagName("piano,guitar");
         soundDto.setMoodTagName("happy,calm");
         soundDto.setGenreTagName("rock,pop");
 
-        List<SoundSearchResultDto> soundList = Arrays.asList(soundDto);
+        List<SearchResultDto> soundList = Arrays.asList(soundDto);
 
         // When
-        List<SoundSearchResultDto> result = soundProcessor.replaceCommaWithSpace(soundList);
+        List<SearchResultDto> result = soundProcessor.replaceCommaWithSpace(soundList);
 
         // Then
         assertEquals("piano guitar", result.get(0).getInstrumentTagName());
@@ -83,15 +83,15 @@ public class SoundSearchServiceTests {
     @Test
     void testReplaceTagsToArray() {
         // Given
-        SoundSearchResultDto soundDto = new SoundSearchResultDto();
+        SearchResultDto soundDto = new SearchResultDto();
         soundDto.setInstrumentTagName("piano,guitar");
         soundDto.setMoodTagName("happy,calm");
         soundDto.setGenreTagName("rock,pop");
 
-        List<SoundSearchResultDto> soundList = Arrays.asList(soundDto);
+        List<SearchResultDto> soundList = Arrays.asList(soundDto);
 
         // When
-        SoundSearchFilterDto result = soundProcessor.replaceTagsToArray(soundList);
+        SearchResponseDto result = soundProcessor.replaceTagsToArray(soundList);
 
         // Then
         assertTrue(result.getInstTag().contains("piano"));

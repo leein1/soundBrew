@@ -9,3 +9,4 @@ import java.util.Optional;
 public interface AlbumRepository extends JpaRepository<Album, Integer> {
     Optional<List<Album>> findByUserId(int userId);
 }
+

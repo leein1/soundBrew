@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Setter
-public class SoundSearchRequestDto {
+public class SearchRequestDto {
     private String nickname;
     private Integer musicId;
     private Integer albumId;

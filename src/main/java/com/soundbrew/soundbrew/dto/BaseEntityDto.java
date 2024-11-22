@@ -1,7 +1,6 @@
-package com.soundbrew.soundbrew.dto.sound;
+package com.soundbrew.soundbrew.dto;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 

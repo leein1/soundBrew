@@ -1,9 +1,9 @@
-package com.soundbrew.soundbrew.dto.sound;
+package com.soundbrew.soundbrew.dto;
 
 import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.sound.*;
 
-public class SoundFactory {
+public class JoinTableBuilderFactory {
     public static AlbumMusic albumMusicToEntity(Album album, Music music, User user){
         return AlbumMusic.builder()
                 .id(new AlbumMusicId(album.getAlbumId(), music.getUserId(), music.getMusicId()))

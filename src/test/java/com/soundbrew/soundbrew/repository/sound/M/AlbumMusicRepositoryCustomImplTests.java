@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.repository.sound.M;
 
-import com.soundbrew.soundbrew.dto.sound.SoundSearchResultDto;
-import com.soundbrew.soundbrew.dto.sound.SoundSearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.SearchRequestDto;
+import com.soundbrew.soundbrew.dto.sound.SearchResultDto;
 import com.soundbrew.soundbrew.repository.custom.AlbumMusicRepositoryCustomImpl;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -23,9 +23,9 @@ public class AlbumMusicRepositoryCustomImplTests {
     @Test
     void testJustSearch() {
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 
         log.info(result.toString());
     }
@@ -33,31 +33,31 @@ public class AlbumMusicRepositoryCustomImplTests {
     @Test
     void testSearchByGuitarAndSadTags() {
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setInstrument(Arrays.asList("guitar"));
         requestDto.setMood(Arrays.asList("sad"));
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
         log.info("Case 2: guitar + sad");
         log.info(result.toString());
     }
 
     @Test
     void testSearchByAlbumId() {
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setAlbumId(11);
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, null);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, null);
         log.info(result.toString());
     }
 
     @Test
     void testSearchByMusicId() {
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setMusicId(11);
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
         log.info("Case 4: musicId = 10");
         log.info(result.toString());
     }
@@ -65,10 +65,10 @@ public class AlbumMusicRepositoryCustomImplTests {
     @Test
     void testSearchByNickname() {
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setNickname("user123");
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
         log.info("Case 5: nickname = user123");
         log.info(result.toString());
     }
@@ -76,12 +76,12 @@ public class AlbumMusicRepositoryCustomImplTests {
     @Test
     void testSearchByTagsCombination() {
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setInstrument(Arrays.asList("drum", "bass"));
         requestDto.setMood(Arrays.asList("calm"));
         requestDto.setGenre(Arrays.asList("rock"));
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
         log.info("Case 6: drum + bass + calm + rock");
         log.info(result.toString());
     }
@@ -89,9 +89,9 @@ public class AlbumMusicRepositoryCustomImplTests {
     @Test
     void testSearchAllNull() {
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();  // 모든 필드 null
+        SearchRequestDto requestDto = new SearchRequestDto();  // 모든 필드 null
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
         log.info("Case 7: all NULL (전체 검색)");
         log.info(result.toString());
     }
@@ -99,10 +99,10 @@ public class AlbumMusicRepositoryCustomImplTests {
     @Test
     void testSearchByMultipleInstrumentTags() {
         Pageable pageable = PageRequest.of(0, 2);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();
+        SearchRequestDto requestDto = new SearchRequestDto();
         requestDto.setInstrument(Arrays.asList("piano", "violin"));
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
         log.info("Case 8: piano + violin");
         log.info(result.toString());
     }
@@ -110,9 +110,9 @@ public class AlbumMusicRepositoryCustomImplTests {
     @Test
     void testSearchByPagination() {
         Pageable pageable = PageRequest.of(0, 5);
-        SoundSearchRequestDto requestDto = new SoundSearchRequestDto();  // 페이징만 적용, 나머지 필드 null
+        SearchRequestDto requestDto = new SearchRequestDto();  // 페이징만 적용, 나머지 필드 null
 
-        List<SoundSearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+        List<SearchResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
         log.info("Case 9: pagination (1페이지, 5개씩)");
         log.info(result.toString());
     }

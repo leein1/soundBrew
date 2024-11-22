@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @Setter
-public class SoundSearchResultDto {
+public class SearchResultDto {
 
     private int albumId;
     private String albumName;

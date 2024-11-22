@@ -1,16 +1,17 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
+import com.soundbrew.soundbrew.dto.sound.MusicTagsDto;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
-import com.soundbrew.soundbrew.repository.UserRepository;
 import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.soundbrew.soundbrew.dto.sound.SoundFactory.*;
+import static com.soundbrew.soundbrew.dto.JoinTableBuilderFactory.*;
 
 @Service
 @AllArgsConstructor
@@ -65,28 +66,6 @@ public class TagsServiceImpl implements TagsService {
     }
 
     @Override
-    public Optional<TagsDto> readTags() {
-        TagsDto tagsDto = new TagsDto();
-
-        List<MoodTag> moodTags= moodTagRepository.findAll();
-        tagsDto.setMood(moodTags.stream()
-                .map(MoodTag::getMoodTagName)  // moodTagName 필드 추출
-                .collect(Collectors.toList())); // List<String> 형태로 변환
-
-        List<InstrumentTag> instrumentTag = instrumentTagRepository.findAll();
-        tagsDto.setInstrument(instrumentTag.stream()
-                .map(InstrumentTag ::getInstrumentTagName)
-                .collect(Collectors.toList()));
-
-        List<GenreTag> genreTag= genreTagRepository.findAll();
-        tagsDto.setGenre(genreTag.stream()
-                .map(GenreTag::getGenreTagName)
-                .collect(Collectors.toList()));
-
-        return Optional.of(tagsDto);
-    }
-
-    @Override
     public void updateSoundTags(int musicId, TagsDto tagsDto) {
         Music music = musicRepository.findById(musicId).orElseThrow();
         musicInstrumentTagRepository.deleteByIdMusicId(music.getMusicId());
@@ -121,9 +100,73 @@ public class TagsServiceImpl implements TagsService {
     }
 
     @Override
-    public Optional<TagsDto> readTagsByArtistName(String userName) {
-        return null;
+    public Optional<?> readTagsByMusicId(List<Integer> musicId) {
+        return Optional.empty();
     }
+
+    // 모든 태그들 들고오기 (for admin)
+    @Override
+    public Optional<TagsDto> readTags() {
+        TagsDto tagsDto = new TagsDto();
+
+        List<MoodTag> moodTags= moodTagRepository.findAll();
+        tagsDto.setMood(moodTags.stream()
+                .map(MoodTag::getMoodTagName)  // moodTagName 필드 추출
+                .collect(Collectors.toList())); // List<String> 형태로 변환
+
+        List<InstrumentTag> instrumentTag = instrumentTagRepository.findAll();
+        tagsDto.setInstrument(instrumentTag.stream()
+                .map(InstrumentTag ::getInstrumentTagName)
+                .collect(Collectors.toList()));
+
+        List<GenreTag> genreTag= genreTagRepository.findAll();
+        tagsDto.setGenre(genreTag.stream()
+                .map(GenreTag::getGenreTagName)
+                .collect(Collectors.toList()));
+
+        return Optional.of(tagsDto);
+    }
+
+    // musicId를 통해서 태그들 검색 (for artist or for admin)
+    @Transactional
+    public List<MusicTagsDto> readTagsByMusicIds(List<Integer> musicIds) {
+        List<MusicTagsDto> musicTagsDtos = new ArrayList<>();
+
+        for (int musicId : musicIds) {
+            List<MusicInstrumentTag> instrumentTags = musicInstrumentTagRepository.findByIdMusicId(musicId);
+            List<String> instrumentTagNames = instrumentTags.stream()
+                    .map(tag -> tag.getInstrumentTag().getInstrumentTagName())
+                    .collect(Collectors.toList());
+
+            List<MusicMoodTag> moodTags = musicMoodTagRepository.findByIdMusicId(musicId);
+            List<String> moodTagNames = moodTags.stream()
+                    .map(tag -> tag.getMoodTag().getMoodTagName())
+                    .collect(Collectors.toList());
+
+            List<MusicGenreTag> genreTags = musicGenreTagRepository.findByIdMusicId(musicId);
+            List<String> genreTagNames = genreTags.stream()
+                    .map(tag -> tag.getGenreTag().getGenreTagName())
+                    .collect(Collectors.toList());
+
+            // Music 정보
+            String title = instrumentTags.isEmpty() ? null : instrumentTags.get(0).getMusic().getTitle();
+
+            // DTO 생성 및 추가
+            MusicTagsDto dto = MusicTagsDto.builder()
+                    .musicId(musicId)
+                    .title(title)
+                    .instrumentTags(instrumentTagNames)
+                    .moodTags(moodTagNames)
+                    .genreTags(genreTagNames)
+                    .build();
+
+            musicTagsDtos.add(dto);
+        }
+
+        return musicTagsDtos;
+    }
+
+
 
 
 }

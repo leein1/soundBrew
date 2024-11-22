@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.dto.sound;
 
 import lombok.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
@@ -10,9 +11,12 @@ import java.util.Set;
 @ToString
 @AllArgsConstructor
 @Setter
-public class SoundSearchFilterDto {
-    private List<SoundSearchResultDto> soundSearchResultDto;
+@Builder
+public class SearchResponseDto {
+    private List<SearchResultDto> searchResultDto;
     private Set<String> instTag;
     private Set<String> moodTag;
     private Set<String> genreTag;
+    private List<AlbumDto> otherAlbums;
+    private Pageable pageable; // 필요하다면 추가
 }
