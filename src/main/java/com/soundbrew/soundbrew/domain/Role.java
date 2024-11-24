@@ -14,12 +14,12 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int role_id;
+    private int roleId;
 
     @Column(nullable = false)
-    private String role_type;
+    private String roleType;
 
-    public void change(String role_type){
-        this.role_type = role_type;
+    public void change(String roleType){
+        this.roleType = roleType;
     }
 }

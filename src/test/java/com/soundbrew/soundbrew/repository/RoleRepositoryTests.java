@@ -19,8 +19,8 @@ public class RoleRepositoryTests {
     @Test
     public void testInsert(){
         Role role = Role.builder()
-                .role_id(10)
-                .role_type("USER")
+                .roleId(10)
+                .roleType("USER")
                 .build();
 
         Role result = roleRepository.save(role);
@@ -31,9 +31,9 @@ public class RoleRepositoryTests {
     @Test
     public void testSelect(){
 
-        int role_id = 3;
+        int roleId = 3;
 
-        Optional<Role> result = roleRepository.findById(role_id);
+        Optional<Role> result = roleRepository.findById(roleId);
 
         Role role = result.orElseThrow();
 
@@ -44,9 +44,9 @@ public class RoleRepositoryTests {
     @Test
     public void testUpdate(){
 
-        int role_id = 4;
+        int roleId = 4;
 
-        Optional<Role> result = roleRepository.findById(role_id);
+        Optional<Role> result = roleRepository.findById(roleId);
 
         Role role = result.orElseThrow();
 
@@ -58,16 +58,16 @@ public class RoleRepositoryTests {
     @Test
     public void testDelete(){
 
-        int role_id = 6;
+        int roleId = 6;
 
-        roleRepository.deleteById(role_id);
+        roleRepository.deleteById(roleId);
 
-        Optional<Role> result = roleRepository.findById(role_id);
+        Optional<Role> result = roleRepository.findById(roleId);
 
         if(result.isEmpty()){
-            log.info("role_id : " + role_id + " has been deleted");
+            log.info("role_id : " + roleId + " has been deleted");
         } else {
-            log.warn("role_id : " + role_id + " still exists");
+            log.warn("role_id : " + roleId + " still exists");
         }
     }
 }

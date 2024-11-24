@@ -23,16 +23,16 @@ public class UserSubscriptionRepositoryTests {
     @Test
     public void testInsert(){
         UserSubscription userSubscription = UserSubscription.builder()
-                .user_id(16)
-                .subscription_id(4)
+                .userId(16)
+                .subscriptionId(4)
                 .build();
 //        log.info("user_id: {}, subscription_id: {}", userSubscription.getUser_id(), userSubscription.getSubscription_id());
         UserSubscription result = userSubscriptionRepository.save(userSubscription);
 
         log.info("user_subscription info : "
-                + userSubscription.getUser_id()
+                + userSubscription.getUserId()
                 + "|"
-                + userSubscription.getSubscription_id()
+                + userSubscription.getSubscriptionId()
         );
 
     }

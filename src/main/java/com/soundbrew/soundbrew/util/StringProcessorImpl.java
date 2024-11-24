@@ -1,5 +1,8 @@
 package com.soundbrew.soundbrew.util;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class StringProcessorImpl implements StringProcessor{
 
     @Override

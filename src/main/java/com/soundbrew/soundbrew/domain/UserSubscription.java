@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,22 +15,22 @@ import java.time.LocalDateTime;
 public class UserSubscription extends BaseEntity{
 
     @Id
-    private int user_id;
+    private int userId;
 
     @Column(nullable = false)
-    private int subscription_id;
+    private int subscriptionId;
 
     @Column(nullable = true)
-    private int credit_balance;
+    private int creditBalance;
 
     @Column(nullable = true)
-    private LocalDateTime first_billing_date;
+    private LocalDateTime firstBillingDate;
 
     @Column(nullable = true)
-    private LocalDateTime next_billing_date;
+    private LocalDateTime nextBillingDate;
 
     @Column(nullable = true)
-    private String payment_status;
+    private String paymentStatus;
 
 //    BaseEntity 상속으로 생략
 //    private LocalDateTime create_date;

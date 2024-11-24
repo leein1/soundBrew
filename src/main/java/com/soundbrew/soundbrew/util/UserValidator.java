@@ -1,5 +1,9 @@
 package com.soundbrew.soundbrew.util;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+@Component
 public class UserValidator extends StringValidatorImpl{
 
     //    비밀번호 입력 형태 검사

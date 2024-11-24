@@ -1,6 +1,8 @@
 package com.soundbrew.soundbrew.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import net.bytebuddy.implementation.bind.annotation.Super;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

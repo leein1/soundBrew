@@ -1,21 +1,24 @@
 package com.soundbrew.soundbrew.dto;
 
 import com.soundbrew.soundbrew.domain.BaseEntity;
+import com.soundbrew.soundbrew.domain.User;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO extends BaseEntity {
+@AllArgsConstructor
+public class UserDTO extends BaseDTO{
 
     public int userId;
 
 
-    public int subscriptionId;
+    public Integer subscriptionId;
 
 
     public String name;
@@ -40,5 +43,21 @@ public class UserDTO extends BaseEntity {
 
 
     public LocalDate birth;
+
+
+    public User toEntity() {
+        return User.builder()
+                .userId(this.userId)
+                .subscriptionId(this.subscriptionId)
+                .name(this.name)
+                .nickname(this.nickname)
+                .password(this.password)
+                .phonenumber(this.phonenumber)
+                .email(this.email)
+                .emailVerified(this.emailVerified)
+                .profileImagePath(this.profileImagePath)
+                .birth(this.birth)
+                .build();
+    }
 
 }

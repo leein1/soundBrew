@@ -9,6 +9,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.datatransfer.Clipboard;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -49,6 +50,17 @@ public class UserRepositoryTests {
         User user= result.orElseThrow();
 
         log.info(user);
+    }
+
+    @Test
+    public void testSelectALl(){
+        List<User> users = userRepository.findAll();
+
+        users.forEach(user -> {
+            log.info("회원 정보 : {}", user.toString());
+            log.info("회원 생성일 : {}", user.getCreateDate());
+            log.info("회원 수정일 : {}", user.getModifyDate());
+        });
     }
 
     @Transactional

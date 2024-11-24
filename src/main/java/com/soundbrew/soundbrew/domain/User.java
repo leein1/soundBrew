@@ -2,14 +2,18 @@ package com.soundbrew.soundbrew.domain;
 
 import com.soundbrew.soundbrew.dto.UserDTO;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
 public class User extends BaseEntity {
@@ -18,8 +22,9 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
+
     @Column(nullable = false)
-    private int subscriptionId;
+    private Integer subscriptionId;
 
     @Column(length = 15, nullable = false)
     private String name;
@@ -56,6 +61,7 @@ public class User extends BaseEntity {
 //    LocalDateTime modify_date;
 //    LocalDateTime create_date;
 
+
     public void update(String name, String nickname, String password, String phonenumber, String email) {
         this.name = name;
         this.nickname = nickname;
@@ -64,20 +70,4 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-    public User toEntity(UserDTO userDTO){
-        User user = User.builder()
-                .userId(userDTO.getUserId())
-                .subscriptionId(userDTO.getSubscriptionId())
-                .name(userDTO.getName())
-                .nickname(userDTO.getNickname())
-                .password(userDTO.getPassword())
-                .phonenumber(userDTO.getPhonenumber())
-                .email(userDTO.getEmail())
-                .emailVerified(userDTO.isEmailVerified())
-                .profileImagePath(userDTO.getProfileImagePath())
-                .birth(userDTO.getBirth())
-                .build();
-
-        return user;
-    }
 }
