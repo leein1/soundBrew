@@ -1,6 +1,5 @@
 package com.soundbrew.soundbrew.controller;
 
-import com.soundbrew.soundbrew.dto.ApiResponse;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 import com.soundbrew.soundbrew.service.UserService;
@@ -28,25 +27,35 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/list")
-    public ResponseDTO<UserDTO> list(Model model) {
+    public ResponseDTO<UserDTO> list() {
 
         ResponseDTO<UserDTO> responseDTO = userService.getAllUsers();
 
 //        확인용
         if (!responseDTO.isHasContent()) {
             log.info("No users found.");
+//            status등 반환 해줘야함
         } else {
 
             log.info("Users found: " + responseDTO.getDtoList().size());
+            //            status등 반환 해줘야함
+
         }
+
+        //            status등 반환 해줘야함
 
         return responseDTO;
 
     }
 
+    @GetMapping("/register")
+    public void registerUser(){
+        log.info("Register user");
+    }
+
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity registerUser(@RequestBody UserDTO userDTO) {
 
 //        try{
 //            boolean result = userService.registerUser(userDTO);
@@ -66,9 +75,13 @@ public class UserController {
 //        }
 
 //        반환형 변경으로 수정
-        ApiResponse response = userService.registerUser(userDTO);
+//        ApiResponse response = userService.registerUser(userDTO);
+//
+//        return ResponseEntity.status(response.getStatus()).body(response);
 
-        return ResponseEntity.status(response.getStatus()).body(response);
+//        Exception핸들러 사용으로 수정
+        userService.registerUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 

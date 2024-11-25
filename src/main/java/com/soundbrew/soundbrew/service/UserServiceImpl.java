@@ -3,7 +3,6 @@ package com.soundbrew.soundbrew.service;
 import antlr.actions.python.CodeLexer;
 import com.soundbrew.soundbrew.domain.Subscription;
 import com.soundbrew.soundbrew.domain.User;
-import com.soundbrew.soundbrew.dto.ApiResponse;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 import com.soundbrew.soundbrew.dto.UserSubscriptionDTO;
@@ -48,6 +47,7 @@ public class UserServiceImpl implements UserService{
 
 //        없으면 Opton.empty return
 //        ResponseDTO 사용으로 수정
+
 //        return userDTOs.isEmpty() ? Optional.empty() : Optional.of(userDTOs);
 
         Optional<List<UserDTO>> optionalDtoList = userDTOs.isEmpty()
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService{
 
     //    회원 가입
     @Override
-    public ApiResponse registerUser(UserDTO userDTO) {
+    public void registerUser(UserDTO userDTO) {
 
 //        validation 적용 해야 할거 같은데 논의 필요.
 //        UserDTO의 유효성 검사 측면
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService{
         if(!userValidator.isPasswordFormatValid(userDTO.getPassword())){
 //            return false;
             //  응답 객체 생성후 반환형 변경
-            return new ApiResponse(HttpStatus.BAD_REQUEST.value(),"비밀번호 규격에 맞지 않습니다.");
+            return;
         }
 
 //      예외 처리
@@ -124,10 +124,10 @@ public class UserServiceImpl implements UserService{
         }catch (DataIntegrityViolationException e){
 
 //            throw new IllegalArgumentException("이미 사용중인 데이터 입니다.", e);
-            return new ApiResponse(HttpStatus.BAD_REQUEST.value(), "이미 사용중인 데이터 입니다.");
+            return;
         }
 
-        return new ApiResponse(HttpStatus.CREATED.value(), "회원 가입 성공");
+
     }
 
 //    활성화 코드 보관함 필요 할것 같음

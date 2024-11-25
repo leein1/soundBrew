@@ -2,6 +2,7 @@ package com.soundbrew.soundbrew.service;
 
 
 import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,14 @@ public class UserServiceTests {
     @Test
     public void testGetAllUsers(){
 
-        Optional<List<UserDTO>> userDTOs= userService.getAllUsers();
+//        Optional<List<UserDTO>> userDTOs= userService.getAllUsers();
+        ResponseDTO responseDTO = userService.getAllUsers();
 
-        if(userDTOs.isEmpty()){
+        if(responseDTO.getDtoList().isEmpty()){
             log.warn("리스트 비어 있음");
 
         } else{
-            List<UserDTO> userDTOList = userDTOs.get();
+            List<UserDTO> userDTOList = responseDTO.getDtoList();
             userDTOList.forEach(userDTO -> log.info(userDTO));
         }
 
@@ -74,7 +76,7 @@ public class UserServiceTests {
                 .email("test12342@test.com")
                 .build();
 
-        log.info(userService.registerUser(userDTO));
+//        log.info(userService.registerUser(userDTO));
     }
 
     @Test

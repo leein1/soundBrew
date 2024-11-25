@@ -1,7 +1,6 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.User;
-import com.soundbrew.soundbrew.dto.ApiResponse;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 
@@ -21,7 +20,7 @@ public interface UserService {
     Optional<UserDTO> getUser(int userId);
 
 //    회원 가입
-    ApiResponse registerUser(UserDTO userDTO);
+    void registerUser(UserDTO userDTO);
 
 //    활성화 위한 메일 발송
     boolean sendActivationCode(String email);

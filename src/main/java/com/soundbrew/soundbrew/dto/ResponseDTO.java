@@ -15,4 +15,6 @@ public class ResponseDTO<E> {
     private List<E> dtoList;
 
     private boolean hasContent;
+
+//   페이징 추가 예정
 }
