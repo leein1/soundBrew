@@ -100,4 +100,18 @@ public class UserRepositoryTests {
         }
     }
 
+    @Test
+    public void testFindByEmail(){
+
+        String email = "inwon.private@icloud.com";
+
+        Optional<User> result = userRepository.findByEmail(email);
+
+        if(result.isEmpty()){
+            log.warn("찾을 수 없습니다.");
+        }
+
+        log.info(result.toString());
+    }
+
 }

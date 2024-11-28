@@ -12,11 +12,14 @@ public interface UserService {
 //    전체 조회
 //    Optional<List<UserDTO>> getAllUsers();
 
+//    전체 조회
     ResponseDTO<UserDTO> getAllUsers();
+
+
 //    한명 조회
 //    UserDTO getUser(int userId);
 
-//    한명 조회 테스트용
+//    한명 조회
     Optional<UserDTO> getUser(int userId);
 
 //    회원 가입
@@ -26,10 +29,10 @@ public interface UserService {
     boolean sendActivationCode(String email);
 
 //    회원 활성화 - 이메일 인증
-    void activateUser(String email);
+    boolean activateUser(String email,String activationCode);
 
 //    회원 정보 수정
-    boolean updateUser(UserDTO userDTO);
+    void updateUser(UserDTO userDTO);
 
 //    본인확인 - 로그인 된 상태더라도 정보 수정을 위해 접근할때 필요
     boolean authentication(int userId, String password);

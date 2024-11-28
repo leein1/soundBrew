@@ -65,18 +65,17 @@ public class UserServiceTests {
     }
 
     @Test
-    @Transactional
     public void testRegisterUser(){
 
         UserDTO userDTO = UserDTO.builder()
-                .name("testName2")
-                .nickname("testNickna2")
-                .password("testPassword1@")
-                .phonenumber("010-1234-1232")
-                .email("test12342@test.com")
+                .name("donghun")
+                .nickname("donghun")
+                .password("12341234A!")
+                .phonenumber("010-1111-1113")
+                .email("ddjsjs12@naver.com")
                 .build();
 
-//        log.info(userService.registerUser(userDTO));
+        userService.registerUser(userDTO);
     }
 
     @Test
@@ -96,6 +95,21 @@ public class UserServiceTests {
 
         log.info(userService.updatePassword(userId, newPassword));
 
+    }
+
+    @Test
+    public void testSendActivationCode(){
+
+        log.info(userService.sendActivationCode("ddjsjs12@naver.com"));
+
+    }
+
+    @Test
+    public void testActivateUser(){
+        String email = "ddjsjs12@naver.com";
+        String activationCode = "6FD591";
+
+        userService.activateUser(email,activationCode);
     }
 
 
