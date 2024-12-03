@@ -1,27 +1,25 @@
 package com.soundbrew.soundbrew.service.sound;
 
+import com.soundbrew.soundbrew.dto.RequestDto;
+import com.soundbrew.soundbrew.dto.ResponseDto;
+import com.soundbrew.soundbrew.dto.SearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.*;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Optional;
-
 // 음원(sound)에 대한 서비스 , 행위 중심 서비스, (album) - (album_music) - (music) - (music_tags) 까지 관여함
 public interface SoundService {
+
+    // soundSearchRequestDto에 따른 음원 검색 (total, keyword, tags)
+    ResponseDto<SearchResponseDto> totalSoundSearch(RequestDto requestDto);
+    // soundSearchReqeustDto에 다른 앨범 검색 (total, keyword, tags)
+    ResponseDto<SearchAlbumResultDto> totalAlbumSearch(RequestDto searchRequestDto);
+    // only album info (All *for admin*  / artist search *for admin* / my album *for artist*)
+    ResponseDto<AlbumDto> searchAlbum(RequestDto requestDto); // all
+    // only music info (All *for admin*  / artist search *for admin* / my music *for artist*)
+    ResponseDto<MusicDto> searchMusic(RequestDto requestDto); // all
+
+    //생성
     void createSound(int checkedUserId, AlbumDto albumDto, MusicDto musicDto, TagsDto tagsDto);
-    // soundSearchRequestDto에 따른 음원 검색 (total)
-    Optional<SearchResponseDto> soundSearch(SearchRequestDto searchRequestDto, Pageable pageable);
-    // nickName 아티스트의 앨범들 들고오기(아티스트의 다른 앨범 가져오기)
-    Optional<List<AlbumDto>> readAlbumByArtistName(String nickName);
-    // nickName 아티스트의 음원 보기
-    Optional<List<MusicDto>> readMusicByArtistName(String nickName);
-
-    // 어드민을 위해서 지금 findAll을 하는데, 특정 대상을 가져오는 기능도 생각해보자.
-    // userId 회원의 수정할 앨범들 보기(album 만)
-    Optional<List<AlbumDto>> readAlbum();
-    // userId 회원의 수정할 음원 검색 (music 만)
-    Optional<List<MusicDto>> readMusic();
-
 
     // albumId 앨범 수정
     void updateAlbum(int albumId, AlbumDto albumDto);

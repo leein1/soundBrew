@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.domain.sound;
 
 import com.soundbrew.soundbrew.domain.BaseEntity;
+import com.soundbrew.soundbrew.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,6 +39,10 @@ public class Music extends BaseEntity {
 
     @Column(nullable = false)
     private String soundType;
+
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false, insertable = false, updatable = false) // userId와 User의 관계 설정
+    private User user;
 
     @OneToMany(mappedBy = "music", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MusicInstrumentTag> musicInstrumentTag; // 태그와의 관계 추가

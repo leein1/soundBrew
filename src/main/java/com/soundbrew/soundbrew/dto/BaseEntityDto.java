@@ -8,4 +8,6 @@ import java.time.LocalDateTime;
 public class BaseEntityDto {
     private LocalDateTime create_date;
     private LocalDateTime modify_date;
+
+
 }

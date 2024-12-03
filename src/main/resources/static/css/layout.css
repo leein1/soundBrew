@@ -1,6 +1,6 @@
-/* 
+/*
 
-색상 변수 추가 
+색상 변수 추가
 모든 스타일에서 같은 색상을 적용하기 위함
 
  */
@@ -39,17 +39,17 @@
 html, body {
     background-color: var(--background-color-light);
     color: var(--text-color-light);
-   
+
     font-family: 'GodoM';
     -ms-overflow-style: none;
-       
+
     /* overflow: hidden; */
 }
 
 /* main ----------------------------------------------------- */
 
 .main {
-    
+
     display: flex;
     /* border: #000000 1px;  */
 }
@@ -81,13 +81,13 @@ html, body {
     transition: width 0.3s;
     width: 100%;
     height: 55px;
-    
+
 }
 
 .menu-icon {
     width: 40px;
     height: 40px;
-    
+
 }
 
 .profile {
@@ -169,7 +169,7 @@ html, body {
     padding: 30px 0 10px 0;
     transition: width 0.3s;
     width: 100%;
-    
+
 }
 
 .toggle-container img{
@@ -178,7 +178,7 @@ html, body {
     visibility: hidden;
     overflow: hidden;
     transition: opacity 3s ease, max-height 0s ease;
-    
+
 }
 
 /* 체크박스를 숨김 */
@@ -211,7 +211,7 @@ html, body {
     transition: transform 0.5s;
 }
 
-.darkMode-checkbox:checked + .darkMode-label{ 
+.darkMode-checkbox:checked + .darkMode-label{
     background-color: #4CAF50; /* 토글이 켜진 상태일 때 배경색 */
 }
 
@@ -259,7 +259,7 @@ html, body {
 /* article ----------------------------------------------------- */
 
 .article {
-    
+
     margin-left: 80px;
     flex: 1;
     overflow: hidden;
@@ -275,10 +275,10 @@ html, body {
     color: var(--text-color-light);
     /* border: 1px solid black; */
     z-index: 2;
-    
+
     height: 55px;
     position: relative; /* sitename을 중앙에 배치하기 위한 기준 설정 */
-    
+
 }
 
 .navigation-menu{
@@ -288,7 +288,7 @@ html, body {
     cursor: pointer;
     height: 40px;
     margin-right: auto;
-    
+
 }
 
 .navigation-menu-icon {
@@ -444,7 +444,7 @@ html, body {
 }
 
 .secondary-button {
-    
+
     font-size: 1rem;
     padding: 8px 12px;
     border: none;
@@ -459,7 +459,7 @@ html, body {
 }
 
 .danger-button {
-    
+
     font-size: 1rem;
     padding: 8px 12px;
     border: none;
@@ -514,7 +514,7 @@ html, body {
     border-radius: 5px;
 }
 
-.music-player-info { 
+.music-player-info {
     display: flex;
     flex-direction: column;
 }
@@ -612,11 +612,11 @@ html, body {
     .player-middle .music-player-waveform {
         display: none; /* 모바일에서 웨이브폼 숨기기 */
     }
-    
+
     .music-player-volume img {
         display: none; /* 모바일에서 볼륨 아이콘 숨기기 */
     }
-    
+
     .music-player-slider {
         margin-left: 0; /* 슬라이더를 볼륨 아이콘과 겹치지 않게 하기 */
     }

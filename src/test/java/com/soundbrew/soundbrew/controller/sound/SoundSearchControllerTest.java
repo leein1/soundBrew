@@ -1,6 +1,6 @@
 package com.soundbrew.soundbrew.controller.sound;
 
-import com.soundbrew.soundbrew.dto.sound.SearchRequestDto;
+import com.soundbrew.soundbrew.dto.SearchRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

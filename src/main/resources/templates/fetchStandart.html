@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API Test</title>
+</head>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<body>
+<h1>API Test</h1>
+
+<!-- 버튼을 클릭하면 API 호출 -->
+<button id="getAlbums">Get Albums</button>
+<button id="getMusic">Get Musics</button>
+<button id="getAlbumByArtist">Get Album by Artist</button>
+
+<div id="response"></div>
+
+<script type="module">
+    import { get } from '/js/fetch/standardMethod.js';
+    import { API_ENDPOINTS } from '/js/fetch/baseUrls.js';
+
+ const test = await get(API_ENDPOINTS.readAlbums);
+    console.log(test);
+
+
+</script>
+</body>
+</html>

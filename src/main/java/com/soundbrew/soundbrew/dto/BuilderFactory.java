@@ -3,7 +3,7 @@ package com.soundbrew.soundbrew.dto;
 import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.sound.*;
 
-public class JoinTableBuilderFactory {
+public class BuilderFactory {
     public static AlbumMusic albumMusicToEntity(Album album, Music music, User user){
         return AlbumMusic.builder()
                 .id(new AlbumMusicId(album.getAlbumId(), music.getUserId(), music.getMusicId()))
@@ -36,4 +36,6 @@ public class JoinTableBuilderFactory {
                 .id(new MusicGenreTagId(music.getUserId(), genreTag.getGenreTagId()))
                 .build();
     }
+
+
 }

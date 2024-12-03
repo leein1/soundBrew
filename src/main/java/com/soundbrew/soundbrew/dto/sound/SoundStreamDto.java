@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StreamingDto {
+public class SoundStreamDto {
     private byte[] data;
     private long start;
     private long end;

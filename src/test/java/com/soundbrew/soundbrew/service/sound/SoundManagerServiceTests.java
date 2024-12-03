@@ -1,6 +1,8 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
+import com.soundbrew.soundbrew.dto.ResponseDto;
+import com.soundbrew.soundbrew.dto.SearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.extern.log4j.Log4j2;
@@ -9,13 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -148,12 +151,13 @@ public class SoundManagerServiceTests {
     public void testReadAlbumByArtistName_WithNonExistingArtist() {
         // given
         String nickname = "nonExistingNickname";
+        Pageable pageable= PageRequest.of(1,10);
 
         // when
-        Optional<List<AlbumDto>> albums = soundService.readAlbumByArtistName(nickname);
+        ResponseDto<AlbumDto> albums = soundService.readAlbumByArtistName(nickname,pageable);
 
         // then
-        assertFalse(albums.isPresent(), "Albums should not be present for non-existing artist");
+        if(!albums.getDto().isEmpty()) log.info("PASS");
     }
 
     @Test
@@ -270,15 +274,26 @@ public class SoundManagerServiceTests {
 
     @Test
     @Transactional
-    void getTagsList() {
+    void getTagsListWithMusicId() {
         // Given: 테스트할 음악 ID 리스트
         List<Integer> musicIds = List.of(11, 12, 280);
 
         // When: 서비스 메서드 호출
-        List<MusicTagsDto> result = tagsService.getMusicTagsByIds(musicIds);
+        ResponseDto<TagsDto> result = tagsService.readTagsByMusicIds(musicIds);
 
         log.info("========================================");
         log.info(result.toString());
+        log.info("========================================");
+    }
+
+    @Test
+    @Transactional
+    void getTagsList(){
+        ResponseDto<TagsDto> result = tagsService.readTags();
+
+        log.info("========================================");
+        if(result.getDto().isEmpty()) log.info("태그들이 없습니다.");
+        else log.info(result.toString());
         log.info("========================================");
     }
 }

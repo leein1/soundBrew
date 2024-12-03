@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Log4j2
-@RequestMapping("/stream")
 @AllArgsConstructor
 public class SampleController {
     // 테스트 페이지로 이동
-    @GetMapping("/test-sound-page")
+    @GetMapping("/stream/test-sound-page")
     public String soundPlayerTestPage() {
         return "soundTest";
+    }
+
+    @GetMapping("/fetch/test-page")
+    public String fetchStandardTestPage(){
+        return  "fetchStandart";
     }
 }

@@ -3,6 +3,8 @@ package com.soundbrew.soundbrew.repository.sound.N;
 import com.soundbrew.soundbrew.domain.sound.Album;
 import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import com.soundbrew.soundbrew.repository.sound.AlbumRepository;
+import com.soundbrew.soundbrew.repository.sound.custom.AlbumMusicRepositoryCustom;
+import com.soundbrew.soundbrew.repository.sound.custom.AlbumMusicRepositoryCustomImpl;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,9 @@ public class AlbumRepositoryTests {
 
     @Autowired
     private AlbumRepository albumRepository;
+
+    @Autowired
+    private AlbumMusicRepositoryCustomImpl albumMusicRepositoryCustom;
 
     // C
     @Test

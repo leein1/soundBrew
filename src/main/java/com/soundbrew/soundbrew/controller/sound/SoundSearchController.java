@@ -1,69 +1,52 @@
 package com.soundbrew.soundbrew.controller.sound;
 
+import com.soundbrew.soundbrew.dto.RequestDto;
+import com.soundbrew.soundbrew.dto.ResponseDto;
+import com.soundbrew.soundbrew.dto.SearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.apache.coyote.Request;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api")
 public class SoundSearchController {
     private final SoundServiceImpl soundService;
 
+    // otherAlbums
+    @GetMapping("/albums/other")//title, nickname
+    public ResponseEntity<ResponseDto<AlbumDto>> getAlbumTest(RequestDto requestDto) {
+        // RequestDto 객체 생성 (실제로는 페이지가 로딩되면서 클라이언트측에서 uri를 완성하고 자동으로 요청을 보냄 즉, 후에 지워도 됨)
+        RequestDto test = RequestDto.builder().type("n").keyword("u_1").build();
+
+        // 서비스 호출
+        ResponseDto<AlbumDto> responseDto = soundService.searchAlbum(requestDto);
+        if(responseDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
+
+        // ResponseEntity로 ResponseDto 반환
+        return ResponseEntity.ok(responseDto);
+    }
+
+    // total Albums
+    @GetMapping("/albums")
+    public ResponseEntity<ResponseDto<SearchAlbumResultDto>> getAlbumList(RequestDto searchRequestDto) {
+        ResponseDto<SearchAlbumResultDto> albums = soundService.totalAlbumSearch(searchRequestDto);
+        if (albums.getDto().isEmpty()) return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok().body(albums);
+    }
+
+    // total sounds
     @GetMapping("/sounds")
-    public ResponseEntity<SearchResponseDto> getMusicList(@ModelAttribute SearchRequestDto searchRequestDto,
-                                                          @RequestParam(value = "page", defaultValue = "0") int page,
-                                                          @RequestParam(value = "size", defaultValue = "10") int size,
-                                                          Model model){
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<ResponseDto<SearchResponseDto>> getMusicList(RequestDto requestDto){
+        ResponseDto<SearchResponseDto> sounds = soundService.totalSoundSearch(requestDto);
+        if(sounds.getDto().isEmpty()) return ResponseEntity.noContent().build();
 
-        Optional<SearchResponseDto> sounds = soundService.soundSearch(searchRequestDto, pageable);
-        if(sounds.isEmpty()) return ResponseEntity.noContent().build();
-
-        return ResponseEntity.ok().body(sounds.get());
-    }
-
-    @GetMapping("/sounds/albums/{albumId}")
-    public ResponseEntity<SearchResponseDto> getAlbumOne(@PathVariable("albumId") int albumId, Model model) {
-        SearchRequestDto request = SearchRequestDto.builder().albumId(albumId).build();
-
-        Optional<SearchResponseDto> albums = soundService.soundSearch(request, null);
-        if(albums.isEmpty()) return ResponseEntity.noContent().build();
-
-        SearchResultDto album = albums.get().getSearchResultDto().isEmpty() ? null : albums.get().getSearchResultDto().get(0);
-        Optional<List<AlbumDto>> albumDto = soundService.readAlbumByArtistName(album.getUserName());
-        albums.get().setOtherAlbums(albumDto.get());
-
-        return ResponseEntity.ok().body(albums.get());
-    }
-
-    @GetMapping("/sounds/artists/{nickname}")
-    public ResponseEntity<SearchResponseDto> getArtistOne(@PathVariable("nickname") String nickname, Model model){
-        SearchRequestDto searchRequestDto = SearchRequestDto.builder().nickname(nickname).build();
-
-        Optional<SearchResponseDto> artist = soundService.soundSearch(searchRequestDto,null);
-        if(artist.isEmpty()) return ResponseEntity.noContent().build();
-
-        SearchResultDto album = artist.get().getSearchResultDto().isEmpty() ? null : artist.get().getSearchResultDto().get(0);
-        Optional<List<AlbumDto>> albumDto = soundService.readAlbumByArtistName(album.getUserName());
-        artist.get().setOtherAlbums(albumDto.get());
-
-        return ResponseEntity.ok().body(artist.get());
-    }
-
-    @GetMapping("/sounds/musics/{musicId}")
-    public ResponseEntity<SearchResponseDto> getSoundOne(@PathVariable("musicId")int musicId, Model model){
-        SearchRequestDto searchRequestDto = SearchRequestDto.builder().musicId(musicId).build();
-
-        Optional<SearchResponseDto> sound = soundService.soundSearch(searchRequestDto,null);
-
-        return ResponseEntity.ok().body(sound.get());
+        return ResponseEntity.ok().body(sounds);
     }
 }

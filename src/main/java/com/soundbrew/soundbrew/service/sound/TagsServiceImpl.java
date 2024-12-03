@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.sound.MusicTagsDto;
+import com.soundbrew.soundbrew.dto.ResponseDto;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
 import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.soundbrew.soundbrew.dto.JoinTableBuilderFactory.*;
+import static com.soundbrew.soundbrew.dto.BuilderFactory.*;
 
 @Service
 @AllArgsConstructor
@@ -47,6 +47,7 @@ public class TagsServiceImpl implements TagsService {
     }
 
     @Override
+    @Transactional
     public void updateInstrumentTagSpelling(String beforeName, String afterName) {
         Optional<InstrumentTag> instrumentTag = instrumentTagRepository.findByInstrumentTagName(beforeName);
         if(instrumentTag.isEmpty()){return;}
@@ -54,18 +55,21 @@ public class TagsServiceImpl implements TagsService {
     }
 
     @Override
+    @Transactional
     public void updateMoodTagSpelling(String beforeName, String afterName) {
         MoodTag moodTag = moodTagRepository.findByMoodTagName(beforeName).orElseThrow();
         moodTag.update(afterName);
     }
 
     @Override
+    @Transactional
     public void updateGenreTagSpelling(String beforeName, String afterName) {
         GenreTag genreTag= genreTagRepository.findByGenreTagName(beforeName).orElseThrow();
         genreTag.update(afterName);
     }
 
     @Override
+    @Transactional
     public void updateSoundTags(int musicId, TagsDto tagsDto) {
         Music music = musicRepository.findById(musicId).orElseThrow();
         musicInstrumentTagRepository.deleteByIdMusicId(music.getMusicId());
@@ -99,14 +103,9 @@ public class TagsServiceImpl implements TagsService {
         musicMoodTagRepository.saveAll(moodTags);
     }
 
-    @Override
-    public Optional<?> readTagsByMusicId(List<Integer> musicId) {
-        return Optional.empty();
-    }
-
     // 모든 태그들 들고오기 (for admin)
     @Override
-    public Optional<TagsDto> readTags() {
+    public ResponseDto<TagsDto> readTags() {
         TagsDto tagsDto = new TagsDto();
 
         List<MoodTag> moodTags= moodTagRepository.findAll();
@@ -124,13 +123,13 @@ public class TagsServiceImpl implements TagsService {
                 .map(GenreTag::getGenreTagName)
                 .collect(Collectors.toList()));
 
-        return Optional.of(tagsDto);
+        return ResponseDto.<TagsDto>builder().dto(List.of(tagsDto)).build();
     }
 
     // musicId를 통해서 태그들 검색 (for artist or for admin)
     @Transactional
-    public List<MusicTagsDto> readTagsByMusicIds(List<Integer> musicIds) {
-        List<MusicTagsDto> musicTagsDtos = new ArrayList<>();
+    public ResponseDto<TagsDto> readTagsByMusicIds(List<Integer> musicIds) {
+        List<TagsDto> musicTagsDtos = new ArrayList<>();
 
         for (int musicId : musicIds) {
             List<MusicInstrumentTag> instrumentTags = musicInstrumentTagRepository.findByIdMusicId(musicId);
@@ -148,22 +147,20 @@ public class TagsServiceImpl implements TagsService {
                     .map(tag -> tag.getGenreTag().getGenreTagName())
                     .collect(Collectors.toList());
 
-            // Music 정보
             String title = instrumentTags.isEmpty() ? null : instrumentTags.get(0).getMusic().getTitle();
 
-            // DTO 생성 및 추가
-            MusicTagsDto dto = MusicTagsDto.builder()
+            TagsDto tagsDto = TagsDto.builder()
                     .musicId(musicId)
                     .title(title)
-                    .instrumentTags(instrumentTagNames)
-                    .moodTags(moodTagNames)
-                    .genreTags(genreTagNames)
+                    .instrument(instrumentTagNames)
+                    .mood(moodTagNames)
+                    .genre(genreTagNames)
                     .build();
 
-            musicTagsDtos.add(dto);
+            musicTagsDtos.add(tagsDto);
         }
 
-        return musicTagsDtos;
+        return ResponseDto.<TagsDto>builder().dto(musicTagsDtos).build();
     }
 
 

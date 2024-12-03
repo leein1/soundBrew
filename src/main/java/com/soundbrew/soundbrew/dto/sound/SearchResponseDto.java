@@ -13,10 +13,11 @@ import java.util.Set;
 @Setter
 @Builder
 public class SearchResponseDto {
-    private List<SearchResultDto> searchResultDto;
+    private List<SearchTotalResultDto> searchTotalResultDto;
     private Set<String> instTag;
     private Set<String> moodTag;
     private Set<String> genreTag;
+    private String keyword;
     private List<AlbumDto> otherAlbums;
     private Pageable pageable; // 필요하다면 추가
 }

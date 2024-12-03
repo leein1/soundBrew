@@ -2,33 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sound Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Test with Queue Bar</title>
+    <style>
+        /* 큐바 스타일 */
+        #queueBar {
+            display: none; /* 초기에는 숨김 */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #282c34;
+            color: white;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        #queueBar .audio-info {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        #queueBar audio {
+            vertical-align: middle;
+        }
+
+        .song-list button {
+            margin: 5px 0;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<h1>Sound Test</h1>
-<!-- 음원 스트리밍 테스트를 위한 오디오 플레이어 -->
-<audio id="audioPlayer" controls>
-    Your browser does not support the audio element.
-</audio>
+<h1>Sound Test with Queue Bar</h1>
 
-<audio id="audioPlayer2" controls>
-    <source src="/sounds/TestSound-SpaceOddity.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
+<!-- 음원 목록 -->
+<div class="song-list">
+    <h2>Song List</h2>
+    <button class="playButton" data-file="TestSound-SpaceOddity.mp3">Play: Space Oddity</button>
+    <button class="playButton" data-file="TestSound-LifeOnMars.mp3">Play: Life on Mars</button>
+</div>
 
-<button id="playButton">Play</button>
+<!-- 큐바 -->
+<div id="queueBar">
+    <span class="audio-info" id="currentSongInfo">No song playing</span>
+    <audio id="audioPlayer" controls>
+        Your browser does not support the audio element.
+    </audio>
+</div>
 
-</body>
 <script>
-    document.getElementById("playButton").addEventListener("click", function() {
-        const audioPlayer = document.getElementById("audioPlayer");
-        const fileName = "TestSound-SpaceOddity.mp3"; // 실제 파일명
-        const streamUrl = `/stream/${fileName}`;
+    // 모든 playButton 요소에 이벤트 리스너 추가
+    document.querySelectorAll(".playButton").forEach(button => {
+        button.addEventListener("click", function() {
+            const fileName = this.getAttribute("data-file"); // 버튼의 data-file 속성값
+            const streamUrl = /stream/${fileName}; // 스트리밍 URL 생성
+            const queueBar = document.getElementById("queueBar");
+            const audioPlayer = document.getElementById("audioPlayer");
+            const songInfo = document.getElementById("currentSongInfo");
 
-        // src 속성을 동적으로 설정하여 스트리밍 시작
-        audioPlayer.src = streamUrl;
-        audioPlayer.load();  // 새로운 src로 로딩
-        audioPlayer.play();  // 자동으로 재생 시작
+            // 큐바를 활성화
+            queueBar.style.display = "flex";
+
+            // 오디오 정보 업데이트
+            songInfo.textContent = Now Playing: ${fileName};
+
+            // 오디오 소스 설정 및 재생
+            audioPlayer.src = streamUrl;
+            audioPlayer.load();
+            audioPlayer.play();
+        });
     });
 </script>
+</body>
 </html>

@@ -2,7 +2,7 @@ package com.soundbrew.soundbrew.repository.sound;
 
 import com.soundbrew.soundbrew.domain.sound.AlbumMusic;
 import com.soundbrew.soundbrew.domain.sound.AlbumMusicId;
-import com.soundbrew.soundbrew.repository.custom.AlbumMusicRepositoryCustom;
+import com.soundbrew.soundbrew.repository.sound.custom.AlbumMusicRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

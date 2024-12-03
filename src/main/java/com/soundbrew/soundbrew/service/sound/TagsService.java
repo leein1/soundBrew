@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.Music;
+import com.soundbrew.soundbrew.dto.ResponseDto;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
 
 import java.util.List;
@@ -13,8 +14,8 @@ public interface TagsService {
     void updateInstrumentTagSpelling(String beforeName, String afterName);
     void updateMoodTagSpelling(String beforeName, String afterName);
     void updateGenreTagSpelling(String beforeName, String afterName);
-    Optional<TagsDto> readTags();
-    Optional<?> readTagsByMusicId(List<Integer> musicId);
+    ResponseDto<TagsDto> readTags();
+    ResponseDto<?> readTagsByMusicIds(List<Integer> musicId);
     void updateSoundTags(int musicId, TagsDto tagsDto);
     void createSoundTags(Music music, TagsDto tagsDto);
 }

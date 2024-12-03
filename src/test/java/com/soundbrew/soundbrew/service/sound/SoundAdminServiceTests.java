@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.sound.SearchRequestDto;
+import com.soundbrew.soundbrew.dto.SearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
 import com.soundbrew.soundbrew.repository.sound.*;
 import org.junit.jupiter.api.AfterEach;

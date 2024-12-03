@@ -1,8 +1,6 @@
 package com.soundbrew.soundbrew.repository.sound.N;
 
 import com.soundbrew.soundbrew.domain.sound.InstrumentTag;
-import com.soundbrew.soundbrew.domain.sound.MusicInstrumentTag;
-import com.soundbrew.soundbrew.dto.sound.MusicTagsDto;
 import com.soundbrew.soundbrew.repository.sound.InstrumentTagRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterEach;
@@ -12,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
