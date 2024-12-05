@@ -68,11 +68,11 @@ public class UserServiceTests {
     public void testRegisterUser(){
 
         UserDTO userDTO = UserDTO.builder()
-                .name("donghun")
-                .nickname("donghun")
+                .name("moon")
+                .nickname("moon")
                 .password("12341234A!")
-                .phonenumber("010-1111-1113")
-                .email("ddjsjs12@naver.com")
+                .phonenumber("010-1111-1114")
+                .email("moonody7731@naver.com")
                 .build();
 
         userService.registerUser(userDTO);
@@ -107,7 +107,7 @@ public class UserServiceTests {
     @Test
     public void testActivateUser(){
         String email = "ddjsjs12@naver.com";
-        String activationCode = "6FD591";
+        String activationCode = "E8A33E";
 
         userService.activateUser(email,activationCode);
     }

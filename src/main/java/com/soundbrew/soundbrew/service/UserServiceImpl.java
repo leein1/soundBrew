@@ -12,12 +12,15 @@ import com.soundbrew.soundbrew.util.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +35,7 @@ public class UserServiceImpl implements UserService{
     private final UserValidator userValidator;
     private final ActivationCodeRepository activationCodeRepository;
     private final MailService mailService;
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 //    전체 조회
     @Override
@@ -163,7 +167,7 @@ public class UserServiceImpl implements UserService{
 
 //    유저가 재요청 했을때 논의 필요
     @Override
-    public boolean activateUser(String email,String userActivationCode) {
+    public boolean activateUser(String email,String providedActivationCode) {
 
         //  1. 사용자 검색
         Optional<User> result = userRepository.findByEmail(email);
@@ -176,10 +180,16 @@ public class UserServiceImpl implements UserService{
         ActivationCode activationInfo = optionalActivationInfo.get();
 
         //  4. 거부 조건
-        if(!activationInfo.getActivationCode().equals(userActivationCode)){
+        if(!activationInfo.getActivationCode().equals(providedActivationCode)){
+
+            logger.warn("Invalid activation code: userId={}, email={}, providedCode={}",
+                    user.getUserId(), user.getEmail(), providedActivationCode);
             throw new IllegalArgumentException("유효하지 않은 코드 입니다.");
         }
         if(!LocalDateTime.now().isBefore(activationInfo.getExpirationTime())){
+
+            logger.warn("Expired activation code: userId={}, email={}, providedCode={}",
+                    user.getUserId(), user.getEmail(), providedActivationCode);
             throw new IllegalArgumentException("유효시간이 지났습니다. 다시 시도해주세요");
         }
 
@@ -188,6 +198,8 @@ public class UserServiceImpl implements UserService{
         userDTO.setEmailVerified(true);
 
         userRepository.save(userDTO.toEntity());
+        logger.info("Activated user: userId={}, name={}, email={}, providedCode={}, activationCode={}",
+                user.getUserId(), user.getName(), user.getEmail(), providedActivationCode, activationInfo.getActivationCode());
 
         activationCodeRepository.delete(activationInfo);
 

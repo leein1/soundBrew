@@ -2,6 +2,8 @@ package com.soundbrew.soundbrew.domain;
 
 import lombok.*;
 import org.hibernate.annotations.ManyToAny;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EntityListeners(value = {AuditingEntityListener.class})
 public class ActivationCode {
 
     @Id
@@ -28,7 +31,8 @@ public class ActivationCode {
     @Column(nullable = false)
     private LocalDateTime expirationTime;
 
-    @Column(nullable = true)
+    @CreatedDate
+    @Column(name = "create_date",updatable = false)
     private LocalDateTime createDate;
 
 

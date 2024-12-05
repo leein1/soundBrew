@@ -1,0 +1,1 @@
+2024-11-28 15:58:59.415  INFO 65065 --- [Test worker] c.s.soundbrew.service.UserServiceImpl    : Activating user: userId=31, name=donghun, email=ddjsjs12@naver.com, providedCode=E8A33E, activationCode=E8A33E
