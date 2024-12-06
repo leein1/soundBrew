@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Getter
 @ToString
-@Builder
 public class ResponseDTO<E> {
 
     private List<E> dtoList;
