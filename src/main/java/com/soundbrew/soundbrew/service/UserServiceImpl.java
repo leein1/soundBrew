@@ -3,6 +3,7 @@ package com.soundbrew.soundbrew.service;
 import com.soundbrew.soundbrew.domain.ActivationCode;
 import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.dto.ActivationCodeDTO;
+import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 import com.soundbrew.soundbrew.repository.ActivationCodeRepository;
@@ -14,8 +15,12 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -37,28 +42,46 @@ public class UserServiceImpl implements UserService{
     private final MailService mailService;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-//    전체 조회
+////    전체 조회
+//    @Override
+//    public ResponseDTO<UserDTO> getAllUsers() {
+//
+//        List<UserDTO> userDTOs = userRepository.findAll().stream()
+//                .map(user -> modelMapper.map(user,UserDTO.class))
+//                .collect(Collectors.toList());
+//
+////        없으면 Opton.empty return
+////        ResponseDTO 사용으로 수정
+//
+////        return userDTOs.isEmpty() ? Optional.empty() : Optional.of(userDTOs);
+//
+//        Optional<List<UserDTO>> optionalDtoList = userDTOs.isEmpty()
+//                ? Optional.empty()
+//                : Optional.of(userDTOs);
+//
+//        return ResponseDTO.<UserDTO>withAll()
+//                .dtoList(optionalDtoList.orElse(Collections.emptyList())) // 값 설정
+//                .build();
+//    }
+
+//    RequestDTO 받아 ResponseDTO 반환
+
     @Override
-    public ResponseDTO<UserDTO> getAllUsers() {
+    public ResponseDTO<UserDTO> list(RequestDTO requestDTO) {
+        String[] types = requestDTO.getTypes();
+        String keyword = requestDTO.getKeyword();
+        Pageable pageable = requestDTO.getPageable("userId");
 
-        List<UserDTO> userDTOs = userRepository.findAll().stream()
-                .map(user -> modelMapper.map(user,UserDTO.class))
-                .collect(Collectors.toList());
+        log.info("UserSservice list() : " + pageable);
 
-//        없으면 Opton.empty return
-//        ResponseDTO 사용으로 수정
+        //  Page<User> result = 유저레파지토리.서치인터페이스(types,keyword,pageable)
 
-//        return userDTOs.isEmpty() ? Optional.empty() : Optional.of(userDTOs);
+        //  result 를 List<UserDTO> dtoList 로 변환
 
-        Optional<List<UserDTO>> optionalDtoList = userDTOs.isEmpty()
-                ? Optional.empty()
-                : Optional.of(userDTOs);
-
-        return ResponseDTO.<UserDTO>builder()
-                .dtoList(optionalDtoList.orElse(Collections.emptyList())) // 값 설정
-                .hasContent(optionalDtoList.isPresent())
-                .build();
+        //  ResponseDTO.<UserDTO>withAll() 빌드 후 리턴
+        return null;
     }
+
 
 //    한명 조회 - Optional 사용으로 주석
 //    @Override
@@ -224,7 +247,7 @@ public class UserServiceImpl implements UserService{
 
         existingUserDTO.setName(userDTO.getName());
         existingUserDTO.setNickname(userDTO.getNickname());
-        existingUserDTO.setPhonenumber(userDTO.getPhonenumber());
+        existingUserDTO.setPhoneNumber(userDTO.getPhoneNumber());
         existingUserDTO.setEmail(userDTO.getEmail());
         existingUserDTO.setBirth(userDTO.getBirth());
 
@@ -314,6 +337,17 @@ public class UserServiceImpl implements UserService{
     }
 
 
+//    프로필 이미지 업로드
+    @Override
+    public void saveProfileImage(int userId, MultipartFile file) {
 
+        //  유저 여부 확인
+        User user = userRepository.findById(userId).get();
 
+        //  파일 확인
+        if(file.isEmpty() || file.getContentType().equals("image/jpeg")){
+
+        }
+
+    }
 }

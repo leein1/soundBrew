@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -9,7 +10,10 @@ import java.util.Optional;
 
 @Getter
 @ToString
+@JsonInclude(JsonInclude.Include.NON_DEFAULT) // null 값인 필드는 제외
 public class ResponseDTO<E> {
+
+    private String message;
 
     private List<E> dtoList;
 
@@ -33,15 +37,20 @@ public class ResponseDTO<E> {
 
 //   페이징 추가 예정
 
+    @Builder(builderMethodName = "withMessage")
+    public ResponseDTO(String message){
+        this.message = message;
+    }
+
     @Builder(builderMethodName = "withAll")
-    public ResponseDTO(RequestDTO pageRequestDTO, List<E> dtoList, int total){
+    public ResponseDTO(RequestDTO requestDTO, List<E> dtoList, int total){
 
         if(total <= 0){
             return;
         }
 
-        this.page = pageRequestDTO.getPage();
-        this.size = pageRequestDTO.getSize();
+        this.page = requestDTO.getPage();
+        this.size = requestDTO.getSize();
 
         this.total = total;
         this.dtoList = dtoList;

@@ -30,7 +30,7 @@ public class UserDTO extends BaseDTO{
     public String password;
 
 
-    public String phonenumber;
+    public String phoneNumber;
 
 
     public String email;
@@ -52,7 +52,7 @@ public class UserDTO extends BaseDTO{
                 .name(this.name)
                 .nickname(this.nickname)
                 .password(this.password)
-                .phonenumber(this.phonenumber)
+                .phoneNumber(this.phoneNumber)
                 .email(this.email)
                 .emailVerified(this.emailVerified)
                 .profileImagePath(this.profileImagePath)

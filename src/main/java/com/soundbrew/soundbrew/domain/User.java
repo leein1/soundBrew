@@ -40,7 +40,7 @@ public class User extends BaseEntity {
 //    비밀번호 변경 기록 필요
 
     @Column(length = 20, nullable = false)
-    private String phonenumber;
+    private String phoneNumber;
 
 //    번호 변경 기록 필요
 
@@ -62,11 +62,11 @@ public class User extends BaseEntity {
 //    LocalDateTime create_date;
 
 
-    public void update(String name, String nickname, String password, String phonenumber, String email) {
+    public void update(String name, String nickname, String password, String phoneNumber, String email) {
         this.name = name;
         this.nickname = nickname;
         this.password = password;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phoneNumber;
         this.email = email;
     }
 

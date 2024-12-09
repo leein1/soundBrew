@@ -1,8 +1,10 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +15,9 @@ public interface UserService {
 //    Optional<List<UserDTO>> getAllUsers();
 
 //    전체 조회
-    ResponseDTO<UserDTO> getAllUsers();
+//    ResponseDTO<UserDTO> getAllUsers();
 
+    public ResponseDTO<UserDTO> list(RequestDTO requestDTO);
 
 //    한명 조회
 //    UserDTO getUser(int userId);
@@ -43,5 +46,8 @@ public interface UserService {
 //    회원 삭제
     void deleteUser(int userId);
 
+//    프로필 이미지 업로드
+
+    void saveProfileImage(int userId, MultipartFile file);
 
 }

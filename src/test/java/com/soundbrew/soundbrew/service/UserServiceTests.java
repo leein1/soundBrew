@@ -23,21 +23,21 @@ public class UserServiceTests {
     @Autowired
     private UserService userService;
 
-    @Test
-    public void testGetAllUsers(){
-
-//        Optional<List<UserDTO>> userDTOs= userService.getAllUsers();
-        ResponseDTO responseDTO = userService.getAllUsers();
-
-        if(responseDTO.getDtoList().isEmpty()){
-            log.warn("리스트 비어 있음");
-
-        } else{
-            List<UserDTO> userDTOList = responseDTO.getDtoList();
-            userDTOList.forEach(userDTO -> log.info(userDTO));
-        }
-
-    }
+//    @Test
+//    public void testGetAllUsers(){
+//
+////        Optional<List<UserDTO>> userDTOs= userService.getAllUsers();
+//        ResponseDTO responseDTO = userService.getAllUsers();
+//
+//        if(responseDTO.getDtoList().isEmpty()){
+//            log.warn("리스트 비어 있음");
+//
+//        } else{
+//            List<UserDTO> userDTOList = responseDTO.getDtoList();
+//            userDTOList.forEach(userDTO -> log.info(userDTO));
+//        }
+//
+//    }
 
 //    @Test
 //    public void getUser(){
@@ -71,7 +71,7 @@ public class UserServiceTests {
                 .name("moon")
                 .nickname("moon")
                 .password("12341234A!")
-                .phonenumber("010-1111-1114")
+                .phoneNumber("010-1111-1114")
                 .email("moonody7731@naver.com")
                 .build();
 
