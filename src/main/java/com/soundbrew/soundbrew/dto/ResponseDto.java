@@ -1,9 +1,7 @@
 package com.soundbrew.soundbrew.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.List;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_DEFAULT) // null 값인 필드는 제외
 public class ResponseDto<E> {
     private List<E> dto;    // 데이터 목록
 
@@ -23,7 +22,14 @@ public class ResponseDto<E> {
     private boolean prev;   // 이전 페이지 존재 여부
     private boolean next;   // 다음 페이지 존재 여부
     private String keyword1; // 검색 키워드
+    private String message;
 
+    @Builder(builderMethodName = "withMessage")
+    public ResponseDto(String message){
+        this.message = message;
+    }
+
+    @Builder(builderMethodName = "withAll")
     public ResponseDto(RequestDto requestDto, List<E> dto, int total){
         if(total <= 0) return;
         this.keyword1 = requestDto.getKeyword();

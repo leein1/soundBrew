@@ -27,7 +27,6 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom{
         CriteriaQuery<MusicDto> query = cb.createQuery(MusicDto.class);
 
         Root<Music> root = query.from(Music.class);
-        Join<Music, User> userJoin = root.join("user");
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -38,7 +37,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom{
                         predicates.add(cb.like(root.get("title"), "%" + keyword + "%"));
                         break;
                     case "n":
-                        predicates.add(cb.equal(userJoin.get("nickname"), keyword));  // 정확히 일치하는 nickname 검색
+                        predicates.add(cb.equal(root.get("nickname"), keyword));  // 정확히 일치하는 nickname 검색
                         break;
                     default:
                         // 타입이 정의되지 않은 경우를 대비한 처리
@@ -48,7 +47,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom{
         }
         query.select(cb.construct(MusicDto.class
                 ,root.get("musicId"),root.get("userId"),root.get("title"),root.get("filePath"),root.get("price"),root.get("description"),root.get("soundType")
-                ,userJoin.get("nickname")
+                ,root.get("nickname")
                 ,root.get("create_date"),root.get("modify_date")
                 ));
 

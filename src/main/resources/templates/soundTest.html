@@ -57,7 +57,7 @@
     document.querySelectorAll(".playButton").forEach(button => {
         button.addEventListener("click", function() {
             const fileName = this.getAttribute("data-file"); // 버튼의 data-file 속성값
-            const streamUrl = /stream/${fileName}; // 스트리밍 URL 생성
+            const streamUrl = `/stream/${fileName}`; // 스트리밍 URL 생성
             const queueBar = document.getElementById("queueBar");
             const audioPlayer = document.getElementById("audioPlayer");
             const songInfo = document.getElementById("currentSongInfo");
@@ -66,7 +66,7 @@
             queueBar.style.display = "flex";
 
             // 오디오 정보 업데이트
-            songInfo.textContent = Now Playing: ${fileName};
+            songInfo.textContent = `Now Playing: ${fileName}`;
 
             // 오디오 소스 설정 및 재생
             audioPlayer.src = streamUrl;

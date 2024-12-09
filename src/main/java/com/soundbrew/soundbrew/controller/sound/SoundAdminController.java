@@ -8,8 +8,6 @@ import com.soundbrew.soundbrew.dto.sound.TagsDto;
 import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
 import com.soundbrew.soundbrew.service.sound.TagsServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,28 +19,34 @@ public class SoundAdminController {
     private final TagsServiceImpl tagsService;
 
     // 음원 검색( only sound)
+    // 1. 나의 권한을 서비스 로직에 같이 보낸다 2. 서비스 로직에서 권한에 따라 메서드를 분기한다.
     @GetMapping("/admin/sounds")
-    public ResponseEntity<ResponseDto<MusicDto>> readMusics(RequestDto requestDto){
-        ResponseDto<MusicDto> responseDto = soundService.searchMusic(requestDto);
-        if(responseDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
+    public ResponseEntity<ResponseDto<MusicDto>> getUsersSounds(RequestDto requestDto) {
+        ResponseDto<MusicDto> responseDto = soundService.getUsersSounds(requestDto);
+        //ResponseDto<MusicDto> responseDto = soundService.searchMusic(requestDto,권한);
+
+        ResponseDto responseDto1 = ResponseDto.withMessage().message("데이터를 없음.").build();
+        if (responseDto.getDto().isEmpty()) return ResponseEntity.ok().body(responseDto1);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     // 앨범 검색( only album)
+    // 1. 나의 권한을 서비스 로직에 같이 보낸다 2. 서비스 로직에서 권한에 따라 메서드를 분기한다.
     @GetMapping("/admin/albums")
-    public ResponseEntity<ResponseDto<AlbumDto>> readAlbums(RequestDto requestDto){
-        ResponseDto<AlbumDto> responseDto = soundService.searchAlbum(requestDto);
-        if(responseDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
+    public ResponseEntity<ResponseDto<AlbumDto>> getUsersAlbums(RequestDto requestDto) {
+        ResponseDto<AlbumDto> responseDto = soundService.getUsersAlbums(requestDto);
+//        ResponseDto<AlbumDto> responseDto = soundService.searchAlbum(requestDto,권한);
+        if (responseDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     // 태그들 불러오기
     @GetMapping("/admin/tags")
-    public ResponseEntity<ResponseDto<TagsDto>> getAdminTagPage(){
+    public ResponseEntity<ResponseDto<TagsDto>> getAllTags() {
         ResponseDto<TagsDto> tagsDto = tagsService.readTags();
-        if(tagsDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
+        if (tagsDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok().body(tagsDto);
     }
@@ -62,7 +66,7 @@ public class SoundAdminController {
     }
 
     // 인스트루먼트 태그 이름 바꾸기
-    @PatchMapping("/admin/tags/instruments/{tagName}")
+    @PatchMapping("/admin/tags/{}/instruments/{tagName}")
     public ResponseEntity<Void> changeInstSpelling(@PathVariable("tagName") String beforeName,
                                                    @RequestParam("afterName") String afterName) {
         tagsService.updateInstrumentTagSpelling(beforeName, null);
@@ -105,4 +109,5 @@ public class SoundAdminController {
         tagsService.createGenreTag(tagsDto);
         return ResponseEntity.ok().build();
     }
+
 }

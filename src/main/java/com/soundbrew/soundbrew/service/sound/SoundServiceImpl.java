@@ -12,6 +12,7 @@ import com.soundbrew.soundbrew.repository.sound.AlbumRepository;
 import com.soundbrew.soundbrew.repository.sound.MusicRepository;
 import com.soundbrew.soundbrew.repository.sound.custom.AlbumRepositoryCustomImpl;
 import com.soundbrew.soundbrew.repository.sound.custom.MusicRepositoryCustomImpl;
+import com.soundbrew.soundbrew.dto.DTOFilteringFactory;
 import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -44,9 +45,7 @@ public class SoundServiceImpl implements SoundService{
         if(before.get().isEmpty()) return ResponseDto.<SearchResponseDto>builder().dto(Collections.emptyList()).build();
 
         List<SearchTotalResultDto> result = before.get().getContent();
-
         SearchResponseDto after = soundProcessor.replaceTagsToArray(result);
-
         List<SearchTotalResultDto> afterSearch = soundProcessor.replaceCommaWithSpace(result);
         after.setSearchTotalResultDto(afterSearch);
 
@@ -62,8 +61,8 @@ public class SoundServiceImpl implements SoundService{
         return new ResponseDto<>(searchRequestDto,result,(int) before.get().getTotalElements());
     }
 
-    @Override
-    public ResponseDto<AlbumDto> searchAlbum(RequestDto requestDto) {
+    @Override // 숨김정보 x 본인 확인 o
+    public ResponseDto<AlbumDto> getUsersAlbums(RequestDto requestDto) {
         Optional<Page<AlbumDto>> albumPage = albumRepositoryCustom.searchAll(requestDto.getType(), requestDto.getKeyword(), requestDto.getPageable("albumId"));
         if(albumPage.get().isEmpty()) return ResponseDto.<AlbumDto>builder().dto(Collections.emptyList()).build();
 
@@ -73,14 +72,20 @@ public class SoundServiceImpl implements SoundService{
         return new ResponseDto<>(requestDto, listDto, (int) albumPage.get().getTotalElements());
     }
 
+    // 분기점 1. 나의 음원 보기 -> 나의 음원을 검색하는지 확인
+    // 분기점 2. 어드민의 회원들 음원 보기 -> 어드민인지 확인
     @Override
-    public ResponseDto<MusicDto> searchMusic(RequestDto requestDto){
+    public ResponseDto<MusicDto> getUsersSounds(RequestDto requestDto){
         Optional<Page<MusicDto>> musicPage = musicRepositoryCustom.searchAll(requestDto.getType(),requestDto.getKeyword(),requestDto.getPageable("albumId"));
         if(musicPage.get().isEmpty()) return ResponseDto.<MusicDto>builder().dto(Collections.emptyList()).build();
 
         List<MusicDto> listDto = musicPage.get().getContent();
+        // 어드민 이라면
 
-        return new ResponseDto<>(requestDto, listDto, (int) musicPage.get().getTotalElements());
+        // 어드민 아니라면(나의 음원 보기) - 아티스트라면
+//        listDto.forEach(DTOFilteringFactory::hideMusicDto);
+
+        return new ResponseDto<>(requestDto, listDto , (int) musicPage.get().getTotalElements());
     }
 
     //===

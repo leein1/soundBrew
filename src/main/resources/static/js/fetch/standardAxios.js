@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
     headers: { 'Content-Type': 'application/json' },
 });
 
-export const fetchData = async (endpoint, method = 'GET', body = null, useAuth = false, params = {}) => {
+export const fetchData = async (endpoint, method = 'GET', body = null, useToken = false, params = {}) => {
     try {
         const options = {
             method,
@@ -17,12 +17,19 @@ export const fetchData = async (endpoint, method = 'GET', body = null, useAuth =
             params,
         };
 
-        if (useAuth) {
+        if (useToken) {
             const token = localStorage.getItem('authToken');
             if (token) {
                 options.headers = { Authorization: `Bearer ${token}` };
             }
         }
+//        console.log('Request Details:', {
+//            method: options.method,
+//            url: axiosInstance.defaults.baseURL + options.url,
+//            params: options.params,
+//            body: options.data,
+//            headers: options.headers,
+//        });
 
         const response = await axiosInstance(options);
         if (response.status === 204) {

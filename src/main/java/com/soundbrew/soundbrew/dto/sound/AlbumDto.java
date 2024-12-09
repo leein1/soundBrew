@@ -16,11 +16,10 @@ import java.time.LocalDateTime;
 public class AlbumDto extends BaseEntityDto {
     private int albumId;
     private int userId;
+    private String nickname;
     private String albumName;
     private String albumArtPath;
     private String description;
-
-    private String nickname;
 
     public AlbumDto(int albumId, int userId, String albumName, String albumArtPath, String description, String nickname, LocalDateTime createDate, LocalDateTime modifyDate) {
         this.albumId = albumId;
@@ -36,6 +35,7 @@ public class AlbumDto extends BaseEntityDto {
     public Album toEntity() {
         return Album.builder()
                 .userId(this.userId)
+                .nickname(this.nickname)
                 .albumName(this.albumName)
                 .albumArtPath(this.albumArtPath)
                 .description(this.description)

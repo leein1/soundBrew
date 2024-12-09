@@ -2,9 +2,7 @@ package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.dto.RequestDto;
 import com.soundbrew.soundbrew.dto.ResponseDto;
-import com.soundbrew.soundbrew.dto.SearchRequestDto;
 import com.soundbrew.soundbrew.dto.sound.*;
-import org.springframework.data.domain.Pageable;
 
 // 음원(sound)에 대한 서비스 , 행위 중심 서비스, (album) - (album_music) - (music) - (music_tags) 까지 관여함
 public interface SoundService {
@@ -14,9 +12,9 @@ public interface SoundService {
     // soundSearchReqeustDto에 다른 앨범 검색 (total, keyword, tags)
     ResponseDto<SearchAlbumResultDto> totalAlbumSearch(RequestDto searchRequestDto);
     // only album info (All *for admin*  / artist search *for admin* / my album *for artist*)
-    ResponseDto<AlbumDto> searchAlbum(RequestDto requestDto); // all
+    ResponseDto<AlbumDto> getUsersAlbums(RequestDto requestDto); // all
     // only music info (All *for admin*  / artist search *for admin* / my music *for artist*)
-    ResponseDto<MusicDto> searchMusic(RequestDto requestDto); // all
+    ResponseDto<MusicDto> getUsersSounds(RequestDto requestDto); // all
 
     //생성
     void createSound(int checkedUserId, AlbumDto albumDto, MusicDto musicDto, TagsDto tagsDto);

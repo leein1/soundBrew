@@ -20,7 +20,7 @@ public class SearchTotalResultDto {
     private String musicFilePath;
     private int price;
     private String musicDescription;
-    private String userName;
+    private String nickname;
     private String instrumentTagName;
     private String moodTagName;
     private String genreTagName;
@@ -32,7 +32,7 @@ public class SearchTotalResultDto {
 
     public SearchTotalResultDto(int albumId, String albumName, String albumArtPath, String albumDescription, int musicId,
                                 String musicTitle, String musicFilePath, int price, String musicDescription,
-                                String userName, String instrumentTagName, String moodTagName, String genreTagName,
+                                String nickname, String instrumentTagName, String moodTagName, String genreTagName,
                                 LocalDateTime create_date, LocalDateTime modify_date) {
         this.albumId = albumId;
         this.albumName = albumName;
@@ -43,7 +43,7 @@ public class SearchTotalResultDto {
         this.musicFilePath = musicFilePath;
         this.price = price;
         this.musicDescription = musicDescription;
-        this.userName = userName;
+        this.nickname = nickname;
         this.instrumentTagName = instrumentTagName;
         this.moodTagName = moodTagName;
         this.genreTagName = genreTagName;

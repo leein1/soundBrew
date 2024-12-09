@@ -21,6 +21,9 @@ public class Album extends BaseEntity {
     @Column(nullable = false)
     private int userId;
 
+    @Column(nullable = true, length = 50)
+    private String nickname;
+
     @Column(length = 255, nullable = false)
     private String albumName;
 

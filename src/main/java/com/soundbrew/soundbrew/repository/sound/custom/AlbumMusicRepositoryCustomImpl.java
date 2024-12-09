@@ -31,7 +31,6 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         Root<AlbumMusic> root = query.from(AlbumMusic.class);
         Join<AlbumMusic, Album> albumJoin = root.join("album");
         Join<AlbumMusic, Music> musicJoin = root.join("music");
-        Join<AlbumMusic, User> userJoin = root.join("user");
         Join<Music, MusicInstrumentTag> musicInstrumentTagJoin = musicJoin.join("musicInstrumentTag", JoinType.LEFT);
         Join<MusicInstrumentTag, InstrumentTag> instrumentTagJoin = musicInstrumentTagJoin.join("instrumentTag", JoinType.LEFT);
         Join<Music, MusicMoodTag> musicMoodTagJoin = musicJoin.join("musicMoodTag", JoinType.LEFT);
@@ -48,7 +47,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                         predicates.add(cb.like(root.get("albumName"), "%" + searchRequestDto.getKeyword() + "%"));  // "title" -> albumName
                         break;
                     case "n":
-                        predicates.add(cb.equal(userJoin.get("nickname"), searchRequestDto.getKeyword()));  // 정확히 일치하는 nickname 검색
+                        predicates.add(cb.equal(root.get("nickname"), searchRequestDto.getKeyword()));  // 정확히 일치하는 nickname 검색
                         break;
                     default:
                         break;
@@ -73,7 +72,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         query.select(cb.construct(SearchTotalResultDto.class,
             albumJoin.get("albumId"), albumJoin.get("albumName"), albumJoin.get("albumArtPath"), albumJoin.get("description"),
             musicJoin.get("musicId"), musicJoin.get("title"), musicJoin.get("filePath"), musicJoin.get("price"), musicJoin.get("description"),
-            userJoin.get("nickname"),
+                albumJoin.get("nickname"),
             cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, instrumentTagJoin.get("instrumentTagName"))),
             cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, moodTagJoin.get("moodTagName"))),
             cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, genreTagJoin.get("genreTagName"))),
@@ -85,7 +84,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         // GROUP BY 절 추가
         query.groupBy(albumJoin.get("albumId"), albumJoin.get("albumName"), albumJoin.get("albumArtPath"), albumJoin.get("description"),
             musicJoin.get("musicId"), musicJoin.get("title"), musicJoin.get("filePath"), musicJoin.get("price"), musicJoin.get("description"),
-            userJoin.get("nickname"));
+                albumJoin.get("nickname"));
 
         // HAVING 절 조건 추가 (중복 제거)
         List<Predicate> havingPredicates = new ArrayList<>();
@@ -142,7 +141,6 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         Root<AlbumMusic> root = query.from(AlbumMusic.class);
         Join<AlbumMusic, Album> albumJoin = root.join("album");
         Join<AlbumMusic, Music> musicJoin = root.join("music");
-        Join<AlbumMusic, User> userJoin = root.join("user");
 
         Join<Music, MusicInstrumentTag> musicInstrumentTagJoin = musicJoin.join("musicInstrumentTag", JoinType.LEFT);
         Join<MusicInstrumentTag, InstrumentTag> instrumentTagJoin = musicInstrumentTagJoin.join("instrumentTag", JoinType.LEFT);
@@ -160,7 +158,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                         predicates.add(cb.like(root.get("albumName"), "%" + searchRequestDto.getKeyword() + "%"));  // "title" -> albumName
                         break;
                     case "n":
-                        predicates.add(cb.equal(userJoin.get("nickname"), searchRequestDto.getKeyword()));  // 정확히 일치하는 nickname 검색
+                        predicates.add(cb.equal(root.get("nickname"), searchRequestDto.getKeyword()));  // 정확히 일치하는 nickname 검색
                         break;
                     default:
                         break;
@@ -184,7 +182,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         //쿼리선택
         query.select(cb.construct(SearchAlbumResultDto.class,
                 albumJoin.get("albumId"),albumJoin.get("albumName"),albumJoin.get("albumArtPath"),albumJoin.get("description")
-                ,userJoin.get("nickname")
+                ,albumJoin.get("nickname")
                 ,cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT",String.class, instrumentTagJoin.get("instrumentTagName")))
                 ,cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT",String.class, moodTagJoin.get("moodTagName")))
                 ,cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT",String.class, genreTagJoin.get("genreTagName")))
@@ -200,7 +198,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 albumJoin.get("albumName"),
                 albumJoin.get("albumArtPath"),
                 albumJoin.get("description"),
-                userJoin.get("nickname")
+                albumJoin.get("nickname")
         );
         //==
         // HAVING 절 조건 추가 (중복 제거)

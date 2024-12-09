@@ -1,6 +1,5 @@
 package com.soundbrew.soundbrew.repository.sound.custom;
 
-import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.sound.Album;
 import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import org.springframework.data.domain.Page;
@@ -27,8 +26,6 @@ public class AlbumRepositoryCustomImpl implements AlbumRepositoryCustom{
 
         //Root
         Root<Album> root = query.from(Album.class);
-        Join<Album, User> userJoin = root.join("user");
-
         //조건
         List<Predicate> predicates = new ArrayList<>();
 
@@ -39,7 +36,7 @@ public class AlbumRepositoryCustomImpl implements AlbumRepositoryCustom{
                         predicates.add(cb.like(root.get("albumName"), "%" + keyword + "%"));  // "title" -> albumName
                         break;
                     case "n":
-                        predicates.add(cb.equal(userJoin.get("nickname"), keyword));  // 정확히 일치하는 nickname 검색
+                        predicates.add(cb.equal(root.get("nickname"), keyword));  // 정확히 일치하는 nickname 검색
                         break;
                     default:
                         break;
@@ -49,7 +46,7 @@ public class AlbumRepositoryCustomImpl implements AlbumRepositoryCustom{
 
         query.select(cb.construct(AlbumDto.class
                 ,root.get("albumId"),root.get("userId"),root.get("albumName"),root.get("albumArtPath"),root.get("description")
-                ,userJoin.get("nickname"),root.get("create_date"),  // BaseEntityDto의 create_date
+                ,root.get("nickname"),root.get("create_date"),  // BaseEntityDto의 create_date
                 root.get("modify_date")
         ));
         // 조건 추가
