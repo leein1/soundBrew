@@ -10,9 +10,6 @@ import com.soundbrew.soundbrew.repository.UserRepository;
 import com.soundbrew.soundbrew.repository.sound.AlbumMusicRepository;
 import com.soundbrew.soundbrew.repository.sound.AlbumRepository;
 import com.soundbrew.soundbrew.repository.sound.MusicRepository;
-import com.soundbrew.soundbrew.repository.sound.custom.AlbumRepositoryCustomImpl;
-import com.soundbrew.soundbrew.repository.sound.custom.MusicRepositoryCustomImpl;
-import com.soundbrew.soundbrew.dto.DTOFilteringFactory;
 import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,56 +33,47 @@ public class SoundServiceImpl implements SoundService{
     private final MusicRepository musicRepository;
     private final SoundProcessor soundProcessor;
     private final TagsServiceImpl tagsServiceImpl;
-    private final AlbumRepositoryCustomImpl albumRepositoryCustom;
-    private final MusicRepositoryCustomImpl musicRepositoryCustom;
 
     @Override
-    public ResponseDto<SearchResponseDto> totalSoundSearch(RequestDto requestDto) {
-        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.search(requestDto);
-        if(before.get().isEmpty()) return ResponseDto.<SearchResponseDto>builder().dto(Collections.emptyList()).build();
+    public ResponseDto<SearchTotalResultDto> totalSoundSearch(RequestDto requestDto) {
+        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.search(requestDto,"sound");
+        if(before.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>builder().dtoList(Collections.emptyList()).build();
 
         List<SearchTotalResultDto> result = before.get().getContent();
-        SearchResponseDto after = soundProcessor.replaceTagsToArray(result);
+//        SearchResponseDto after = soundProcessor.replaceTagsToArray(result);
         List<SearchTotalResultDto> afterSearch = soundProcessor.replaceCommaWithSpace(result);
-        after.setSearchTotalResultDto(afterSearch);
+//        after.setSearchTotalResultDto(afterSearch);
 
-        return new ResponseDto<>(requestDto,List.of(after),(int) before.get().getTotalElements());
+        return new ResponseDto<>(requestDto,afterSearch,(int) before.get().getTotalElements());
     }
 
     @Override
-    public ResponseDto<SearchAlbumResultDto> totalAlbumSearch(RequestDto searchRequestDto) {
-        Optional<Page<SearchAlbumResultDto>> before = albumMusicRepository.albums(searchRequestDto);
-        if(before.get().isEmpty()) return ResponseDto.<SearchAlbumResultDto>builder().dto(Collections.emptyList()).build();
+    public ResponseDto<SearchTotalResultDto> totalAlbumSearch(RequestDto searchRequestDto) {
+        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.search(searchRequestDto,"album");
+        if(before.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>builder().dtoList(Collections.emptyList()).build();
 
-        List<SearchAlbumResultDto> result = before.get().getContent();
+        List<SearchTotalResultDto> result = before.get().getContent();
+
         return new ResponseDto<>(searchRequestDto,result,(int) before.get().getTotalElements());
     }
 
     @Override // 숨김정보 x 본인 확인 o
-    public ResponseDto<AlbumDto> getUsersAlbums(RequestDto requestDto) {
-        Optional<Page<AlbumDto>> albumPage = albumRepositoryCustom.searchAll(requestDto.getType(), requestDto.getKeyword(), requestDto.getPageable("albumId"));
-        if(albumPage.get().isEmpty()) return ResponseDto.<AlbumDto>builder().dto(Collections.emptyList()).build();
-
-        List<AlbumDto> listDto = albumPage.get().getContent();
+    public ResponseDto<SearchTotalResultDto> getUsersAlbums(RequestDto requestDto) {
+        Optional<Page<SearchTotalResultDto>> albumPage = albumMusicRepository.getAlbumOne("u_1","Jonsi1",requestDto);
+        if(albumPage.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으신 앨범의 정보가 없습니다.").build();
 
         // ResponseDto 생성 및 반환
-        return new ResponseDto<>(requestDto, listDto, (int) albumPage.get().getTotalElements());
+        return new ResponseDto<>(requestDto,albumPage.get().getContent(),(int) albumPage.get().getTotalElements());
     }
 
     // 분기점 1. 나의 음원 보기 -> 나의 음원을 검색하는지 확인
     // 분기점 2. 어드민의 회원들 음원 보기 -> 어드민인지 확인
     @Override
-    public ResponseDto<MusicDto> getUsersSounds(RequestDto requestDto){
-        Optional<Page<MusicDto>> musicPage = musicRepositoryCustom.searchAll(requestDto.getType(),requestDto.getKeyword(),requestDto.getPageable("albumId"));
-        if(musicPage.get().isEmpty()) return ResponseDto.<MusicDto>builder().dto(Collections.emptyList()).build();
+    public ResponseDto<SearchTotalResultDto> getUsersSounds(RequestDto requestDto){
+        Optional<SearchTotalResultDto> musicPage = musicRepository.soundOne("u_1","henglias");
+        if(!musicPage.isPresent()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾은시는 음원이 없습니다.").build();
 
-        List<MusicDto> listDto = musicPage.get().getContent();
-        // 어드민 이라면
-
-        // 어드민 아니라면(나의 음원 보기) - 아티스트라면
-//        listDto.forEach(DTOFilteringFactory::hideMusicDto);
-
-        return new ResponseDto<>(requestDto, listDto , (int) musicPage.get().getTotalElements());
+        return ResponseDto.<SearchTotalResultDto>withSingleData().dto(musicPage.get()).build();
     }
 
     //===

@@ -2,7 +2,6 @@ package com.soundbrew.soundbrew.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_DEFAULT) // null 값인 필드는 제외
 public class ResponseDto<E> {
-    private List<E> dto;    // 데이터 목록
-
+    private List<E> dtoList;// 데이터 목록
+    private E dto; //단수일때 쓰는것.
     private int page;       // 현재 페이지
     private int size;       // 페이지 크기
     private int total;      // 전체 데이터 개수
@@ -29,14 +28,19 @@ public class ResponseDto<E> {
         this.message = message;
     }
 
+    @Builder(builderMethodName = "withSingleData")
+    public ResponseDto(E dto){
+        this.dto = dto;
+    }
+
     @Builder(builderMethodName = "withAll")
-    public ResponseDto(RequestDto requestDto, List<E> dto, int total){
+    public ResponseDto(RequestDto requestDto, List<E> dtoList, int total){
         if(total <= 0) return;
         this.keyword1 = requestDto.getKeyword();
         this.page = requestDto.getPage();
         this.size = requestDto.getSize();
         this.total = total;
-        this.dto = dto;
+        this.dtoList = dtoList;
         this.end = (int)(Math.ceil(this.page/10.0))*10; // 화면에서 마지막 번호
         this.start = this.end - 9; // 화면에서 시작 번호
         int last = (int)(Math.ceil(total/(double)size));

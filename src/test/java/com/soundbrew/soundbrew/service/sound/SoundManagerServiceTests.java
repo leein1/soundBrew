@@ -11,8 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -292,7 +290,7 @@ public class SoundManagerServiceTests {
         ResponseDto<TagsDto> result = tagsService.readTags();
 
         log.info("========================================");
-        if(result.getDto().isEmpty()) log.info("태그들이 없습니다.");
+        if(result.getDtoList().isEmpty()) log.info("태그들이 없습니다.");
         else log.info(result.toString());
         log.info("========================================");
     }

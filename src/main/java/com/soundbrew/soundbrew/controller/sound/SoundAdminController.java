@@ -4,6 +4,7 @@ import com.soundbrew.soundbrew.dto.RequestDto;
 import com.soundbrew.soundbrew.dto.sound.AlbumDto;
 import com.soundbrew.soundbrew.dto.sound.MusicDto;
 import com.soundbrew.soundbrew.dto.ResponseDto;
+import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
 import com.soundbrew.soundbrew.dto.sound.TagsDto;
 import com.soundbrew.soundbrew.service.sound.SoundServiceImpl;
 import com.soundbrew.soundbrew.service.sound.TagsServiceImpl;
@@ -21,12 +22,8 @@ public class SoundAdminController {
     // 음원 검색( only sound)
     // 1. 나의 권한을 서비스 로직에 같이 보낸다 2. 서비스 로직에서 권한에 따라 메서드를 분기한다.
     @GetMapping("/admin/sounds")
-    public ResponseEntity<ResponseDto<MusicDto>> getUsersSounds(RequestDto requestDto) {
-        ResponseDto<MusicDto> responseDto = soundService.getUsersSounds(requestDto);
-        //ResponseDto<MusicDto> responseDto = soundService.searchMusic(requestDto,권한);
-
-        ResponseDto responseDto1 = ResponseDto.withMessage().message("데이터를 없음.").build();
-        if (responseDto.getDto().isEmpty()) return ResponseEntity.ok().body(responseDto1);
+    public ResponseEntity<ResponseDto<SearchTotalResultDto>> getUsersSounds(RequestDto requestDto) {
+        ResponseDto<SearchTotalResultDto> responseDto = soundService.getUsersSounds(requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -34,10 +31,9 @@ public class SoundAdminController {
     // 앨범 검색( only album)
     // 1. 나의 권한을 서비스 로직에 같이 보낸다 2. 서비스 로직에서 권한에 따라 메서드를 분기한다.
     @GetMapping("/admin/albums")
-    public ResponseEntity<ResponseDto<AlbumDto>> getUsersAlbums(RequestDto requestDto) {
-        ResponseDto<AlbumDto> responseDto = soundService.getUsersAlbums(requestDto);
+    public ResponseEntity<ResponseDto<SearchTotalResultDto>> getUsersAlbums(RequestDto requestDto) {
+        ResponseDto<SearchTotalResultDto> responseDto = soundService.getUsersAlbums(requestDto);
 //        ResponseDto<AlbumDto> responseDto = soundService.searchAlbum(requestDto,권한);
-        if (responseDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -46,7 +42,7 @@ public class SoundAdminController {
     @GetMapping("/admin/tags")
     public ResponseEntity<ResponseDto<TagsDto>> getAllTags() {
         ResponseDto<TagsDto> tagsDto = tagsService.readTags();
-        if (tagsDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
+        if (tagsDto.getDtoList().isEmpty()) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok().body(tagsDto);
     }

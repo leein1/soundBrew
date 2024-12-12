@@ -23,49 +23,49 @@ public class SoundManageController {
     // 앨범 가져오기(나의) read
     // 1. 나의 권한을 서비스 로직에 같이 보낸다, 2. 서비스로직에서 권한에 따라 메서드를 분기한다.
     @GetMapping("/albums/mine")
-    public ResponseEntity<ResponseDto<AlbumDto>> getMyAlbums(RequestDto requestDto) {
+    public ResponseEntity<ResponseDto<SearchTotalResultDto>> getMyAlbums(RequestDto requestDto) {
         // RequestDto 객체 생성(실제로는 프론트에서 이미 값을 추출해서 넘겨주기때문에 나중에는 지우기)
         RequestDto test = RequestDto.builder().type("n").keyword("u_1").build();
 
-        ResponseDto<AlbumDto> responseDto = soundService.getUsersAlbums(requestDto);
+        ResponseDto<SearchTotalResultDto> responseDto = soundService.getUsersAlbums(requestDto);
         //ResponseDto<AlbumDto> responseDto = soundService.searchAlbum(requestDto,권한);
-        if(responseDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
+        if(responseDto.getDtoList().isEmpty()) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     // 음악 가져오기(나의) read
     // 1. 나의 권한을 서비스 로직에 같이 보낸다, 2. 서비스로직에서 권한에 따라 메서드를 분기한다.
-    @GetMapping("/sounds/mine")
-    public ResponseEntity<ResponseDto<MusicDto>> getMySounds(RequestDto requestDto) {
-        // RequestDto 객체 생성(실제로는 프론트에서 이미 값을 추출해서 넘겨주기때문에 나중에는 지우기)
-        RequestDto test = RequestDto.builder().type("n").keyword("u_1").build();
-
-        ResponseDto<MusicDto> responseDto = soundService.getUsersSounds(requestDto);
-        //ResponseDto<MusicDto> responseDto = soundService.searchMusic(requestDto,권한);
-        if(responseDto.getDto().isEmpty()) return ResponseEntity.noContent().build();
-
-        return ResponseEntity.ok().body(responseDto);
-    }
+//    @GetMapping("/sounds/mine")
+//    public ResponseEntity<ResponseDto<MusicDto>> getMySounds(RequestDto requestDto) {
+//        // RequestDto 객체 생성(실제로는 프론트에서 이미 값을 추출해서 넘겨주기때문에 나중에는 지우기)
+//        RequestDto test = RequestDto.builder().type("n").keyword("u_1").build();
+//
+//        ResponseDto<MusicDto> responseDto = soundService.getUsersSounds(requestDto);
+//        //ResponseDto<MusicDto> responseDto = soundService.searchMusic(requestDto,권한);
+//        if(responseDto.getDtoList().isEmpty()) return ResponseEntity.noContent().build();
+//
+//        return ResponseEntity.ok().body(responseDto);
+//    }
 
     // 태그들 가져오기(나의) ( 아티스트의 곡을 중심으로 태그를 긁어옴)
-    @GetMapping("/tags/mine")
-    public ResponseEntity<ResponseDto<TagsDto>> getTagsForMyMusics(RequestDto requestDto) {
-        // RequestDto 객체 생성(실제로는 프론트에서 이미 값을 추출해서 넘겨주기때문에 나중에는 지우기)
-        RequestDto test = RequestDto.builder().type("n").keyword("u_1").build();
-
-        // if(reqeust.getKeyword()와 JWT.get..이 같은지를 통해서 내 명의의 정보를 확인할려는 건지 확인){
-        ResponseDto<MusicDto> musics = soundService.getUsersSounds(requestDto);
-        if(musics.getDto().isEmpty()) return ResponseEntity.noContent().build();
-
-        List<Integer> musicIds = musics.getDto().stream().map(MusicDto :: getMusicId).collect(Collectors.toList());
-        ResponseDto<TagsDto> tagsList = tagsService.readTagsByMusicIds(musicIds);
-
-        return ResponseEntity.ok().body(tagsList);
-        //} else{
-        // return ResponseEntity.noContent().build();
-        //}
-    }
+//    @GetMapping("/tags/mine")
+//    public ResponseEntity<ResponseDto<TagsDto>> getTagsForMyMusics(RequestDto requestDto) {
+//        // RequestDto 객체 생성(실제로는 프론트에서 이미 값을 추출해서 넘겨주기때문에 나중에는 지우기)
+//        RequestDto test = RequestDto.builder().type("n").keyword("u_1").build();
+//
+//        // if(reqeust.getKeyword()와 JWT.get..이 같은지를 통해서 내 명의의 정보를 확인할려는 건지 확인){
+//        ResponseDto<MusicDto> musics = soundService.getUsersSounds(requestDto);
+//        if(musics.getDtoList().isEmpty()) return ResponseEntity.noContent().build();
+//
+//        List<Integer> musicIds = musics.getDtoList().stream().map(MusicDto :: getMusicId).collect(Collectors.toList());
+//        ResponseDto<TagsDto> tagsList = tagsService.readTagsByMusicIds(musicIds);
+//
+//        return ResponseEntity.ok().body(tagsList);
+//        //} else{
+//        // return ResponseEntity.noContent().build();
+//        //}
+//    }
 
     //생성
     @PostMapping("/manage/sounds")

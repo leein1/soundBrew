@@ -30,51 +30,15 @@ public class SoundProcessor extends StringProcessorImpl{
         return sounds;
     }
 
-    //  태그를 분리하고 중복 제거
-    public SearchResponseDto replaceTagsToArray(List<SearchTotalResultDto> sounds) {
-        SearchResponseDto afterTags = new SearchResponseDto();
-        Set<String> instTagSet = new HashSet<>();
-        Set<String> moodTagSet = new HashSet<>();
-        Set<String> genreTagSet = new HashSet<>();
-
-        for (SearchTotalResultDto sound : sounds) {
-            // Instrument tags 처리
-            if (sound.getInstrumentTagName() != null) {
-                // Split by space as well as commas, to ensure tags are separated correctly
-                String[] instTags = sound.getInstrumentTagName().split("[, ]+");
-                for (String tag : instTags) {
-                    if (!tag.isEmpty()) {
-                        instTagSet.add(tag.trim()); // Add only non-empty trimmed tags
-                    }
-                }
-            }
-
-            // Mood tags 처리
-            if (sound.getMoodTagName() != null) {
-                String[] moodTags = sound.getMoodTagName().split("[, ]+");
-                for (String tag : moodTags) {
-                    if (!tag.isEmpty()) {
-                        moodTagSet.add(tag.trim());
-                    }
-                }
-            }
-
-            // Genre tags 처리
-            if (sound.getGenreTagName() != null) {
-                String[] genreTags = sound.getGenreTagName().split("[, ]+");
-                for (String tag : genreTags) {
-                    if (!tag.isEmpty()) {
-                        genreTagSet.add(tag.trim());
-                    }
+    //  태그를 set에 저장
+    public void addTagsToSet(String tagNames, Set<String> tagSet) {
+        if (tagNames != null) {
+            String[] tags = tagNames.split("[, ]+");
+            for (String tag : tags) {
+                if (!tag.isEmpty()) {
+                    tagSet.add(tag.trim());
                 }
             }
         }
-
-        // Save the sets to the SoundServiceDto
-        afterTags.setInstTag(instTagSet);
-        afterTags.setMoodTag(moodTagSet);
-        afterTags.setGenreTag(genreTagSet);
-
-        return afterTags;
     }
 }

@@ -123,7 +123,7 @@ public class TagsServiceImpl implements TagsService {
                 .map(GenreTag::getGenreTagName)
                 .collect(Collectors.toList()));
 
-        return ResponseDto.<TagsDto>builder().dto(List.of(tagsDto)).build();
+        return ResponseDto.<TagsDto>builder().dtoList(List.of(tagsDto)).build();
     }
 
     // musicId를 통해서 태그들 검색 (for artist or for admin)
@@ -160,7 +160,7 @@ public class TagsServiceImpl implements TagsService {
             musicTagsDtos.add(tagsDto);
         }
 
-        return ResponseDto.<TagsDto>builder().dto(musicTagsDtos).build();
+        return ResponseDto.<TagsDto>builder().dtoList(musicTagsDtos).build();
     }
 
 

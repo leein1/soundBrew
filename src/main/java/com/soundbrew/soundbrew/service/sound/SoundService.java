@@ -8,13 +8,13 @@ import com.soundbrew.soundbrew.dto.sound.*;
 public interface SoundService {
 
     // soundSearchRequestDto에 따른 음원 검색 (total, keyword, tags)
-    ResponseDto<SearchResponseDto> totalSoundSearch(RequestDto requestDto);
+    ResponseDto<SearchTotalResultDto> totalSoundSearch(RequestDto requestDto);
     // soundSearchReqeustDto에 다른 앨범 검색 (total, keyword, tags)
-    ResponseDto<SearchAlbumResultDto> totalAlbumSearch(RequestDto searchRequestDto);
+    ResponseDto<SearchTotalResultDto> totalAlbumSearch(RequestDto searchRequestDto);
     // only album info (All *for admin*  / artist search *for admin* / my album *for artist*)
-    ResponseDto<AlbumDto> getUsersAlbums(RequestDto requestDto); // all
+    ResponseDto<SearchTotalResultDto> getUsersAlbums(RequestDto requestDto); // all
     // only music info (All *for admin*  / artist search *for admin* / my music *for artist*)
-    ResponseDto<MusicDto> getUsersSounds(RequestDto requestDto); // all
+    ResponseDto<SearchTotalResultDto> getUsersSounds(RequestDto requestDto); // all
 
     //생성
     void createSound(int checkedUserId, AlbumDto albumDto, MusicDto musicDto, TagsDto tagsDto);
