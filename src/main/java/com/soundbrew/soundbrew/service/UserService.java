@@ -1,13 +1,10 @@
 package com.soundbrew.soundbrew.service;
 
-import com.soundbrew.soundbrew.domain.User;
+
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
@@ -22,9 +19,14 @@ public interface UserService {
 //    한명 조회
 //    UserDTO getUser(int userId);
 
-//    한명 조회
-    Optional<UserDTO> getUser(int userId);
+    default String hello() {
+        return null;
+    }
 
+    //    한명 조회
+    ResponseDTO<UserDTO> getUser(int userId);
+
+    ResponseDTO<UserDTO> getUserByNickname(String nickname);
 //    회원 가입
     void registerUser(UserDTO userDTO);
 
@@ -35,10 +37,10 @@ public interface UserService {
     boolean activateUser(String email,String activationCode);
 
 //    회원 정보 수정
-    void updateUser(UserDTO userDTO);
+    ResponseDTO updateUser(UserDTO userDTO);
 
 //    본인확인 - 로그인 된 상태더라도 정보 수정을 위해 접근할때 필요
-    boolean authentication(int userId, String password);
+    ResponseDTO<String> verifyPassword(String nickname, String password);
 
 //    비밀번호 수정
     String updatePassword(int userId, String newPassword);
@@ -46,6 +48,7 @@ public interface UserService {
 //    회원 삭제
     void deleteUser(int userId);
 
+    ResponseDTO<String> deleteUserByNickname(String nickname);
 //    프로필 이미지 업로드
 
     void saveProfileImage(int userId, MultipartFile file);

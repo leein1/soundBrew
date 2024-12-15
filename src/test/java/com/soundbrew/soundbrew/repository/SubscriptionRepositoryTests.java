@@ -94,6 +94,15 @@ public class SubscriptionRepositoryTests {
         log.info(subscriptionRepository.findBySubscriptionName(subscriptionName));
     }
 
+    @Test
+    public void testFindBySubscriptionId(){
+
+        int subscriptionId = 4;
+
+        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
+    log.info("구독제 정보 : {}", subscription.toString() );
+    }
+
 
     @Transactional
     @Rollback(false)

@@ -39,6 +39,9 @@ public class UserDTO extends BaseDTO{
     public boolean emailVerified;
 
 
+    private int creditBalance;
+
+
     public  String profileImagePath;
 
 
@@ -55,6 +58,7 @@ public class UserDTO extends BaseDTO{
                 .phoneNumber(this.phoneNumber)
                 .email(this.email)
                 .emailVerified(this.emailVerified)
+                .creditBalance(this.creditBalance)
                 .profileImagePath(this.profileImagePath)
                 .birth(this.birth)
                 .build();

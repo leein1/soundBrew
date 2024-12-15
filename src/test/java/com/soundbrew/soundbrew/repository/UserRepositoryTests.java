@@ -30,7 +30,7 @@ public class UserRepositoryTests {
                     .name("user_" + i)
                     .nickname("u_" + i)
                     .password("password_" + i)
-                    .phonenumber("010-" + i)
+                    .phoneNumber("010-" + i)
                     .email(i + "_insert_test@test.com")
                     .build();
 
@@ -111,6 +111,17 @@ public class UserRepositoryTests {
             log.warn("찾을 수 없습니다.");
         }
 
+        log.info(result.toString());
+    }
+
+    @Test
+    public void testFindByNickname(){
+
+        String nickname = "moon";
+        Optional<User> result = userRepository.findByNickname(nickname);
+        if(result.isEmpty()){
+            log.info("찾을 수 없습니다.");
+        }
         log.info(result.toString());
     }
 

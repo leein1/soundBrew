@@ -21,9 +21,6 @@ public class UserSubscription extends BaseEntity{
     private int subscriptionId;
 
     @Column(nullable = true)
-    private int creditBalance;
-
-    @Column(nullable = true)
     private LocalDateTime firstBillingDate;
 
     @Column(nullable = true)

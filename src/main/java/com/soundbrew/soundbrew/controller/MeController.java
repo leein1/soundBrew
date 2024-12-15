@@ -1,21 +1,15 @@
 package com.soundbrew.soundbrew.controller;
 
-import com.soundbrew.soundbrew.dto.RequestDTO;
+
 import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.service.SubscriptionService;
 import com.soundbrew.soundbrew.service.UserService;
-import com.soundbrew.soundbrew.util.StringProcessorImpl;
-import com.soundbrew.soundbrew.util.UserValidator;
 import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class MeController {
 
     private final UserService userService;
+    private final SubscriptionService subscriptionService;
+
 
 //    @GetMapping("/list")
 //    public ResponseDTO<UserDTO> list() {
@@ -112,6 +108,157 @@ public class MeController {
 //
 //    }
 
+
+
+
+
+
+
+//    검색을 nickname으로 해야 하는가 userId로 해야 하는가
+
+//    내 정보 보기 - GET /me/{userId}
+    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
+    @GetMapping(value = "")
+    public ResponseEntity<ResponseDTO<UserDTO>> getMe(@RequestParam("nickname") String nickname) {   //추후 토큰에서 user nickname 추출 해야 함
+
+        ResponseDTO<UserDTO> responseDTO = userService.getUserByNickname(nickname);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+
+//    내 정보 수정 - PATCH /me/{userId}
+//    수정 하는 방식으로 현재는 UserDTO 를 대입하지만 Map(k,v)로 바꾸는게 좋아보임
+//    controller - Map으로 클라이언트측에서 수정한 값 가져오기,
+//    service - 수정한 값 null 검증 후 수정
+    @ApiOperation(value = "me PATCH",notes = "PATCH 방식으로 내 정보 수정")
+    @PatchMapping(value = "")
+    public ResponseEntity<ResponseDTO<String>> updateMe(@RequestBody UserDTO userDTO){  //추후 토큰으로 변경
+
+        ResponseDTO<String> responseDTO = userService.updateUser(userDTO);
+
+
+        return ResponseEntity.ok().body(responseDTO);
+
+    }
+
+
+//    탈퇴 - DELETE /me/{userId}
+//    비밀번호 확인 후 탈퇴 가능
+    @ApiOperation(value = "me DELETE", notes = "DELETE 탈퇴")
+    @DeleteMapping("")
+    public ResponseEntity<ResponseDTO<String>> deleteMe(@RequestParam String nickname){ //추후 토큰으로 변경
+
+        ResponseDTO<String> responseDTO = userService.deleteUserByNickname(nickname);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+
+//    회원 구독제 보기 GET /me/subscription
+//    반환형으로 SubscriptionDTO ? UserSubscriptionDTO
+    @ApiOperation(value = "subscription GET", notes = "GET 내 구독제 정보 가져오기")
+    @GetMapping("/subscription")
+    public ResponseEntity<ResponseDTO<SubscriptionDTO>> getSubscription(@RequestParam("nickname") String nickname){ //추후 토큰으로 변경
+
+        // user 조회
+        UserDTO userDTO = userService.getUserByNickname(nickname).getDto();
+
+        // user가 구독중인 subscriptionId 가져오기
+        int subscriptionId = userDTO.getSubscriptionId();
+
+        // subscriptionId로 구독제 정보 가져오기
+        ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.findOneSubscription(subscriptionId);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+
+//    회원 구독제 등록 POST /me/subscription/{subscriptionId}
+    @ApiOperation(value = "subscription POST", notes = "POST 유저의 구독제 구독")
+    @PostMapping("/subscription/{subscriptionId}")
+    public ResponseEntity addSubscription(@PathVariable int subscriptionId, @RequestParam int userId){ //추후 토큰으로 변경
+
+       ResponseDTO<String> responseDTO = subscriptionService.addUserSubscription(userId, subscriptionId);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+
+//    구독제 정보 수정 PATCH /me/subscription
+    @ApiOperation(value = "subscription PATCH", notes = "PATCH 유저의 구독제 변경")
+    @PatchMapping("/subscription/{subscriptionId}")
+    public ResponseEntity updateSubscription(@PathVariable int subscriptionId,@RequestParam int userId){    //추후 토큰으로 변경
+
+
+
+
+
+        return null;
+    }
+
+
+//    구독제 정보 삭제 DELETE /me/subscription
+    @ApiOperation(value = "subscription DELETE", notes = "DELETE 유저의 구독 취소")
+    @DeleteMapping("/subscription")
+    public ResponseEntity deleteSubscription(@RequestParam int subscriptionId, @RequestParam int userId) {  //추후 토큰으로 변경
+
+
+
+        return null;
+    }
+
+
+
+//    구매기록보기
+//    구매하기
+//    다운로드 기록 보기
+
+
+
+//    나의 모든 앨범 - GET /me/albums
+    @GetMapping("/albums")
+    public ResponseEntity getMyAlbums(@RequestParam String nickname){    //추후 토큰으로 변경
+
+        //내 앨범 요청
+        return null;
+    }
+
+
+//    나의 특정 앨범 - GET /me/albums/{albumId}
+//    메서드 이름 수정 필요
+    @GetMapping("/albums/{albumId}")
+    public ResponseEntity getMyAlbums(@PathVariable int albumId, @RequestParam String nickname){    //추후 토큰으로 변경
+
+        return null;
+    }
+
+
+
+//    나의 특정 앨범수정 - PATCH /me/albums/{albumId} - 해당 행위를 /api/me에서 처리하는것이 맞는가?
+
+
+//    나의 모든 음원 - GET /me/tracks
+    @GetMapping("/tracks")
+    public ResponseEntity getMyTracks(@RequestParam String nickname){    //추후 토큰으로 변경
+
+        //내 앨범 요청
+        return null;
+    }
+
+
+//    나의 특정 음원 - GET /me/tracks/{trackId}
+//    메서드 이름 수정 필요
+    @GetMapping("/tracks/{musicId}")
+    public ResponseEntity getMyTracks(@PathVariable int musicId, @RequestParam String nickname){    //추후 토큰으로 변경
+
+        //내 앨범 요청
+        return null;
+    }
+
+
+
+//   나의 특정 음원 수정 - PATCH /me/tracks/{trackId} - 해당 행위를 /api/me에서 처리하는것이 맞는가?
 
 
 }

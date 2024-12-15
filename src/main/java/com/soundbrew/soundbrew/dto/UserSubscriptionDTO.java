@@ -21,8 +21,7 @@ public class UserSubscriptionDTO extends BaseDTO {
     @Column(nullable = false)
     private int subscriptionId;
 
-    @Column(nullable = true)
-    private int creditBalance;
+
 
     @Column(nullable = true)
     private LocalDateTime firstBillingDate;
@@ -43,7 +42,6 @@ public class UserSubscriptionDTO extends BaseDTO {
         UserSubscription userSubscription = UserSubscription.builder()
                 .userId(this.userId)
                 .subscriptionId(this.subscriptionId)
-                .creditBalance(this.creditBalance)
                 .firstBillingDate(this.firstBillingDate)
                 .nextBillingDate(this.nextBillingDate)
                 .paymentStatus(this.paymentStatus)

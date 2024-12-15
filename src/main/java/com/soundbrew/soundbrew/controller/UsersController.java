@@ -21,8 +21,8 @@ public class UsersController {
 
     private final UserService userService;
 
-    @ApiOperation(value = "users POST",notes = "POST 방식으로 회원 등록")
-    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "users POST", notes = "POST 방식으로 회원 등록")
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Object>> resgister(@RequestBody UserDTO userDTO) {
 
         userService.registerUser(userDTO);
@@ -34,5 +34,8 @@ public class UsersController {
         return ResponseEntity.ok(responseDTO);
 
     }
+
+//    인증 메일 발송 -  POST /me/email-verification
+//    메일 인증 - PATCH /me/email-verification
 
 }

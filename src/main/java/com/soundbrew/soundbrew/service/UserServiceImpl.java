@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.service;
 
+
 import com.soundbrew.soundbrew.domain.ActivationCode;
 import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.dto.ActivationCodeDTO;
@@ -15,24 +16,21 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
 @RequiredArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService{
+
 
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
@@ -58,6 +56,7 @@ public class UserServiceImpl implements UserService{
 //        Optional<List<UserDTO>> optionalDtoList = userDTOs.isEmpty()
 //                ? Optional.empty()
 //                : Optional.of(userDTOs);
+//
 //
 //        return ResponseDTO.<UserDTO>withAll()
 //                .dtoList(optionalDtoList.orElse(Collections.emptyList())) // 값 설정
@@ -97,14 +96,30 @@ public class UserServiceImpl implements UserService{
 //    }
 
     @Override
-    public Optional<UserDTO> getUser(int userId) {
+    public ResponseDTO<UserDTO> getUser(int userId) {
 
         // Optional 객체로 조회
-        Optional<User> result = userRepository.findById(userId);
+       User user = userRepository.findById(userId).orElseThrow();
 
-//        없으면 Optional.empty() 반환
-//        있으면 User를 UserDTO로 변환후 Optional<UserDTO>로 반환
-        return result.map(user -> modelMapper.map(user,UserDTO.class));
+        //  DTO변환
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+
+        return ResponseDTO.<UserDTO>withSingeData()
+                .dto(userDTO)
+                .build();
+
+    }
+
+    @Override
+    public ResponseDTO<UserDTO> getUserByNickname(String nickname) {
+
+        User result = userRepository.findByNickname(nickname).orElseThrow();
+
+        UserDTO userDTO = modelMapper.map(result,UserDTO.class);
+
+        return ResponseDTO.<UserDTO>withSingeData()
+                .dto(userDTO)
+                .build();
 
     }
 
@@ -233,14 +248,15 @@ public class UserServiceImpl implements UserService{
 //    회원 정보 수정
 //    비밀번호 변경은 따로 처리할것
 //    프로필 이미지 변경 따로 처리할 것
+//    반환형 ResponseDTO로 변경
     @Override
-    public void updateUser(UserDTO userDTO) {
+    public ResponseDTO updateUser(UserDTO userDTO) {
 
 //        업데이트 방법 필요
 //        이 메서드는 userDTO에 기존 정보도 전부 받아 온다고 가정 후 작성
         int userId = userDTO.getUserId();
 
-        Optional<User> result = userRepository.findById(userId);
+        User result = userRepository.findById(userId).orElseThrow();
 
 //         기존 사용자 정보 수정
         UserDTO existingUserDTO = modelMapper.map(result, UserDTO.class);
@@ -253,31 +269,40 @@ public class UserServiceImpl implements UserService{
 
         userRepository.save(existingUserDTO.toEntity());
 
+        return ResponseDTO.withMessage()
+                .message("수정 되었습니다.")
+                .build();
+
     }
 
 
 //    비밀번호 재 확인 - 본인 인증용
+//    userId -> nickname으로 변경
+//    반환형 responseDTO로 변경
     @Override
-    public boolean authentication(int userId, String password) {
+    public ResponseDTO<String> verifyPassword(String nickname, String inputPassword) {
 
 //        유저가 존재 하는지 검증
 //        User user = userRepository.findById(userId).orElseThrow(() ->
 //                new NoSuchElementException(userId + " 번 회원을 찾을 수 없습니다."));
 
-        Optional<User> result = userRepository.findById(userId);
+//        Optional<User> result = userRepository.findById(userId);
 
-        User user = result.get();
+        User user = userRepository.findByNickname(nickname).orElseThrow();
 
         String existingUserPassword = user.getPassword();
 
 //            비밀 번호가 일치 하는 경우
-        if (existingUserPassword.equals(password)) {
+        if (!existingUserPassword.equals(inputPassword)) {
 
-            return true;
-        } else {
-
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
+            return ResponseDTO.<String>withMessage()
+                    .message("비밀번호가 일치하지 않습니다.")
+                    .build();
         }
+
+        return ResponseDTO.<String>withMessage()
+                .message("확인되었습니다.")
+                .build();
 
     }
 
@@ -298,6 +323,8 @@ public class UserServiceImpl implements UserService{
 //        User user = userRepository.findById(userId).orElseThrow(() ->
 //                new NoSuchElementException(userId + " 번 회원을 찾을 수 없습니다."));
 
+
+        /*
         Optional<UserDTO> optionalUserDTO = this.getUser(userId);
 
 //        Opiton.empty()라면
@@ -306,23 +333,20 @@ public class UserServiceImpl implements UserService{
             return "해당 유저가 존재하지 않습니다.";
 
         }else {
+        */
+
 
 //        set을 위해 DTO로 변환
-            UserDTO userDTO = optionalUserDTO.get();
+        UserDTO userDTO = this.getUser(userId).getDto();
 
 //        비밀번호 set
-            userDTO.setPassword(newPassword);
+        userDTO.setPassword(newPassword);
 
 //        entity로 변환 후 save()
-            userRepository.save(userDTO.toEntity());
+        userRepository.save(userDTO.toEntity());
 
-            return "수정 되었습니다.";
-        }
-
-
-
+        return "수정 되었습니다.";
     }
-
 
 //    회원 삭제
 //    삭제시 구독 정보도 삭제 해야함
@@ -331,18 +355,28 @@ public class UserServiceImpl implements UserService{
     public void deleteUser(int userId) {
 
 //        유저가 존재 하는지 검증
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow();
 
         userRepository.delete(user);
     }
 
+    @Override
+    public ResponseDTO<String> deleteUserByNickname(String nickname) {
+        User user = userRepository.findByNickname(nickname).orElseThrow();
 
-//    프로필 이미지 업로드
+        userRepository.delete(user);
+
+        return ResponseDTO.<String>withMessage()
+                .message("탈퇴되었습니다.")
+                .build();
+    }
+
+    //    프로필 이미지 업로드
     @Override
     public void saveProfileImage(int userId, MultipartFile file) {
 
         //  유저 여부 확인
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow();
 
         //  파일 확인
         if(file.isEmpty() || file.getContentType().equals("image/jpeg")){
@@ -350,4 +384,5 @@ public class UserServiceImpl implements UserService{
         }
 
     }
+
 }

@@ -2,8 +2,10 @@ package com.soundbrew.soundbrew.dto;
 
 import com.soundbrew.soundbrew.domain.ActivationCode;
 import com.soundbrew.soundbrew.domain.User;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

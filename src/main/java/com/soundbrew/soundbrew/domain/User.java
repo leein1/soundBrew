@@ -51,6 +51,10 @@ public class User extends BaseEntity {
     @Column(nullable = true)
     private boolean emailVerified;
 
+    @Column(nullable = false)
+    private int creditBalance;
+
+
     @Column(nullable = true)
     private  String profileImagePath;
 

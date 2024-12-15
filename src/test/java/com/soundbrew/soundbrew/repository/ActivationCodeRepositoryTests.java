@@ -37,7 +37,7 @@ public class ActivationCodeRepositoryTests {
                 .name("user_" + 1234)
                 .nickname("u_" + 1234)
                 .password("password_" + 1234)
-                .phonenumber("010-" + 1234)
+                .phoneNumber("010-" + 1234)
                 .email("activation_test@test.com")
                 .build();
         userRepository.save(user);
