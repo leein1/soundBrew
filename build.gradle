@@ -1,3 +1,9 @@
+buildscript{
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.18'
@@ -58,13 +64,27 @@ dependencies {
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
-    //
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
+    //QueryDSL
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 
+    annotationProcessor(
+            "javax.persistence:javax.persistence-api",
+            "javax.annotation:javax.annotation-api",
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jpa"
+    )
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+sourceSets{
+    main{
+        java{
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+        }
+    }
 }
