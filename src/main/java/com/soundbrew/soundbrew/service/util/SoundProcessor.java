@@ -1,6 +1,5 @@
 package com.soundbrew.soundbrew.service.util;
 
-import com.soundbrew.soundbrew.dto.sound.SearchResponseDto;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
 import org.springframework.stereotype.Component;
 

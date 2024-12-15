@@ -2,7 +2,6 @@ package com.soundbrew.soundbrew.repository.sound.custom;
 
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.RequestDto;
-import com.soundbrew.soundbrew.dto.sound.SearchAlbumResultDto;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -85,6 +84,44 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(cb.equal(albumJoin.get("nickname"), nickname));
         predicates.add(cb.equal(albumJoin.get("albumName"), albumName));
+
+        // 검색에 필요한 DTO 필드를 선택하는 설정
+        configureSelectQuery(query, cb, albumJoin, musicJoin, instrumentTagJoin, moodTagJoin, genreTagJoin, "sound");
+        // 준비된 검색 조건들을 쿼리에 적용
+        query.where(predicates.toArray(new Predicate[0]));
+        // 그룹화 조건 설정
+        configureGroupBy(query, cb, albumJoin, musicJoin, "sound");
+
+        // 최종 쿼리 준비 및 실행
+        TypedQuery<SearchTotalResultDto> typedQuery = entityManager.createQuery(query);
+
+        int totalRows = typedQuery.getResultList().size();
+        typedQuery.setFirstResult((int) requestDto.getPageable().getOffset());
+        typedQuery.setMaxResults(requestDto.getPageable().getPageSize());
+
+        return Optional.of(new PageImpl<>(typedQuery.getResultList(), requestDto.getPageable(), totalRows));
+    }
+
+    @Override
+    public Optional<Page<SearchTotalResultDto>> getAlbumOne(String nickname, int id, RequestDto requestDto) {
+        //최초 작업준비
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<SearchTotalResultDto> query = cb.createQuery(SearchTotalResultDto.class);
+
+        //join
+        Root<AlbumMusic> root = query.from(AlbumMusic.class);
+        Join<AlbumMusic, Album> albumJoin = root.join("album");
+        Join<AlbumMusic, Music> musicJoin = root.join("music");
+        Join<Music, MusicInstrumentTag> musicInstrumentTagJoin = musicJoin.join("musicInstrumentTag", JoinType.LEFT);
+        Join<MusicInstrumentTag, InstrumentTag> instrumentTagJoin = musicInstrumentTagJoin.join("instrumentTag", JoinType.LEFT);
+        Join<Music, MusicMoodTag> musicMoodTagJoin = musicJoin.join("musicMoodTag", JoinType.LEFT);
+        Join<MusicMoodTag, MoodTag> moodTagJoin = musicMoodTagJoin.join("moodTag", JoinType.LEFT);
+        Join<Music, MusicGenreTag> musicGenreTagJoin = musicJoin.join("musicGenreTag", JoinType.LEFT);
+        Join<MusicGenreTag, GenreTag> genreTagJoin = musicGenreTagJoin.join("genreTag", JoinType.LEFT);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(albumJoin.get("nickname"), nickname));
+        predicates.add(cb.equal(albumJoin.get("albumId"), id));
 
         // 검색에 필요한 DTO 필드를 선택하는 설정
         configureSelectQuery(query, cb, albumJoin, musicJoin, instrumentTagJoin, moodTagJoin, genreTagJoin, "sound");

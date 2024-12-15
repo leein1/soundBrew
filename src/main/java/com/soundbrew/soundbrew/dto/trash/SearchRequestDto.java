@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.dto;
+package com.soundbrew.soundbrew.dto.trash;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;

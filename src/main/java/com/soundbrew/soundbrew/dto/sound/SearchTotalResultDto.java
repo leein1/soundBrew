@@ -30,18 +30,12 @@ public class SearchTotalResultDto {
     private LocalDateTime modify_date;
 
     public SearchTotalResultDto(int albumId, String albumName, String albumArtPath, String albumDescription,
-//                                int musicId, String musicTitle, String musicFilePath, int price, String musicDescription,
                                 String nickname, String instrumentTagName, String moodTagName, String genreTagName,
                                 LocalDateTime create_date, LocalDateTime modify_date) {
         this.albumId = albumId;
         this.albumName = albumName;
         this.albumArtPath = albumArtPath;
         this.albumDescription = albumDescription;
-//        this.musicId = musicId;
-//        this.musicTitle = musicTitle;
-//        this.musicFilePath = musicFilePath;
-//        this.price = price;
-//        this.musicDescription = musicDescription;
         this.nickname = nickname;
         this.instrumentTagName = instrumentTagName;
         this.moodTagName = moodTagName;
@@ -51,14 +45,9 @@ public class SearchTotalResultDto {
     }
 
     public SearchTotalResultDto(
-//            int albumId, String albumName, String albumArtPath, String albumDescription,
                                 int musicId, String musicTitle, String musicFilePath, int price, String musicDescription,
                                 String nickname, String instrumentTagName, String moodTagName, String genreTagName,
                                 LocalDateTime create_date, LocalDateTime modify_date) {
-//        this.albumId = albumId;
-//        this.albumName = albumName;
-//        this.albumArtPath = albumArtPath;
-//        this.albumDescription = albumDescription;
         this.musicId = musicId;
         this.musicTitle = musicTitle;
         this.musicFilePath = musicFilePath;

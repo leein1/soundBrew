@@ -1,21 +1,15 @@
-package com.soundbrew.soundbrew.service.newservice;
+package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.RequestDto;
 import com.soundbrew.soundbrew.dto.ResponseDto;
-import com.soundbrew.soundbrew.dto.sound.AlbumDto;
-import com.soundbrew.soundbrew.dto.sound.MusicDto;
-import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
-import com.soundbrew.soundbrew.dto.sound.TagsDto;
+import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,17 +32,9 @@ public class AdminServiceImpl implements AdminService{
     @Override
     @Transactional
     public ResponseDto createTag(TagsDto tagsDto) {
-        if (!tagsDto.getInstrument().isEmpty()) {
-            tagsDto.InstToEntity().forEach(instrumentTagRepository::save);
-        }
-
-        if (!tagsDto.getMood().isEmpty()) {
-            tagsDto.moodToEntity().forEach(moodTagRepository::save);
-        }
-
-        if (!tagsDto.getGenre().isEmpty()) {
-            tagsDto.genreToEntity().forEach(genreTagRepository::save);
-        }
+        if (!tagsDto.getInstrument().isEmpty()) tagsDto.InstToEntity().forEach(instrumentTagRepository::save);
+        if (!tagsDto.getMood().isEmpty()) tagsDto.moodToEntity().forEach(moodTagRepository::save);
+        if (!tagsDto.getGenre().isEmpty()) tagsDto.genreToEntity().forEach(genreTagRepository::save);
 
        return ResponseDto.withMessage().message("태그가 성공적으로 저장되었습니다.").build();
     }
@@ -85,7 +71,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     @Transactional
-    public ResponseDto updateSoundTags(int musicId, TagsDto tagsDto) {
+    public ResponseDto updateLinkTags(int musicId, TagsDto tagsDto) {
         Optional<Music> music = musicRepository.findById(musicId);
         if(music.isEmpty()) return ResponseDto.withMessage().message("업데이트 하려는 음원을 찾지 못했습니다.").build();
 
@@ -93,13 +79,13 @@ public class AdminServiceImpl implements AdminService{
         musicMoodTagRepository.deleteByIdMusicId(music.get().getMusicId());
         musicGenreTagRepository.deleteByIdMusicId(music.get().getMusicId());
 
-        linkSoundTags(music.get(),tagsDto);
+        linkTags(music.get(),tagsDto);
         return ResponseDto.withMessage().message("음원의 태그를 새롭게 연결했습니다.").build();
     }
 
     @Override
     @Transactional
-    public ResponseDto linkSoundTags(Music music, TagsDto tagsDto) {
+    public ResponseDto linkTags(Music music, TagsDto tagsDto) {
         List<MusicInstrumentTag> instrumentTags = new ArrayList<>();
         List<MusicMoodTag> moodTags = new ArrayList<>();
         List<MusicGenreTag>genreTags = new ArrayList<>();
@@ -223,5 +209,15 @@ public class AdminServiceImpl implements AdminService{
 
         modify.get().update(musicDto.getTitle(),musicDto.getDescription(), musicDto.getSoundType());
         return ResponseDto.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
+    }
+
+    @Override
+    public ResponseDto<SearchTotalResultDto> getSoundOne(String nickname, int id) {
+        return null;
+    }
+
+    @Override
+    public ResponseDto<SearchTotalResultDto> getAlbumOne(String nickname, int id) {
+        return null;
     }
 }
