@@ -19,9 +19,6 @@ public interface UserService {
 //    한명 조회
 //    UserDTO getUser(int userId);
 
-    default String hello() {
-        return null;
-    }
 
     //    한명 조회
     ResponseDTO<UserDTO> getUser(int userId);

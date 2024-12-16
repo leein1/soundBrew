@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.controller;
 
+import com.soundbrew.soundbrew.dto.ResponseDTO;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,14 @@ public class GlobalExceptionHandler {
 
     // 400 - 클라이언트측 오류
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, IOException.class})
-    public ResponseEntity<Map<String, Object>> handleBadRequestExceptions(Exception ex) {
+    public ResponseEntity<ResponseDTO<String>> handleBadRequestExceptions(Exception ex) {
 
-        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
+//        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("요청 데이터에 문제가 발생했습니다.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
     }
 
     // 404 - 리소스 찾지 못한 경우

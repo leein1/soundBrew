@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -24,6 +26,8 @@ public class RequestDTO {
     int size = 10;
 
     String keyword;
+
+    Map<String,String> more;
 
     //  복수형 검색어 변수 추가 필요
 

@@ -1,6 +1,9 @@
 package com.soundbrew.soundbrew.repository;
 
 import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.repository.search.UserSearchRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ public class UserRepositoryTests {
 
     @Autowired
     private UserRepository userRepository;
+
+
 
 
     @Test
@@ -123,6 +128,16 @@ public class UserRepositoryTests {
             log.info("찾을 수 없습니다.");
         }
         log.info(result.toString());
+    }
+
+    @Test
+    public void testSearch(){
+        ResponseDTO<UserDTO> responseDTO = userRepository.searchTest();
+
+        List<UserDTO> testResult = responseDTO.getDtoList();
+
+        log.info("갯수 : {}", testResult.size());
+        testResult.forEach(dto ->log.info("결과 : {}", dto ));
     }
 
 }

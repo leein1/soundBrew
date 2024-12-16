@@ -3,7 +3,6 @@ package com.soundbrew.soundbrew.controller;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 import com.soundbrew.soundbrew.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
@@ -21,7 +20,7 @@ public class UsersController {
 
     private final UserService userService;
 
-    @ApiOperation(value = "users POST", notes = "POST 방식으로 회원 등록")
+//    @ApiOperation(value = "users POST", notes = "POST 방식으로 회원 등록")
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Object>> resgister(@RequestBody UserDTO userDTO) {
 
@@ -35,7 +34,6 @@ public class UsersController {
 
     }
 
-//    인증 메일 발송 -  POST /me/email-verification
-//    메일 인증 - PATCH /me/email-verification
+
 
 }

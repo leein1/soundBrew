@@ -2,7 +2,6 @@ package com.soundbrew.soundbrew.controller;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ public class VerifyController {
 
     private final UserService userService;
 
-    @ApiOperation(value = "verify-password POST", notes = "POST 비밀번호 인증")
+//    @ApiOperation(value = "verify-password POST", notes = "POST 비밀번호 인증")
     @PostMapping("/password")
     ResponseEntity<ResponseDTO<String>> verifyPassword(@RequestParam String nickname, @RequestParam String password) {
         ResponseDTO<String> responseDTO = userService.verifyPassword(nickname, password);
@@ -43,4 +42,10 @@ public class VerifyController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(responseDTO);
     }
+
+
+//    인증 메일 발송 -  POST /me/email-verification
+//    메일 인증 - PATCH /me/email-verification
+
+
 }

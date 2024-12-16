@@ -62,10 +62,13 @@ dependencies {
 
     //  swaggerUI
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+//    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+//    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15' // 최신 버전 사용
+    implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.15'
 
     //QueryDSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
@@ -81,10 +84,24 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-sourceSets{
-    main{
-        java{
-            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+//sourceSets{
+//    main{
+//        java{
+//            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+//        }
+//    }
+//}
+def generatedDir = "$buildDir/generated/querydsl"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$generatedDir"]
         }
     }
+}
+
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(generatedDir)
 }
