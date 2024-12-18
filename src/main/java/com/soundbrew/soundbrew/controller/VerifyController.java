@@ -2,6 +2,7 @@ package com.soundbrew.soundbrew.controller;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.service.UserService;
+import com.soundbrew.soundbrew.service.VerifyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -17,20 +18,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Log4j2
 public class VerifyController {
 
-
-
     /*
         메일 전송 및 인증 과정 컨트롤러 위치 논의 필요
             - api를 따로 발급 해야 하는가
             - 발급하지 않는다면 어느 api 하위 목록이어야 하는가
      */
 
-    private final UserService userService;
+//    private final UserService userService;
 
+
+
+    private final VerifyService verifyService;
 //    @ApiOperation(value = "verify-password POST", notes = "POST 비밀번호 인증")
     @PostMapping("/password")
     ResponseEntity<ResponseDTO<String>> verifyPassword(@RequestParam String nickname, @RequestParam String password) {
-        ResponseDTO<String> responseDTO = userService.verifyPassword(nickname, password);
+        ResponseDTO<String> responseDTO = verifyService.verifyPassword(nickname, password);
         if (responseDTO.getMessage().equals("확인되었습니다.")) {
 
             // 토큰 또는 세션 데이터 생성 필요
@@ -45,6 +47,8 @@ public class VerifyController {
 
 
 //    인증 메일 발송 -  POST /me/email-verification
+
+
 //    메일 인증 - PATCH /me/email-verification
 
 

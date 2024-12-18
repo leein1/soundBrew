@@ -34,11 +34,11 @@ public class UserServiceImpl implements UserService{
 
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
-    private final SubscriptionRepository subscriptionRepository;
+//    private final SubscriptionRepository subscriptionRepository;
     private final UserValidator userValidator;
-    private final ActivationCodeRepository activationCodeRepository;
-    private final MailService mailService;
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+//    private final ActivationCodeRepository activationCodeRepository;
+//    private final MailService mailService;
+//    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 ////    전체 조회
 //    @Override
@@ -159,90 +159,91 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    //  ---------------------------------------VerifyService 로 이동
 //    활성화 코드 보관함 필요 할것 같음 DB에서..? 자바에서...?
-    @Override
-    public boolean sendActivationCode(String email) {
+//    @Override
+//    public boolean sendActivationCode(String email) {
+//
+////        ddjsjs12@naver.com
+////        moonody7731@naver.com
+//
+////        활성화 코드를 보내고 요청한 이메일과 코드를 묶어 기록 필요.
+//
+//        //  유저 검색 후 해당 userId의 기존 활성화 코드를 선 삭제
+//        Optional<User> result = userRepository.findByEmail(email);
+//
+//        if(result.isEmpty()){
+//            return false;
+//        }
+//
+//        User user = result.get();
+//
+//        activationCodeRepository.deleteByUser(user);
+//
+//        //  활성화 코드 생성
+//        String activationCode = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+//        //  코드 만료 시간 생성
+//        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
+//
+//        ActivationCodeDTO activationCodeDTO = ActivationCodeDTO.builder()
+//                .user(user)
+//                .activationCode(activationCode)
+//                .expirationTime(expirationTime)
+//                .build();
+//
+//        //  코드와 유저 정보 기록
+//        activationCodeRepository.save(activationCodeDTO.toEntity());
+//
+//        try {
+//            mailService.send(email, "SoundBrew 계정 인증", "활성화 코드 입니다 : " + activationCode);
+//        }catch (Exception e){
+//            log.error("메일 전송 실패: {}", email, e);
+//        }
+//
+//        return true;
+//    }
 
-//        ddjsjs12@naver.com
-//        moonody7731@naver.com
-
-//        활성화 코드를 보내고 요청한 이메일과 코드를 묶어 기록 필요.
-
-        //  유저 검색 후 해당 userId의 기존 활성화 코드를 선 삭제
-        Optional<User> result = userRepository.findByEmail(email);
-
-        if(result.isEmpty()){
-            return false;
-        }
-
-        User user = result.get();
-
-        activationCodeRepository.deleteByUser(user);
-
-        //  활성화 코드 생성
-        String activationCode = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-        //  코드 만료 시간 생성
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
-
-        ActivationCodeDTO activationCodeDTO = ActivationCodeDTO.builder()
-                .user(user)
-                .activationCode(activationCode)
-                .expirationTime(expirationTime)
-                .build();
-
-        //  코드와 유저 정보 기록
-        activationCodeRepository.save(activationCodeDTO.toEntity());
-
-        try {
-            mailService.send(email, "SoundBrew 계정 인증", "활성화 코드 입니다 : " + activationCode);
-        }catch (Exception e){
-            log.error("메일 전송 실패: {}", email, e);
-        }
-
-        return true;
-    }
-
-
+//  ---------------------------------------VerifyService 로 이동
 //    유저가 재요청 했을때 논의 필요
-    @Override
-    public boolean activateUser(String email,String providedActivationCode) {
-
-        //  1. 사용자 검색
-        Optional<User> result = userRepository.findByEmail(email);
-        User user = result.get();
-
-        //  2. 활성화 코드 조회
-        Optional<ActivationCode> optionalActivationInfo = activationCodeRepository.findByUser(user);
-
-        //  3. 활성화 코드 유효성 검사( 보관한 기록 조회 후 대조)
-        ActivationCode activationInfo = optionalActivationInfo.get();
-
-        //  4. 거부 조건
-        if(!activationInfo.getActivationCode().equals(providedActivationCode)){
-
-            logger.warn("Invalid activation code: userId={}, email={}, providedCode={}",
-                    user.getUserId(), user.getEmail(), providedActivationCode);
-            throw new IllegalArgumentException("유효하지 않은 코드 입니다.");
-        }
-        if(!LocalDateTime.now().isBefore(activationInfo.getExpirationTime())){
-
-            logger.warn("Expired activation code: userId={}, email={}, providedCode={}",
-                    user.getUserId(), user.getEmail(), providedActivationCode);
-            throw new IllegalArgumentException("유효시간이 지났습니다. 다시 시도해주세요");
-        }
-
-        //  5. 활성화
-        UserDTO userDTO = modelMapper.map(user,UserDTO.class);
-        userDTO.setEmailVerified(true);
-
-        userRepository.save(userDTO.toEntity());
-        logger.info("Activated user: userId={}, name={}, email={}, providedCode={}, activationCode={}",
-                user.getUserId(), user.getName(), user.getEmail(), providedActivationCode, activationInfo.getActivationCode());
-
-        activationCodeRepository.delete(activationInfo);
-
-        return true;
-    }
+//    @Override
+//    public boolean activateUser(String email,String providedActivationCode) {
+//
+//        //  1. 사용자 검색
+//        Optional<User> result = userRepository.findByEmail(email);
+//        User user = result.get();
+//
+//        //  2. 활성화 코드 조회
+//        Optional<ActivationCode> optionalActivationInfo = activationCodeRepository.findByUser(user);
+//
+//        //  3. 활성화 코드 유효성 검사( 보관한 기록 조회 후 대조)
+//        ActivationCode activationInfo = optionalActivationInfo.get();
+//
+//        //  4. 거부 조건
+//        if(!activationInfo.getActivationCode().equals(providedActivationCode)){
+//
+//            logger.warn("Invalid activation code: userId={}, email={}, providedCode={}",
+//                    user.getUserId(), user.getEmail(), providedActivationCode);
+//            throw new IllegalArgumentException("유효하지 않은 코드 입니다.");
+//        }
+//        if(!LocalDateTime.now().isBefore(activationInfo.getExpirationTime())){
+//
+//            logger.warn("Expired activation code: userId={}, email={}, providedCode={}",
+//                    user.getUserId(), user.getEmail(), providedActivationCode);
+//            throw new IllegalArgumentException("유효시간이 지났습니다. 다시 시도해주세요");
+//        }
+//
+//        //  5. 활성화
+//        UserDTO userDTO = modelMapper.map(user,UserDTO.class);
+//        userDTO.setEmailVerified(true);
+//
+//        userRepository.save(userDTO.toEntity());
+//        logger.info("Activated user: userId={}, name={}, email={}, providedCode={}, activationCode={}",
+//                user.getUserId(), user.getName(), user.getEmail(), providedActivationCode, activationInfo.getActivationCode());
+//
+//        activationCodeRepository.delete(activationInfo);
+//
+//        return true;
+//    }
 
 
 //    회원 정보 수정
@@ -275,36 +276,36 @@ public class UserServiceImpl implements UserService{
 
     }
 
-
+//  ---------------------------------------VerifyService 로 이동
 //    비밀번호 재 확인 - 본인 인증용
 //    userId -> nickname으로 변경
 //    반환형 responseDTO로 변경
-    @Override
-    public ResponseDTO<String> verifyPassword(String nickname, String inputPassword) {
-
-//        유저가 존재 하는지 검증
-//        User user = userRepository.findById(userId).orElseThrow(() ->
-//                new NoSuchElementException(userId + " 번 회원을 찾을 수 없습니다."));
-
-//        Optional<User> result = userRepository.findById(userId);
-
-        User user = userRepository.findByNickname(nickname).orElseThrow();
-
-        String existingUserPassword = user.getPassword();
-
-//            비밀 번호가 일치 하는 경우
-        if (!existingUserPassword.equals(inputPassword)) {
-
-            return ResponseDTO.<String>withMessage()
-                    .message("비밀번호가 일치하지 않습니다.")
-                    .build();
-        }
-
-        return ResponseDTO.<String>withMessage()
-                .message("확인되었습니다.")
-                .build();
-
-    }
+//    @Override
+//    public ResponseDTO<String> verifyPassword(String nickname, String inputPassword) {
+//
+////        유저가 존재 하는지 검증
+////        User user = userRepository.findById(userId).orElseThrow(() ->
+////                new NoSuchElementException(userId + " 번 회원을 찾을 수 없습니다."));
+//
+////        Optional<User> result = userRepository.findById(userId);
+//
+//        User user = userRepository.findByNickname(nickname).orElseThrow();
+//
+//        String existingUserPassword = user.getPassword();
+//
+////            비밀 번호가 일치 하는 경우
+//        if (!existingUserPassword.equals(inputPassword)) {
+//
+//            return ResponseDTO.<String>withMessage()
+//                    .message("비밀번호가 일치하지 않습니다.")
+//                    .build();
+//        }
+//
+//        return ResponseDTO.<String>withMessage()
+//                .message("확인되었습니다.")
+//                .build();
+//
+//    }
 
 //    비밀번호만 수정
 //    매개변수로 비밀번호만 받을지 DTO형태로 받을지 논의 필요
