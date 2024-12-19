@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface MusicRepositoryCustom {
     Optional<SearchTotalResultDto> soundOne(String nickname, String title);
-    Optional<SearchTotalResultDto> soundOne(String nickname, int id);
+    Optional<SearchTotalResultDto> soundOne(int userId, int id);
 }

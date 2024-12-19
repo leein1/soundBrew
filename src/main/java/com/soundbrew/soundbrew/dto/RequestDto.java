@@ -25,7 +25,6 @@ public class RequestDto {
     private String type;// n,t,c
     private String keyword;
     private String link;
-
     private Map<String,String> more;
 
     public String[] getType(){
@@ -39,24 +38,38 @@ public class RequestDto {
         return PageRequest.of(this.page-1, this.size, Sort.by(props).descending());
     }
 
-    public String getLink(){
-        if(link ==null){
+    public String getLink() {
+        if (link == null) {
             StringBuilder builder = new StringBuilder();
             builder.append("page=" + this.page);
             builder.append("&size=" + this.size);
 
-            if(type != null && type.length()>0) builder.append("&type="+type);
+            if (type != null && type.length() > 0) {
+                builder.append("&type=" + type);
+            }
 
-            if(keyword != null){
-                try{
-                    builder.append("&keyword="+ URLEncoder.encode(keyword,"UTF-8"));
-                }catch (UnsupportedEncodingException e){
+            if (keyword != null) {
+                try {
+                    builder.append("&keyword=" + URLEncoder.encode(keyword, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             }
+
+            if (more != null && !more.isEmpty()) {
+                more.forEach((key, value) -> {
+                    try {
+                        builder.append("&more%5B" + URLEncoder.encode(key, "UTF-8") + "%5D=" + URLEncoder.encode(value, "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
             link = builder.toString();
         }
         return link;
     }
+
 
 }

@@ -9,6 +9,4 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface AlbumRepositoryCustom {
-    Optional<SearchTotalResultDto> albumsOne(String nickname, String albumName);
-    Optional<SearchTotalResultDto> albumsOne(String nickname, int id);
 }

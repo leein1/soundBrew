@@ -9,65 +9,51 @@
 <body>
 <h1>Sound Test with Queue Bar</h1>
 <form id="myForm">
-    <input type="text" name="instrument" value="PianoKing" />
-    <input type="text" name="instrument" value="ViolinKing" />
-    <button type="button" id="submitButton">Submit</button>
+    <input type="text" name="albumName" value="amazing album title" />
+    <input type="text" name="title" value="amazing song title" />
+    <input type="text" name="description" value="pinoKing" />
+    <input type="number" name="price" value=3 />
+    <input type="text" name="instrument" value="tagone">
+    <input type="text" name="instrument" value="tagtwo">
+    <button type="submit">Submit</button>
 </form>
 
 <!-- JSON 결과를 출력할 영역 -->
 <pre id="output" style="background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd;"></pre>
 
 <script type="module">
-import { get, post, put, deleteRequest } from '/js/fetch/standardMethod.js';
+    import { inputProcessor, inputValidator, inputHandler } from '/js/check/inputHandler.js';
+    import { serializeFormToJSON } from '/js/serialize/formTojson.js';
 
-// 제외할 필드 (필요시 추가)
-const excludeFields = [];
+    // axios 인터셉터로 요청을 가로채서 로그 출력
+    axios.interceptors.request.use(function (config) {
+        // 요청 전에 로그를 출력
+        console.log('Request to:', config.url);
+        console.log('Request body:', config.data);
 
-// Form 데이터를 JSON으로 변환하는 함수
-function serializeFormToJSON(form) {
-    const formData = new FormData(form);
-    const jsonObject = {};
-
-    formData.forEach((value, key) => {
-        if (excludeFields.includes(key)) {
-            return; // 제외 필드 무시
-        }
-
-        // 중범주 키 분리
-        const keys = key.split('.'); // 예: 'albumDto.nickname' → ['albumDto', 'nickname']
-        let current = jsonObject;
-
-        keys.forEach((k, index) => {
-            if (index === keys.length - 1) {
-                // 마지막 키는 값을 할당
-                if (current[k]) {
-                    if (!Array.isArray(current[k])) {
-                        current[k] = [current[k]];
-                    }
-                    current[k].push(value);
-                } else {
-                    current[k] = value;
-                }
-            } else {
-                // 중간 키는 객체 생성
-                if (!current[k]) {
-                    current[k] = {};
-                }
-                current = current[k];
-            }
-        });
+        // 실제 요청은 하지 않음
+        return Promise.reject(new Error('Mock request!')); // 실제 요청을 차단
+    }, function (error) {
+        // 에러 발생 시 처리
+        return Promise.reject(error);
     });
 
-    return jsonObject;
-}
+    document.getElementById("myForm").addEventListener("submit", async (event) => {
+        event.preventDefault(); // 기본 폼 제출 방지
 
-// 버튼 클릭 이벤트 핸들러
-document.getElementById("submitButton").addEventListener("click", async() => {
-    const form = document.getElementById("myForm");
-    const jsonData = serializeFormToJSON(form);
+        const form = document.getElementById("myForm");
+        const jsonData = serializeFormToJSON(form);
+        const { errors, processedData } = inputHandler(jsonData, form);
 
-     await get('/api/sounds/tracks');
-});
+        if (!errors) {
+            try {
+                // 요청을 보내지 않고 로그만 확인
+                await axios.post('/api/create', processedData);
+            } catch (err) {
+                console.log('Mock request triggered - no actual network request sent');
+            }
+        }
+    });
 </script>
 </body>
 </html>

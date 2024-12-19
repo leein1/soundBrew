@@ -7,10 +7,11 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface AlbumMusicRepositoryCustom {
-    Optional<Page<SearchTotalResultDto>> search(RequestDto requestDto,String searchType);
+    Optional<Page<SearchTotalResultDto>> search(RequestDto requestDto);
+    Optional<Page<SearchTotalResultDto>> searchAlbum(RequestDto requestDto);
 
     //get album..
-    Optional<Page<SearchTotalResultDto>> getAlbumOne(String nickname, String albumName,RequestDto requestDto);
-    Optional<Page<SearchTotalResultDto>> getAlbumOne(String nickname, int id, RequestDto requestDto);
+    Optional<Page<SearchTotalResultDto>> albumOne(String nickname, String albumName,RequestDto requestDto);
+    Optional<Page<SearchTotalResultDto>> albumOne(int userId, int id, RequestDto requestDto);
 
 }

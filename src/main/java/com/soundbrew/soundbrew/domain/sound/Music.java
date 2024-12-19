@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(of = {"title", "userId"})
 @Entity
-@Setter
 public class Music extends BaseEntity {
 
     @Id

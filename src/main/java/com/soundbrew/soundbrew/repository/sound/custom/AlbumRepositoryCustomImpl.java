@@ -19,15 +19,6 @@ public class AlbumRepositoryCustomImpl implements AlbumRepositoryCustom{
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public Optional<SearchTotalResultDto> albumsOne(String nickname, String albumName) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<SearchTotalResultDto> albumsOne(String nickname, int id) {
-        return Optional.empty();
-    }
 //
 //    @Override
 //    public Optional<SearchTotalResultDto> albumsOne(String nickname, String albumName){

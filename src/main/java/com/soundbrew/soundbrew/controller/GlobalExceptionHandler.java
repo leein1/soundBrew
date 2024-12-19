@@ -48,17 +48,6 @@ public class GlobalExceptionHandler {
         return createErrorResponse(HttpStatus.CONFLICT, "데이터 처리 중 오류가 발생했습니다.");
     }
 
-    // 500 - 데이터 베이스 관련 오류
-    @ExceptionHandler({SQLException.class, DataAccessException.class})
-    public ResponseEntity<Map<String, Object>> handleDatabaseExceptions(Exception ex) {
-        return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "데이터 처리 중 오류가 발생했습니다.");
-    }
-
-    // 500 - 런타임 오류
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeExceptions(RuntimeException ex) {
-        return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도홰주세요.");
-    }
 
     // 503 서버 자체 문제
     @ExceptionHandler({ConnectException.class, SocketTimeoutException.class})

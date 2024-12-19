@@ -1,8 +1,11 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.sound.Music;
+import com.soundbrew.soundbrew.dto.RequestDto;
 import com.soundbrew.soundbrew.dto.ResponseDto;
 import com.soundbrew.soundbrew.dto.sound.*;
+
+import java.util.List;
 
 public interface MeService {
     // tags for me
@@ -16,6 +19,6 @@ public interface MeService {
     ResponseDto updateMusic(int musicId, MusicDto musicDto );
 
     // get one for me or admin
-    ResponseDto<SearchTotalResultDto> getSoundOne(String nickname, int id);
-    ResponseDto<SearchTotalResultDto> getAlbumOne(String nickname, int id);
+    ResponseDto<SearchTotalResultDto> getSoundOne(int userId, int id);
+    ResponseDto<SearchTotalResultDto> getAlbumOne(int userId, int id, RequestDto requestDto);
 }

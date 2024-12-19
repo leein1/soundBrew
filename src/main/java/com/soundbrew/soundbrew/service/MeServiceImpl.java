@@ -2,12 +2,15 @@ package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.sound.*;
+import com.soundbrew.soundbrew.dto.RequestDto;
 import com.soundbrew.soundbrew.dto.ResponseDto;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.UserRepository;
 import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -22,6 +25,8 @@ import static com.soundbrew.soundbrew.dto.BuilderFactory.*;
 @AllArgsConstructor
 @Log4j2
 public class MeServiceImpl implements MeService{
+    private final ModelMapper modelMapper;
+
     private final UserRepository userRepository;
 
     private final InstrumentTagRepository instrumentTagRepository;
@@ -119,6 +124,7 @@ public class MeServiceImpl implements MeService{
         if (modify.isEmpty()) return ResponseDto.withMessage().message("수정할 대상이 없습니다.").build();
 
         modify.get().update(albumDto.getAlbumName(), albumDto.getDescription());
+
         return ResponseDto.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
     }
 
@@ -129,17 +135,33 @@ public class MeServiceImpl implements MeService{
         if (modify.isEmpty()) return ResponseDto.withMessage().message("수정할 대상이 없습니다.").build();
 
         modify.get().update(musicDto.getTitle(),musicDto.getDescription(), musicDto.getSoundType());
+
+//        Music music = modify.get();
+//        MusicDto existingDto= modelMapper.map(music, MusicDto.class);
+//        existingDto.setTitle("Ho Go Dong no.12");
+//        Music updatedMusic = modelMapper.map(existingDto, Music.class);
+//        updatedMusic.setMusicGenreTag(music.getMusicGenreTag());
+//        updatedMusic.setMusicMoodTag(music.getMusicMoodTag());
+//        updatedMusic.setMusicInstrumentTag(music.getMusicInstrumentTag());
+//        updatedMusic.setAlbumMusics(music.getAlbumMusics());
+//        musicRepository.save(updatedMusic);
         return ResponseDto.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
     }
 
     @Override
-    public ResponseDto<SearchTotalResultDto> getSoundOne(String nickname, int id) {
-        return null;
+    public ResponseDto<SearchTotalResultDto> getSoundOne(int userId, int id) {
+        Optional<SearchTotalResultDto> soundOne = musicRepository.soundOne(userId,id);
+        if(soundOne.isEmpty()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으시는 음원이 없습니다.").build();
+
+        return ResponseDto.<SearchTotalResultDto>withSingleData().dto(soundOne.get()).build();
     }
 
     @Override
-    public ResponseDto<SearchTotalResultDto> getAlbumOne(String nickname, int id) {
-        return null;
+    public ResponseDto<SearchTotalResultDto> getAlbumOne(int userId, int id, RequestDto requestDto) {
+        Optional<Page<SearchTotalResultDto>> albumOne = albumMusicRepository.albumOne(userId,id,requestDto);
+        if(albumOne.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으시는 앨범이 없습니다.").build();
+
+        return ResponseDto.<SearchTotalResultDto>withAll().total((int) albumOne.get().getTotalElements()).requestDto(requestDto).dtoList(albumOne.get().getContent()).build();
     }
 
 

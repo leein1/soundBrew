@@ -33,26 +33,6 @@ public class SoundsServiceImpl implements SoundsService{
     private final SoundProcessor soundProcessor;
     private static final long MAX_RANGE_SIZE = 5 * 1024 * 1024; // 5MB
 
-//    @Override
-//    public ResponseDto<SoundStreamDto> streamSound(HttpRange range, String fileName) throws IOException {
-//        Path filePath = Path.of(fileDirectory+"/"+fileName);
-//        if (!Files.exists(filePath) || !Files.isReadable(filePath)) return ResponseDto.<SoundStreamDto>withMessage().message("재생할 음원을 읽지못했습니다.").build();
-//
-//        long fileLength = Files.size(filePath);
-//        long start = range.getRangeStart(fileLength);
-//        long end = Math.min(start + MAX_RANGE_SIZE - 1, fileLength - 1);
-//        if (start >= fileLength) return ResponseDto.<SoundStreamDto>withMessage().message("음원재생 길이를 초과하는 요청입니다.").build();
-//
-//        long rangeLength = end - start + 1;
-//        byte[] data = new byte[(int) rangeLength];
-//
-//        try (RandomAccessFile raf = new RandomAccessFile(filePath.toFile(), "r")) {
-//            raf.seek(start);
-//            raf.read(data, 0, (int) rangeLength);
-//        }
-//        // 데이터 반환
-//        return ResponseDto.<SoundStreamDto>withSingleData().dto(new SoundStreamDto(data, start, end, fileLength)).build();
-//    }
     @Override
     public ResponseDto<SoundStreamDto> streamSound(HttpRange range, String fileName) throws IOException {
         Path filePath = Path.of(fileDirectory + "/" + fileName);
@@ -74,7 +54,7 @@ public class SoundsServiceImpl implements SoundsService{
 
     @Override
     public ResponseDto<SearchTotalResultDto> totalSoundSearch(RequestDto requestDto) {
-        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.search(requestDto,"sound");
+        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.search(requestDto);
         if(before.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>builder().dtoList(Collections.emptyList()).build();
 
         return ResponseDto.<SearchTotalResultDto>withAll()
@@ -87,7 +67,7 @@ public class SoundsServiceImpl implements SoundsService{
 
     @Override
     public ResponseDto<SearchTotalResultDto> totalAlbumSearch(RequestDto searchRequestDto) {
-        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.search(searchRequestDto, "album");
+        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.searchAlbum(searchRequestDto);
         if(before.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>builder().dtoList(Collections.emptyList()).build();
 
         return  ResponseDto.<SearchTotalResultDto>withAll()
@@ -120,15 +100,15 @@ public class SoundsServiceImpl implements SoundsService{
     @Override
     public ResponseDto<SearchTotalResultDto> getSoundOne(String nickname, String title) {
         Optional<SearchTotalResultDto> musicPage = musicRepository.soundOne(nickname,title);
-        if(!musicPage.isPresent()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾은시는 음원이 없습니다.").build();
+        if(musicPage.isEmpty()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으시는 음원이 없습니다.").build();
 
         return ResponseDto.<SearchTotalResultDto>withSingleData().dto(hideSearchTotalResultDto(musicPage.get())).build();
     }
 
     @Override
     public ResponseDto<SearchTotalResultDto> getAlbumOne(String nickname, String albumName, RequestDto requestDto) {
-        Optional<Page<SearchTotalResultDto>> albumPage = albumMusicRepository.getAlbumOne(nickname,albumName,requestDto);
-        if(albumPage.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으신 앨범의 정보가 없습니다.").build();
+        Optional<Page<SearchTotalResultDto>> albumPage = albumMusicRepository.albumOne(nickname,albumName,requestDto);
+        if(albumPage.isEmpty()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으시는 앨범의 정보가 없습니다.").build();
 
         return  ResponseDto.<SearchTotalResultDto>withAll()
                 .dtoList(soundProcessor.replaceCommaWithSpace(albumPage.get().getContent()).stream()
@@ -136,4 +116,26 @@ public class SoundsServiceImpl implements SoundsService{
                 .total((int) albumPage.get().getTotalElements())
                 .build();
     }
+
+    //    @Override
+//    public ResponseDto<SoundStreamDto> streamSound(HttpRange range, String fileName) throws IOException {
+//        Path filePath = Path.of(fileDirectory+"/"+fileName);
+//        if (!Files.exists(filePath) || !Files.isReadable(filePath)) return ResponseDto.<SoundStreamDto>withMessage().message("재생할 음원을 읽지못했습니다.").build();
+//
+//        long fileLength = Files.size(filePath);
+//        long start = range.getRangeStart(fileLength);
+//        long end = Math.min(start + MAX_RANGE_SIZE - 1, fileLength - 1);
+//        if (start >= fileLength) return ResponseDto.<SoundStreamDto>withMessage().message("음원재생 길이를 초과하는 요청입니다.").build();
+//
+//        long rangeLength = end - start + 1;
+//        byte[] data = new byte[(int) rangeLength];
+//
+//        try (RandomAccessFile raf = new RandomAccessFile(filePath.toFile(), "r")) {
+//            raf.seek(start);
+//            raf.read(data, 0, (int) rangeLength);
+//        }
+//        // 데이터 반환
+//        return ResponseDto.<SoundStreamDto>withSingleData().dto(new SoundStreamDto(data, start, end, fileLength)).build();
+//    }
+
 }

@@ -5,6 +5,7 @@ import com.soundbrew.soundbrew.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Builder
@@ -33,9 +34,12 @@ public class Album extends BaseEntity {
     @Column(length = 500)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = false, insertable = false, updatable = false) // userId와 User의 관계 설정
-    private User user;  // User와의 관계를 설정
+//    @ManyToOne
+//    @JoinColumn(name = "userId", nullable = false, insertable = false, updatable = false) // userId와 User의 관계 설정
+//    private User user;  // User와의 관계를 설정
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AlbumMusic> albumMusic;
 
     public void update(String albumName, String description){
         this.albumName = albumName;

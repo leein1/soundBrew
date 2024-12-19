@@ -1,11 +1,14 @@
 package com.soundbrew.soundbrew.controller;
 
+import com.soundbrew.soundbrew.dto.RequestDto;
 import com.soundbrew.soundbrew.dto.ResponseDto;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.service.MeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -53,15 +56,15 @@ public class MeController {
     @GetMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDto<SearchTotalResultDto>> getSoundOne(@PathVariable("musicId") int id){
         // 쿠키 -> 내이름
-        ResponseDto<SearchTotalResultDto> responseDto = meService.getSoundOne("u_1",id);
+        ResponseDto<SearchTotalResultDto> responseDto = meService.getSoundOne(2,id);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDto<SearchTotalResultDto>> getAlbumOne(@PathVariable("albumId") int id){
+    ResponseEntity<ResponseDto<SearchTotalResultDto>> getAlbumOne(@PathVariable("albumId") int id, RequestDto requestDto){
         //쿠키 -> 내이름
-        ResponseDto<SearchTotalResultDto> responseDto = meService.getAlbumOne("u_1",id);
+        ResponseDto<SearchTotalResultDto> responseDto = meService.getAlbumOne(2,id,requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
     }

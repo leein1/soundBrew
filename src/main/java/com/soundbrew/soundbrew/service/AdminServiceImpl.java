@@ -9,17 +9,15 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.soundbrew.soundbrew.dto.BuilderFactory.*;
-
 @Service
 @AllArgsConstructor
 @Log4j2
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
+    private final MeService meService;
     private final InstrumentTagRepository instrumentTagRepository;
     private final MoodTagRepository moodTagRepository;
     private final GenreTagRepository genreTagRepository;
@@ -71,58 +69,6 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     @Transactional
-    public ResponseDto updateLinkTags(int musicId, TagsDto tagsDto) {
-        Optional<Music> music = musicRepository.findById(musicId);
-        if(music.isEmpty()) return ResponseDto.withMessage().message("업데이트 하려는 음원을 찾지 못했습니다.").build();
-
-        musicInstrumentTagRepository.deleteByIdMusicId(music.get().getMusicId());
-        musicMoodTagRepository.deleteByIdMusicId(music.get().getMusicId());
-        musicGenreTagRepository.deleteByIdMusicId(music.get().getMusicId());
-
-        linkTags(music.get(),tagsDto);
-        return ResponseDto.withMessage().message("음원의 태그를 새롭게 연결했습니다.").build();
-    }
-
-    @Override
-    @Transactional
-    public ResponseDto linkTags(Music music, TagsDto tagsDto) {
-        List<MusicInstrumentTag> instrumentTags = new ArrayList<>();
-        List<MusicMoodTag> moodTags = new ArrayList<>();
-        List<MusicGenreTag>genreTags = new ArrayList<>();
-
-        for (String tagName : tagsDto.getInstrument()) {
-            Optional<InstrumentTag> instrumentTag = instrumentTagRepository.findByInstrumentTagName(tagName);
-            if(!instrumentTag.isEmpty()) return ResponseDto.withMessage().message("악기 태그 연결에서 문제가 발생했습니다.").build();
-
-            MusicInstrumentTag musicInstrumentTag = musicInstrumentTagToEntity(music, instrumentTag.get());
-            instrumentTags.add(musicInstrumentTag);
-        }
-
-        for(String tagName : tagsDto.getMood()){
-            Optional<MoodTag> moodTag  = moodTagRepository.findByMoodTagName(tagName);
-            if(!moodTag.isEmpty()) return ResponseDto.withMessage().message("무드 태그 연결에서 문제가 발생했습니다.").build();
-
-            MusicMoodTag musicMoodTag = musicMoodTagToEntity(music,moodTag.get());
-            moodTags.add(musicMoodTag);
-        }
-
-        for(String tagName : tagsDto.getGenre()){
-            Optional<GenreTag> genreTag = genreTagRepository.findByGenreTagName(tagName);
-            if(!genreTag.isEmpty()) return ResponseDto.withMessage().message("장르 태그 연결에서 문제가 발생했습니다.").build();
-
-            MusicGenreTag musicGenreTag = musicGenreTagToEntity(music,genreTag.get());
-            genreTags.add(musicGenreTag);
-
-        }
-
-        musicInstrumentTagRepository.saveAll(instrumentTags);
-        musicGenreTagRepository.saveAll(genreTags);
-        musicMoodTagRepository.saveAll(moodTags);
-
-        return ResponseDto.withMessage().message("음원의 태그를 새롭게 연결했습니다.").build();
-    }
-
-    @Transactional
     public ResponseDto<TagsDto> getTags(List<Integer> musicIds) {
         if (musicIds == null || musicIds.isEmpty()) {
             TagsDto tagsDto = new TagsDto();
@@ -165,22 +111,6 @@ public class AdminServiceImpl implements AdminService{
         }
     }
 
-////     @Override
-////    public ResponseDto<SearchTotalResultDto> getUsersAlbums(String nickname, String title) {
-////        Optional<SearchTotalResultDto> albumPage = albumRepository.searchAll(nickname, title);
-////        if(albumPage.isPresent()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으시는 앨범이 없습니다.").build();
-////
-////        return Collections.emptyList() ;
-////    }
-//
-//    @Override
-//    public ResponseDto<SearchTotalResultDto> getUsersSounds(String nickname, String title){
-//        Optional<SearchTotalResultDto> musicPage = musicRepository.soundOne(nickname,title);
-//        if(musicPage.isPresent()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으시는 음원이 없습니다.").build();
-//
-//        return ResponseDto.<SearchTotalResultDto>withSingleData().dto(musicPage.get()).build();
-//    }
-
     @Override
     public ResponseDto deleteAlbum(int albumId) {
         albumRepository.deleteById(albumId);
@@ -193,31 +123,34 @@ public class AdminServiceImpl implements AdminService{
         return ResponseDto.withMessage().message("삭제가 정상적으로 처리되었습니다.").build();
     }
 
-    @Override
+    @Transactional
+    public ResponseDto updateLinkTags(int musicId, TagsDto tagsDto) {
+       return meService.updateLinkTags(musicId,tagsDto);
+    }
+
+    @Transactional
+    public ResponseDto linkTags(Music music, TagsDto tagsDto) {
+        return meService.linkTags(music,tagsDto);
+    }
+
+    @Transactional
     public ResponseDto updateAlbum(int albumId, AlbumDto albumDto) {
-        Optional<Album> modify = albumRepository.findById(albumId);
-        if (modify.isEmpty()) return ResponseDto.withMessage().message("수정할 대상이 없습니다.").build();
-
-        modify.get().update(albumDto.getAlbumName(), albumDto.getDescription());
-        return ResponseDto.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
+        return meService.updateAlbum(albumId,albumDto);
     }
 
-    @Override
+    @Transactional
     public ResponseDto updateMusic(int musicId, MusicDto musicDto) {
-        Optional<Music> modify = musicRepository.findById(musicId);
-        if (modify.isEmpty()) return ResponseDto.withMessage().message("수정할 대상이 없습니다.").build();
-
-        modify.get().update(musicDto.getTitle(),musicDto.getDescription(), musicDto.getSoundType());
-        return ResponseDto.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
+        //verify도 수정가능해야함.
+       return  meService.updateMusic(musicId, musicDto);
     }
 
-    @Override
-    public ResponseDto<SearchTotalResultDto> getSoundOne(String nickname, int id) {
-        return null;
+    public ResponseDto<SearchTotalResultDto> getSoundOne(int userId, int id) {
+        //임의의 키워드
+        return meService.getSoundOne(userId,id);
     }
 
-    @Override
-    public ResponseDto<SearchTotalResultDto> getAlbumOne(String nickname, int id) {
-        return null;
+    public ResponseDto<SearchTotalResultDto> getAlbumOne(int userId, int id) {
+        // 임의의 키워드
+        return meService.getSoundOne(userId, id);
     }
 }

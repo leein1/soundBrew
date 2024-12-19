@@ -29,6 +29,28 @@ public class SearchTotalResultDto {
     private LocalDateTime create_date;
     private LocalDateTime modify_date;
 
+    // 기본 생성자와 모든 필드를 포함한 생성자
+    public SearchTotalResultDto(int albumId, String albumName, String albumArtPath, String albumDescription,String nickname,
+                                int musicId, String musicTitle, String musicFilePath, int price, String musicDescription,
+                                String instrumentTagName, String moodTagName, String genreTagName,
+                                LocalDateTime create_date, LocalDateTime modify_date) {
+        this.albumId = albumId;
+        this.albumName = albumName;
+        this.albumArtPath = albumArtPath;
+        this.albumDescription = albumDescription;
+        this.nickname = nickname;
+        this.musicId = musicId;
+        this.musicTitle = musicTitle;
+        this.musicFilePath = musicFilePath;
+        this.price = price;
+        this.musicDescription = musicDescription;
+        this.instrumentTagName = instrumentTagName;
+        this.moodTagName = moodTagName;
+        this.genreTagName = genreTagName;
+        this.create_date = create_date;
+        this.modify_date = modify_date;
+    }
+
     public SearchTotalResultDto(int albumId, String albumName, String albumArtPath, String albumDescription,
                                 String nickname, String instrumentTagName, String moodTagName, String genreTagName,
                                 LocalDateTime create_date, LocalDateTime modify_date) {

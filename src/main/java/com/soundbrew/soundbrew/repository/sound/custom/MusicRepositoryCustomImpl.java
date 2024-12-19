@@ -1,106 +1,98 @@
 package com.soundbrew.soundbrew.repository.sound.custom;
 
-import com.soundbrew.soundbrew.domain.User;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.sound.MusicDto;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import lombok.RequiredArgsConstructor;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-public class MusicRepositoryCustomImpl implements MusicRepositoryCustom{
-    @PersistenceContext
-    private EntityManager entityManager;
+@RequiredArgsConstructor
+public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Optional<SearchTotalResultDto> soundOne(String nickname, String title) {
-        //선언
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<SearchTotalResultDto> query = cb.createQuery(SearchTotalResultDto.class);
+        QMusic music = QMusic.music;
+        QMusicInstrumentTag musicInstrumentTag =QMusicInstrumentTag.musicInstrumentTag;
+        QInstrumentTag instrumentTag = QInstrumentTag.instrumentTag;
+        QMusicMoodTag musicMoodTag = QMusicMoodTag.musicMoodTag;
+        QMoodTag moodTag = QMoodTag.moodTag;
+        QMusicGenreTag musicGenreTag = QMusicGenreTag.musicGenreTag;
+        QGenreTag genreTag = QGenreTag.genreTag;
 
-        Root<Music> root = query.from(Music.class);
-        Join<Music, MusicInstrumentTag> musicInstrumentTagJoin = root.join("musicInstrumentTag", JoinType.LEFT);
-        Join<MusicInstrumentTag, InstrumentTag> instrumentTagJoin = musicInstrumentTagJoin.join("instrumentTag", JoinType.LEFT);
-        Join<Music, MusicMoodTag> musicMoodTagJoin = root.join("musicMoodTag", JoinType.LEFT);
-        Join<MusicMoodTag, MoodTag> moodTagJoin = musicMoodTagJoin.join("moodTag", JoinType.LEFT);
-        Join<Music, MusicGenreTag> musicGenreTagJoin = root.join("musicGenreTag", JoinType.LEFT);
-        Join<MusicGenreTag, GenreTag> genreTagJoin = musicGenreTagJoin.join("genreTag", JoinType.LEFT);
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(music.nickname.eq(nickname));
+        builder.and(music.title.eq(title));
 
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(root.get("nickname"), nickname));
-        predicates.add(cb.equal(root.get("title"), title));
+        SearchTotalResultDto result = queryFactory
+                .select(Projections.constructor(
+                        SearchTotalResultDto.class,
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.nickname,
+                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName),
+                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName),
+                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName),
+                        music.create_date,
+                        music.modify_date
+                ))
+                .from(music)
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder) // 조건 추가
+                .groupBy(
+                        music.musicId, music.title, music.filePath, music.price, music.description,
+                        music.nickname, music.create_date, music.modify_date
+                )
+                .fetchOne(); // 단일 결과 반환
 
-        query.select(cb.construct(SearchTotalResultDto.class
-                ,root.get("musicId"),root.get("title"),root.get("filePath"),root.get("price"),root.get("description")
-                ,root.get("nickname"),
-                cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, instrumentTagJoin.get("instrumentTagName"))),
-                cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, moodTagJoin.get("moodTagName"))),
-                cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, genreTagJoin.get("genreTagName"))),
-                root.get("create_date"),root.get("modify_date")
-        ));
-
-        // 조건 추가
-        query.where(cb.and(predicates.toArray(new Predicate[0])));
-
-        query.groupBy(
-                root.get("musicId"), root.get("title"), root.get("filePath"), root.get("price"), root.get("description"),
-                root.get("nickname"));
-
-        // 쿼리 실행
-        TypedQuery<SearchTotalResultDto> typedQuery = entityManager.createQuery(query);
-        // 데이터 반환
-        List<SearchTotalResultDto> results = typedQuery.getResultList();
-
-        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+        return Optional.ofNullable(result);
     }
 
     @Override
-    public Optional<SearchTotalResultDto> soundOne(String nickname, int id) {
-        //선언
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<SearchTotalResultDto> query = cb.createQuery(SearchTotalResultDto.class);
+    public Optional<SearchTotalResultDto> soundOne(int userId, int musicId) {
+        QMusic music = QMusic.music;
+        QMusicInstrumentTag musicInstrumentTag =QMusicInstrumentTag.musicInstrumentTag;
+        QInstrumentTag instrumentTag = QInstrumentTag.instrumentTag;
+        QMusicMoodTag musicMoodTag = QMusicMoodTag.musicMoodTag;
+        QMoodTag moodTag = QMoodTag.moodTag;
+        QMusicGenreTag musicGenreTag = QMusicGenreTag.musicGenreTag;
+        QGenreTag genreTag = QGenreTag.genreTag;
 
-        Root<Music> root = query.from(Music.class);
-        Join<Music, MusicInstrumentTag> musicInstrumentTagJoin = root.join("musicInstrumentTag", JoinType.LEFT);
-        Join<MusicInstrumentTag, InstrumentTag> instrumentTagJoin = musicInstrumentTagJoin.join("instrumentTag", JoinType.LEFT);
-        Join<Music, MusicMoodTag> musicMoodTagJoin = root.join("musicMoodTag", JoinType.LEFT);
-        Join<MusicMoodTag, MoodTag> moodTagJoin = musicMoodTagJoin.join("moodTag", JoinType.LEFT);
-        Join<Music, MusicGenreTag> musicGenreTagJoin = root.join("musicGenreTag", JoinType.LEFT);
-        Join<MusicGenreTag, GenreTag> genreTagJoin = musicGenreTagJoin.join("genreTag", JoinType.LEFT);
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(music.userId.eq(userId));
+        builder.and(music.musicId.eq(musicId));
 
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(root.get("nickname"), nickname));
-        predicates.add(cb.equal(root.get("musicId"), id));
+        SearchTotalResultDto result = queryFactory
+                .select(Projections.constructor(
+                        SearchTotalResultDto.class,
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.nickname,
+                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName),
+                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName),
+                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName),
+                        music.create_date,
+                        music.modify_date
+                ))
+                .from(music)
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder) // 조건 추가
+                .groupBy(
+                        music.musicId, music.title, music.filePath, music.price, music.description,
+                        music.nickname, music.create_date, music.modify_date
+                )
+                .fetchOne(); // 단일 결과 반환
 
-        query.select(cb.construct(SearchTotalResultDto.class
-                ,root.get("musicId"),root.get("title"),root.get("filePath"),root.get("price"),root.get("description")
-                ,root.get("nickname"),
-                cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, instrumentTagJoin.get("instrumentTagName"))),
-                cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, moodTagJoin.get("moodTagName"))),
-                cb.function("GROUP_CONCAT", String.class, cb.function("DISTINCT", String.class, genreTagJoin.get("genreTagName"))),
-                root.get("create_date"),root.get("modify_date")
-        ));
-
-        // 조건 추가
-        query.where(cb.and(predicates.toArray(new Predicate[0])));
-
-        query.groupBy(
-                root.get("musicId"), root.get("title"), root.get("filePath"), root.get("price"), root.get("description"),
-                root.get("nickname"));
-
-        // 쿼리 실행
-        TypedQuery<SearchTotalResultDto> typedQuery = entityManager.createQuery(query);
-        // 데이터 반환
-        List<SearchTotalResultDto> results = typedQuery.getResultList();
-
-        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+        return Optional.ofNullable(result);
     }
 }
