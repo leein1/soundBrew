@@ -16,14 +16,19 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static com.soundbrew.soundbrew.dto.ResponseDTO.withAll;
 
 @Service
 @Log4j2
@@ -71,14 +76,24 @@ public class UserServiceImpl implements UserService{
         String keyword = requestDTO.getKeyword();
         Pageable pageable = requestDTO.getPageable("userId");
 
-        log.info("UserSservice list() : " + pageable);
+        log.info("UserService requestDTO : {}", requestDTO);
+        log.info("UserService list() : " + pageable);
 
         //  Page<User> result = 유저레파지토리.서치인터페이스(types,keyword,pageable)
-
+        Page<User> users = userRepository.findAll(pageable);
         //  result 를 List<UserDTO> dtoList 로 변환
-
+        List<UserDTO> dtoList = users.getContent().stream()
+                .map(user -> modelMapper.map(user,UserDTO.class))
+                .collect(Collectors.toList());
         //  ResponseDTO.<UserDTO>withAll() 빌드 후 리턴
-        return null;
+
+//        return ResponseDTO<UserDTO>.withAll()
+//                .requestDTO(requestDTO)
+//                .dtoList(dtoList)
+//                .total((int)users.getTotalElements())
+//                .build();
+
+        return ResponseDTO.withAll(requestDTO,dtoList,(int)users.getTotalElements());
     }
 
 

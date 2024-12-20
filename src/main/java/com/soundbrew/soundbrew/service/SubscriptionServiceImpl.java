@@ -38,11 +38,13 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 
 
 
-        return ResponseDTO.<SubscriptionDTO>withAll()
-                .requestDto(new RequestDTO())
-                .dtoList(subscriptionDTOs)
-                .total(subscriptionDTOs.size())
-                .build();
+//        return ResponseDTO.<SubscriptionDTO>withAll()
+//                .requestDTO(new RequestDTO())
+//                .dtoList(subscriptionDTOs)
+//                .total(subscriptionDTOs.size())
+//                .build();
+
+        return ResponseDTO.withAll(new RequestDTO(),subscriptionDTOs,subscriptionDTOs.size());
     }
 
     @Override

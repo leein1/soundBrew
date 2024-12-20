@@ -2,7 +2,7 @@ package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 
-public interface VerifyService {
+public interface VerificationService {
 
     //    활성화 위한 메일 발송
     ResponseDTO<String> sendActivationCode(String email);

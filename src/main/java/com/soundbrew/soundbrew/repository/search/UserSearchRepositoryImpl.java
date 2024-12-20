@@ -4,9 +4,7 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.soundbrew.soundbrew.domain.QUser;
 import com.soundbrew.soundbrew.domain.User;
-import com.soundbrew.soundbrew.dto.RequestDTO;
-import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -21,26 +19,52 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
     private final JPAQueryFactory jpaQueryFactory;
     private final ModelMapper modelMapper;
 
+//    public ResponseDTO<UserDTO> searchTest() {
+//        QUser user = QUser.user;
+//
+//        List<User> resultList = jpaQueryFactory.selectFrom(user)
+//                .where(user.nickname.contains("lee"))
+//                .fetch();
+//
+//        List<UserDTO> userDTOList = resultList.stream()
+//                .map(u -> modelMapper.map(u, UserDTO.class))
+//                .collect(Collectors.toList());
+//
+//        int totalCount = (int) jpaQueryFactory.selectFrom(user)
+//                .where(user.nickname.contains("lee"))
+//                .fetchCount();
+//
+//        return ResponseDTO.<UserDTO>withAll()
+//                .dtoList(userDTOList)
+//                .total(totalCount)
+//                .build();
+//    }
+
+    @Override
     public ResponseDTO<UserDTO> searchTest() {
-        QUser user = QUser.user;
-
-        List<User> resultList = jpaQueryFactory.selectFrom(user)
-                .where(user.nickname.contains("lee"))
-                .fetch();
-
-        List<UserDTO> userDTOList = resultList.stream()
-                .map(u -> modelMapper.map(u, UserDTO.class))
-                .collect(Collectors.toList());
-
-        int totalCount = (int) jpaQueryFactory.selectFrom(user)
-                .where(user.nickname.contains("lee"))
-                .fetchCount();
-
-        return ResponseDTO.<UserDTO>withAll()
-                .dtoList(userDTOList)
-                .total(totalCount)
-                .build();
+        return null;
     }
+
+    @Override
+    public UserDetailsDTO findUserDetailsById(int userId) {
+        return null;
+    }
+
+
+//    @Override
+//    public UserDetailsDTO findUserDetailsById(int userId) {
+//
+//        QUser user = QUser.user;
+//
+//        UserDetailsDTO userDetailsDTO = jpaQueryFactory.selectFrom(user)
+//                .
+//
+//
+//
+//
+//        return null;
+//
+//    }
 
 
 }

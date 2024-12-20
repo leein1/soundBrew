@@ -27,9 +27,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, IOException.class})
     public ResponseEntity<ResponseDTO<String>> handleBadRequestExceptions(Exception ex) {
 
+        String exceptionMessage = ex.getMessage() != null ? ex.getMessage() : "요청 데이터에 문제가 발생했습니다.";
+
 //        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
+
         ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                .message("요청 데이터에 문제가 발생했습니다.")
+                .message(exceptionMessage)
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);

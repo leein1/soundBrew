@@ -243,6 +243,11 @@ public class MeController {
 
 //    나의 특정 앨범수정 - PATCH /me/albums/{albumId} - 해당 행위를 /api/me에서 처리하는것이 맞는가?
 //    userid를 토큰에서 받아옴 -
+    @PatchMapping("/albums/{albumId}")
+    public ResponseEntity updateAlbum(@PathVariable int albumId, @RequestParam int userId){ //추후 토큰으로 변경
+
+        return null;
+    }
 
     
 
@@ -269,6 +274,10 @@ public class MeController {
 
 
 //   나의 특정 음원 수정 - PATCH /me/tracks/{trackId} - 해당 행위를 /api/me에서 처리하는것이 맞는가?
+    @PatchMapping("/tracks/{trackId}")
+    public ResponseEntity updateTrack(@PathVariable int trackId, @RequestParam int userId){
 
+        return null;
+    }
 
 }

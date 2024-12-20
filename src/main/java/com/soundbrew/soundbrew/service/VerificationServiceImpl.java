@@ -20,7 +20,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class VerifyServiceImpl implements VerifyService{
+public class VerificationServiceImpl implements VerificationService{
 
     private final UserRepository userRepository;
     private final ActivationCodeRepository activationCodeRepository;
@@ -107,12 +107,17 @@ public class VerifyServiceImpl implements VerifyService{
         activationCodeRepository.save(activationCodeDTO.toEntity());
 
         try {
+
             mailService.send(email, "SoundBrew 계정 인증", "활성화 코드 입니다 : " + activationCode);
             return this.buildMessageResponse("메일을 전송하였습니다.");
+
         } catch (Exception e) {
+
             log.error("메일 전송 실패", e);
             return this.buildMessageResponse("메일 전송에 실패하였습니다.");
+
         }
+
     }
 
 
@@ -171,9 +176,12 @@ public class VerifyServiceImpl implements VerifyService{
                 .orElseThrow(() -> new IllegalArgumentException("활성화 코드가 존재하지 않습니다."));
 
         if (LocalDateTime.now().isAfter(activationEntity.getExpirationTime())) {
+
             return this.buildMessageResponse("유효 시간이 지났습니다.");
         }
+
         if (!activationEntity.getActivationCode().equals(providedActivationCode)) {
+
             return this.buildMessageResponse("코드가 일치하지 않습니다.");
         }
 
@@ -215,10 +223,10 @@ public class VerifyServiceImpl implements VerifyService{
     @Override
     public ResponseDTO<String> verifyPassword(String nickname, String inputPassword) {
 
-        User user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        User user = this.findUserByEmail(nickname);
 
         if (!user.getPassword().equals(inputPassword)) {
+
             return this.buildMessageResponse("비밀번호가 일치하지 않습니다.");
         }
 
