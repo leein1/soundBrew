@@ -10,7 +10,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_DEFAULT) // null 값인 필드는 제외
-public class ResponseDto<E> {
+public class ResponseDTO<E> {
     private List<E> dtoList;// 데이터 목록
     private E dto; //단수일때 쓰는것.
     private int page;       // 현재 페이지
@@ -24,21 +24,21 @@ public class ResponseDto<E> {
     private String message;
 
     @Builder(builderMethodName = "withMessage")
-    public ResponseDto(String message){
+    public ResponseDTO(String message){
         this.message = message;
     }
 
     @Builder(builderMethodName = "withSingleData")
-    public ResponseDto(E dto){
+    public ResponseDTO(E dto){
         this.dto = dto;
     }
 
     @Builder(builderMethodName = "withAll")
-    public ResponseDto(RequestDto requestDto, List<E> dtoList, int total){
+    public ResponseDTO(RequestDTO requestDTO, List<E> dtoList, int total){
         if(total <= 0) return;
-        this.keyword1 = requestDto.getKeyword();
-        this.page = requestDto.getPage();
-        this.size = requestDto.getSize();
+        this.keyword1 = requestDTO.getKeyword();
+        this.page = requestDTO.getPage();
+        this.size = requestDTO.getSize();
         this.total = total;
         this.dtoList = dtoList;
         this.end = (int)(Math.ceil(this.page/10.0))*10; // 화면에서 마지막 번호

@@ -1,13 +1,11 @@
 package com.soundbrew.soundbrew.repository.sound.N;
 
 import com.soundbrew.soundbrew.domain.sound.Album;
-import com.soundbrew.soundbrew.dto.sound.AlbumDto;
+import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
 import com.soundbrew.soundbrew.repository.sound.AlbumRepository;
-import com.soundbrew.soundbrew.repository.sound.custom.AlbumMusicRepositoryCustom;
 import com.soundbrew.soundbrew.repository.sound.custom.AlbumMusicRepositoryCustomImpl;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -29,7 +27,7 @@ public class AlbumRepositoryTests {
     @Test
     @Transactional
     void testCreate(){
-        AlbumDto dto = AlbumDto.builder()
+        AlbumDTO dto = AlbumDTO.builder()
                 .userId(2)
                 .albumName("Test_album_no.12")
                 .albumArtPath("/test/test/path")

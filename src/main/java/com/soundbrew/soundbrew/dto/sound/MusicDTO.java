@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.dto.sound;
 
 import com.soundbrew.soundbrew.domain.sound.Music;
-import com.soundbrew.soundbrew.dto.BaseEntityDto;
+import com.soundbrew.soundbrew.dto.BaseEntityDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MusicDto extends BaseEntityDto {
+public class MusicDTO extends BaseEntityDTO {
     private int musicId;
     private int userId;
     private String nickname;
@@ -24,7 +24,7 @@ public class MusicDto extends BaseEntityDto {
     private String soundType;
 
 
-    public MusicDto(int musicId, int userId, String title, String filePath, int price, String description, String soundType, String nickname, LocalDateTime createDate, LocalDateTime modifyDate) {
+    public MusicDTO(int musicId, int userId, String title, String filePath, int price, String description, String soundType, String nickname, LocalDateTime createDate, LocalDateTime modifyDate) {
         this.musicId = musicId;
         this.userId = userId;
         this.nickname = nickname;
@@ -33,8 +33,8 @@ public class MusicDto extends BaseEntityDto {
         this.price = price;
         this.description = description;
         this.soundType = soundType;
-        super.setCreate_date(createDate); // BaseEntityDto의 필드 설정
-        super.setModify_date(modifyDate);
+        super.setCreateDate(createDate); // BaseEntityDto의 필드 설정
+        super.setModifyDate(modifyDate);
     }
 
 

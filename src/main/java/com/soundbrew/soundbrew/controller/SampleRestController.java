@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.controller;
 
-import com.soundbrew.soundbrew.dto.ResponseDto;
-import com.soundbrew.soundbrew.dto.sound.SoundStreamDto;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.sound.SoundStreamDTO;
 import com.soundbrew.soundbrew.service.SoundsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -23,8 +23,8 @@ public class SampleRestController {
                 .findFirst()
                 .orElseThrow();
 
-        ResponseDto<SoundStreamDto> responseDto = soundsService.streamSound(range, fileName);
-        SoundStreamDto dto = responseDto.getDto();
+        ResponseDTO<SoundStreamDTO> responseDto = soundsService.streamSound(range, fileName);
+        SoundStreamDTO dto = responseDto.getDto();
 
         return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                 .header(HttpHeaders.CONTENT_TYPE, "audio/mpeg")

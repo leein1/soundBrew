@@ -17,7 +17,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        Pageable pageable = PageRequest.of(0, 2);
 //        SearchRequestDto requestDto = new SearchRequestDto();
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 //
 //        log.info(result.toString());
 //    }
@@ -29,7 +29,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        requestDto.setInstrument(Arrays.asList("guitar"));
 //        requestDto.setMood(Arrays.asList("sad"));
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 //        log.info("Case 2: guitar + sad");
 //        log.info(result.toString());
 //    }
@@ -39,7 +39,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        SearchRequestDto requestDto = new SearchRequestDto();
 //        requestDto.setAlbumId(11);
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, null);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, null);
 //        log.info(result.toString());
 //    }
 //
@@ -49,7 +49,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        SearchRequestDto requestDto = new SearchRequestDto();
 //        requestDto.setMusicId(11);
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 //        log.info("Case 4: musicId = 10");
 //        log.info(result.toString());
 //    }
@@ -60,7 +60,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        SearchRequestDto requestDto = new SearchRequestDto();
 //        requestDto.setNickname("user123");
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 //        log.info("Case 5: nickname = user123");
 //        log.info(result.toString());
 //    }
@@ -73,7 +73,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        requestDto.setMood(Arrays.asList("calm"));
 //        requestDto.setGenre(Arrays.asList("rock"));
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 //        log.info("Case 6: drum + bass + calm + rock");
 //        log.info(result.toString());
 //    }
@@ -83,7 +83,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        Pageable pageable = PageRequest.of(0, 2);
 //        SearchRequestDto requestDto = new SearchRequestDto();  // 모든 필드 null
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 //        log.info("Case 7: all NULL (전체 검색)");
 //        log.info(result.toString());
 //    }
@@ -94,7 +94,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        SearchRequestDto requestDto = new SearchRequestDto();
 //        requestDto.setInstrument(Arrays.asList("piano", "violin"));
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 //        log.info("Case 8: piano + violin");
 //        log.info(result.toString());
 //    }
@@ -104,7 +104,7 @@ public class AlbumMusicRepositoryCustomImplTests {
 //        Pageable pageable = PageRequest.of(0, 5);
 //        SearchRequestDto requestDto = new SearchRequestDto();  // 페이징만 적용, 나머지 필드 null
 //
-//        List<SearchTotalResultDto> result = albumMusicRepositoryCustom.search(requestDto, pageable);
+//        List<SearchTotalResultDTO> result = albumMusicRepositoryCustom.search(requestDto, pageable);
 //        log.info("Case 9: pagination (1페이지, 5개씩)");
 //        log.info(result.toString());
 //    }

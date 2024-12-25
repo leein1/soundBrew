@@ -5,7 +5,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
+import com.soundbrew.soundbrew.dto.sound.MusicDTO;
+import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
+import com.soundbrew.soundbrew.dto.sound.TagsStreamDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -15,7 +17,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<SearchTotalResultDto> soundOne(String nickname, String title) {
+    public Optional<SearchTotalResultDTO> soundOne(String nickname, String title) {
         QMusic music = QMusic.music;
         QMusicInstrumentTag musicInstrumentTag =QMusicInstrumentTag.musicInstrumentTag;
         QInstrumentTag instrumentTag = QInstrumentTag.instrumentTag;
@@ -28,15 +30,15 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
         builder.and(music.nickname.eq(nickname));
         builder.and(music.title.eq(title));
 
-        SearchTotalResultDto result = queryFactory
-                .select(Projections.bean(
-                        SearchTotalResultDto.class,
-                        music.musicId.as("musicId"), music.title.as("musicTitle"), music.filePath.as("albumArtPath"), music.price.as("price"), music.description.as("musicDescription"), music.nickname.as("nickname"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName"),
-                        music.create_date.as("create_date"),
-                        music.modify_date.as("modify_date")
+        SearchTotalResultDTO result = queryFactory.select(Projections.bean(SearchTotalResultDTO.class,
+                        Projections.bean(MusicDTO.class,
+                                music.musicId, music.title, music.filePath, music.price, music.description, music.nickname, music.createDate, music.modifyDate
+                        ).as("musicDTO"),
+                        Projections.bean(TagsStreamDTO.class,
+                            Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
+                            Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
+                            Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
+                        ).as("tagsStreamDTO")
                 ))
                 .from(music)
                 .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
@@ -48,7 +50,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                 .where(builder) // 조건 추가
                 .groupBy(
                         music.musicId, music.title, music.filePath, music.price, music.description,
-                        music.nickname, music.create_date, music.modify_date
+                        music.nickname, music.createDate, music.modifyDate
                 )
                 .fetchOne(); // 단일 결과 반환
 
@@ -56,7 +58,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
     }
 
     @Override
-    public Optional<SearchTotalResultDto> soundOne(int userId, int musicId) {
+    public Optional<SearchTotalResultDTO> soundOne(int userId, int musicId) {
         QMusic music = QMusic.music;
         QMusicInstrumentTag musicInstrumentTag =QMusicInstrumentTag.musicInstrumentTag;
         QInstrumentTag instrumentTag = QInstrumentTag.instrumentTag;
@@ -69,15 +71,16 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
         builder.and(music.userId.eq(userId));
         builder.and(music.musicId.eq(musicId));
 
-        SearchTotalResultDto result = queryFactory
-                .select(Projections.constructor(
-                        SearchTotalResultDto.class,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.nickname,
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName),
-                        music.create_date,
-                        music.modify_date
+        SearchTotalResultDTO result = queryFactory
+                .select(Projections.bean(SearchTotalResultDTO.class,
+                        Projections.bean(MusicDTO.class,
+                                music.musicId, music.title, music.filePath, music.price, music.description, music.nickname, music.createDate, music.modifyDate
+                        ).as("musicDTO"),
+                        Projections.bean(TagsStreamDTO.class,
+                                Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
+                        ).as("tagsStreamDTO")
                 ))
                 .from(music)
                 .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
@@ -89,7 +92,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                 .where(builder) // 조건 추가
                 .groupBy(
                         music.musicId, music.title, music.filePath, music.price, music.description,
-                        music.nickname, music.create_date, music.modify_date
+                        music.nickname, music.createDate, music.modifyDate
                 )
                 .fetchOne(); // 단일 결과 반환
 

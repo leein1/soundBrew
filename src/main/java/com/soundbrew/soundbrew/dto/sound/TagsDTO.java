@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import javax.annotation.security.DenyAll;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +15,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
-public class TagsDto {
+public class TagsDTO {
     private Integer musicId;
     private String title;
     private List<String> instrument;

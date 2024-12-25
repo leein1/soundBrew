@@ -1,11 +1,11 @@
 package com.soundbrew.soundbrew.controller;
 
 
-import com.soundbrew.soundbrew.dto.ResponseDto;
-import com.soundbrew.soundbrew.dto.sound.AlbumDto;
-import com.soundbrew.soundbrew.dto.sound.MusicDto;
-import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
-import com.soundbrew.soundbrew.dto.sound.TagsDto;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
+import com.soundbrew.soundbrew.dto.sound.MusicDTO;
+import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
+import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.service.AdminService;
 import com.soundbrew.soundbrew.service.AdminServiceImpl;
 import lombok.AllArgsConstructor;
@@ -22,86 +22,86 @@ public class AdminController {
     private final AdminServiceImpl adminServiceImpl;
 
     @PostMapping("/tags")
-    ResponseEntity<ResponseDto> createTag(@RequestBody TagsDto tagsDto){
-        ResponseDto responseDto = adminService.createTag(tagsDto);
+    ResponseEntity<ResponseDTO> createTag(@RequestBody TagsDTO tagsDto){
+        ResponseDTO responseDto = adminService.createTag(tagsDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/tags/instruments/{beforeName}")
-    ResponseEntity<ResponseDto> updateInstrumentTagSpelling(@PathVariable String beforeName,@RequestBody String afterName){
-        ResponseDto responseDto  = adminService.updateInstrumentTagSpelling(beforeName, afterName);
+    ResponseEntity<ResponseDTO> updateInstrumentTagSpelling(@PathVariable String beforeName, @RequestBody String afterName){
+        ResponseDTO responseDto  = adminService.updateInstrumentTagSpelling(beforeName, afterName);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/tags/moods/{beforeName}")
-    ResponseEntity<ResponseDto> updateMoodTagSpelling(@PathVariable String beforeName, @RequestBody String afterName){
-        ResponseDto responseDto = adminService.updateMoodTagSpelling(beforeName, afterName);
+    ResponseEntity<ResponseDTO> updateMoodTagSpelling(@PathVariable String beforeName, @RequestBody String afterName){
+        ResponseDTO responseDto = adminService.updateMoodTagSpelling(beforeName, afterName);
 
         return  ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/tags/genres/{beforeName}")
-    ResponseEntity<ResponseDto> updateGenreTagSpelling(@PathVariable String beforeName,@RequestBody String afterName){
-            ResponseDto responseDto = adminService.updateGenreTagSpelling(beforeName, afterName);
+    ResponseEntity<ResponseDTO> updateGenreTagSpelling(@PathVariable String beforeName, @RequestBody String afterName){
+            ResponseDTO responseDto = adminService.updateGenreTagSpelling(beforeName, afterName);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PostMapping("/tags/{musicId}")
-    ResponseEntity<ResponseDto> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDto tagsDto){
-        ResponseDto responseDto = adminServiceImpl.updateLinkTags(musicId,tagsDto);
+    ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDTO tagsDto){
+        ResponseDTO responseDto = adminServiceImpl.updateLinkTags(musicId,tagsDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/tags")
-    ResponseEntity<ResponseDto<TagsDto>> getTags(@RequestParam(required = false) List<Integer> musicIds){ // 아티스트(내)의 음악들 ( List<Integer>)의 태그들
-        ResponseDto<TagsDto> responseDto = adminServiceImpl.getTags(musicIds);
+    ResponseEntity<ResponseDTO<TagsDTO>> getTags(@RequestParam(required = false) List<Integer> musicIds){ // 아티스트(내)의 음악들 ( List<Integer>)의 태그들
+        ResponseDTO<TagsDTO> responseDto = adminServiceImpl.getTags(musicIds);
 
         return  ResponseEntity.ok().body(responseDto);
     }
 
     // sounds for admin
     @DeleteMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDto> deleteAlbum(@PathVariable int albumId){
-        ResponseDto responseDto = adminServiceImpl.deleteAlbum(albumId);
+    ResponseEntity<ResponseDTO> deleteAlbum(@PathVariable int albumId){
+        ResponseDTO responseDto = adminServiceImpl.deleteAlbum(albumId);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @DeleteMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDto> deleteMusic(@PathVariable int musicId){
-        ResponseDto responseDto = adminServiceImpl.deleteMusic(musicId);
+    ResponseEntity<ResponseDTO> deleteMusic(@PathVariable int musicId){
+        ResponseDTO responseDto = adminServiceImpl.deleteMusic(musicId);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDto> updateAlbum(@PathVariable int albumId,@RequestBody AlbumDto albumDto){
-        ResponseDto responseDto = adminServiceImpl.updateAlbum(albumId,albumDto);
+    ResponseEntity<ResponseDTO> updateAlbum(@PathVariable int albumId, @RequestBody AlbumDTO albumDto){
+        ResponseDTO responseDto = adminServiceImpl.updateAlbum(albumId,albumDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDto> updateMusic(@PathVariable int musicId,@RequestBody MusicDto musicDto ){
-        ResponseDto responseDto = adminServiceImpl.updateMusic(musicId,musicDto);
+    ResponseEntity<ResponseDTO> updateMusic(@PathVariable int musicId, @RequestBody MusicDTO musicDto ){
+        ResponseDTO responseDto = adminServiceImpl.updateMusic(musicId,musicDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/tracks/{userId}/{musicId}")
-    ResponseEntity<ResponseDto<SearchTotalResultDto>> getSoundOne(@PathVariable int userId, @PathVariable("musicId") int id){
-        ResponseDto<SearchTotalResultDto> responseDto = adminServiceImpl.getSoundOne(userId,id);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable int userId, @PathVariable("musicId") int id){
+        ResponseDTO<SearchTotalResultDTO> responseDto = adminServiceImpl.getSoundOne(userId,id);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums/{userId}/{albumId}")
-    ResponseEntity<ResponseDto<SearchTotalResultDto>> getAlbumOne(@PathVariable int userId,@PathVariable("albumId") int id){
-        ResponseDto<SearchTotalResultDto> responseDto = adminServiceImpl.getAlbumOne(userId,id);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable int userId, @PathVariable("albumId") int id){
+        ResponseDTO<SearchTotalResultDTO> responseDto = adminServiceImpl.getAlbumOne(userId,id);
 
         return ResponseEntity.ok().body(responseDto);
     }

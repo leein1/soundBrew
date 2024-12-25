@@ -1,27 +1,25 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.sound.Music;
-import com.soundbrew.soundbrew.dto.RequestDto;
-import com.soundbrew.soundbrew.dto.ResponseDto;
+import com.soundbrew.soundbrew.dto.RequestDTO;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
-
-import java.util.List;
 
 public interface MeService {
     // tags for me
-    ResponseDto updateLinkTags(int musicId, TagsDto tagsDto);
-    ResponseDto linkTags(Music music, TagsDto tagsDto);
-    // ResponseDto<TagsDto> tagsList(RequestDto requestDto); 전체, 회원 닉네임.
+    ResponseDTO updateLinkTags(int musicId, TagsDTO tagsDTO);
+    ResponseDTO linkTags(Music music, TagsDTO tagsDTO);
+    // ResponseDTO<TagsDTO> tagsList(RequestDTO requestDto); 전체, 회원 닉네임.
 
     // sounds for me
-    ResponseDto createSound(int checkedUserId, AlbumDto albumDto, MusicDto musicDto, TagsDto tagsDto);
-    ResponseDto updateAlbum(int albumId, AlbumDto albumDto);
-    ResponseDto updateMusic(int musicId, MusicDto musicDto );
+    ResponseDTO createSound(int checkedUserId, AlbumDTO albumDTO, MusicDTO musicDTO, TagsDTO tagsDTO);
+    ResponseDTO updateAlbum(int albumId, AlbumDTO albumDTO);
+    ResponseDTO updateMusic(int musicId, MusicDTO musicDTO );
 
     // get one for me or admin
-    ResponseDto<SearchTotalResultDto> getSoundOne(int userId, int id);
-    ResponseDto<SearchTotalResultDto> getAlbumOne(int userId, int id, RequestDto requestDto);
+    ResponseDTO<SearchTotalResultDTO> getSoundOne(int userId, int id);
+    ResponseDTO<SearchTotalResultDTO> getAlbumOne(int userId, int id, RequestDTO requestDTO);
 
-    ResponseDto<SearchTotalResultDto> getSoundMe(RequestDto requestDto);
-    ResponseDto<SearchTotalResultDto> getAlbumMe(RequestDto responseDto);
+    ResponseDTO<SearchTotalResultDTO> getSoundMe(RequestDTO requestDTO);
+    ResponseDTO<SearchTotalResultDTO> getAlbumMe(RequestDTO requestDTO);
 }

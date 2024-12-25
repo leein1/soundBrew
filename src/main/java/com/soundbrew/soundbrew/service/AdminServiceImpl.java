@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.ResponseDto;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.AllArgsConstructor;
@@ -29,65 +29,65 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public ResponseDto createTag(TagsDto tagsDto) {
-        if (!tagsDto.getInstrument().isEmpty()) tagsDto.InstToEntity().forEach(instrumentTagRepository::save);
-        if (!tagsDto.getMood().isEmpty()) tagsDto.moodToEntity().forEach(moodTagRepository::save);
-        if (!tagsDto.getGenre().isEmpty()) tagsDto.genreToEntity().forEach(genreTagRepository::save);
+    public ResponseDTO createTag(TagsDTO tagsDTO) {
+        if (!tagsDTO.getInstrument().isEmpty()) tagsDTO.InstToEntity().forEach(instrumentTagRepository::save);
+        if (!tagsDTO.getMood().isEmpty()) tagsDTO.moodToEntity().forEach(moodTagRepository::save);
+        if (!tagsDTO.getGenre().isEmpty()) tagsDTO.genreToEntity().forEach(genreTagRepository::save);
 
-       return ResponseDto.withMessage().message("태그가 성공적으로 저장되었습니다.").build();
+       return ResponseDTO.withMessage().message("태그가 성공적으로 저장되었습니다.").build();
     }
 
     @Override
     @Transactional
-    public ResponseDto updateInstrumentTagSpelling(String beforeName, String afterName) {
+    public ResponseDTO updateInstrumentTagSpelling(String beforeName, String afterName) {
         Optional<InstrumentTag> instrumentTag = instrumentTagRepository.findByInstrumentTagName(beforeName);
-        if(instrumentTag.isEmpty()) return ResponseDto.withMessage().message("오탈자 수정이 정상적으로 작동하지 않았습니다.").build();
+        if(instrumentTag.isEmpty()) return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하지 않았습니다.").build();
 
         instrumentTag.get().update(afterName);
-        return ResponseDto.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
+        return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
     }
 
     @Override
     @Transactional
-    public ResponseDto updateMoodTagSpelling(String beforeName, String afterName) {
+    public ResponseDTO updateMoodTagSpelling(String beforeName, String afterName) {
         Optional<MoodTag> moodTag = moodTagRepository.findByMoodTagName(beforeName);
-        if(moodTag.isEmpty()) return ResponseDto.withMessage().message("오탈자 수정이 정상적으로 작동하지 않았습니다.").build();
+        if(moodTag.isEmpty()) return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하지 않았습니다.").build();
 
         moodTag.get().update(afterName);
-        return ResponseDto.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
+        return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
     }
 
     @Override
     @Transactional
-    public ResponseDto updateGenreTagSpelling(String beforeName, String afterName) {
+    public ResponseDTO updateGenreTagSpelling(String beforeName, String afterName) {
         Optional<GenreTag> genreTag= genreTagRepository.findByGenreTagName(beforeName);
-        if(genreTag.isEmpty()) return ResponseDto.withMessage().message("오탈자 수정이 정상적으로 작동하지 않았습니다.").build();
+        if(genreTag.isEmpty()) return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하지 않았습니다.").build();
 
         genreTag.get().update(afterName);
-        return ResponseDto.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
+        return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
     }
 
     @Override
     @Transactional
-    public ResponseDto<TagsDto> getTags(List<Integer> musicIds) {
+    public ResponseDTO<TagsDTO> getTags(List<Integer> musicIds) {
         if (musicIds == null || musicIds.isEmpty()) {
-            TagsDto tagsDto = new TagsDto();
+            TagsDTO tagsDTO = new TagsDTO();
 
-            tagsDto.setMood(moodTagRepository.findAll().stream()
+            tagsDTO.setMood(moodTagRepository.findAll().stream()
                     .map(MoodTag::getMoodTagName)
                     .collect(Collectors.toList()));
 
-            tagsDto.setInstrument(instrumentTagRepository.findAll().stream()
+            tagsDTO.setInstrument(instrumentTagRepository.findAll().stream()
                     .map(InstrumentTag::getInstrumentTagName)
                     .collect(Collectors.toList()));
 
-            tagsDto.setGenre(genreTagRepository.findAll().stream()
+            tagsDTO.setGenre(genreTagRepository.findAll().stream()
                     .map(GenreTag::getGenreTagName)
                     .collect(Collectors.toList()));
 
-            return ResponseDto.<TagsDto>builder().dtoList(List.of(tagsDto)).build();
+            return ResponseDTO.<TagsDTO>builder().dtoList(List.of(tagsDTO)).build();
         } else {
-            List<TagsDto> musicTagsDtos = musicIds.stream()
+            List<TagsDTO> musicTagsDTOS = musicIds.stream()
                     .map(musicId -> {
                         List<String> instrumentTagNames = musicInstrumentTagRepository.findByIdMusicId(musicId).stream()
                                 .map(tag -> tag.getInstrumentTag().getInstrumentTagName())
@@ -104,52 +104,52 @@ public class AdminServiceImpl implements AdminService {
                         String title = instrumentTagNames.isEmpty() ? null
                                 : musicInstrumentTagRepository.findByIdMusicId(musicId).get(0).getMusic().getTitle();
 
-                        return TagsDto.builder().musicId(musicId).title(title).instrument(instrumentTagNames).mood(moodTagNames).genre(genreTagNames).build();
+                        return TagsDTO.builder().musicId(musicId).title(title).instrument(instrumentTagNames).mood(moodTagNames).genre(genreTagNames).build();
                     }).collect(Collectors.toList());
 
-            return ResponseDto.<TagsDto>builder().dtoList(musicTagsDtos).build();
+            return ResponseDTO.<TagsDTO>builder().dtoList(musicTagsDTOS).build();
         }
     }
 
     @Override
-    public ResponseDto deleteAlbum(int albumId) {
+    public ResponseDTO deleteAlbum(int albumId) {
         albumRepository.deleteById(albumId);
-        return ResponseDto.withMessage().message("삭제가 정상적으로 처리되었습니다.").build();
+        return ResponseDTO.withMessage().message("삭제가 정상적으로 처리되었습니다.").build();
     }
 
     @Override
-    public ResponseDto deleteMusic(int musicId) {
+    public ResponseDTO deleteMusic(int musicId) {
         musicRepository.deleteById(musicId);
-        return ResponseDto.withMessage().message("삭제가 정상적으로 처리되었습니다.").build();
+        return ResponseDTO.withMessage().message("삭제가 정상적으로 처리되었습니다.").build();
     }
 
     @Transactional
-    public ResponseDto updateLinkTags(int musicId, TagsDto tagsDto) {
-       return meService.updateLinkTags(musicId,tagsDto);
+    public ResponseDTO updateLinkTags(int musicId, TagsDTO tagsDTO) {
+       return meService.updateLinkTags(musicId,tagsDTO);
     }
 
     @Transactional
-    public ResponseDto linkTags(Music music, TagsDto tagsDto) {
-        return meService.linkTags(music,tagsDto);
+    public ResponseDTO linkTags(Music music, TagsDTO tagsDTO) {
+        return meService.linkTags(music,tagsDTO);
     }
 
     @Transactional
-    public ResponseDto updateAlbum(int albumId, AlbumDto albumDto) {
-        return meService.updateAlbum(albumId,albumDto);
+    public ResponseDTO updateAlbum(int albumId, AlbumDTO albumDTO) {
+        return meService.updateAlbum(albumId,albumDTO);
     }
 
     @Transactional
-    public ResponseDto updateMusic(int musicId, MusicDto musicDto) {
+    public ResponseDTO updateMusic(int musicId, MusicDTO musicDTO) {
         //verify도 수정가능해야함.
-       return  meService.updateMusic(musicId, musicDto);
+       return  meService.updateMusic(musicId, musicDTO);
     }
 
-    public ResponseDto<SearchTotalResultDto> getSoundOne(int userId, int id) {
+    public ResponseDTO<SearchTotalResultDTO> getSoundOne(int userId, int id) {
         //임의의 키워드
         return meService.getSoundOne(userId,id);
     }
 
-    public ResponseDto<SearchTotalResultDto> getAlbumOne(int userId, int id) {
+    public ResponseDTO<SearchTotalResultDTO> getAlbumOne(int userId, int id) {
         // 임의의 키워드
         return meService.getSoundOne(userId, id);
     }

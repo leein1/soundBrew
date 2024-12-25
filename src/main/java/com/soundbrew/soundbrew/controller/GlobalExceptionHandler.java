@@ -22,18 +22,18 @@ public class GlobalExceptionHandler {
 //    비슷한 오류들 최대한 병합 - 지나친 세부 분류 X
 //    클라이언트 기준 중요해 보이는 예외들 처리
 
-    // 400 - 클라이언트측 오류
-    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<Map<String, Object>> handleBadRequestExceptions(Exception ex) {
-        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
-    }
-
-    // 400 - 파일 처리 오류
-    // 따로 필요한지....? 의문이 들긴 하지만 일단 넣어둠
-    @ExceptionHandler(IOException.class)
-    public ResponseEntity<Map<String, Object>> handleFileExceptions(IOException ex) {
-        return createErrorResponse(HttpStatus.BAD_REQUEST, "파일 처리 중 문제가 발생했습니다.");
-    }
+//    // 400 - 클라이언트측 오류
+//    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
+//    public ResponseEntity<Map<String, Object>> handleBadRequestExceptions(Exception ex) {
+//        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
+//    }
+//
+//    // 400 - 파일 처리 오류
+//    // 따로 필요한지....? 의문이 들긴 하지만 일단 넣어둠
+//    @ExceptionHandler(IOException.class)
+//    public ResponseEntity<Map<String, Object>> handleFileExceptions(IOException ex) {
+//        return createErrorResponse(HttpStatus.BAD_REQUEST, "파일 처리 중 문제가 발생했습니다.");
+//    }
 
     // 404 - 리소스 찾지 못한 경우
     @ExceptionHandler(NoSuchElementException.class)

@@ -17,7 +17,7 @@ import java.util.Map;
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class RequestDto {
+public class RequestDTO {
     @Builder.Default
     private int page=1;
     @Builder.Default

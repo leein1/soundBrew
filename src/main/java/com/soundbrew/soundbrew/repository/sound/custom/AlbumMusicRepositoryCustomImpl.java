@@ -5,8 +5,11 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.RequestDto;
-import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
+import com.soundbrew.soundbrew.dto.RequestDTO;
+import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
+import com.soundbrew.soundbrew.dto.sound.MusicDTO;
+import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
+import com.soundbrew.soundbrew.dto.sound.TagsStreamDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,7 +21,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<Page<SearchTotalResultDto>> search(RequestDto requestDto){
+    public Optional<Page<SearchTotalResultDTO>> search(RequestDTO requestDTO){
         List<String> instruments = new ArrayList<>();
         List<String> moods = new ArrayList<>();
         List<String> genres = new ArrayList<>();
@@ -32,8 +35,8 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         QMusicGenreTag musicGenreTag = QMusicGenreTag.musicGenreTag;
         QGenreTag genreTag = QGenreTag.genreTag;
 
-        if(requestDto.getMore()!= null && !requestDto.getMore().isEmpty()){
-            for(Map.Entry<String, String> entry : requestDto.getMore().entrySet()){
+        if(requestDTO.getMore()!= null && !requestDTO.getMore().isEmpty()){
+            for(Map.Entry<String, String> entry : requestDTO.getMore().entrySet()){
                 String key = entry.getKey();
                 String value = entry.getValue();
 
@@ -56,37 +59,38 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         }
 
         BooleanBuilder builder = new BooleanBuilder();
-        if(requestDto.getType()!= null) {
-            List<String> types = List.of(requestDto.getType());
+        if(requestDTO.getType()!= null) {
+            List<String> types = List.of(requestDTO.getType());
             for (String type : types) {
                 switch (type.toLowerCase()) {
-                    case "t": builder.and(music.title.contains(requestDto.getKeyword()));break;
-                    case "n": builder.and(music.nickname.contains(requestDto.getKeyword())); break;
+                    case "t": builder.and(music.title.contains(requestDTO.getKeyword()));break;
+                    case "n": builder.and(music.nickname.contains(requestDTO.getKeyword())); break;
                 }
             }
         }
 
-        List<SearchTotalResultDto> results = queryFactory
-                .select(Projections.bean(
-                        SearchTotalResultDto.class,
-                        album.albumId.as("albumId"),
-                        album.albumName.as("albumName"),
-                        album.albumArtPath.as("albumArtPath"),
-                        album.description.as("albumDescription"),
-                        album.nickname.as("nickname"),
-                        music.musicId.as("musicId"),
-                        music.title.as("musicTitle"),
-                        music.filePath.as("musicFilePath"),
-                        music.price.as("price"),
-                        music.description.as("musicDescription"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
-                                .as("instrumentTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
-                                .as("moodTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
-                                .as("genreTagName"),
-                        music.create_date.as("create_date"),
-                        music.modify_date.as("modify_date")
+        List<SearchTotalResultDTO> results = queryFactory.select(Projections.bean(SearchTotalResultDTO.class,
+                        Projections.bean(AlbumDTO.class,
+                            album.albumId,
+                            album.albumName,
+                            album.albumArtPath,
+                            album.description,
+                            album.nickname
+                        ).as("albumDTO"),
+                        Projections.bean(MusicDTO.class,
+                            music.musicId,
+                            music.title,
+                            music.filePath,
+                            music.price,
+                            music.description,
+                            music.createDate,
+                            music.modifyDate
+                        ).as("musicDTO"),
+                        Projections.bean(TagsStreamDTO.class,
+                                Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
+                        ).as("tagsStreamDTO")
                 ))
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
@@ -100,22 +104,22 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .where(builder) // 조건 추가
                 .groupBy(
                         album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.create_date, music.modify_date
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
                 )
                 .having(havingBuilder)
-                .offset(requestDto.getPageable().getOffset()) // 페이징 시작 위치
-                .limit(requestDto.getPageable().getPageSize()) // 페이지 크기
+                .offset(requestDTO.getPageable().getOffset()) // 페이징 시작 위치
+                .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
         // 페이징 결과를 Page로 래핑하여 반환
-        Page<SearchTotalResultDto> pageResult = new PageImpl<>(results, requestDto.getPageable(), results.size());
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
 
         // Optional로 반환
         return Optional.of(pageResult);
     }
 
     @Override
-    public Optional<Page<SearchTotalResultDto>> searchAlbum(RequestDto requestDto){
+    public Optional<Page<SearchTotalResultDTO>> searchAlbum(RequestDTO requestDTO){
         List<String> instruments = new ArrayList<>();
         List<String> moods = new ArrayList<>();
         List<String> genres = new ArrayList<>();
@@ -129,8 +133,8 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         QMusicGenreTag musicGenreTag = QMusicGenreTag.musicGenreTag;
         QGenreTag genreTag = QGenreTag.genreTag;
 
-        if(requestDto.getMore()!= null && !requestDto.getMore().isEmpty()){
-            for(Map.Entry<String, String> entry : requestDto.getMore().entrySet()){
+        if(requestDTO.getMore()!= null && !requestDTO.getMore().isEmpty()){
+            for(Map.Entry<String, String> entry : requestDTO.getMore().entrySet()){
                 String key = entry.getKey();
                 String value = entry.getValue();
 
@@ -153,33 +157,33 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         }
 
         BooleanBuilder builder = new BooleanBuilder();
-        if(requestDto.getType()!= null) {
-            List<String> types = List.of(requestDto.getType());
+        if(requestDTO.getType()!= null) {
+            List<String> types = List.of(requestDTO.getType());
             for (String type : types) {
                 switch (type.toLowerCase()) {
-                    case "t": builder.and(album.albumName.contains(requestDto.getKeyword()));break;
-                    case "n": builder.and(album.nickname.contains(requestDto.getKeyword())); break;
+                    case "t": builder.and(album.albumName.contains(requestDTO.getKeyword()));break;
+                    case "n": builder.and(album.nickname.contains(requestDTO.getKeyword())); break;
                 }
             }
         }
 
         // 쿼리 생성
-        List<SearchTotalResultDto> results = queryFactory
-                .select(Projections.bean(
-                        SearchTotalResultDto.class,
-                        album.albumId.as("albumId"),
-                        album.albumName.as("albumName"),
-                        album.albumArtPath.as("albumArtPath"),
-                        album.description.as("albumDescription"),
-                        album.nickname.as("nickname"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
-                                .as("instrumentTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
-                                .as("moodTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
-                                .as("genreTagName"),
-                        album.create_date.as("create_date"),
-                        album.modify_date.as("modify_date")
+        List<SearchTotalResultDTO> results = queryFactory
+                .select(Projections.bean(SearchTotalResultDTO.class,
+                        Projections.bean(AlbumDTO.class,
+                                album.albumId,
+                                album.albumName,
+                                album.albumArtPath,
+                                album.description,
+                                album.nickname,
+                                album.createDate,
+                                album.modifyDate
+                        ).as("albumDTO"),
+                        Projections.bean(TagsStreamDTO.class,
+                                Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
+                        ).as("tagsStreamDTO")
                 ))
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
@@ -192,22 +196,22 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
                 .where(builder) // 조건 추가
                 .groupBy(
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,album.create_date, album.modify_date
+                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,album.createDate, album.modifyDate
                 )
                 .having(havingBuilder)
-                .offset(requestDto.getPageable().getOffset()) // 페이징 시작 위치
-                .limit(requestDto.getPageable().getPageSize()) // 페이지 크기
+                .offset(requestDTO.getPageable().getOffset()) // 페이징 시작 위치
+                .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
         // 페이징 결과를 Page로 래핑하여 반환
-        Page<SearchTotalResultDto> pageResult = new PageImpl<>(results, requestDto.getPageable(), results.size());
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
 
         // Optional로 반환
         return Optional.of(pageResult);
     }
 
     @Override
-    public Optional<Page<SearchTotalResultDto>> albumOne(String nickname, String albumName,RequestDto requestDto) {
+    public Optional<Page<SearchTotalResultDTO>> albumOne(String nickname, String albumName, RequestDTO requestDTO) {
         List<String> instruments = new ArrayList<>();
         List<String> moods = new ArrayList<>();
         List<String> genres = new ArrayList<>();
@@ -225,8 +229,8 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         builder.and(album.albumName.eq(albumName));
         builder.and(album.nickname.eq(nickname));
 
-        if(requestDto.getMore()!= null && !requestDto.getMore().isEmpty()){
-            for(Map.Entry<String, String> entry : requestDto.getMore().entrySet()){
+        if(requestDTO.getMore()!= null && !requestDTO.getMore().isEmpty()){
+            for(Map.Entry<String, String> entry : requestDTO.getMore().entrySet()){
                 String key = entry.getKey();
                 String value = entry.getValue();
 
@@ -248,27 +252,29 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
             havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).contains(mood));
         }
 
-        List<SearchTotalResultDto> results = queryFactory
-                .select(Projections.bean(
-                        SearchTotalResultDto.class,
-                        album.albumId.as("albumId"),
-                        album.albumName.as("albumName"),
-                        album.albumArtPath.as("albumArtPath"),
-                        album.description.as("albumDescription"),
-                        album.nickname.as("nickname"),
-                        music.musicId.as("musicId"),
-                        music.title.as("musicTitle"),
-                        music.filePath.as("musicFilePath"),
-                        music.price.as("price"),
-                        music.description.as("musicDescription"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
-                                .as("instrumentTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
-                                .as("moodTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
-                                .as("genreTagName"),
-                        music.create_date.as("create_date"),
-                        music.modify_date.as("modify_date")
+        List<SearchTotalResultDTO> results = queryFactory
+                .select(Projections.bean(SearchTotalResultDTO.class,
+                        Projections.bean(AlbumDTO.class,
+                                album.albumId,
+                                album.albumName,
+                                album.albumArtPath,
+                                album.description,
+                                album.nickname
+                        ).as("albumDTO"),
+                        Projections.bean(MusicDTO.class,
+                                music.musicId,
+                                music.title,
+                                music.filePath,
+                                music.price,
+                                music.description,
+                                music.createDate,
+                                music.modifyDate
+                        ).as("musicDTO"),
+                        Projections.bean(TagsStreamDTO.class,
+                                Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
+                        ).as("tagsStreamDTO")
                 ))
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
@@ -282,20 +288,20 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .where(builder) // 조건 추가
                 .groupBy(
                         album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.create_date, music.modify_date
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
                 )
                 .having(havingBuilder)
-                .offset(requestDto.getPageable().getOffset()) // 페이징 시작 위치
-                .limit(requestDto.getPageable().getPageSize()) // 페이지 크기
+                .offset(requestDTO.getPageable().getOffset()) // 페이징 시작 위치
+                .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
-        Page<SearchTotalResultDto> pageResult = new PageImpl<>(results, requestDto.getPageable(), results.size());
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
 
         return Optional.of(pageResult);
     }
 
     @Override
-    public Optional<Page<SearchTotalResultDto>> albumOne(int userId, int id,RequestDto requestDto) {
+    public Optional<Page<SearchTotalResultDTO>> albumOne(int userId, int id, RequestDTO requestDTO) {
         List<String> instruments = new ArrayList<>();
         List<String> moods = new ArrayList<>();
         List<String> genres = new ArrayList<>();
@@ -309,8 +315,8 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         QMusicGenreTag musicGenreTag = QMusicGenreTag.musicGenreTag;
         QGenreTag genreTag = QGenreTag.genreTag;
 
-        if(requestDto.getMore()!= null && !requestDto.getMore().isEmpty()){
-            for(Map.Entry<String, String> entry : requestDto.getMore().entrySet()){
+        if(requestDTO.getMore()!= null && !requestDTO.getMore().isEmpty()){
+            for(Map.Entry<String, String> entry : requestDTO.getMore().entrySet()){
                 String key = entry.getKey();
                 String value = entry.getValue();
 
@@ -336,27 +342,30 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         builder.and(album.albumId.eq(id));
         builder.and(album.userId.eq(userId));
 
-        List<SearchTotalResultDto> results = queryFactory
+        List<SearchTotalResultDTO> results = queryFactory
                 .select(Projections.bean(
-                        SearchTotalResultDto.class,
-                        album.albumId.as("albumId"),
-                        album.albumName.as("albumName"),
-                        album.albumArtPath.as("albumArtPath"),
-                        album.description.as("albumDescription"),
-                        album.nickname.as("nickname"),
-                        music.musicId.as("musicId"),
-                        music.title.as("musicTitle"),
-                        music.filePath.as("musicFilePath"),
-                        music.price.as("price"),
-                        music.description.as("musicDescription"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
-                                .as("instrumentTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
-                                .as("moodTagName"),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
-                                .as("genreTagName"),
-                        music.create_date.as("create_date"),
-                        music.modify_date.as("modify_date")
+                        SearchTotalResultDTO.class,
+                        Projections.bean(AlbumDTO.class,
+                                album.albumId,
+                                album.albumName,
+                                album.albumArtPath,
+                                album.description,
+                                album.nickname
+                        ).as("albumDTO"),
+                        Projections.bean(MusicDTO.class,
+                                music.musicId,
+                                music.title,
+                                music.filePath,
+                                music.price,
+                                music.description,
+                                music.createDate,
+                                music.modifyDate
+                        ).as("musicDTO"),
+                        Projections.bean(TagsStreamDTO.class,
+                                Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
+                        ).as("tagsStreamDTO")
                 ))
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
@@ -370,14 +379,14 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .where(builder) // 조건 추가
                 .groupBy(
                         album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.create_date, music.modify_date
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
                 )
                 .having(havingBuilder)
-                .offset(requestDto.getPageable().getOffset()) // 페이징 시작 위치
-                .limit(requestDto.getPageable().getPageSize()) // 페이지 크기
+                .offset(requestDTO.getPageable().getOffset()) // 페이징 시작 위치
+                .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
-        Page<SearchTotalResultDto> pageResult = new PageImpl<>(results, requestDto.getPageable(), results.size());
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
 
         return Optional.of(pageResult);
     }

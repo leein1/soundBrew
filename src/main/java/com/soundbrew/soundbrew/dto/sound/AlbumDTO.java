@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.dto.sound;
 
 import com.soundbrew.soundbrew.domain.sound.Album;
-import com.soundbrew.soundbrew.dto.BaseEntityDto;
+import com.soundbrew.soundbrew.dto.BaseEntityDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AlbumDto extends BaseEntityDto {
+public class AlbumDTO extends BaseEntityDTO {
     private int albumId;
     private int userId;
     private String nickname;
@@ -21,15 +21,15 @@ public class AlbumDto extends BaseEntityDto {
     private String albumArtPath;
     private String description;
 
-    public AlbumDto(int albumId, int userId, String albumName, String albumArtPath, String description, String nickname, LocalDateTime createDate, LocalDateTime modifyDate) {
+    public AlbumDTO(int albumId, int userId, String albumName, String albumArtPath, String description, String nickname, LocalDateTime createDate, LocalDateTime modifyDate) {
         this.albumId = albumId;
         this.userId = userId;
         this.albumName = albumName;
         this.albumArtPath = albumArtPath;
         this.description = description;
         this.nickname = nickname;
-        super.setCreate_date(createDate); // BaseEntityDto의 필드 설정
-        super.setModify_date(modifyDate);
+        super.setCreateDate(createDate); // BaseEntityDto의 필드 설정
+        super.setModifyDate(modifyDate);
     }
 
     public Album toEntity() {

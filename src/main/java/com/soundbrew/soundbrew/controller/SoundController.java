@@ -1,10 +1,10 @@
 package com.soundbrew.soundbrew.controller;
 
-import com.soundbrew.soundbrew.dto.RequestDto;
-import com.soundbrew.soundbrew.dto.ResponseDto;
-import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDto;
-import com.soundbrew.soundbrew.dto.sound.SoundStreamDto;
-import com.soundbrew.soundbrew.dto.sound.TagsDto;
+import com.soundbrew.soundbrew.dto.RequestDTO;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
+import com.soundbrew.soundbrew.dto.sound.SoundStreamDTO;
+import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.service.SoundsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +32,7 @@ public class SoundController {
 //        HttpRange range = HttpRange.parseRanges(rangeHeader).stream().findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid Range header"));
 //        if (HttpRange.parseRanges(rangeHeader).size() > 1) return ResponseEntity.badRequest().build();
 //
-//        ResponseDto<SoundStreamDto> responseDto = soundsService.streamSound(range, fileName);
+//        ResponseDTO<SoundStreamDTO> responseDto = soundsService.streamSound(range, fileName);
 //
 //        // 응답 헤더 설정 및 데이터 반환
 //        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
@@ -48,8 +48,8 @@ public class SoundController {
                 .findFirst()
                 .orElseThrow();
 
-        ResponseDto<SoundStreamDto> responseDto = soundsService.streamSound(range, fileName);
-        SoundStreamDto dto = responseDto.getDto();
+        ResponseDTO<SoundStreamDTO> responseDto = soundsService.streamSound(range, fileName);
+        SoundStreamDTO dto = responseDto.getDto();
 
         return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                 .header(HttpHeaders.CONTENT_TYPE, "audio/mpeg")
@@ -59,40 +59,40 @@ public class SoundController {
     }
 
     @GetMapping("/tracks")
-    ResponseEntity<ResponseDto<SearchTotalResultDto>> totalSoundSearch(@ModelAttribute RequestDto requestDto) {
-        ResponseDto<SearchTotalResultDto> responseDto = soundsService.totalSoundSearch(requestDto);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalSoundSearch(@ModelAttribute RequestDTO requestDto) {
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.totalSoundSearch(requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums")
-    ResponseEntity<ResponseDto<SearchTotalResultDto>> totalAlbumSearch(RequestDto requestDto) {
-        ResponseDto<SearchTotalResultDto> responseDto = soundsService.totalAlbumSearch(requestDto);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalAlbumSearch(RequestDTO requestDto) {
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.totalAlbumSearch(requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
     }
 
     @PostMapping("/tags")
-    ResponseEntity<ResponseDto<TagsDto>> totalTagsSearch(@RequestBody Map<String, List<SearchTotalResultDto>> requestBody) {
-        List<SearchTotalResultDto> sounds = null;
+    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@RequestBody Map<String, List<SearchTotalResultDTO>> requestBody) {
+        List<SearchTotalResultDTO> sounds = null;
         if (requestBody.containsKey("dtoList")) sounds = requestBody.get("dtoList");
         else if (requestBody.containsKey("dto")) sounds = requestBody.get("dto");
 
-        ResponseDto<TagsDto> responseDto = soundsService.totalTagsSearch(sounds);
+        ResponseDTO<TagsDTO> responseDto = soundsService.totalTagsSearch(sounds);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/tracks/{nickname}/title/{title}")
-    ResponseEntity<ResponseDto<SearchTotalResultDto>> getSoundsOne(@PathVariable String nickname,@PathVariable String title){
-        ResponseDto<SearchTotalResultDto> responseDto = soundsService.getSoundOne(nickname,title);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundsOne(@PathVariable String nickname, @PathVariable String title){
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundOne(nickname,title);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums/{nickname}/title/{albumName}")
-    ResponseEntity<ResponseDto<SearchTotalResultDto>> getAlbumsOne(@PathVariable String nickname, @PathVariable String albumName, RequestDto requestDto){
-        ResponseDto<SearchTotalResultDto> responseDto = soundsService.getAlbumOne(nickname,albumName,requestDto);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumsOne(@PathVariable String nickname, @PathVariable String albumName, RequestDTO requestDto){
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(nickname,albumName,requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }

@@ -19,13 +19,13 @@ public class BaseEntity {
 //    DB에서 create_date는 전부
 //    default CURRENT_TIMESTAMP 적용 됨
     @CreatedDate
-    @Column(name = "create_date",updatable = false)
-    private LocalDateTime create_date;
+    @Column(name = "createDate",updatable = false)
+    private LocalDateTime createDate;
 
 //    DB에서  modify_date 는 전부
 //    default CURRENT_TIMESTAMP 및
 //    on update CURRENT_TIMESTAMP 적용 됨
     @LastModifiedDate
-    @Column(name = "modify_date")
-    private LocalDateTime modify_date;
+    @Column(name = "modifyDate")
+    private LocalDateTime modifyDate;
 }

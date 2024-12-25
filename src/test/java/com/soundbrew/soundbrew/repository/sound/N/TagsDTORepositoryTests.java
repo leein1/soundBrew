@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Log4j2
 @SpringBootTest
-public class TagsDtoRepositoryTests {
+public class TagsDTORepositoryTests {
     @Autowired
     private InstrumentTagRepository instrumentTagRepository;
 
