@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Tags</title>
+
+    <!-- Module CSS -->
+    <link th:href="@{/css/album.css}" rel="stylesheet">
+    <link th:href="@{/css/music.css}" rel="stylesheet">
+    <style>
+        .tag-item {
+            border-radius: 4px;
+            margin: 5px;
+        }
+
+        .tag-item.active {
+            background-color: #555;
+            color: white;
+            border: 1px solid #ccc;
+            order: -1;
+        }
+
+        .tag-section {
+            margin: 10px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        <div id="render-tags-sort-container" class="render-tags-sort-container"></div>
+        <div id="render-result-sort-container" class="render-result-sort-container"></div>
+        <div id="render-albums-container" class="render-albums-container"></div>
+    </div>
+</div>
+</body>
+<th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module">
+        import { axiosGet, axiosPost } from '/js/fetch/standardAxios.js';
+        import { renderTotalAlbums, renderSort } from '/js/render/sound.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            function getQueryParams() {
+                const params = {};
+                const queryString = window.location.search.slice(1); // "?" 제거
+                console.log(queryString);
+
+                const pairs = queryString.split('&'); // 쿼리 파라미터들을 & 기준으로 분리
+                pairs.forEach(pair => {
+                    const [key, value] = pair.split('=');
+                    const decodedKey = key; // decodeURIComponent(key) 디코딩
+                    const decodedValue = decodeURIComponent(value); // value 디코딩
+
+                    // 쿼리 파라미터에 key와 value 추가
+                    params[decodedKey] = decodedValue;
+                });
+
+                return params;
+            }
+
+try {
+    const params = getQueryParams();
+    console.log(params);
+
+    // 파라미터에서 특수문자 인코딩
+    const encodedParams = {
+        keyword: "u_2",
+        ["more[instrument]"]: encodeURIComponent("rest")
+    };
+
+    const renderTotal = await axiosGet({
+        endpoint: '/api/sounds/albums',
+        params: encodedParams,
+        type: "n"
+    });
+
+    renderTotalAlbums(renderTotal.dtoList);
+    renderSort();
+}
+            catch (error) {
+                console.error('Error occurred while rendering:', error);
+            }
+        });
+
+        function renderTagsFromSearch(data, initialParams = {}) {
+            const container = document.getElementById("render-tags-sort-container");
+            container.innerHTML = ''; // Clear existing content
+
+            const html = `
+                <div class="music-tag-sort">
+                    <div class="music-tag-sort-list">
+                        <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
+                        <span class="music-tag-sort-toggle" data-type="instrument">악기</span>
+                        <div class="tag-section hidden" id="instrument-section">
+                            ${data.dto.instrument.map(tag => createTagItem(tag, 'instrument')).join('')}
+                        </div>
+
+                        <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
+                        <span class="music-tag-sort-toggle" data-type="mood">분위기</span>
+                        <div class="tag-section hidden" id="mood-section">
+                            ${data.dto.mood.map(tag => createTagItem(tag, 'mood')).join('')}
+                        </div>
+
+                        <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
+                        <span class="music-tag-sort-toggle" data-type="genre">장르</span>
+                        <div class="tag-section hidden" id="genre-section">
+                            ${data.dto.genre.map(tag => createTagItem(tag, 'genre')).join('')}
+                        </div>
+                    </div>
+                    <div class="music-tag-display"></div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+
+            Object.entries(initialParams).forEach(([type, value]) => {
+                const tag = document.querySelector(`.tag-item[data-type="${type}"][data-value="${value}"]`);
+                if (tag) activateTag(tag);
+            });
+
+            document.querySelectorAll('.music-tag-sort-toggle').forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const section = document.getElementById(`${toggle.dataset.type}-section`);
+                    section.classList.toggle('hidden');
+                });
+            });
+
+            document.querySelectorAll('.tag-item').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const type = tag.dataset.type;
+                    const value = tag.dataset.value;
+
+                    if (tag.classList.contains('active')) {
+                        deactivateTag(tag);
+                        performSearch({ [type]: null });
+                    } else {
+                        activateTag(tag);
+                        performSearch({ [type]: value });
+                    }
+                });
+            });
+
+            function createTagItem(value, type) {
+                return `<span class="tag-item" data-value="${value}" data-type="${type}">${value}</span>`;
+            }
+
+            function activateTag(tag) {
+                tag.classList.add('active');
+                tag.style.order = '-1';
+            }
+
+            function deactivateTag(tag) {
+                tag.classList.remove('active');
+                tag.style.order = 'initial';
+            }
+
+            function performSearch(params) {
+                const queryString = Object.entries(params)
+                    .filter(([_, value]) => value !== null)
+                    .map(([key, value]) => {
+                        // %5B와 %5D를 그대로 사용하여 쿼리 문자열을 인코딩
+                        const encodedKey = `more%5B${key}%5D`;
+                        return `${encodedKey}=${encodeURIComponent(value)}`;
+                    })
+                    .join('&');
+
+                const newUrl = window.location.pathname + '?' + queryString;
+                window.history.pushState(null, '', newUrl);  // 페이지 URL 변경
+                window.location.reload();  // 페이지 리프레시
+            }
+
+        }
+    </script>
+</th:block>
+</html>
+

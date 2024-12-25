@@ -5,14 +5,17 @@ import com.soundbrew.soundbrew.dto.ResponseDto;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.service.MeService;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.readers.operation.ResponseMessagesReader;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/me")
+@Log4j2
 public class MeController {
     private final MeService meService;
 
@@ -65,6 +68,33 @@ public class MeController {
     ResponseEntity<ResponseDto<SearchTotalResultDto>> getAlbumOne(@PathVariable("albumId") int id, RequestDto requestDto){
         //쿠키 -> 내이름
         ResponseDto<SearchTotalResultDto> responseDto = meService.getAlbumOne(2,id,requestDto);
+
+        return  ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/tracks")
+    ResponseEntity<ResponseDto<SearchTotalResultDto>> getSoundMe(RequestDto requestDto){
+        requestDto.setKeyword("u_1");
+        requestDto.setType("n");
+        ResponseDto<SearchTotalResultDto> responseDto = meService.getSoundMe(requestDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/tags")
+    ResponseEntity<ResponseDto<SearchTotalResultDto>> getTagsMe(RequestDto requestDto){
+        requestDto.setKeyword("u_1");
+        requestDto.setType("n");
+        ResponseDto<SearchTotalResultDto> responseDto = meService.getSoundMe(requestDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/albums")
+    ResponseEntity<ResponseDto<SearchTotalResultDto>> getAlbumMe(RequestDto requestDto){
+        requestDto.setKeyword("u_1");
+        requestDto.setType("n");
+        ResponseDto<SearchTotalResultDto> responseDto = meService.getAlbumMe(requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
     }

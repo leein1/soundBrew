@@ -57,8 +57,8 @@ public class AdminController {
     }
 
     @GetMapping("/tags")
-    ResponseEntity<ResponseDto<TagsDto>> getTags(@RequestBody List<Integer> musicIds){ // 아티스트(내)의 음악들 ( List<Integer>)의 태그들
-        ResponseDto<TagsDto> responseDto = adminService.getTags(musicIds);
+    ResponseEntity<ResponseDto<TagsDto>> getTags(@RequestParam(required = false) List<Integer> musicIds){ // 아티스트(내)의 음악들 ( List<Integer>)의 태그들
+        ResponseDto<TagsDto> responseDto = adminServiceImpl.getTags(musicIds);
 
         return  ResponseEntity.ok().body(responseDto);
     }

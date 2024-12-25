@@ -34,25 +34,6 @@ public class SoundsServiceImpl implements SoundsService{
     private static final long MAX_RANGE_SIZE = 5 * 1024 * 1024; // 5MB
 
     @Override
-    public ResponseDto<SoundStreamDto> streamSound(HttpRange range, String fileName) throws IOException {
-        Path filePath = Path.of(fileDirectory + "/" + fileName);
-
-        long fileLength = Files.size(filePath);
-        long start = range.getRangeStart(fileLength);
-        long end = Math.min(start + MAX_RANGE_SIZE - 1, fileLength - 1);
-
-        long rangeLength = end - start + 1;
-        byte[] data = new byte[(int) rangeLength];
-
-        try (RandomAccessFile raf = new RandomAccessFile(filePath.toFile(), "r")) {
-            raf.seek(start);
-            raf.read(data, 0, (int) rangeLength);
-        }
-
-        return ResponseDto.<SoundStreamDto>withSingleData().dto(new SoundStreamDto(data, start, end, fileLength)).build();
-    }
-
-    @Override
     public ResponseDto<SearchTotalResultDto> totalSoundSearch(RequestDto requestDto) {
         Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.search(requestDto);
         if(before.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>builder().dtoList(Collections.emptyList()).build();
@@ -69,6 +50,8 @@ public class SoundsServiceImpl implements SoundsService{
     public ResponseDto<SearchTotalResultDto> totalAlbumSearch(RequestDto searchRequestDto) {
         Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.searchAlbum(searchRequestDto);
         if(before.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>builder().dtoList(Collections.emptyList()).build();
+
+        log.info(before.get().stream().toList());
 
         return  ResponseDto.<SearchTotalResultDto>withAll()
                 .dtoList(before.get().getContent().stream()
@@ -108,7 +91,7 @@ public class SoundsServiceImpl implements SoundsService{
     @Override
     public ResponseDto<SearchTotalResultDto> getAlbumOne(String nickname, String albumName, RequestDto requestDto) {
         Optional<Page<SearchTotalResultDto>> albumPage = albumMusicRepository.albumOne(nickname,albumName,requestDto);
-        if(albumPage.isEmpty()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으시는 앨범의 정보가 없습니다.").build();
+        if(albumPage.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>withMessage().message("찾으시는 앨범의 정보가 없습니다.").build();
 
         return  ResponseDto.<SearchTotalResultDto>withAll()
                 .dtoList(soundProcessor.replaceCommaWithSpace(albumPage.get().getContent()).stream()
@@ -117,25 +100,25 @@ public class SoundsServiceImpl implements SoundsService{
                 .build();
     }
 
-    //    @Override
-//    public ResponseDto<SoundStreamDto> streamSound(HttpRange range, String fileName) throws IOException {
-//        Path filePath = Path.of(fileDirectory+"/"+fileName);
-//        if (!Files.exists(filePath) || !Files.isReadable(filePath)) return ResponseDto.<SoundStreamDto>withMessage().message("재생할 음원을 읽지못했습니다.").build();
-//
-//        long fileLength = Files.size(filePath);
-//        long start = range.getRangeStart(fileLength);
-//        long end = Math.min(start + MAX_RANGE_SIZE - 1, fileLength - 1);
-//        if (start >= fileLength) return ResponseDto.<SoundStreamDto>withMessage().message("음원재생 길이를 초과하는 요청입니다.").build();
-//
-//        long rangeLength = end - start + 1;
-//        byte[] data = new byte[(int) rangeLength];
-//
-//        try (RandomAccessFile raf = new RandomAccessFile(filePath.toFile(), "r")) {
-//            raf.seek(start);
-//            raf.read(data, 0, (int) rangeLength);
-//        }
-//        // 데이터 반환
-//        return ResponseDto.<SoundStreamDto>withSingleData().dto(new SoundStreamDto(data, start, end, fileLength)).build();
-//    }
+        @Override
+    public ResponseDto<SoundStreamDto> streamSound(HttpRange range, String fileName) throws IOException {
+        Path filePath = Path.of(fileDirectory+"/"+fileName);
+        if (!Files.exists(filePath) || !Files.isReadable(filePath)) return ResponseDto.<SoundStreamDto>withMessage().message("재생할 음원을 읽지못했습니다.").build();
+
+        long fileLength = Files.size(filePath);
+        long start = range.getRangeStart(fileLength);
+        long end = Math.min(start + MAX_RANGE_SIZE - 1, fileLength - 1);
+        if (start >= fileLength) return ResponseDto.<SoundStreamDto>withMessage().message("음원재생 길이를 초과하는 요청입니다.").build();
+
+        long rangeLength = end - start + 1;
+        byte[] data = new byte[(int) rangeLength];
+
+        try (RandomAccessFile raf = new RandomAccessFile(filePath.toFile(), "r")) {
+            raf.seek(start);
+            raf.read(data, 0, (int) rangeLength);
+        }
+        // 데이터 반환
+        return ResponseDto.<SoundStreamDto>withSingleData().dto(new SoundStreamDto(data, start, end, fileLength)).build();
+    }
 
 }

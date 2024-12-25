@@ -2,11 +2,13 @@ package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.sound.*;
+import com.soundbrew.soundbrew.dto.DTOFilteringFactory;
 import com.soundbrew.soundbrew.dto.RequestDto;
 import com.soundbrew.soundbrew.dto.ResponseDto;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.UserRepository;
 import com.soundbrew.soundbrew.repository.sound.*;
+import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +41,7 @@ public class MeServiceImpl implements MeService{
     private final AlbumRepository albumRepository;
     private final AlbumMusicRepository albumMusicRepository;
     private final MusicRepository musicRepository;
+    private final SoundProcessor soundProcessor;
 
     @Override
     @Transactional
@@ -50,7 +54,7 @@ public class MeServiceImpl implements MeService{
         musicGenreTagRepository.deleteByIdMusicId(music.get().getMusicId());
 
         linkTags(music.get(),tagsDto);
-        return ResponseDto.withMessage().message("음원의 태그를 새롭게 연결했습니다.").build();
+            return ResponseDto.withMessage().message("음원의 태그를 새롭게 연결했습니다.").build();
     }
 
     @Override
@@ -107,8 +111,11 @@ public class MeServiceImpl implements MeService{
         if(checkedUser.isEmpty()) return ResponseDto.withMessage().message("회원정보가 올바르지 않습니다.").build();
 
         albumDto.setUserId(checkedUser.get().getUserId());
+        albumDto.setNickname(checkedUser.get().getNickname());
         musicDto.setUserId(checkedUser.get().getUserId());
-        musicDto.setPrice(musicDto.getSoundType().equals("sfx") ? 2 : 3);
+        musicDto.setNickname(checkedUser.get().getNickname());
+        musicDto.setSoundType("sound");
+        musicDto.setPrice(3);
         Album album = albumRepository.save(albumDto.toEntity());
         Music music = musicRepository.save(musicDto.toEntity());
         albumMusicRepository.save(albumMusicToEntity(album,music,checkedUser.get()));
@@ -134,7 +141,7 @@ public class MeServiceImpl implements MeService{
         Optional<Music> modify = musicRepository.findById(musicId);
         if (modify.isEmpty()) return ResponseDto.withMessage().message("수정할 대상이 없습니다.").build();
 
-        modify.get().update(musicDto.getTitle(),musicDto.getDescription(), musicDto.getSoundType());
+        modify.get().update(musicDto.getTitle(),musicDto.getDescription(), modify.get().getSoundType());
 
 //        Music music = modify.get();
 //        MusicDto existingDto= modelMapper.map(music, MusicDto.class);
@@ -164,5 +171,28 @@ public class MeServiceImpl implements MeService{
         return ResponseDto.<SearchTotalResultDto>withAll().total((int) albumOne.get().getTotalElements()).requestDto(requestDto).dtoList(albumOne.get().getContent()).build();
     }
 
+    @Override
+    public ResponseDto<SearchTotalResultDto> getSoundMe(RequestDto requestDto) {
+        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.search(requestDto);
+        if(before.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>builder().dtoList(Collections.emptyList()).build();
 
+        return ResponseDto.<SearchTotalResultDto>withAll()
+                .requestDto(requestDto)
+                .dtoList(soundProcessor.replaceCommaWithSpace(before.get().getContent()).stream().toList())
+                .total((int) before.get().getTotalElements())
+                .build();
+    }
+
+    @Override
+    public ResponseDto<SearchTotalResultDto> getAlbumMe(RequestDto responseDto) {
+        Optional<Page<SearchTotalResultDto>> before = albumMusicRepository.searchAlbum(responseDto);
+        if(before.get().isEmpty()) return ResponseDto.<SearchTotalResultDto>builder().dtoList(Collections.emptyList()).build();
+
+        log.info(before.get().stream().toList());
+
+        return  ResponseDto.<SearchTotalResultDto>withAll()
+                .dtoList(before.get().getContent().stream().toList())
+                .requestDto(responseDto)
+                .build();
+    }
 }

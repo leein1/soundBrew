@@ -48,7 +48,7 @@
         if (!errors) {
             try {
                 // 요청을 보내지 않고 로그만 확인
-                await axios.post('/api/create', processedData);
+                await axios.get('/api/read', processedData);
             } catch (err) {
                 console.log('Mock request triggered - no actual network request sent');
             }

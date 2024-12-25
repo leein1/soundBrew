@@ -14,37 +14,78 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <div class="content-header" th:with="album=${album}">
-            <div class="content-header-info">
-                <img class="album-image" th:src="${album.albumArtPath}" alt="Album Image">
-                <div class="album-info">
-                    <div class="album-title font-size-large" th:text="${album.albumName}">Album Name</div>
-                    <div class="artist-name font-size-medium">
-                        <span>Artist</span> <a th:text="${album.userName}" th:href="@{/artist/{artistName}(artistName=${album.userName})}" class="artist-link">Jonsi</a>
-                    </div>
-                    <div class="album-info-reaction">
-                        <button class="btn album-btn">Play album</button>
-                        <button class="btn album-btn">Get album</button>
-                        <button class="btn album-btn">Share album</button>
-                    </div>
-                </div>
-            </div>
-            <div class="album-info-text">
-                <p class="album-description" th:text="${album.albumDescription}">
-                    Inspired by the deep, solid sound of Melodic Techno, ‘Fleck’ offers you a sample album of extensive, room quivering ideas and immediate inspiration for your new tracks.<br><br>
-                    This collection runs extremely heavy with analogue gear, over 90% of the sound sources are created on analogue synthesizers and vintage drum machines. This dedication to the retro sound ensures a sonic palette that surpasses your production beliefs. ‘Fleck - Melodic Techno’ nods at key producers including Tale Of Us, Mathame, Colyn, Fideles, and Dizharmonia. You’ll find content inspired by these legendary figures that can be used straight out the box for immediate impact or edit, manipulate and warp till your heart's content. The diverse 700+ Melodic Techno sample library ensures you’ll have what you need in the studio when you need it.<br><br>
-                    ‘Fleck - Melodic Techno’ has been intricately designed to give you the tools you need in today's Techno world. Take them for a spin, we know you’ll be happy and your studio running at 100% will be tickled pink too.
-                </p>
-            </div>
+        <div class="content-header">
+            <div id="render-album-info-container" class="render-album-info-container"></div>
             <button class="album-btn show-more-btn">더보기</button>
-            <!-- 앨범 리스트 모듈 -->
-             <div th:insert="~{module/album :: albumModule}"></div>
         </div>
-        <!-- 음악 리스트 모듈 -->
-        <div th:insert="~{module/music :: musicModule(${sounds})}"></div>
+    <div id="render-sounds-container" class="content-body"></div>
     </div>
 
+<!--    <div layout:fragment="content">-->
+<!--        <div class="content-header" th:with="album=${album}">-->
+<!--            <div class="content-header-info">-->
+<!--                <img class="album-image" th:src="${album.albumArtPath}" alt="Album Image">-->
+<!--                <div class="album-info">-->
+<!--                    <div class="album-title font-size-large" th:text="${album.albumName}">Album Name</div>-->
+<!--                    <div class="artist-name font-size-medium">-->
+<!--                        <span>Artist</span> <a th:text="${album.userName}" th:href="@{/artist/{artistName}(artistName=${album.userName})}" class="artist-link">Jonsi</a>-->
+<!--                    </div>-->
+<!--                    <div class="album-info-reaction">-->
+<!--                        <button class="btn album-btn">Play album</button>-->
+<!--                        <button class="btn album-btn">Get album</button>-->
+<!--                        <button class="btn album-btn">Share album</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="album-info-text">-->
+<!--                <p class="album-description" th:text="${album.albumDescription}">-->
+<!--                    Inspired by the deep, solid sound of Melodic Techno, ‘Fleck’ offers you a sample album of extensive, room quivering ideas and immediate inspiration for your new tracks.<br><br>-->
+<!--                    This collection runs extremely heavy with analogue gear, over 90% of the sound sources are created on analogue synthesizers and vintage drum machines. This dedication to the retro sound ensures a sonic palette that surpasses your production beliefs. ‘Fleck - Melodic Techno’ nods at key producers including Tale Of Us, Mathame, Colyn, Fideles, and Dizharmonia. You’ll find content inspired by these legendary figures that can be used straight out the box for immediate impact or edit, manipulate and warp till your heart's content. The diverse 700+ Melodic Techno sample library ensures you’ll have what you need in the studio when you need it.<br><br>-->
+<!--                    ‘Fleck - Melodic Techno’ has been intricately designed to give you the tools you need in today's Techno world. Take them for a spin, we know you’ll be happy and your studio running at 100% will be tickled pink too.-->
+<!--                </p>-->
+<!--            </div>-->
+<!--            <button class="album-btn show-more-btn">더보기</button>-->
+<!--            &lt;!&ndash; 앨범 리스트 모듈 &ndash;&gt;-->
+<!--             <div th:insert="~{module/album :: albumModule}"></div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; 음악 리스트 모듈 &ndash;&gt;-->
+<!--        <div th:insert="~{module/music :: musicModule(${sounds})}"></div>-->
+<!--    </div>-->
+
 <th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module">
+        import { axiosGet, axiosPost, axiosPut, axiosDelete } from '/js/fetch/standardAxios.js';
+        import { inputProcessor, inputValidator, inputHandler } from '/js/check/inputHandler.js';
+        import { serializeFormToJSON } from '/js/serialize/formTojson.js'
+        import {renderAlbumOne ,renderTotalSounds, renderTagsFromSearch, renderSort} from '/js/render/sound.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const nickname = "u_1";
+                const albumName = "New Album"
+
+                const response = await axiosGet({ endpoint : '/api/sounds/albums/' + nickname + '/title/' + albumName });
+                console.log(response);
+                renderAlbumOne(response);
+                renderTotalSounds(response.dtoList);
+
+                const tagsBody = { dto: response.dtoList };
+                const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
+                renderTagsFromSearch(renderTags);
+
+                renderSort();
+
+            } catch (error) {
+                console.error('Error occurred while rendering:', error);
+            }
+        });
+    </script>
+    <!-- module js -->
+    <script th:src="@{/js/module/sound/tag.js}"></script>
+    <script th:src="@{/js/module/sound/sort.js}"></script>
+    <!--  page js  -->
+    <script th:src="@{/js/module/sound/music.js}"></script>
     <!--모듈 js-->
     <script th:src="@{/js/music.js}"></script>
     <script th:src="@{/js/album.js}"></script>

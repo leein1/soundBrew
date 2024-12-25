@@ -29,14 +29,14 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
         builder.and(music.title.eq(title));
 
         SearchTotalResultDto result = queryFactory
-                .select(Projections.constructor(
+                .select(Projections.bean(
                         SearchTotalResultDto.class,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.nickname,
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName),
-                        music.create_date,
-                        music.modify_date
+                        music.musicId.as("musicId"), music.title.as("musicTitle"), music.filePath.as("albumArtPath"), music.price.as("price"), music.description.as("musicDescription"), music.nickname.as("nickname"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName"),
+                        music.create_date.as("create_date"),
+                        music.modify_date.as("modify_date")
                 ))
                 .from(music)
                 .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))

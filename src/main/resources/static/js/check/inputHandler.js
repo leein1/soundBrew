@@ -21,6 +21,11 @@ export function inputProcessor(key, value, rules) {
                     processedValue = processedValue.replace(/\s+/g, ' ').trim(); // 중간 공백 제거
                 }
                 break;
+            case 'toUpperCase':
+                if (typeof processedValue === 'string'){
+                    processedValue = processedValue.toUpperCase();
+                }
+                break;
             default:
                 console.warn(`Unknown processing rule: ${rule}`);
         }
@@ -73,44 +78,80 @@ export function inputValidator(key, value, rules) {
     return errors;
 }
 
+function flattenObject(obj, parentKey = '', result = {}) {
+    for (let key in obj) {
+        const newKey = parentKey ? `${parentKey}.${key}` : key;
+        if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+            flattenObject(obj[key], newKey, result);
+        } else {
+            result[newKey] = obj[key];
+        }
+    }
+    return result;
+}
+
+function unflattenObject(flatObj) {
+    const result = {};
+    for (let flatKey in flatObj) {
+        const keys = flatKey.split('.');
+        let current = result;
+        keys.forEach((key, index) => {
+            if (index === keys.length - 1) {
+                current[key] = flatObj[flatKey];
+            } else {
+                current[key] = current[key] || {};
+                current = current[key];
+            }
+        });
+    }
+    return result;
+}
+
 export function inputHandler(input, form) {
+    const flatInput = flattenObject(input); // 중첩 객체를 평탄화
     const errors = {};
     const processedData = {};
-    let firstErrorField = null; // 첫 번째 에러가 발생한 필드
+    let firstErrorField = null;
 
-    Object.keys(input).forEach((key) => {
-        let value = input[key];
+    Object.keys(flatInput).forEach((flatKey) => {
+        let value = flatInput[flatKey];
+        console.log(flatKey);
+        console.log(value);
+        console.log(validationRules[flatKey]);
+
 
         // 처리 규칙 적용
-        value = inputProcessor(key, value, processingRules);
+        value = inputProcessor(flatKey, value, processingRules);
 
-        const fieldErrors = inputValidator(key, value, validationRules[key]);
+        // 검증 수행
+        const fieldErrors = inputValidator(flatKey, value, validationRules[flatKey]);
 
         if (fieldErrors.length) {
-            errors[key] = fieldErrors;
-            // 첫 번째 에러 필드를 추적
+            errors[flatKey] = fieldErrors;
             if (!firstErrorField) {
-                firstErrorField = key;
+                firstErrorField = flatKey;
             }
         } else {
-            processedData[key] = value; // 처리된 데이터 저장
+            processedData[flatKey] = value;
         }
     });
 
-    // 에러가 있으면 피드백 제공
     if (Object.keys(errors).length > 0) {
-        const firstErrorMessage = errors[firstErrorField][0]; // 첫 번째 에러 메시지
-        alert(`Validation Error: ${firstErrorMessage}`); // 사용자에게 에러 메시지 알림
+        const firstErrorMessage = errors[firstErrorField][0];
+        alert(`Validation Error: ${firstErrorMessage}`);
 
-        // 폼 내의 첫 번째 에러 필드 찾기
-        const fieldWithError = form.querySelector(`[name="${firstErrorField}"]`);
+        // 수정된 부분: firstErrorField 그대로 사용
+        const firstErrorFieldOriginal = firstErrorField;
+
+        const fieldWithError = form.querySelector(`[name="${firstErrorFieldOriginal}"]`);
         if (fieldWithError) {
-            fieldWithError.focus(); // 포커스 이동
+            fieldWithError.focus();
         }
 
         return { errors, processedData: null };
     }
 
-    // 에러가 없으면 처리된 데이터를 반환
-    return { errors: null, processedData };
+    // 평탄화된 데이터 복구
+    const nestedProcessedData = unflattenObject(processedData);
+    return { errors: null, processedData: nestedProcessedData };
 }

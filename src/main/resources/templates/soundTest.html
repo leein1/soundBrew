@@ -5,33 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sound Test with Queue Bar</title>
     <style>
-        /* 큐바 스타일 */
         #queueBar {
-            display: none; /* 초기에는 숨김 */
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #282c34;
-            color: white;
-            padding: 10px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-        }
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #181818; /* 어두운 배경 */
+    color: #eee; /* 밝은 텍스트 */
+    padding: 15px 20px;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.5); /* 더 강한 그림자 */
+    z-index: 1000;
+    display: flex; /* flexbox 사용 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: space-between; /* 양쪽 정렬 */
+}
 
-        #queueBar .audio-info {
-            display: inline-block;
-            margin-right: 20px;
-        }
+#queueBar .audio-info {
+    font-size: 16px;
+    font-weight: 500;
+    overflow: hidden; /* 텍스트가 넘칠 경우 숨김 */
+    text-overflow: ellipsis; /* ...으로 표시 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    flex-grow: 1; /* 남는 공간 차지 */
+}
 
-        #queueBar audio {
-            vertical-align: middle;
-        }
+#queueBar audio {
+    width: 300px; /* 적절한 너비 설정 */
+    margin-left: 20px;
+}
 
-        .song-list button {
-            margin: 5px 0;
-            cursor: pointer;
-        }
+/* 오디오 컨트롤러 스타일 개선 (선택적) */
+#queueBar audio::-webkit-media-controls-panel {
+    background-color: #282828; /* 컨트롤 패널 배경색 */
+    color: #eee;
+}
+
+#queueBar audio::-webkit-media-controls-play-button,
+#queueBar audio::-webkit-media-controls-pause-button,
+#queueBar audio::-webkit-media-controls-current-time-display,
+#queueBar audio::-webkit-media-controls-time-remaining-display,
+#queueBar audio::-webkit-media-controls-mute-button,
+#queueBar audio::-webkit-media-controls-volume-slider {
+    color: #eee; /* 컨트롤 버튼 색상 */
+}
+
+.song-list button {
+    margin: 5px 0;
+    padding: 10px 15px;
+    border: none;
+    background-color: #333;
+    color: #eee;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.song-list button:hover {
+    background-color: #444;
+}
     </style>
 </head>
 <body>

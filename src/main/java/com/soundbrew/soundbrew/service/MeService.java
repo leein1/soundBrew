@@ -21,4 +21,7 @@ public interface MeService {
     // get one for me or admin
     ResponseDto<SearchTotalResultDto> getSoundOne(int userId, int id);
     ResponseDto<SearchTotalResultDto> getAlbumOne(int userId, int id, RequestDto requestDto);
+
+    ResponseDto<SearchTotalResultDto> getSoundMe(RequestDto requestDto);
+    ResponseDto<SearchTotalResultDto> getAlbumMe(RequestDto responseDto);
 }

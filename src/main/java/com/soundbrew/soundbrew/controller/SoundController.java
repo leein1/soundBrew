@@ -72,7 +72,7 @@ public class SoundController {
         return  ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/tags")
+    @PostMapping("/tags")
     ResponseEntity<ResponseDto<TagsDto>> totalTagsSearch(@RequestBody Map<String, List<SearchTotalResultDto>> requestBody) {
         List<SearchTotalResultDto> sounds = null;
         if (requestBody.containsKey("dtoList")) sounds = requestBody.get("dtoList");

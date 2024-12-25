@@ -51,6 +51,12 @@
         border: none;
     }
 
+    .table-container td button.open-modal {
+        background-color: #FF5252;
+        color: white;
+        border: none;
+    }
+
     .table-container td button.apply-button {
         background-color: #2196F3;
         color: white;

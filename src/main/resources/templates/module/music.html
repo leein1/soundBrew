@@ -6,26 +6,26 @@
     <title>music</title>
 
     <!-- music css -->
-    <div th:fragment="musicCssModule">
-        <link href="css/music.css" rel="stylesheet">
-    </div>
+<!--    <div th:fragment="musicCssModule">-->
+<!--        <link href="css/music.css" rel="stylesheet">-->
+<!--    </div>-->
 </head>
 <body>
 
     <!-- music body -->
-    <div th:fragment="musicModule(${sounds})">
+    <div th:fragment="musicModule">
         <div class="content-body">
-            <div th:each="sound : ${sounds}" class="music-item">
+            <div class="music-item">
                 <div class="music-item-left">
-                    <img th:src="${sound.albumArtPath}" alt="앨범 이미지" class="music-album-img">
+                    <img  alt="앨범 이미지" class="music-album-img">
 
                     <div class="music-play-btn">
-                        <img src="images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
+                        <img th:src="@{/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="재생">
                     </div>
 
                     <div class="music-info">
-                        <h3 th:text="${sound.userName}">Jonsi</h3>
-                        <p th:text="${sound.albumName}">Go</p>
+                        <h3 >Jonsi</h3>
+                        <p>Go</p>
                     </div>
 
                     <div class="music-info-time">
@@ -35,15 +35,15 @@
 
                 <div class="music-item-center">
                     <div class="music-info-tag">
-                        <span th:text="${sound.instrumentTagName}">피아노</span><span th:text="${sound.moodTagName}">행복</span><span th:text="${sound.genreTagName}"></span>
+                        <span>피아노</span><span>행복</span><span></span>
                     </div>
                 </div>
 
                 <div class="music-item-right">
                     <div class="music-actions">
-                        <img src="images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="다운로드">
-                        <img src="images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">
-                        <img src="images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="공유">
+                        <img th:src="@{/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="다운로드">
+                        <img th:src="@{/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="장바구니">
+                        <img th:src="@{/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="공유">
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
 </body>
 
     <!-- music js -->
-    <div th:fragment="musicJsModule">
-        <script src="js/music.js"></script>
-    </div>
+<!--    <div th:fragment="musicJsModule">-->
+<!--        <script src="js/music.js"></script>-->
+<!--    </div>-->
 </html>

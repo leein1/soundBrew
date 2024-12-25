@@ -2,10 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout.html}">
-<th:block layout:fragment="script">
-    <!-- 해당 페이지 전용 js-->
-    <script th:src="@{/js/manage-musics.js}"></script>
-</th:block>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,92 +12,70 @@
     
 <body>
     <div class="content" layout:fragment="content">
+        <div id="render-update" class="render-update"></div>
         <div class="content-header">Manage Information</div>
         <div class="content-body">
             <!-- Table for Album Information Modification -->
             <h3>앨범 정보 수정</h3>
             <table class="table-container">
+                <thead>
                 <tr>
-                    <th>NO</th>
-                    <th>artistID</th>
-                    <th>musicTitle</th>
-                    <th>musicDescription</th>
-                    <th>soundType</th>
-                    <th>createDate</th>
-                    <th>modifyDate</th>
-                    <th>process</th>
+                    <th>ID</th>
+                    <th>아티스트Id</th>
+                    <th>타이틀</th>
+                    <th>트랙 설명</th>
+                    <th>업로드일</th>
+                    <th>수정일</th>
+                    <th>작업</th>
                 </tr>
-                <tr>
-                    <td id="NO">1</td>
-                    <td id="artistID">Jonsi</td>
-                    <td>
-                        <span class="current-value" data-field="musicTitle">My music Title</span>
-                        <input type="text" class="editable-field" data-field="musicTitle">
-                    </td>
-                    <td>
-                        <span class="current-value" data-field="musicDescription" >My Album Description</span>
-                        <input type="text" class="editable-field" data-field="musicDescription"
-                    </td>
-                    <td>
-                        <span class="current-value" data-field="soundType" >sound</span>
-                        <div class="editable-field" data-field="soundType">
-                            <label>
-                                <input type="radio" name="soundType" value="sound" checked> sound
-                            </label>
-                            <label>
-                                <input type="radio" name="soundType" value="sfx"> sfx
-                            </label>
-                        </div>
-                    </td>
-                    <td id="create_date">2024-01-10</td>
-                    <td id="modify_date">2024-01-10</td>
-                    <td>
-                        <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                        <button class="apply-button" onclick="applyChanges(this, [[${sound.musicId}]])">적용</button>
-                        <button class="cancel-button" onclick="cancelChanges(this)">취소</button>
-                    </td>
+                </thead>
+                <tbody id="render-tracks-manage-container">
+                <!-- Albums will be rendered here -->
+                </tbody>
+                <tfoot>
+                <tr id="no-tracks-message">
+                    <td colspan="7">앨범이 없습니다.</td>
                 </tr>
-
+                </tfoot>
             </table>
         </div>
     </div>
 </body>
-<script>
-    // 데이터 업데이트 함수
-    async function fetchAndUpdateRow(musicId) {
-        try {
-            // 서버에서 데이터를 가져옴
-            const response = await fetch(`/api/musics`);
-            if (!response.ok) throw new Error('Failed to fetch data');
 
-            const data = await response.json(); // JSON 데이터 파싱
+    <th:block layout:fragment="script">
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="/js/manage.js"></script>
 
-            // DOM 업데이트
-            document.getElementById('artistID').textContent = data.artistID;
-            document.querySelector('[data-field="musicTitle"]').textContent = data.musicTitle;
-            document.querySelector('[data-field="musicDescription"]').textContent = data.musicDescription;
-            document.querySelector('[data-field="soundType"]').textContent = data.soundType;
-            document.getElementById('create_date').textContent = data.createDate;
-            document.getElementById('modify_date').textContent = data.modifyDate;
+        <script type="module">
+            import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+            import { axiosGet, axiosPost, axiosPatch, axiosDelete } from '/js/fetch/standardAxios.js';
+            import { inputHandler } from '/js/check/inputHandler.js';
+            import { processingRules, validationRules } from '/js/check/inputRules.js';
+            import { renderManageTracks } from '/js/render/sound.js';
 
-            // input 및 radio button 값 업데이트
-            document.querySelector('[data-field="musicTitle"] + input').value = data.musicTitle;
-            document.querySelector('[data-field="musicDescription"] + input').value = data.musicDescription;
-            document.querySelector(`input[name="soundType"][value="${data.soundType}"]`).checked = true;
-        } catch (error) {
-            console.error('Error:', error);
-            // 로딩 실패 시 기본 메시지 설정
-            document.getElementById('artistID').textContent = 'Error loading data';
-        }
-    }
+            document.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    // API 호출 및 렌더링 처리
+                    const renderTotal = await axiosGet({endpoint:'/api/me/tracks'});
+                    console.log(renderTotal);
+                    renderManageTracks(renderTotal.dtoList);
 
-    // 특정 musicId로 fetch 요청
-    fetchAndUpdateRow(123); // 123은 예시 musicId
-</script>
-<!-- 다크모드 js -->
-<script src="/static/js/darkmode.js"></script>
-<!-- 사이드바 확장 js -->
-<script src="/static/js/sidebarExpand.js"></script>
-<!-- 뮤직 플레이어 js -->
-<script src="/static/js/musicPlayer.js"></script>
+                } catch (error) {
+                    console.error('Error occurred while rendering:', error);
+                }
+
+                // 폼을 서버로 전송하는 함수
+            async function sendUpdateRequest(albumId, formData) {
+                const response = serializeFormToJSON(formData);
+
+                const { errors, processedData } = inputHandler(response,validationRules,processingRules,formData);
+
+                if (!errors) {
+                    await axiosPatch({ endpoint: '/api/me/tracks/' + albumId, body: processedData });
+                }
+            }
+            window.sendUpdateRequest=sendUpdateRequest;
+            });
+        </script>
+    </th:block>
 </html>

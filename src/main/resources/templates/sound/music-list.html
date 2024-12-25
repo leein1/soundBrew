@@ -2,24 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout.html}">
-<th:block layout:fragment="script">
-    <script th:inline="javascript" type="text/javascript">
-        const musicTags = {
-            instTags: [[${instTags}]],
-            moodTags: [[${moodTags}]],
-            genreTags: [[${genreTags}]]
-        };
-    </script>
-    <!-- module js -->
-    <script th:src="@{/js/tag.js}"></script>
-    <script th:src="@{/js/sort.js}"></script>
-    <!--  page js  -->
-    <script th:src="@{/js/music.js}"></script>
-</th:block>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>music</title>
+
     <!-- module css -->
     <link th:href="@{/css/music.css}" rel="stylesheet">
 
@@ -29,13 +16,48 @@
     <div layout:fragment="content">
         <div class="content-header">
             <!-- tag body -->
-            <div th:insert="~{module/tag :: tagModule(inst_tags=${inst_tags}, mood_tags=${mood_tags}, genre_tags=${genre_tags}, test = ${test})}"></div>
+            <div id="render-tags-sort-container" class="render-tags-sort-container"></div>
 
             <!-- sort body -->
-            <div th:insert="~{module/sort :: sortModule}"></div>
+            <div id="render-result-sort-container" class="render-result-sort-container"></div>
         </div>
         <!-- music body -->
-    <div th:insert="~{module/music :: musicModule(${sounds})}"></div>
+    <div id="render-sounds-container" class="render-sounds-container"></div>
     </div>
 </body>
+
+<th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module">
+        import { axiosGet, axiosPost, axiosPut, axiosDelete } from '/js/fetch/standardAxios.js';
+        import { inputProcessor, inputValidator, inputHandler } from '/js/check/inputHandler.js';
+        import { serializeFormToJSON } from '/js/serialize/formTojson.js'
+        import {renderTotalSounds, renderTagsFromSearch, renderSort} from '/js/render/sound.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // API 호출 및 렌더링 처리
+                const renderTotal = await axiosGet({endpoint:'/api/sounds/tracks'});
+                renderTotalSounds(renderTotal.dtoList);
+                const tagsBody = { dto: renderTotal.dtoList };
+
+                const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
+                renderTagsFromSearch(renderTags);
+                renderSort();
+            } catch (error) {
+                console.error('Error occurred while rendering:', error);
+            }
+        });
+    </script>
+    <!-- module js -->
+    <script th:src="@{/js/module/sound/tag.js}"></script>
+    <script th:src="@{/js/module/sound/sort.js}"></script>
+    <!--  page js  -->
+    <script th:src="@{/js/module/sound/music.js}"></script>
+    <!--모듈 js-->
+    <script th:src="@{/js/music.js}"></script>
+    <script th:src="@{/js/album.js}"></script>
+    <!-- 페이지 js -->
+    <script th:src="@{/js/album-list.js}"></script>
+</th:block>
 </html>

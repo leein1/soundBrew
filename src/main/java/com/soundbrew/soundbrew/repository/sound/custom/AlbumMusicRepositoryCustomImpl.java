@@ -67,15 +67,26 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         }
 
         List<SearchTotalResultDto> results = queryFactory
-                .select(Projections.constructor(
+                .select(Projections.bean(
                         SearchTotalResultDto.class,
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description,
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName),
-                        music.create_date,
-                        music.modify_date
+                        album.albumId.as("albumId"),
+                        album.albumName.as("albumName"),
+                        album.albumArtPath.as("albumArtPath"),
+                        album.description.as("albumDescription"),
+                        album.nickname.as("nickname"),
+                        music.musicId.as("musicId"),
+                        music.title.as("musicTitle"),
+                        music.filePath.as("musicFilePath"),
+                        music.price.as("price"),
+                        music.description.as("musicDescription"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
+                                .as("instrumentTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
+                                .as("moodTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
+                                .as("genreTagName"),
+                        music.create_date.as("create_date"),
+                        music.modify_date.as("modify_date")
                 ))
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
@@ -154,14 +165,21 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
 
         // 쿼리 생성
         List<SearchTotalResultDto> results = queryFactory
-                .select(Projections.constructor(
+                .select(Projections.bean(
                         SearchTotalResultDto.class,
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName),
-                        album.create_date,
-                        album.modify_date
+                        album.albumId.as("albumId"),
+                        album.albumName.as("albumName"),
+                        album.albumArtPath.as("albumArtPath"),
+                        album.description.as("albumDescription"),
+                        album.nickname.as("nickname"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
+                                .as("instrumentTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
+                                .as("moodTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
+                                .as("genreTagName"),
+                        album.create_date.as("create_date"),
+                        album.modify_date.as("modify_date")
                 ))
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
@@ -231,15 +249,26 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         }
 
         List<SearchTotalResultDto> results = queryFactory
-                .select(Projections.constructor(
+                .select(Projections.bean(
                         SearchTotalResultDto.class,
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description,
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName),
-                        music.create_date,
-                        music.modify_date
+                        album.albumId.as("albumId"),
+                        album.albumName.as("albumName"),
+                        album.albumArtPath.as("albumArtPath"),
+                        album.description.as("albumDescription"),
+                        album.nickname.as("nickname"),
+                        music.musicId.as("musicId"),
+                        music.title.as("musicTitle"),
+                        music.filePath.as("musicFilePath"),
+                        music.price.as("price"),
+                        music.description.as("musicDescription"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
+                                .as("instrumentTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
+                                .as("moodTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
+                                .as("genreTagName"),
+                        music.create_date.as("create_date"),
+                        music.modify_date.as("modify_date")
                 ))
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
@@ -308,15 +337,26 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         builder.and(album.userId.eq(userId));
 
         List<SearchTotalResultDto> results = queryFactory
-                .select(Projections.constructor(
+                .select(Projections.bean(
                         SearchTotalResultDto.class,
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description,
-                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName),
-                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName),
-                        music.create_date,
-                        music.modify_date
+                        album.albumId.as("albumId"),
+                        album.albumName.as("albumName"),
+                        album.albumArtPath.as("albumArtPath"),
+                        album.description.as("albumDescription"),
+                        album.nickname.as("nickname"),
+                        music.musicId.as("musicId"),
+                        music.title.as("musicTitle"),
+                        music.filePath.as("musicFilePath"),
+                        music.price.as("price"),
+                        music.description.as("musicDescription"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
+                                .as("instrumentTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
+                                .as("moodTagName"),
+                        Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
+                                .as("genreTagName"),
+                        music.create_date.as("create_date"),
+                        music.modify_date.as("modify_date")
                 ))
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
