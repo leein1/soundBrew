@@ -13,8 +13,16 @@ public class UserDetailsDTO {
 
     private UserDTO userDTO;
 
+    private UserRoleDTO userRoleDTO;
+
     private UserSubscriptionDTO userSubscriptionDTO;
 
-    private UserRoleDTO userRoleDTO;
+
+
+//    public UserDetailsDTO(UserDTO userDTO, UserRoleDTO userRoleDTO, UserSubscriptionDTO userSubscriptionDTO) {
+//        this.userDTO = userDTO;
+//        this.userRoleDTO = userRoleDTO;
+//        this.userSubscriptionDTO = userSubscriptionDTO;
+//    }
 
 }

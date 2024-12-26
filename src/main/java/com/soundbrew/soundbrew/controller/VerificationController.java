@@ -73,5 +73,13 @@ public class VerificationController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PatchMapping("/password")
+    public ResponseEntity<ResponseDTO> changePassword(@RequestBody String nickname, @RequestBody String providedActivationCode){
+
+        // 입력받은 비밀번호가 없다면 자체적으로 비밀번호 reset
+        // 입력받은 비밀번호가 있다면 입력받은것으로 변경
+        return null;
+    }
+
 
 }

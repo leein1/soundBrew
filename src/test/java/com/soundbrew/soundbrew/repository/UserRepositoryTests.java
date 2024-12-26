@@ -1,13 +1,19 @@
 package com.soundbrew.soundbrew.repository;
 
 import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.dto.UserDetailsDTO;
 import com.soundbrew.soundbrew.repository.search.UserSearchRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +29,17 @@ public class UserRepositoryTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
 
+    @Test
+    public void dtoTest(){
+        User user = userRepository.findById(16).get();
+        log.info(user.toString());
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        log.info(userDTO);
+    }
 
     @Test
     public void testInsert(){
@@ -140,4 +155,29 @@ public class UserRepositoryTests {
         testResult.forEach(dto ->log.info("결과 : {}", dto ));
     }
 
+    @Test
+    public void testSearchRepository(){
+
+        UserDetailsDTO userDetailsDTO = userRepository.findUserDetailsById(16).orElseThrow();
+
+        log.info(userDetailsDTO.toString());
+        log.info(userDetailsDTO.getUserDTO().getCreateDate());
+        log.info(userDetailsDTO.getUserSubscriptionDTO().getCreateDate());
+    }
+
+    @Test
+    public void testSearchRepository2(){
+        Pageable pageable = PageRequest.of(0, 10); // 첫 페이지, 10개씩 가져오기
+
+        Page<UserDetailsDTO> userDetailsPage = userRepository.findAllUserDetails(new RequestDTO()).get();
+
+        if(userDetailsPage.isEmpty()){
+            log.info("page 객체가 비어 있습니다.");
+        } else if(userDetailsPage.hasContent()){
+            System.out.println("Total Users: " + userDetailsPage.getTotalElements());
+            userDetailsPage.getContent().forEach(System.out::println);
+        }
+
+
+    }
 }

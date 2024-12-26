@@ -23,10 +23,7 @@ public class GlobalExceptionHandler {
 //    비슷한 오류들 최대한 병합 - 지나친 세부 분류 X
 //    클라이언트 기준 중요해 보이는 예외들 처리
 
-    // 400 - 클라이언트측 오류
-    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, IOException.class})
-    public ResponseEntity<ResponseDTO<String>> handleBadRequestExceptions(Exception ex) {
-
+    public ResponseDTO<String> buildResponseDTOwithMessage(Exception ex){
         String exceptionMessage = ex.getMessage() != null ? ex.getMessage() : "요청 데이터에 문제가 발생했습니다.";
 
 //        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
@@ -35,6 +32,23 @@ public class GlobalExceptionHandler {
                 .message(exceptionMessage)
                 .build();
 
+        return responseDTO;
+    }
+
+    // 400 - 클라이언트측 오류
+    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, IOException.class})
+    public ResponseEntity<ResponseDTO<String>> handleBadRequestExceptions(Exception ex) {
+
+//        String exceptionMessage = ex.getMessage() != null ? ex.getMessage() : "요청 데이터에 문제가 발생했습니다.";
+//
+////        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
+//
+//        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+//                .message(exceptionMessage)
+//                .build();
+
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
     }
 
@@ -42,6 +56,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Map<String, Object>> handleNotFoundException(NoSuchElementException ex) {
 
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
         return createErrorResponse(HttpStatus.NOT_FOUND, "결과를 찾을 수 없습니다.");
     }
 
@@ -50,6 +65,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> handleConflictException(DataIntegrityViolationException ex) {
 
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
         return createErrorResponse(HttpStatus.CONFLICT, "데이터 처리 중 오류가 발생했습니다.");
     }
 
@@ -57,6 +73,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({SQLException.class, DataAccessException.class})
     public ResponseEntity<Map<String, Object>> handleDatabaseExceptions(Exception ex) {
 
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "데이터 처리 중 오류가 발생했습니다.");
     }
 
@@ -64,6 +81,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeExceptions(RuntimeException ex) {
 
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도홰주세요.");
     }
 
@@ -71,6 +89,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ConnectException.class, SocketTimeoutException.class})
     public ResponseEntity<Map<String, Object>> handleServerUnavailableExceptions(Exception ex) {
 
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
         return createErrorResponse(HttpStatus.SERVICE_UNAVAILABLE, "서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
 

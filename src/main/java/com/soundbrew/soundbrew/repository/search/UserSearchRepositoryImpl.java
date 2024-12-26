@@ -1,16 +1,21 @@
 package com.soundbrew.soundbrew.repository.search;
 
-import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.soundbrew.soundbrew.domain.QUser;
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.QUserRole;
+import com.soundbrew.soundbrew.domain.QUserSubscription;
 import com.soundbrew.soundbrew.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.NamedStoredProcedureQueries;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -18,6 +23,10 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
     private final ModelMapper modelMapper;
+
+    private final QUser user = QUser.user;
+    private final QUserRole userRole = QUserRole.userRole;
+    private final QUserSubscription userSubscription = QUserSubscription.userSubscription;
 
 //    public ResponseDTO<UserDTO> searchTest() {
 //        QUser user = QUser.user;
@@ -45,10 +54,190 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
         return null;
     }
 
+//    @Override
+//    public UserDetailsDTO findUserDetailsById(int userId) {
+//        QUser user = QUser.user;
+//        QUserRole userRole = QUserRole.userRole;
+//        QUserSubscription userSubscription = QUserSubscription.userSubscription;
+//
+//        return jpaQueryFactory.select(Projections.constructor(UserDetailsDTO.class,
+//                        Projections.constructor(UserDTO.class,
+//                                user.userId,
+//                                user.subscriptionId,
+//                                user.name,
+//                                user.nickname,
+//                                user.password,
+//                                user.phoneNumber,
+//                                user.email,
+//                                user.emailVerified,
+//                                user.creditBalance,
+//                                user.profileImagePath,
+//                                user.birth
+//                        ),
+//                        Projections.constructor(UserRoleDTO.class,
+//                                userRole.id.roleId,
+//                                userRole.id.userId
+//                        ),
+//                        Projections.constructor(UserSubscriptionDTO.class,
+//                                userSubscription.userId,
+//                                userSubscription.subscriptionId,
+//                                userSubscription.firstBillingDate,
+//                                userSubscription.nextBillingDate,
+//                                userSubscription.paymentStatus
+//
+//                        )
+//                ))
+//                .from(user)
+//                .join(userRole).on(user.userId.eq(userRole.id.userId))
+//                .leftJoin(userSubscription).on(user.userId.eq(userSubscription.userId))
+//                .where(user.userId.eq(userId))
+//                .fetchOne();
+//    }
+
     @Override
-    public UserDetailsDTO findUserDetailsById(int userId) {
-        return null;
+    public Optional<UserDetailsDTO> findUserDetailsById(int userId) {
+
+//        QUser user = QUser.user;
+//        QUserRole userRole = QUserRole.userRole;
+//        QUserSubscription userSubscription = QUserSubscription.userSubscription;
+
+        return Optional.ofNullable(jpaQueryFactory.select(Projections.bean(UserDetailsDTO.class,
+                        Projections.bean(UserDTO.class,
+                                user.userId,
+                                user.subscriptionId,
+                                user.name,
+                                user.nickname,
+                                user.password,
+                                user.phoneNumber,
+                                user.email,
+                                user.emailVerified,
+                                user.creditBalance,
+                                user.profileImagePath,
+                                user.birth,
+                                user.createDate, // BaseDTO의 필드
+                                user.modifyDate  // BaseDTO의 필드
+
+                        ).as("userDTO"),
+
+                        Projections.bean(UserRoleDTO.class,
+                                userRole.id.roleId,
+                                userRole.id.userId
+                        ).as("userRoleDTO"),
+
+                        Projections.bean(UserSubscriptionDTO.class,
+                                userSubscription.userId,
+                                userSubscription.subscriptionId,
+                                userSubscription.firstBillingDate,
+                                userSubscription.nextBillingDate,
+                                userSubscription.paymentStatus,
+                                userSubscription.createDate,
+                                userSubscription.modifyDate
+
+                        ).as("userSubscriptionDTO")
+                ))
+                .from(user)
+                .join(userRole).on(user.userId.eq(userRole.id.userId))
+                .leftJoin(userSubscription).on(user.userId.eq(userSubscription.userId))
+                .where(user.userId.eq(userId))
+                .fetchOne());
     }
+
+    @Override
+    public Optional<Page<UserDetailsDTO>> findAllUserDetails(RequestDTO requestDTO) {
+
+        List<UserDetailsDTO> userDetailsList = jpaQueryFactory
+                .select(Projections.bean(UserDetailsDTO.class,
+                        Projections.bean(UserDTO.class,
+                                user.userId,
+                                user.subscriptionId,
+                                user.name,
+                                user.nickname,
+                                user.password,
+                                user.phoneNumber,
+                                user.email,
+                                user.emailVerified,
+                                user.creditBalance,
+                                user.profileImagePath,
+                                user.birth,
+                                user.createDate,
+                                user.modifyDate
+
+                        ).as("userDTO"),
+
+                        Projections.bean(UserRoleDTO.class,
+                                userRole.id.roleId,
+                                userRole.id.userId
+
+                        ).as("userRoleDTO"),
+
+                        Projections.bean(UserSubscriptionDTO.class,
+                                userSubscription.userId,
+                                userSubscription.subscriptionId,
+                                userSubscription.firstBillingDate,
+                                userSubscription.nextBillingDate,
+                                userSubscription.paymentStatus,
+                                userSubscription.createDate,
+                                userSubscription.modifyDate
+
+                        ).as("userSubscriptionDTO")
+                ))
+                .from(user)
+                .join(userRole).on(user.userId.eq(userRole.id.userId))
+                .leftJoin(userSubscription).on(user.userId.eq(userSubscription.userId))
+                .offset(requestDTO.getPageable().getOffset())
+                .limit(requestDTO.getPageable().getPageSize())
+                .fetch();
+
+        long total = jpaQueryFactory.select(user.count())
+                .from(user)
+                .fetchOne();
+
+        return Optional.of(new PageImpl<>(userDetailsList, requestDTO.getPageable(), total));
+    }
+
+//    public Optional<Page<UserDetailsDTO>> findAllUserDetails(Pageable pageable) {
+//
+//        List<UserDetailsDTO> userDetailsList = jpaQueryFactory.select(
+//                Projections.constructor(UserDetailsDTO.class,
+//                        Projections.constructor(UserDTO.class,
+//                                user.userId,
+//                                user.subscriptionId,
+//                                user.name,
+//                                user.nickname,
+//                                user.password,
+//                                user.phoneNumber,
+//                                user.email,
+//                                user.emailVerified,
+//                                user.creditBalance,
+//                                user.profileImagePath,
+//                                user.birth
+//                        ),
+//                        Projections.constructor(UserRoleDTO.class,
+//                                userRole.id.roleId,
+//                                userRole.id.userId
+//                        ),
+//                        Projections.constructor(UserSubscriptionDTO.class,
+//                                userSubscription.userId,
+//                                userSubscription.subscriptionId,
+//                                userSubscription.firstBillingDate,
+//                                userSubscription.nextBillingDate,
+//                                userSubscription.paymentStatus
+//                        )
+//                ))
+//                .from(user)
+//                .join(userRole).on(user.userId.eq(userRole.id.userId))
+//                .leftJoin(userSubscription).on(user.userId.eq(userSubscription.userId))
+//                .offset(pageable.getOffset())
+//                .limit(pageable.getPageSize())
+//                .fetch();
+//
+//        long total = jpaQueryFactory.select(user.count())
+//                .from(user)
+//                .fetchOne();
+//
+//        return Optional.of(new PageImpl<>(userDetailsList, pageable, total));
+//    }
+}
 
 
 //    @Override
@@ -67,7 +256,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
 //    }
 
 
-}
+
 
 
 

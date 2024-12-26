@@ -9,13 +9,11 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
 
@@ -97,6 +95,8 @@ public class FileService {
 //
 //        return Paths.get(System.getProperty("user.dir"), uploadDir, filename);
     }
+
+
 
     public Resource streamFile(String filename, String rangeHeader) throws IOException {    // 토큰 인증 해야 함!!!!
         /*
