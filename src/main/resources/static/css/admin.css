@@ -1,0 +1,62 @@
+.content-header{
+    /* border: 1px solid black;  */
+    margin-top: 20px;
+    height: 50px;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.content-body{
+    border: 1px black solid;
+    display: flex;
+    gap: 20px; /* 두 섹션 간 간격 */
+}
+
+.statistics-section {
+    flex: 1; /* 왼쪽 영역 */
+    border: 1px solid #ccc; /* 테두리 추가 (선택 사항) */
+    padding: 10px; /* 내부 여백 */
+    box-sizing: border-box;
+}
+
+
+.content-body .title {
+    padding: 10px 20px;
+    border: 2px solid rgb(165, 165, 165); /* 아웃라인 */
+    border-radius: 20px; /* 곡률 추가 */
+    display: inline-block; /* 텍스트 주변에만 스타일 적용 */
+    margin-bottom: 20px; /* 여백 추가 */
+    font-weight: bold; /* 텍스트 강조 */
+    font-size: 1.2rem;
+}
+
+.management-section {
+    flex: 1; /* 오른쪽 영역 (50% 너비) */
+    display: flex;
+    flex-direction: column; /* 세로 방향 정렬 */
+    gap: 20px; /* 각 섹션 간 간격 */
+    box-sizing: border-box;
+}
+
+.user-section, .music-section, .etc-section, .album-section, .tag-section{
+    border: 1px solid #ccc; /* 시각적 구분 */
+    padding: 10px; /* 내부 여백 */
+    box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+    width: 100%; /* 내부 섹션의 너비를 100%로 설정 */
+}
+
+.management-section >ol{
+    text-align: right;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .content-body {
+        flex-direction: column; /* 세로 정렬 */
+    }
+
+    .statistics-section, .management-section {
+        flex: 0 0 100%; /* 너비를 100%로 설정 */
+    }
+}

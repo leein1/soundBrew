@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../css/register.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        회원가입
+    </div>
+
+    <div class="content-body">
+        <form class="register-form">
+            <div class="input-group">
+                <label for="email">이메일:</label>
+                <div class="input-with-button">
+                    <input type="email" id="email" name="email" required>
+                    <button type="button" class="check-button">중복확인</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="name">이름:</label>
+                <div class="input-with-button">
+                    <input type="text" id="name" name="name" required>
+                    <button type="button" class="check-button">중복확인</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="nickname">닉네임:</label>
+                <div class="input-with-button">
+                    <input type="text" id="nickname" name="nickname" required>
+                    <button type="button" class="check-button">중복확인</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="password">비밀번호:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="input-group">
+                <label>전화번호:</label>
+                <div class="phone-number">
+                    <input type="text" id="phone1" value="010" readonly>
+                    <input type="text" id="phone2" maxlength="4" pattern="\d{4}" required>
+                    <input type="text" id="phone3" maxlength="4" pattern="\d{4}" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="birth">생일:</label>
+                <input type="date" id="birth" name="birth" required>
+            </div>
+
+            <input type="hidden" name="phonenumber" id="phonenumber">
+            <button type="submit">제출</button>
+        </form>
+
+    </div>
+
+    <div class="content-footer" style="border: 1px green solid;">
+        푸터 - 버튼 위치할 예정
+    </div>
+</div>
+</body>
+<script layout:fragment="script" th:inline="javascript">
+    console.log("loaded script..");
+
+    // 폼 제출 시 전화번호를 합쳐서 hidden input에 설정
+    function combinePhoneNumber(event) {
+        event.preventDefault(); // 기본 폼 제출 동작 방지
+        const phone1 = document.getElementById('phone1').value;
+        const phone2 = document.getElementById('phone2').value;
+        const phone3 = document.getElementById('phone3').value;
+
+        if (phone2.length !== 4 || phone3.length !== 4) {
+            alert('전화번호를 올바르게 입력해주세요.');
+            return;
+        }
+
+        const fullPhoneNumber = `${phone1}${phone2}${phone3}`;
+        document.getElementById('phonenumber').value = fullPhoneNumber;
+
+        console.log('전화번호:', fullPhoneNumber); // 확인용
+
+    }
+</script>
+</html>

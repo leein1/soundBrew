@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../css/myInfo.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        내 정보
+    </div>
+
+    <div class="content-body">
+        <form class="register-form">
+            <div class="input-group">
+                <label for="email">이메일:</label>
+                <div class="input-with-button">
+                    <input type="email" id="email" name="email" readonly>
+
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="name">이름:</label>
+                <div class="input-with-button">
+                    <input type="text" id="name" name="name" readonly>
+
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="nickname">닉네임:</label>
+                <div class="input-with-button">
+                    <input type="text" id="nickname" name="nickname" readonly>
+
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="password">비밀번호:</label>
+                <input type="password" id="password" name="password" readonly>
+            </div>
+
+            <!-- <div class="input-group">
+                <label>전화번호:</label>
+                <div class="phone-number">
+                    <input type="text" id="phone1" value="010" readonly>
+                    <input type="text" id="phone2" maxlength="4" pattern="\d{4}" required>
+                    <input type="text" id="phone3" maxlength="4" pattern="\d{4}" required>
+                </div>
+            </div> -->
+
+            <div class="input-group">
+                <label for="password">전화번호</label>
+                <input type="text" name="phonenumber" id="phonenumber" readonly>
+            </div>
+
+            <div class="input-group">
+                <label for="birth">생일:</label>
+                <input type="date" id="birth" name="birth" readonly>
+            </div>
+
+
+
+        </form>
+
+    </div>
+
+    <div class="content-footer" style="border: 1px green solid;">
+        푸터 - 버튼 위치할 예정
+    </div>
+</div>
+</body>
+<script layout:fragment="script" th:inline="javascript">
+    console.log("loaded script..");
+</script>
+</html>
+
+
+
+
+                
+
