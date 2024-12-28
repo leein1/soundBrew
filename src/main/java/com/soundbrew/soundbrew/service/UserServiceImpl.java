@@ -10,7 +10,7 @@ import com.soundbrew.soundbrew.dto.UserDTO;
 import com.soundbrew.soundbrew.repository.ActivationCodeRepository;
 import com.soundbrew.soundbrew.repository.SubscriptionRepository;
 import com.soundbrew.soundbrew.repository.UserRepository;
-import com.soundbrew.soundbrew.util.UserValidator;
+import com.soundbrew.soundbrew.service.util.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
