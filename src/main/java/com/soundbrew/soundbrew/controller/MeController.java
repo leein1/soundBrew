@@ -1,12 +1,24 @@
 package com.soundbrew.soundbrew.controller;
 
-@RestController
-<<<<<<< HEAD
-@RequestMapping("/api/me")
-@AllArgsConstructor
-@RequiredArgsConstructor
-@Log4j2
+import com.soundbrew.soundbrew.dto.RequestDTO;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.SubscriptionDTO;
+import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.dto.sound.*;
+import com.soundbrew.soundbrew.service.MeService;
+import com.soundbrew.soundbrew.service.SubscriptionService;
+import com.soundbrew.soundbrew.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/api/me")
+@RequiredArgsConstructor
+//@AllArgsConstructor
+@Log4j2
 public class MeController {
 
     private final UserService userService;
@@ -351,5 +363,5 @@ public class MeController {
 
         return  ResponseEntity.ok().body(responseDto);
     }
->>>>>>> feature/kyoung
+
 }

@@ -54,7 +54,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 
         SubscriptionDTO subscriptionDTO = modelMapper.map(subscription, SubscriptionDTO.class);
 
-        return ResponseDTO.<SubscriptionDTO>withSingeData()
+        return ResponseDTO.<SubscriptionDTO>withSingleData()
                 .dto(subscriptionDTO)
                 .build();
     }

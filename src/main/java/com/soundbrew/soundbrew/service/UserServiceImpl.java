@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService{
         //  DTO변환
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 
-        return ResponseDTO.<UserDTO>withSingeData()
+        return ResponseDTO.<UserDTO>withSingleData()
                 .dto(userDTO)
                 .build();
 
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService{
 
         UserDTO userDTO = modelMapper.map(result,UserDTO.class);
 
-        return ResponseDTO.<UserDTO>withSingeData()
+        return ResponseDTO.<UserDTO>withSingleData()
                 .dto(userDTO)
                 .build();
 

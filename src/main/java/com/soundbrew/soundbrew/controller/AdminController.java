@@ -1,9 +1,26 @@
 package com.soundbrew.soundbrew.controller;
 
 
+import com.soundbrew.soundbrew.dto.RequestDTO;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.UserDetailsDTO;
+import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
+import com.soundbrew.soundbrew.dto.sound.MusicDTO;
+import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
+import com.soundbrew.soundbrew.dto.sound.TagsDTO;
+import com.soundbrew.soundbrew.service.AdminService;
+import com.soundbrew.soundbrew.service.AdminServiceImpl;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/admin")
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequiredArgsConstructor
 @Log4j2
 public class AdminController {  //  관리자용 컨트롤러

@@ -38,12 +38,13 @@ public class SoundsServiceImpl implements SoundsService{
         Optional<Page<SearchTotalResultDTO>> before = albumMusicRepository.search(requestDTO);
         if(before.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
 
-        return ResponseDTO.<SearchTotalResultDTO>withAll()
-                .requestDTO(requestDTO)
-                .dtoList(soundProcessor.replaceCommaWithSpace(before.get().getContent()).stream()
-                    .map(DTOFilteringFactory::hideSearchTotalResultDTO).toList())
-                .total((int) before.get().getTotalElements())
-                .build();
+        return null;
+//        return ResponseDTO.<SearchTotalResultDTO>withAll()
+//                .requestDTO(requestDTO)
+//                .dtoList(soundProcessor.replaceCommaWithSpace(before.get().getContent()).stream()
+//                    .map(DTOFilteringFactory::hideSearchTotalResultDTO).toList())
+//                .total((int) before.get().getTotalElements())
+//                .build();
     }
 
     @Override
@@ -53,11 +54,12 @@ public class SoundsServiceImpl implements SoundsService{
 
         log.info(before.get().stream().toList());
 
-        return  ResponseDTO.<SearchTotalResultDTO>withAll()
-                .dtoList(before.get().getContent().stream()
-                        .map(DTOFilteringFactory::hideSearchTotalResultDTO).toList())
-                .requestDTO(requestDTO)
-                .build();
+        return null;
+//        return  ResponseDTO.<SearchTotalResultDTO>withAll()
+//                .dtoList(before.get().getContent().stream()
+//                        .map(DTOFilteringFactory::hideSearchTotalResultDTO).toList())
+//                .requestDTO(requestDTO)
+//                .build();
     }
 
     @Override
@@ -93,11 +95,12 @@ public class SoundsServiceImpl implements SoundsService{
         Optional<Page<SearchTotalResultDTO>> albumPage = albumMusicRepository.albumOne(nickname,albumName, requestDTO);
         if(albumPage.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>withMessage().message("찾으시는 앨범의 정보가 없습니다.").build();
 
-        return  ResponseDTO.<SearchTotalResultDTO>withAll()
-                .dtoList(soundProcessor.replaceCommaWithSpace(albumPage.get().getContent()).stream()
-                    .map(DTOFilteringFactory::hideSearchTotalResultDTO).toList())
-                .total((int) albumPage.get().getTotalElements())
-                .build();
+        return null;
+//        return  ResponseDTO.<SearchTotalResultDTO>withAll()
+//                .dtoList(soundProcessor.replaceCommaWithSpace(albumPage.get().getContent()).stream()
+//                    .map(DTOFilteringFactory::hideSearchTotalResultDTO).toList())
+//                .total((int) albumPage.get().getTotalElements())
+//                .build();
     }
 
         @Override

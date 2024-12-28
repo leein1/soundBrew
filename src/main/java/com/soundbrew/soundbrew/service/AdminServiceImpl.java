@@ -1,15 +1,22 @@
 package com.soundbrew.soundbrew.service;
 
+import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 import com.soundbrew.soundbrew.dto.UserDetailsDTO;
+import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
+import com.soundbrew.soundbrew.dto.sound.MusicDTO;
+import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
+import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.repository.UserRepository;
+import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.awt.print.PageFormat;
@@ -17,6 +24,7 @@ import java.awt.print.Printable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +62,7 @@ public class AdminServiceImpl implements AdminService {
 
         UserDetailsDTO userDetialsDTO = userRepository.findUserDetailsById(userId).orElseThrow();
 
-        ResponseDTO<UserDetailsDTO> responseDTO = ResponseDTO.<UserDetailsDTO>withSingeData()
+        ResponseDTO<UserDetailsDTO> responseDTO = ResponseDTO.<UserDetailsDTO>withSingleData()
                 .dto(userDetialsDTO)
                 .build();
 
@@ -172,10 +180,11 @@ public class AdminServiceImpl implements AdminService {
         Optional<Page<SearchTotalResultDTO>> before = albumMusicRepository.verifyAlbum(requestDTO);
         if(before.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
 
-        return  ResponseDTO.<SearchTotalResultDTO>withAll()
-                .dtoList(before.get().getContent().stream().toList())
-                .requestDTO(requestDTO)
-                .build();
+        return null;
+//        return  ResponseDTO.<SearchTotalResultDTO>withAll()
+//                .dtoList(before.get().getContent().stream().toList())
+//                .requestDTO(requestDTO)
+//                .build();
     }
 
     @Override
@@ -183,7 +192,8 @@ public class AdminServiceImpl implements AdminService {
         Optional<Page<SearchTotalResultDTO>> albumOne = albumMusicRepository.verifyAlbumOne(userId,id, requestDTO);
         if(albumOne.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>withMessage().message("찾으시는 앨범이 없습니다.").build();
 
-        return ResponseDTO.<SearchTotalResultDTO>withAll().total((int) albumOne.get().getTotalElements()).requestDTO(requestDTO).dtoList(albumOne.get().getContent()).build();
+        return null;
+//        return ResponseDTO.<SearchTotalResultDTO>withAll().total((int) albumOne.get().getTotalElements()).requestDTO(requestDTO).dtoList(albumOne.get().getContent()).build();
     }
 
     @Transactional

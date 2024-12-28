@@ -1,14 +1,9 @@
 package com.soundbrew.soundbrew.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-<<<<<<< HEAD
-import lombok.NoArgsConstructor;
-=======
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+
+
 import lombok.experimental.SuperBuilder;
->>>>>>> feature/kyoung
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

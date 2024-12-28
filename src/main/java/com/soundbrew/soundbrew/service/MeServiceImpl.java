@@ -167,7 +167,8 @@ public class MeServiceImpl implements MeService{
         Optional<Page<SearchTotalResultDTO>> albumOne = albumMusicRepository.albumOne(userId,id, requestDTO);
         if(albumOne.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>withMessage().message("찾으시는 앨범이 없습니다.").build();
 
-        return ResponseDTO.<SearchTotalResultDTO>withAll().total((int) albumOne.get().getTotalElements()).requestDTO(requestDTO).dtoList(albumOne.get().getContent()).build();
+        return null;
+//        return ResponseDTO.<SearchTotalResultDTO>withAll().total((int) albumOne.get().getTotalElements()).requestDTO(requestDTO).dtoList(albumOne.get().getContent()).build();
     }
 
     @Override
@@ -175,11 +176,12 @@ public class MeServiceImpl implements MeService{
         Optional<Page<SearchTotalResultDTO>> before = albumMusicRepository.search(requestDTO);
         if(before.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
 
-        return ResponseDTO.<SearchTotalResultDTO>withAll()
-                .requestDTO(requestDTO)
-                .dtoList(soundProcessor.replaceCommaWithSpace(before.get().getContent()).stream().toList())
-                .total((int) before.get().getTotalElements())
-                .build();
+        return null;
+//        return ResponseDTO.<SearchTotalResultDTO>withAll()
+//                .requestDTO(requestDTO)
+//                .dtoList(soundProcessor.replaceCommaWithSpace(before.get().getContent()).stream().toList())
+//                .total((int) before.get().getTotalElements())
+//                .build();
     }
 
     @Override
@@ -189,9 +191,10 @@ public class MeServiceImpl implements MeService{
 
         log.info(before.get().stream().toList());
 
-        return  ResponseDTO.<SearchTotalResultDTO>withAll()
+        return null;
+/*        return  ResponseDTO.<SearchTotalResultDTO>withAll()
                 .dtoList(before.get().getContent().stream().toList())
                 .requestDTO(requestDTO)
-                .build();
+                .build();*/
     }
 }
