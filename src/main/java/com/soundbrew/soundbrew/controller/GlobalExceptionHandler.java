@@ -1,9 +1,6 @@
 package com.soundbrew.soundbrew.controller;
 
-<<<<<<< HEAD
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-=======
->>>>>>> feature/kyoung
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +8,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.dao.DataAccessException;
-
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -26,7 +22,6 @@ public class GlobalExceptionHandler {
 //    비슷한 오류들 최대한 병합 - 지나친 세부 분류 X
 //    클라이언트 기준 중요해 보이는 예외들 처리
 
-<<<<<<< HEAD
     public ResponseDTO<String> buildResponseDTOwithMessage(Exception ex){
         String exceptionMessage = ex.getMessage() != null ? ex.getMessage() : "요청 데이터에 문제가 발생했습니다.";
 
@@ -55,29 +50,12 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
     }
-=======
-//    // 400 - 클라이언트측 오류
-//    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
-//    public ResponseEntity<Map<String, Object>> handleBadRequestExceptions(Exception ex) {
-//        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
-//    }
-//
-//    // 400 - 파일 처리 오류
-//    // 따로 필요한지....? 의문이 들긴 하지만 일단 넣어둠
-//    @ExceptionHandler(IOException.class)
-//    public ResponseEntity<Map<String, Object>> handleFileExceptions(IOException ex) {
-//        return createErrorResponse(HttpStatus.BAD_REQUEST, "파일 처리 중 문제가 발생했습니다.");
-//    }
->>>>>>> feature/kyoung
 
     // 404 - 리소스 찾지 못한 경우
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Map<String, Object>> handleNotFoundException(NoSuchElementException ex) {
-<<<<<<< HEAD
 
         ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
-=======
->>>>>>> feature/kyoung
         return createErrorResponse(HttpStatus.NOT_FOUND, "결과를 찾을 수 없습니다.");
     }
 
@@ -85,7 +63,6 @@ public class GlobalExceptionHandler {
     // 클라이언트에게 필요한 정보인가...?
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> handleConflictException(DataIntegrityViolationException ex) {
-<<<<<<< HEAD
 
         ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
         return createErrorResponse(HttpStatus.CONFLICT, "데이터 처리 중 오류가 발생했습니다.");
@@ -106,20 +83,12 @@ public class GlobalExceptionHandler {
         ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도홰주세요.");
     }
-=======
-        return createErrorResponse(HttpStatus.CONFLICT, "데이터 처리 중 오류가 발생했습니다.");
-    }
-
->>>>>>> feature/kyoung
 
     // 503 서버 자체 문제
     @ExceptionHandler({ConnectException.class, SocketTimeoutException.class})
     public ResponseEntity<Map<String, Object>> handleServerUnavailableExceptions(Exception ex) {
-<<<<<<< HEAD
 
         ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
-=======
->>>>>>> feature/kyoung
         return createErrorResponse(HttpStatus.SERVICE_UNAVAILABLE, "서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
 
@@ -138,9 +107,5 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status).body(errorResponse);
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> feature/kyoung
 }
 
