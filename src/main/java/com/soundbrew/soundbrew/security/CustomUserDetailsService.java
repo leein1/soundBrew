@@ -1,6 +1,5 @@
 package com.soundbrew.soundbrew.security;
 
-import com.soundbrew.soundbrew.dto.UserDetailsDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.User;

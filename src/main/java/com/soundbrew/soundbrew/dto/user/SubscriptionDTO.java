@@ -1,10 +1,8 @@
-package com.soundbrew.soundbrew.dto;
+package com.soundbrew.soundbrew.dto.user;
 
-import com.soundbrew.soundbrew.domain.BaseEntity;
-import com.soundbrew.soundbrew.domain.Subscription;
+import com.soundbrew.soundbrew.domain.user.Subscription;
+import com.soundbrew.soundbrew.dto.BaseDTO;
 import lombok.*;
-
-import javax.persistence.*;
 
 @Data
 @Builder

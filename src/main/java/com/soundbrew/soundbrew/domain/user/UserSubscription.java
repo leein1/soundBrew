@@ -1,7 +1,7 @@
-package com.soundbrew.soundbrew.domain;
+package com.soundbrew.soundbrew.domain.user;
 
+import com.soundbrew.soundbrew.domain.BaseEntity;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @Entity
-public class UserSubscription extends BaseEntity{
+public class UserSubscription extends BaseEntity {
 
     @Id
     private int userId;

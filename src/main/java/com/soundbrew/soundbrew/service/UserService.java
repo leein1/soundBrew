@@ -3,7 +3,7 @@ package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {

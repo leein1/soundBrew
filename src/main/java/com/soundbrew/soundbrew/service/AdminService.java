@@ -2,9 +2,8 @@ package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.UserDetailsDTO;
+import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 

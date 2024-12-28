@@ -1,9 +1,8 @@
-package com.soundbrew.soundbrew.repository;
+package com.soundbrew.soundbrew.repository.user;
 
-import com.soundbrew.soundbrew.domain.Subscription;
-import org.hibernate.metamodel.model.convert.spi.JpaAttributeConverter;
+import com.soundbrew.soundbrew.domain.user.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
+
 import java.util.Optional;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Integer> {

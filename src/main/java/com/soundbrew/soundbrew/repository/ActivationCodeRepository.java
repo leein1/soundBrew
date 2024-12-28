@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.repository;
 
 import com.soundbrew.soundbrew.domain.ActivationCode;
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

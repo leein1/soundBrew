@@ -1,10 +1,8 @@
-package com.soundbrew.soundbrew.repository;
+package com.soundbrew.soundbrew.repository.user;
 
-import com.soundbrew.soundbrew.domain.UserRole;
-import com.soundbrew.soundbrew.domain.UserRoleId;
+import com.soundbrew.soundbrew.domain.user.UserRole;
+import com.soundbrew.soundbrew.domain.user.UserRoleId;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

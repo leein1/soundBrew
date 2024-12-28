@@ -1,9 +1,7 @@
 package com.soundbrew.soundbrew.controller;
 
-import com.soundbrew.soundbrew.domain.Subscription;
-import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.SubscriptionDTO;
+import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

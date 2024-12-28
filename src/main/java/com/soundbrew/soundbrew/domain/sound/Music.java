@@ -1,11 +1,10 @@
 package com.soundbrew.soundbrew.domain.sound;
 
 import com.soundbrew.soundbrew.domain.BaseEntity;
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,11 +1,11 @@
 package com.soundbrew.soundbrew.service;
 
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
-import com.soundbrew.soundbrew.repository.UserRepository;
+import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.AllArgsConstructor;

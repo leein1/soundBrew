@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.dto;
 
 import com.soundbrew.soundbrew.domain.ActivationCode;
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

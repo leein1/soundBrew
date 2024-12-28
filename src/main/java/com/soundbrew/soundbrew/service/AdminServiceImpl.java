@@ -3,24 +3,20 @@ package com.soundbrew.soundbrew.service;
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.UserDTO;
-import com.soundbrew.soundbrew.dto.UserDetailsDTO;
+import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
 import com.soundbrew.soundbrew.dto.sound.MusicDTO;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 import com.soundbrew.soundbrew.dto.sound.TagsDTO;
-import com.soundbrew.soundbrew.repository.UserRepository;
+import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

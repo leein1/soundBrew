@@ -1,12 +1,15 @@
 package com.soundbrew.soundbrew.service;
 
 
-import com.soundbrew.soundbrew.domain.Subscription;
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.Subscription;
+import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.dto.*;
-import com.soundbrew.soundbrew.repository.SubscriptionRepository;
-import com.soundbrew.soundbrew.repository.UserRepository;
-import com.soundbrew.soundbrew.repository.UserSubscriptionRepository;
+import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
+import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
+import com.soundbrew.soundbrew.repository.user.SubscriptionRepository;
+import com.soundbrew.soundbrew.repository.user.UserRepository;
+import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;

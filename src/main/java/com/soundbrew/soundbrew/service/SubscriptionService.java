@@ -1,9 +1,7 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.SubscriptionDTO;
-
-import java.util.List;
+import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 
 public interface SubscriptionService {
 
