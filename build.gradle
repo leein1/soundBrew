@@ -34,22 +34,35 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+<<<<<<< HEAD
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+=======
+>>>>>>> feature/kyoung
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
+<<<<<<< HEAD
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+=======
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+>>>>>>> feature/kyoung
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     //테스트시 lombok 사용을 위한 라이브러리 설정
+<<<<<<< HEAD
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+=======
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+>>>>>>> feature/kyoung
 
     //thymeleaf 레이아웃을 위한 라이브러리
     implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.1.0'
@@ -65,6 +78,7 @@ dependencies {
 
     //  swaggerUI
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
+<<<<<<< HEAD
 //    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
@@ -72,6 +86,12 @@ dependencies {
 
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.15' // 최신 버전 사용
     implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.15'
+=======
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+    // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+>>>>>>> feature/kyoung
 
     //QueryDSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
@@ -87,6 +107,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+<<<<<<< HEAD
 //sourceSets{
 //    main{
 //        java{
@@ -100,11 +121,21 @@ sourceSets {
     main {
         java {
             srcDirs = ["$projectDir/src/main/java", "$generatedDir"]
+=======
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java"]
+>>>>>>> feature/kyoung
         }
     }
 }
 
+<<<<<<< HEAD
 
+=======
+def generatedDir = "$buildDir/generated/querydsl"
+>>>>>>> feature/kyoung
 tasks.withType(JavaCompile) {
     options.annotationProcessorGeneratedSourcesDirectory = file(generatedDir)
 }

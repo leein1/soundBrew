@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        /* 토글 컨테이너 기본 스타일 */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 30px;
+    position: relative;
+}
+
+/* 체크박스를 숨김 */
+.toggle-checkbox {
+    display: none;
+}
+
+/* 토글 버튼 배경 */
+.toggle-label {
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* 토글 버튼의 움직이는 원 */
+.toggle-label::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+/* 체크박스가 체크된 상태 */
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #4CAF50; /* 토글이 켜진 상태일 때 배경색 */
+}
+
+.toggle-checkbox:checked + .toggle-label::before {
+    transform: translateX(30px); /* 토글이 오른쪽으로 이동 */
+}
+
+    </style>
+    <div class="toggle-container">
+        <img src="../images/light_mode_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+        <input type="checkbox" id="toggle" class="toggle-checkbox">
+        <label for="toggle" class="toggle-label"></label>
+        <img src="../images/dark_mode_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+    </div>
+</body>
+</html>

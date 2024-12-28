@@ -8,7 +8,11 @@ document.querySelector('.play-trigger')?.addEventListener('click', function() {
 // 재생/정지 버튼 토글
 document.getElementById('playButton').addEventListener('click', function() {
     var playButton = document.querySelector('#playButton img');
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> feature/kyoung
     if (playButton.src.includes('play_circle')) {
         playButton.src = 'pause_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg';
         playButton.alt = '정지';
@@ -27,7 +31,11 @@ document.getElementById('copyLinkButton').addEventListener('click', function() {
         // 복사 완료 후 메시지 표시
         const notification = document.getElementById('copyNotification');
         notification.style.display = 'block';
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> feature/kyoung
         // 2초 후 메시지 숨기기
         setTimeout(function() {
             notification.style.display = 'none';

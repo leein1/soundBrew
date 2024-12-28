@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.repository;
 
 import com.soundbrew.soundbrew.domain.User;
+<<<<<<< HEAD
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
@@ -20,6 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.awt.datatransfer.Clipboard;
 import java.util.List;
 import java.util.Optional;
+=======
+import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+>>>>>>> feature/kyoung
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -29,6 +37,7 @@ public class UserRepositoryTests {
     @Autowired
     private UserRepository userRepository;
 
+<<<<<<< HEAD
     @Autowired
     private ModelMapper modelMapper;
 
@@ -40,10 +49,13 @@ public class UserRepositoryTests {
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         log.info(userDTO);
     }
+=======
+>>>>>>> feature/kyoung
 
     @Test
     public void testInsert(){
 
+<<<<<<< HEAD
         IntStream.rangeClosed(100,100).forEach(i ->{
             User user = User.builder()
                     .subscriptionId(4)
@@ -51,11 +63,21 @@ public class UserRepositoryTests {
                     .nickname("u_" + i)
                     .password("password_" + i)
                     .phoneNumber("010-" + i)
+=======
+        IntStream.rangeClosed(1,1).forEach(i ->{
+            User user = User.builder()
+                    .subscription_id(1)
+                    .name("user_" + i)
+                    .nickname("u_" + i)
+                    .password("password_" + i)
+                    .phonenumber("010-" + i)
+>>>>>>> feature/kyoung
                     .email(i + "_insert_test@test.com")
                     .build();
 
             User result = userRepository.save(user);
 
+<<<<<<< HEAD
             log.info("user_id : "+result.getUserId());
         });
     }
@@ -180,4 +202,10 @@ public class UserRepositoryTests {
 
 
     }
+=======
+            log.info("user_id"+result.getUserId());
+        });
+    }
+
+>>>>>>> feature/kyoung
 }

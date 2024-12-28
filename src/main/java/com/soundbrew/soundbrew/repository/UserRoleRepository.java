@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.repository;
 
 import com.soundbrew.soundbrew.domain.UserRole;
+<<<<<<< HEAD
 import com.soundbrew.soundbrew.domain.UserRoleId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,9 @@ public interface UserRoleRepository extends JpaRepository<UserRole, UserRoleId> 
     List<UserRole> findByIdUserId(int userId);
 
     List<UserRole> findByIdRoleId(int roleId);
+=======
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRoleRepository extends JpaRepository<UserRole, Integer> {
+>>>>>>> feature/kyoung
 }

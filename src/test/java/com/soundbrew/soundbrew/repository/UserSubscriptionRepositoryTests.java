@@ -6,9 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+<<<<<<< HEAD
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+=======
+>>>>>>> feature/kyoung
 @SpringBootTest
 @Log4j2
 public class UserSubscriptionRepositoryTests {
@@ -16,6 +19,7 @@ public class UserSubscriptionRepositoryTests {
     @Autowired
     private UserSubscriptionRepository userSubscriptionRepository;
 
+<<<<<<< HEAD
 
 //    실제 서비스에서는 회원이 구독을 했을때
 //    user 테이블에서 subscription_id 컬럼을 수정 한 후
@@ -25,11 +29,19 @@ public class UserSubscriptionRepositoryTests {
         UserSubscription userSubscription = UserSubscription.builder()
                 .userId(16)
                 .subscriptionId(4)
+=======
+    @Test
+    public void testInsert(){
+        UserSubscription userSubscription = UserSubscription.builder()
+                .user_id(2)
+                .subscription_id(1)
+>>>>>>> feature/kyoung
                 .build();
 //        log.info("user_id: {}, subscription_id: {}", userSubscription.getUser_id(), userSubscription.getSubscription_id());
         UserSubscription result = userSubscriptionRepository.save(userSubscription);
 
         log.info("user_subscription info : "
+<<<<<<< HEAD
                 + userSubscription.getUserId()
                 + "|"
                 + userSubscription.getSubscriptionId()
@@ -56,4 +68,12 @@ public class UserSubscriptionRepositoryTests {
 
     }
 
+=======
+                + userSubscription.getUser_id()
+                + "|"
+                + userSubscription.getSubscription_id()
+        );
+
+    }
+>>>>>>> feature/kyoung
 }

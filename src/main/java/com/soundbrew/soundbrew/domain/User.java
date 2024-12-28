@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.domain;
 
+<<<<<<< HEAD
 import com.soundbrew.soundbrew.dto.UserDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,6 +15,17 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+=======
+import lombok.*;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+>>>>>>> feature/kyoung
 @ToString
 @Entity
 public class User extends BaseEntity {
@@ -22,9 +34,14 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
+<<<<<<< HEAD
 
     @Column(nullable = false)
     private Integer subscriptionId;
+=======
+    @Column(nullable = false)
+    private int subscription_id;
+>>>>>>> feature/kyoung
 
     @Column(length = 15, nullable = false)
     private String name;
@@ -40,7 +57,11 @@ public class User extends BaseEntity {
 //    비밀번호 변경 기록 필요
 
     @Column(length = 20, nullable = false)
+<<<<<<< HEAD
     private String phoneNumber;
+=======
+    private String phonenumber;
+>>>>>>> feature/kyoung
 
 //    번호 변경 기록 필요
 
@@ -49,6 +70,7 @@ public class User extends BaseEntity {
 
 //  이메일 인증 default false라 null해도 됨
     @Column(nullable = true)
+<<<<<<< HEAD
     private boolean emailVerified;
 
     @Column(nullable = false)
@@ -57,6 +79,12 @@ public class User extends BaseEntity {
 
     @Column(nullable = true)
     private  String profileImagePath;
+=======
+    private boolean email_verified;
+
+    @Column(nullable = true)
+    private  String profile_image_path;
+>>>>>>> feature/kyoung
 
     @Column(nullable = true)
     private LocalDate birth;
@@ -64,6 +92,7 @@ public class User extends BaseEntity {
 //    BaseEntity 클래스를 상속
 //    LocalDateTime modify_date;
 //    LocalDateTime create_date;
+<<<<<<< HEAD
 
 
     public void update(String name, String nickname, String password, String phoneNumber, String email) {
@@ -74,4 +103,6 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
+=======
+>>>>>>> feature/kyoung
 }

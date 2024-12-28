@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.repository;
 
+<<<<<<< HEAD
 import com.soundbrew.soundbrew.domain.Role;
 import com.soundbrew.soundbrew.domain.User;
 import com.soundbrew.soundbrew.domain.UserRole;
@@ -15,6 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
+=======
+import com.soundbrew.soundbrew.domain.UserRole;
+import com.soundbrew.soundbrew.domain.UserRoleId;
+import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+>>>>>>> feature/kyoung
 
 @SpringBootTest
 @Log4j2
@@ -23,6 +32,7 @@ public class UserRoleRepositoryTests {
     @Autowired
     private UserRoleRepository userRoleRepository;
 
+<<<<<<< HEAD
 //    @Autowired
 //    private UserRepository userRepository;
 //
@@ -84,6 +94,13 @@ public class UserRoleRepositoryTests {
         UserRoleId userRoleId = UserRoleId.builder()
                 .roleId(4)
                 .userId(16)
+=======
+    @Test
+    void testInsert(){
+        UserRoleId userRoleId = UserRoleId.builder()
+                .role_id(3)
+                .user_id(1)
+>>>>>>> feature/kyoung
                 .build();
 
         UserRole userRole = UserRole.builder()
@@ -94,6 +111,7 @@ public class UserRoleRepositoryTests {
         log.info("user_role"+result.getId());
 
     }
+<<<<<<< HEAD
 
     @Test
     public void testSelect(){
@@ -192,4 +210,6 @@ public class UserRoleRepositoryTests {
         }
 
     }
+=======
+>>>>>>> feature/kyoung
 }

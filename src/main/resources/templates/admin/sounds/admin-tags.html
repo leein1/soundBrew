@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<th:block layout:fragment="script">
+    <!-- 해당 페이지 전용 js-->
+    <script th:src="@{/js/admin-tags.js}"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Tag Management</title>
+    <link th:href="@{/css/admin-tags.css}" rel="stylesheet">
+</head>
+
+<body>
+<div class="content" layout:fragment="content">
+    <div class="content-header">Tag Management</div>
+    <div class="content-body">
+        <h3>Instrument Tags</h3>
+        <table class="table-container">
+            <tr>
+                <th>타입</th>
+                <th>현재 태그명</th>
+                <th>변경할 태그명</th>
+                <th>작업</th>
+            </tr>
+            <!-- Example row, repeated for each tag in the list -->
+            <th:block th:if="${tags.present}">
+            <tr th:each="instTag : ${tags.get().instrument}">
+                <td>Instrument</td>
+                <td><span class="current-value" data-field="tagName" th:text="${instTag}">Guitar</span></td>
+                <td>
+                    <input type="text" class="editable-field" placeholder="Enter new name" />
+                </td>
+                <td>
+                    <button class="edit-button" onclick="enableTagEditing(this)">Edit</button>
+                    <button class="apply-button" onclick="applyTagChanges(this, 'instrument', '[[${instTag}]]'  )">Save</button>
+                    <button class="cancel-button" onclick="cancelTagChanges(this)">Cancel</button>
+                </td>
+            </tr>
+        </table>
+
+        <h3>Mood Tags</h3>
+        <table class="table-container">
+            <tr>
+                <th>타입</th>
+                <th>현재 태그명</th>
+                <th>변경할 태그명</th>
+                <th>작업</th>
+            </tr>
+            <!-- Example row, repeated for each tag in the list -->
+            <tr th:each="moodTag : ${tags.get().mood}">
+                <td>Mood</td>
+                <td><span class="current-value" data-field="tagName" th:text="${moodTag}">Guitar</span></td>
+                <td>
+                    <input type="text" class="editable-field" placeholder="Enter new name" />
+                </td>
+                <td>
+                    <button class="edit-button" onclick="enableTagEditing(this)">Edit</button>
+                    <button class="apply-button" onclick="applyTagChanges(this, 'Mood', '[[${moodTag}]]')">Save</button>
+                    <button class="cancel-button" onclick="cancelTagChanges(this)">Cancel</button>
+                </td>
+            </tr>
+        </table>
+
+        <h3>Genre Tags</h3>
+        <table class="table-container">
+            <tr>
+                <th>타입</th>
+                <th>현재 태그명</th>
+                <th>변경할 태그명</th>
+                <th>작업</th>
+            </tr>
+            <!-- Example row, repeated for each tag in the list -->
+            <tr th:each="genreTag : ${tags.get().genre}">
+                <td>Genre</td>
+                <td><span class="current-value" data-field="tagName" th:text="${genreTag}">Guitar</span></td>
+                <td>
+                    <input type="text" class="editable-field" placeholder="Enter new name" />
+                </td>
+                <td>
+                    <button class="edit-button" onclick="enableTagEditing(this)">Edit</button>
+                    <button class="apply-button" onclick="applyTagChanges(this, 'Genre', '[[${genreTag}]]')">Save</button>
+                    <button class="cancel-button" onclick="cancelTagChanges(this)">Cancel</button>
+                </td>
+            </tr>
+            </th:block>
+        </table>
+        <!-- Add new tag section -->
+        <h4>Create New Tag</h4>
+        <div>
+            <label for="newTagType">Tag Type:</label>
+            <select id="newTagType">
+                <option value="instrument">Instrument</option>
+                <option value="mood">Mood</option>
+                <option value="genre">Genre</option>
+            </select>
+            <input type="text" id="newTagName" placeholder="New tag name" />
+            <button onclick="createNewTag()">Add Tag</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

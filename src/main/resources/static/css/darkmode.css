@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*
+=======
+/*      
+>>>>>>> feature/kyoung
 
     모든 다크모드는 해당 파일에 작성할것
 
@@ -15,7 +19,11 @@
 
     작성 양식 -> 클래스이름.dark-mode{}
     하위 요소 특정해서 지정해야 할때 예) 이미지 파일에만 적용해야 할 경우 -> 클래스이름.dark-mode .클래스이름 img{}
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> feature/kyoung
 */
 
 
@@ -41,7 +49,11 @@
 
 .sidebar.dark-mode .sidebar-item > img{
     filter: invert(100%);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> feature/kyoung
 }
 
 

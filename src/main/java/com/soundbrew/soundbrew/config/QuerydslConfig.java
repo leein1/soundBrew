@@ -15,6 +15,10 @@ public class QuerydslConfig {
 
     @Bean
     public JPAQueryFactory jpaQueryFactory() {
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/kyoung
         return new JPAQueryFactory(entityManager);
     }
 }

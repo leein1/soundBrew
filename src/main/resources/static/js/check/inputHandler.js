@@ -115,10 +115,13 @@ export function inputHandler(input, form) {
 
     Object.keys(flatInput).forEach((flatKey) => {
         let value = flatInput[flatKey];
+<<<<<<< HEAD
         console.log(flatKey);
         console.log(value);
         console.log(validationRules[flatKey]);
 
+=======
+>>>>>>> feature/kyoung
 
         // 처리 규칙 적용
         value = inputProcessor(flatKey, value, processingRules);
@@ -143,6 +146,17 @@ export function inputHandler(input, form) {
         // 수정된 부분: firstErrorField 그대로 사용
         const firstErrorFieldOriginal = firstErrorField;
 
+<<<<<<< HEAD
+=======
+//        const form = document.getElementById('myForm'); // form id가 'myForm'일 경우
+//        if (form instanceof HTMLFormElement) {
+//            const fieldWithError = form.querySelector(`[name="${firstErrorFieldOriginal}"]`);
+//            if (fieldWithError) {
+//                fieldWithError.focus();
+//            }
+
+        // querySelector를 사용하여 점(.)이 포함된 name을 처리
+>>>>>>> feature/kyoung
         const fieldWithError = form.querySelector(`[name="${firstErrorFieldOriginal}"]`);
         if (fieldWithError) {
             fieldWithError.focus();
@@ -151,6 +165,11 @@ export function inputHandler(input, form) {
         return { errors, processedData: null };
     }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> feature/kyoung
     // 평탄화된 데이터 복구
     const nestedProcessedData = unflattenObject(processedData);
     return { errors: null, processedData: nestedProcessedData };
