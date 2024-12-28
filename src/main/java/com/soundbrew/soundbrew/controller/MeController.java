@@ -185,6 +185,11 @@ public class MeController {
 
        ResponseDTO<String> responseDTO = subscriptionService.addUserSubscription(userId, subscriptionId);
 
+       //유저 아이디 검색
+        // 구독제 검색
+        //유저 정보에 구독제 정보를 업데인트
+        // 크레딧 연산
+
         return ResponseEntity.ok().body(responseDTO);
     }
 
