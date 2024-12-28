@@ -1,11 +1,6 @@
 document.querySelector('.menu').addEventListener('click', function() {
     var sidebar = document.querySelector('.sidebar');
-    var menuIcon = document.querySelector('.menu-icon');
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> feature/kyoung
+    var menuIcon = document.querySelector('.menu-icon');s
     sidebar.classList.toggle('expanded');
 
     if (sidebar.classList.contains('expanded')) {
@@ -14,15 +9,10 @@ document.querySelector('.menu').addEventListener('click', function() {
         menuIcon.src = '../images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
     }
 });
-<<<<<<< HEAD
 
 // 모바일 환경에서 navigation-menu 클릭 시 sidebar 확장
 document.querySelector('.navigation-menu').addEventListener('click', function() {
-=======
- 
- // 모바일 환경에서 navigation-menu 클릭 시 sidebar 확장
- document.querySelector('.navigation-menu').addEventListener('click', function() {
->>>>>>> feature/kyoung
+
     var sidebar = document.querySelector('.sidebar');
     var menuIcon = document.querySelector('.menu-icon');
 

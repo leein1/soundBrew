@@ -11,20 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.classList.toggle('dark-mode');
         musicPlayer.classList.toggle('dark-mode');
         navigation.classList.toggle('dark-mode');
-
-<<<<<<< HEAD
-        // 로컬 스토리지에 현재 다크 모드 상태를 저장
+                // 로컬 스토리지에 현재 다크 모드 상태를 저장
         const isDarkMode = document.body.classList.contains('dark-mode');
         localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
     }
 
-=======
-         // 로컬 스토리지에 현재 다크 모드 상태를 저장
-         const isDarkMode = document.body.classList.contains('dark-mode');
-         localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-    }
-    
->>>>>>> feature/kyoung
     // 저장된 다크 모드 상태를 확인하여 적용
     const savedDarkMode = localStorage.getItem('darkMode');
     if (savedDarkMode === 'enabled') {

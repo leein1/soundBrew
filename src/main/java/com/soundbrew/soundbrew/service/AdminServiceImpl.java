@@ -1,25 +1,15 @@
 package com.soundbrew.soundbrew.service;
 
-<<<<<<< HEAD
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.UserDTO;
 import com.soundbrew.soundbrew.dto.UserDetailsDTO;
 import com.soundbrew.soundbrew.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-=======
-import com.soundbrew.soundbrew.domain.sound.*;
-import com.soundbrew.soundbrew.dto.RequestDTO;
-import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.sound.*;
-import com.soundbrew.soundbrew.repository.sound.*;
-import lombok.AllArgsConstructor;
->>>>>>> feature/kyoung
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-<<<<<<< HEAD
 
 
 import java.awt.print.PageFormat;
@@ -34,6 +24,16 @@ import java.util.Optional;
 public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
+    private final MeService meService;
+    private final InstrumentTagRepository instrumentTagRepository;
+    private final MoodTagRepository moodTagRepository;
+    private final GenreTagRepository genreTagRepository;
+    private final MusicInstrumentTagRepository musicInstrumentTagRepository;
+    private final MusicMoodTagRepository musicMoodTagRepository;
+    private final MusicGenreTagRepository musicGenreTagRepository;
+    private final AlbumRepository albumRepository;
+    private final MusicRepository musicRepository;
+    private final AlbumMusicRepository albumMusicRepository;
 
     @Override
     public ResponseDTO<UserDetailsDTO> getAlluser(RequestDTO requestDTO) {
@@ -61,35 +61,6 @@ public class AdminServiceImpl implements AdminService {
         return responseDTO;
     }
 
-
-
-
-
-
-
-
-=======
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-@Service
-@AllArgsConstructor
-@Log4j2
-public class AdminServiceImpl implements AdminService {
-    private final MeService meService;
-    private final InstrumentTagRepository instrumentTagRepository;
-    private final MoodTagRepository moodTagRepository;
-    private final GenreTagRepository genreTagRepository;
-    private final MusicInstrumentTagRepository musicInstrumentTagRepository;
-    private final MusicMoodTagRepository musicMoodTagRepository;
-    private final MusicGenreTagRepository musicGenreTagRepository;
-    private final AlbumRepository albumRepository;
-    private final MusicRepository musicRepository;
-    private final AlbumMusicRepository albumMusicRepository;
 
     @Override
     @Transactional
@@ -244,5 +215,4 @@ public class AdminServiceImpl implements AdminService {
         // 임의의 키워드
         return meService.getSoundOne(userId, id);
     }
->>>>>>> feature/kyoung
 }
