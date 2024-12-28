@@ -1,20 +1,9 @@
 package com.soundbrew.soundbrew.controller;
 
-<<<<<<< HEAD
-import com.soundbrew.soundbrew.dto.RequestDTO;
-import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.UserDetailsDTO;
-import com.soundbrew.soundbrew.service.AdminService;
-import com.soundbrew.soundbrew.service.UserService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.apache.coyote.Response;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Log4j2
 public class AdminController {  //  관리자용 컨트롤러
@@ -24,34 +13,31 @@ public class AdminController {  //  관리자용 컨트롤러
      */
 
     private final AdminService adminService;
+    private final AdminServiceImpl adminServiceImpl;
 
     //  모든 유저 조회
     @GetMapping("/users")
     public ResponseEntity<ResponseDTO<UserDetailsDTO>> getAllUsers(RequestDTO requestDTO) {
 
         ResponseDTO responseDTO = adminService.getAlluser(requestDTO);
-=======
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
-import com.soundbrew.soundbrew.dto.RequestDTO;
-import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
-import com.soundbrew.soundbrew.dto.sound.MusicDTO;
-import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
-import com.soundbrew.soundbrew.dto.sound.TagsDTO;
-import com.soundbrew.soundbrew.service.AdminService;
-import com.soundbrew.soundbrew.service.AdminServiceImpl;
-import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseDTO<UserDetailsDTO>> getUserById(@PathVariable int userId) {
 
-import java.util.List;
+       ResponseDTO responseDTO = adminService.getUser(userId);
+       return ResponseEntity.ok().body(responseDTO);
+    }
+    @PatchMapping("/users/{userId}")
+    public ResponseEntity<ResponseDTO<UserDetailsDTO>> updateUser(@PathVariable int userId, @RequestBody UserDetailsDTO userDetailsDTO) {
+        return null;
+    }
 
-@RestController
-@AllArgsConstructor
-@RequestMapping("/api/admin")
-public class AdminController {
-    private final AdminService adminService;
-    private final AdminServiceImpl adminServiceImpl;
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ResponseDTO<String>> deleteUser(@PathVariable int userId) {
+        return null;
+    }
 
     @PostMapping("/tags")
     ResponseEntity<ResponseDTO> createTag(@RequestBody TagsDTO tagsDto){
@@ -120,38 +106,16 @@ public class AdminController {
     @PatchMapping("/albums/{albumId}/verify")
     ResponseEntity<ResponseDTO> updateVerifyAlbum(@PathVariable int albumId){
         ResponseDTO responseDTO = adminService.updateVerifyAlbum(albumId);
->>>>>>> feature/kyoung
-
         return ResponseEntity.ok().body(responseDTO);
     }
 
-<<<<<<< HEAD
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<ResponseDTO<UserDetailsDTO>> getUserById(@PathVariable int userId) {
-
-       ResponseDTO responseDTO = adminService.getUser(userId);
-=======
     @GetMapping("/albums/verify")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> readVerifyAlbum(RequestDTO requestDTO){
         ResponseDTO<SearchTotalResultDTO> responseDTO = adminService.readVerifyAlbum(requestDTO);
->>>>>>> feature/kyoung
 
         return ResponseEntity.ok().body(responseDTO);
     }
 
-<<<<<<< HEAD
-    @PatchMapping("/users/{userId}")
-    public ResponseEntity<ResponseDTO<UserDetailsDTO>> updateUser(@PathVariable int userId, @RequestBody UserDetailsDTO userDetailsDTO) {
-        return null;
-    }
-
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<ResponseDTO<String>> deleteUser(@PathVariable int userId) {
-        return null;
-    }
-
-
-=======
     @GetMapping("/albums/{userId}/{albumId}/verify")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> readVerifyAlbumOne(int userId, int albumId, RequestDTO requestDTO){
         ResponseDTO<SearchTotalResultDTO> responseDTO = adminService.readVerifyAlbumOne(userId,albumId,requestDTO);
@@ -179,5 +143,4 @@ public class AdminController {
 
         return ResponseEntity.ok().body(responseDto);
     }
->>>>>>> feature/kyoung
 }
