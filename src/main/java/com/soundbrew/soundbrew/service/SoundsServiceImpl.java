@@ -54,12 +54,7 @@ public class SoundsServiceImpl implements SoundsService{
 
         log.info(before.get().stream().toList());
 
-        return null;
-//        return  ResponseDTO.<SearchTotalResultDTO>withAll()
-//                .dtoList(before.get().getContent().stream()
-//                        .map(DTOFilteringFactory::hideSearchTotalResultDTO).toList())
-//                .requestDTO(requestDTO)
-//                .build();
+        return  ResponseDTO.<SearchTotalResultDTO>withAll(requestDTO,before.get().stream().toList(),before.get().getSize());
     }
 
     @Override
