@@ -1,7 +1,7 @@
-package com.soundbrew.soundbrew.dto;
+package com.soundbrew.soundbrew.dto.user;
 
-import com.soundbrew.soundbrew.domain.UserRole;
-import com.soundbrew.soundbrew.domain.UserRoleId;
+import com.soundbrew.soundbrew.domain.user.UserRole;
+import com.soundbrew.soundbrew.domain.user.UserRoleId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

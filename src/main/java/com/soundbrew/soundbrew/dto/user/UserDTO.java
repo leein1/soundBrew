@@ -1,20 +1,17 @@
-package com.soundbrew.soundbrew.dto;
+package com.soundbrew.soundbrew.dto.user;
 
-import com.soundbrew.soundbrew.domain.BaseEntity;
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.User;
+import com.soundbrew.soundbrew.dto.BaseDTO;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO extends BaseDTO{
+public class UserDTO extends BaseDTO {
 
     public int userId;
 

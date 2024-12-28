@@ -2,13 +2,12 @@ package com.soundbrew.soundbrew.controller;
 
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.SubscriptionDTO;
-import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.service.MeService;
 import com.soundbrew.soundbrew.service.SubscriptionService;
 import com.soundbrew.soundbrew.service.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;

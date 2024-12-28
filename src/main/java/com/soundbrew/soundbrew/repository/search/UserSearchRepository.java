@@ -2,10 +2,9 @@ package com.soundbrew.soundbrew.repository.search;
 
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.UserDTO;
-import com.soundbrew.soundbrew.dto.UserDetailsDTO;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
+import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 

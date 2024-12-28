@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.domain;
 
+import com.soundbrew.soundbrew.domain.user.User;
 import lombok.*;
-import org.hibernate.annotations.ManyToAny;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

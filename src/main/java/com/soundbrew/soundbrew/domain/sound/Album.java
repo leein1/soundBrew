@@ -1,7 +1,6 @@
 package com.soundbrew.soundbrew.domain.sound;
 
 import com.soundbrew.soundbrew.domain.BaseEntity;
-import com.soundbrew.soundbrew.domain.User;
 import lombok.*;
 
 import javax.persistence.*;

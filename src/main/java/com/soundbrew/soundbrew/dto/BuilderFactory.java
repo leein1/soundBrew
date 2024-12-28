@@ -1,6 +1,6 @@
 package com.soundbrew.soundbrew.dto;
 
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.domain.sound.*;
 
 public class BuilderFactory {

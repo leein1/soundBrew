@@ -1,34 +1,23 @@
 package com.soundbrew.soundbrew.service;
 
 
-import com.soundbrew.soundbrew.domain.ActivationCode;
-import com.soundbrew.soundbrew.domain.User;
-import com.soundbrew.soundbrew.dto.ActivationCodeDTO;
+import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.UserDTO;
-import com.soundbrew.soundbrew.repository.ActivationCodeRepository;
-import com.soundbrew.soundbrew.repository.SubscriptionRepository;
-import com.soundbrew.soundbrew.repository.UserRepository;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
+import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.service.util.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static com.soundbrew.soundbrew.dto.ResponseDTO.withAll;
 
 @Service
 @Log4j2

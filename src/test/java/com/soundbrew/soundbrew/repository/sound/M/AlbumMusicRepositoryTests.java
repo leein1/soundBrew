@@ -1,11 +1,11 @@
 package com.soundbrew.soundbrew.repository.sound.M;
 
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.domain.sound.Album;
 import com.soundbrew.soundbrew.domain.sound.AlbumMusic;
 import com.soundbrew.soundbrew.domain.sound.AlbumMusicId;
 import com.soundbrew.soundbrew.domain.sound.Music;
-import com.soundbrew.soundbrew.repository.UserRepository;
+import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.repository.sound.AlbumMusicRepository;
 import com.soundbrew.soundbrew.repository.sound.AlbumRepository;
 import com.soundbrew.soundbrew.repository.sound.MusicRepository;

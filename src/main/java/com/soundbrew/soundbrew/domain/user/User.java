@@ -1,14 +1,10 @@
-package com.soundbrew.soundbrew.domain;
+package com.soundbrew.soundbrew.domain.user;
 
-import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.domain.BaseEntity;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Builder

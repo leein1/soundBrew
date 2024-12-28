@@ -1,10 +1,11 @@
 package com.soundbrew.soundbrew.repository;
 
-import com.soundbrew.soundbrew.domain.Subscription;
+import com.soundbrew.soundbrew.domain.user.Subscription;
 <<<<<<< HEAD
-import com.soundbrew.soundbrew.domain.SubscriptionType;
+import com.soundbrew.soundbrew.domain.user.SubscriptionType;
 =======
 >>>>>>> feature/kyoung
+import com.soundbrew.soundbrew.repository.user.SubscriptionRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

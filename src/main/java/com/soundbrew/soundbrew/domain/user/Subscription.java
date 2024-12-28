@@ -1,11 +1,9 @@
-package com.soundbrew.soundbrew.domain;
+package com.soundbrew.soundbrew.domain.user;
 
+import com.soundbrew.soundbrew.domain.BaseEntity;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import net.bytebuddy.implementation.bind.annotation.Super;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Builder

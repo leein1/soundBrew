@@ -1,12 +1,12 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.ActivationCode;
-import com.soundbrew.soundbrew.domain.User;
+import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.dto.ActivationCodeDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.UserDTO;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.repository.ActivationCodeRepository;
-import com.soundbrew.soundbrew.repository.UserRepository;
+import com.soundbrew.soundbrew.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

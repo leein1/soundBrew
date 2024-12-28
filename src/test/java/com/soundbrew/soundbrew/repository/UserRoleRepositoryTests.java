@@ -1,12 +1,10 @@
 package com.soundbrew.soundbrew.repository;
 
 <<<<<<< HEAD
-import com.soundbrew.soundbrew.domain.Role;
-import com.soundbrew.soundbrew.domain.User;
-import com.soundbrew.soundbrew.domain.UserRole;
-import com.soundbrew.soundbrew.domain.UserRoleId;
+import com.soundbrew.soundbrew.domain.user.UserRole;
+import com.soundbrew.soundbrew.domain.user.UserRoleId;
+import com.soundbrew.soundbrew.repository.user.UserRoleRepository;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,14 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 =======
-import com.soundbrew.soundbrew.domain.UserRole;
-import com.soundbrew.soundbrew.domain.UserRoleId;
-import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 >>>>>>> feature/kyoung
 
 @SpringBootTest

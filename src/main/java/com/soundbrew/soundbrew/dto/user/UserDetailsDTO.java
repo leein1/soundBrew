@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.dto;
+package com.soundbrew.soundbrew.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

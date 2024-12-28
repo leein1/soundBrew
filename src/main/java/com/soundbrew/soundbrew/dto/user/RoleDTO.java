@@ -1,9 +1,7 @@
-package com.soundbrew.soundbrew.dto;
+package com.soundbrew.soundbrew.dto.user;
 
-import com.soundbrew.soundbrew.domain.Role;
+import com.soundbrew.soundbrew.domain.user.Role;
 import lombok.*;
-
-import javax.persistence.*;
 
 @Data
 @Builder

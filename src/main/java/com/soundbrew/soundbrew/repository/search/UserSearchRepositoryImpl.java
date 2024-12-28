@@ -6,17 +6,17 @@ import com.soundbrew.soundbrew.domain.QUser;
 import com.soundbrew.soundbrew.domain.QUserRole;
 import com.soundbrew.soundbrew.domain.QUserSubscription;
 import com.soundbrew.soundbrew.dto.*;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
+import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
+import com.soundbrew.soundbrew.dto.user.UserRoleDTO;
+import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-import javax.persistence.NamedStoredProcedureQueries;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserSearchRepositoryImpl implements UserSearchRepository {

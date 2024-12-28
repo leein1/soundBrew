@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.repository;
 
-import com.soundbrew.soundbrew.domain.UserSubscription;
+import com.soundbrew.soundbrew.domain.user.UserSubscription;
+import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

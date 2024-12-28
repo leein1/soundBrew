@@ -1,11 +1,10 @@
-package com.soundbrew.soundbrew.dto;
+package com.soundbrew.soundbrew.dto.user;
 
-import com.soundbrew.soundbrew.domain.BaseEntity;
-import com.soundbrew.soundbrew.domain.UserSubscription;
+import com.soundbrew.soundbrew.domain.user.UserSubscription;
+import com.soundbrew.soundbrew.dto.BaseDTO;
 import lombok.*;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
