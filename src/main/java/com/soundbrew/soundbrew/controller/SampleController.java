@@ -42,7 +42,7 @@ public class SampleController {
 
     @GetMapping("/sounds/tracks/one")
     public String getTracksOne(){
-        return "/sound/track";
+        return "/sound/music-one";
     }
 
     @GetMapping("/sounds/albums/one")

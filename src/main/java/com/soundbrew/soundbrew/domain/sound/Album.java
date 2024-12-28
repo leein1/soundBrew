@@ -34,6 +34,8 @@ public class Album extends BaseEntity {
     @Column(length = 500)
     private String description;
 
+    @Column(length = 1)
+    private int verify;
 //    @ManyToOne
 //    @JoinColumn(name = "userId", nullable = false, insertable = false, updatable = false) // userId와 User의 관계 설정
 //    private User user;  // User와의 관계를 설정
@@ -46,4 +48,7 @@ public class Album extends BaseEntity {
         this.description = description;
     }
 
+    public void verify(int verify){
+        this.verify= verify;
+    }
 }

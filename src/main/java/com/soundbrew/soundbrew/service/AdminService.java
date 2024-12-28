@@ -1,7 +1,9 @@
 package com.soundbrew.soundbrew.service;
 
+import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -15,4 +17,8 @@ public interface AdminService {
 
     ResponseDTO deleteAlbum(int albumId);
     ResponseDTO deleteMusic(int musicId);
+
+    ResponseDTO updateVerifyAlbum(int albumId);
+    ResponseDTO<SearchTotalResultDTO> readVerifyAlbum(RequestDTO requestDTO);
+    ResponseDTO<SearchTotalResultDTO> readVerifyAlbumOne(int userId, int id, RequestDTO requestDTO);
 }

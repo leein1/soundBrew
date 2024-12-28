@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.controller;
 
 
+import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
 import com.soundbrew.soundbrew.dto.sound.MusicDTO;
@@ -83,6 +84,27 @@ public class AdminController {
         ResponseDTO responseDto = adminServiceImpl.updateAlbum(albumId,albumDto);
 
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    @PatchMapping("/albums/{albumId}/verify")
+    ResponseEntity<ResponseDTO> updateVerifyAlbum(@PathVariable int albumId){
+        ResponseDTO responseDTO = adminService.updateVerifyAlbum(albumId);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/albums/verify")
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> readVerifyAlbum(RequestDTO requestDTO){
+        ResponseDTO<SearchTotalResultDTO> responseDTO = adminService.readVerifyAlbum(requestDTO);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/albums/{userId}/{albumId}/verify")
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> readVerifyAlbumOne(int userId, int albumId, RequestDTO requestDTO){
+        ResponseDTO<SearchTotalResultDTO> responseDTO = adminService.readVerifyAlbumOne(userId,albumId,requestDTO);
+
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @PatchMapping("/tracks/{musicId}")

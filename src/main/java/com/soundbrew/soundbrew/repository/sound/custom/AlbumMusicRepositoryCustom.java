@@ -14,4 +14,6 @@ public interface AlbumMusicRepositoryCustom {
     Optional<Page<SearchTotalResultDTO>> albumOne(String nickname, String albumName, RequestDTO requestDTO);
     Optional<Page<SearchTotalResultDTO>> albumOne(int userId, int id, RequestDTO requestDTO);
 
+    Optional<Page<SearchTotalResultDTO>> verifyAlbumOne(int userId, int id, RequestDTO requestDTO);
+    Optional<Page<SearchTotalResultDTO>> verifyAlbum(RequestDTO requestDTO);
 }

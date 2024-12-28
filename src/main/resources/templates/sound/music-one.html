@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sound Page</title>
-    <link th:href="@{/css/sound.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/sound.css}" rel="stylesheet">
 </head>
 <body>
 <div layout:fragment="content">
@@ -16,7 +16,6 @@
 </div>
 </body>
 <th:block layout:fragment="script">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
         import { axiosGet, axiosPost, axiosPut, axiosDelete } from '/js/fetch/standardAxios.js';
         import { inputProcessor, inputValidator, inputHandler } from '/js/check/inputHandler.js';

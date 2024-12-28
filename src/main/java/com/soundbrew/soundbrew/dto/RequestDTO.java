@@ -56,15 +56,15 @@ public class RequestDTO {
                 }
             }
 
-            if (more != null && !more.isEmpty()) {
-                more.forEach((key, value) -> {
-                    try {
-                        builder.append("&more%5B" + URLEncoder.encode(key, "UTF-8") + "%5D=" + URLEncoder.encode(value, "UTF-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
+//            if (more != null && !more.isEmpty()) {
+//                more.forEach((key, value) -> {
+//                    try {
+//                        builder.append("&more%5B" + URLEncoder.encode(key, "UTF-8") + "%5D=" + URLEncoder.encode(value, "UTF-8"));
+//                    } catch (UnsupportedEncodingException e) {
+//                        e.printStackTrace();
+//                    }
+//                });
+//            }
 
             link = builder.toString();
         }

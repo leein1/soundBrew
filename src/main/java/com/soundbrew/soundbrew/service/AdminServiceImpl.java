@@ -1,14 +1,18 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.sound.*;
+import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.sound.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +30,7 @@ public class AdminServiceImpl implements AdminService {
     private final MusicGenreTagRepository musicGenreTagRepository;
     private final AlbumRepository albumRepository;
     private final MusicRepository musicRepository;
+    private final AlbumMusicRepository albumMusicRepository;
 
     @Override
     @Transactional
@@ -123,6 +128,34 @@ public class AdminServiceImpl implements AdminService {
         return ResponseDTO.withMessage().message("삭제가 정상적으로 처리되었습니다.").build();
     }
 
+    @Override
+    @Transactional
+    public ResponseDTO updateVerifyAlbum(int albumId) {
+        Album album = albumRepository.findById(albumId).orElseThrow();
+
+        album.verify(1);
+        return ResponseDTO.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
+    }
+
+    @Override
+    public ResponseDTO<SearchTotalResultDTO> readVerifyAlbum(RequestDTO requestDTO){
+        Optional<Page<SearchTotalResultDTO>> before = albumMusicRepository.verifyAlbum(requestDTO);
+        if(before.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
+
+        return  ResponseDTO.<SearchTotalResultDTO>withAll()
+                .dtoList(before.get().getContent().stream().toList())
+                .requestDTO(requestDTO)
+                .build();
+    }
+
+    @Override
+    public ResponseDTO<SearchTotalResultDTO> readVerifyAlbumOne(int userId, int id, RequestDTO requestDTO){
+        Optional<Page<SearchTotalResultDTO>> albumOne = albumMusicRepository.verifyAlbumOne(userId,id, requestDTO);
+        if(albumOne.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>withMessage().message("찾으시는 앨범이 없습니다.").build();
+
+        return ResponseDTO.<SearchTotalResultDTO>withAll().total((int) albumOne.get().getTotalElements()).requestDTO(requestDTO).dtoList(albumOne.get().getContent()).build();
+    }
+
     @Transactional
     public ResponseDTO updateLinkTags(int musicId, TagsDTO tagsDTO) {
        return meService.updateLinkTags(musicId,tagsDTO);
@@ -140,7 +173,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Transactional
     public ResponseDTO updateMusic(int musicId, MusicDTO musicDTO) {
-        //verify도 수정가능해야함.
        return  meService.updateMusic(musicId, musicDTO);
     }
 

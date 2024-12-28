@@ -158,6 +158,11 @@
     display: block;
 }
 
+.music-sort-menu li.active {
+    font-weight: bold;
+    color: #007bff; /* 강조 색상 */
+}
+
 .music-tag-sort-list{
     display: flex;
     justify-content: left;
@@ -206,6 +211,22 @@
     flex-wrap: wrap;
     opacity: 0; /* 초기 상태 */
     animation: fadeIn 0.3s forwards; /* 애니메이션 적용 */
+    margin: 10px 0;
+
+}
+.tag-item {
+    border-radius: 4px;
+    margin: 5px;
+}
+
+.tag-item.active {
+    font-weight: bold;
+    color: #007bff;
+    order: -1;
+}
+
+.hidden {
+    display: none;
 }
 
 .tag {

@@ -61,12 +61,11 @@ public class SoundController {
     @GetMapping("/tracks")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalSoundSearch(@ModelAttribute RequestDTO requestDto) {
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.totalSoundSearch(requestDto);
-
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalAlbumSearch(RequestDTO requestDto) {
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalAlbumSearch(@ModelAttribute RequestDTO requestDto) {
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.totalAlbumSearch(requestDto);
 
         return  ResponseEntity.ok().body(responseDto);

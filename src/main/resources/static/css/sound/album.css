@@ -29,6 +29,12 @@
     max-width: 250px; /* 최대 크기를 300px로 제한 */
     margin: 0 auto; /* 가운데 정렬 */
 }
+/* 호버 시 스타일 */
+.list-album-item:hover {
+    background-color: #f4f4f4; /* 배경색 변화 */
+    transform: scale(1.02); /* 살짝 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+}
 
 .list-album-image {
     width: 100%;

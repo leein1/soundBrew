@@ -15,17 +15,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+    private final QMusic music = QMusic.music;
+    private final QMusicInstrumentTag musicInstrumentTag =QMusicInstrumentTag.musicInstrumentTag;
+    private final QInstrumentTag instrumentTag = QInstrumentTag.instrumentTag;
+    private final QMusicMoodTag musicMoodTag = QMusicMoodTag.musicMoodTag;
+    private final QMoodTag moodTag = QMoodTag.moodTag;
+    private final QMusicGenreTag musicGenreTag = QMusicGenreTag.musicGenreTag;
+    private final QGenreTag genreTag = QGenreTag.genreTag;
 
     @Override
     public Optional<SearchTotalResultDTO> soundOne(String nickname, String title) {
-        QMusic music = QMusic.music;
-        QMusicInstrumentTag musicInstrumentTag =QMusicInstrumentTag.musicInstrumentTag;
-        QInstrumentTag instrumentTag = QInstrumentTag.instrumentTag;
-        QMusicMoodTag musicMoodTag = QMusicMoodTag.musicMoodTag;
-        QMoodTag moodTag = QMoodTag.moodTag;
-        QMusicGenreTag musicGenreTag = QMusicGenreTag.musicGenreTag;
-        QGenreTag genreTag = QGenreTag.genreTag;
-
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(music.nickname.eq(nickname));
         builder.and(music.title.eq(title));
@@ -59,14 +58,6 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
 
     @Override
     public Optional<SearchTotalResultDTO> soundOne(int userId, int musicId) {
-        QMusic music = QMusic.music;
-        QMusicInstrumentTag musicInstrumentTag =QMusicInstrumentTag.musicInstrumentTag;
-        QInstrumentTag instrumentTag = QInstrumentTag.instrumentTag;
-        QMusicMoodTag musicMoodTag = QMusicMoodTag.musicMoodTag;
-        QMoodTag moodTag = QMoodTag.moodTag;
-        QMusicGenreTag musicGenreTag = QMusicGenreTag.musicGenreTag;
-        QGenreTag genreTag = QGenreTag.genreTag;
-
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(music.userId.eq(userId));
         builder.and(music.musicId.eq(musicId));

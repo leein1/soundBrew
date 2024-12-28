@@ -45,15 +45,14 @@ export function renderTagsFromSearch(data) {
 export function renderSoundOne(data, data2){
     const container = document.getElementById("render-sound-one-container");
     container.innerHTML = '';
-
+    console.log(data);
     const html = `
         <div class="content-header-info">
             <img class="sound-image" src="${data.albumArtPath}" alt="sound Image">
             <div class="sound-info">
-                <div class="sound-title font-size-large">${data.musicTitle}</div>
+                <div class="sound-title font-size-large">${data.musicDTO.title}</div>
                 <div class="artist-name font-size-medium">
-                    <span>Album</span> <a href="/album/go" class="album-link">${data.musicTitle}</a>,
-                    <span>Artist</span> <a href="/artist/jonsi" class="artist-link">${data.nickname}</a>
+                    <span>Artist</span> <a href="/artist/jonsi" class="artist-link">${data.musicDTO.nickname}</a>
                 </div>
                 <div class="sound-info-reaction">
                     <button class="btn sound-btn">Play sound</button>
@@ -95,9 +94,9 @@ export function renderAlbumOne(data){
 
     const html = `
         <div class="content-header-info">
-            <img class="sound-image" src="${data.dtoList[0].albumArtPath}" alt="sound Image">
+            <img class="sound-image" src="${data.dtoList[0].albumDTO.albumArtPath}" alt="sound Image">
             <div class="sound-info">
-                <span>Artist</span><div class="sound-title font-size-large">${data.dtoList[0].nickname}</div>
+                <span>Artist</span><div class="sound-title font-size-large">${data.dtoList[0].albumDTO.nickname}</div>
                 <div class="artist-name font-size-medium">
                 </div>
                 <div class="sound-info-reaction">
@@ -109,7 +108,7 @@ export function renderAlbumOne(data){
         </div>
         <div class="album-info-text">
             <p class="album-description">
-                ${data.dtoList[0].albumDescription}
+                ${data.dtoList[0].albumDTO.description}
             </p>
         </div>
     `;
@@ -128,24 +127,24 @@ export function renderTotalSounds(data) {
 
         musicItem.innerHTML = `
             <div class="music-item-left">
-                <img alt="앨범 이미지" class="music-album-img" src="${sound.albumArtPath}">
+                <img alt="앨범 이미지" class="music-album-img" src="${sound.albumDTO.albumArtPath}">
                 <div class="music-play-btn">
                     <img src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                 </div>
                 <div class="music-info">
-                    <h3>${sound.albumName}</h3>
-                    <p>${sound.musicTitle}</p>
+                    <h3>${sound.albumDTO.albumName}</h3>
+                    <p>${sound.musicDTO.title}</p>
                 </div>
                 <div class="music-info-time">
-                    <p>${sound.musicDuration || '0:00'}</p>
+                    <p>${sound.musicDTO.musicDuration || '0:00'}</p>
                 </div>
             </div>
 
             <div class="music-item-center">
                 <div class="music-info-tag">
-                    <span>${sound.instrumentTagName || '기타'}</span>
-                    <span>${sound.moodTagName || '없음'}</span>
-                    <span>${sound.genreTagName || '기타'}</span>
+                    <span>${sound.tagsStreamDTO.instrumentTagName || '기타'}</span>
+                    <span>${sound.tagsStreamDTO.moodTagName || '없음'}</span>
+                    <span>${sound.tagsStreamDTO.genreTagName || '기타'}</span>
                 </div>
             </div>
 
@@ -177,9 +176,9 @@ export function renderSort() {
             <!-- 정렬 드롭다운 -->
             <div class="music-sort-menu" id="musicSortMenu">
                 <ul>
-                    <li data-sort="download">다운로드순</li>
-                    <li data-sort="name">이름순</li>
-                    <li data-sort="length">길이순</li>
+                    <li data-sort="newest">Newest</li>
+                    <li data-sort="oldest">Oldest</li>
+                    <li data-sort="download">Download</li>
                 </ul>
             </div>
         </div>
@@ -318,13 +317,13 @@ export function renderTotalAlbums(data) {
     const albumListHTML = `
         <div class="list-albums">
             <h2 class="list-albums-title">${data.length}개의 검색결과</h2>
-            <h1 class="list-albums-title">정렬 : 다운로드 순</h1>
+            <h1 class="list-albums-title">Album Pack Search</h1>
             <div class="list-albums-list">
                 ${data.map(album => `
-                    <div class="list-album-item">
-                        <img class="list-album-image" src="${album.albumArtPat || '/images/sample-album-imge.png'}" alt="Album Image">
-                        <div class="list-album-name">${album.albumName}</div>
-                        <div class="list-album-artist">${album.nickname}</div>
+                    <div class="list-album-item" data-album-name="${album.albumDTO.albumName}" data-nickname="${album.albumDTO.nickname}">
+                        <img class="list-album-image" src="${album.albumDTO.albumArtPat || '/images/sample-album-imge.png'}" alt="Album Image">
+                        <div class="list-album-name">${album.albumDTO.albumName}</div>
+                        <div class="list-album-artist">${album.albumDTO.nickname}</div>
                     </div>
                 `).join('')}
             </div>
