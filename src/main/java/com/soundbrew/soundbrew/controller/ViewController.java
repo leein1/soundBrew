@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.controller;
 
+import com.soundbrew.soundbrew.dto.RequestDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,4 +28,14 @@ public class ViewController {
 
     @GetMapping("/admin")
     public void adminMain(){}
+
+    @GetMapping("/search")
+    public String getSearch(RequestDTO requestDTO) {
+
+
+        String link = requestDTO.getLink();
+
+        return "redirect:/search" + link;
+
+    }
 }

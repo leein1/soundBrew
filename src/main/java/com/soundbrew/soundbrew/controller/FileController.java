@@ -32,7 +32,7 @@ public class FileController {
 
 
     //
-    @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/music",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(// 추후 토큰 사용
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title) {
@@ -82,9 +82,8 @@ public class FileController {
 //
 //    }
 
-    @GetMapping("/download/{filename}")
-    public ResponseEntity<Resource> downloadFile(
-            @PathVariable String filename) throws IOException {// 추후 토큰 사용
+    @GetMapping("/music/{filename}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {// 추후 토큰 사용
 
         try {
             Resource resource = fileService.downloadFile(filename);
@@ -144,7 +143,23 @@ public class FileController {
         }
     }
 
+    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadProfile(@RequestParam MultipartFile file, @RequestParam int userId) throws IOException {
 
+        fileService.uploadProfileImage(file, Integer.toString(userId));
+
+        return null;
+    }
+
+    @GetMapping("/profile/{userId}")
+    public Resource getProfile(@PathVariable String userId){
+        return null;
+    }
+
+    @DeleteMapping("/profile/{userId}")
+    public ResponseEntity<String> deleteProfile(@PathVariable String userId){
+        return null;
+    }
 
 
 }

@@ -125,9 +125,9 @@ public class MeController {
 //    내 정보 보기 - GET /me/{userId}
 //    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
     @GetMapping(value = "")
-    public ResponseEntity<ResponseDTO<UserDTO>> getMe(@RequestParam("nickname") String nickname) {   //추후 토큰에서 user nickname 추출 해야 함
+    public ResponseEntity<ResponseDTO<UserDTO>> getMe() {   //추후 토큰에서 user nickname 추출 해야 함
 
-        ResponseDTO<UserDTO> responseDTO = userService.getUserByNickname(nickname);
+        ResponseDTO<UserDTO> responseDTO = userService.getUserByNickname("gmail");
 
         return ResponseEntity.ok().body(responseDTO);
     }

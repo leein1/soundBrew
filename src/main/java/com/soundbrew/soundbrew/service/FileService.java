@@ -9,6 +9,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
@@ -29,7 +30,11 @@ public class FileService {
     private final FileProperties fileProperties;
     private final MusicFileRepository repository;
 
+    //  파일 경로 새로 지정해주어야 함 - 현재 테스트용으로 되는대로 작성함
     private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "upload");
+    private final Path profileImageDir = uploadDir.resolve("profile-images");
+
+
 
 
     //  업로드 (mp3,wav 확장자만 지원)
@@ -127,6 +132,43 @@ public class FileService {
             byte[] data = new byte[(int) (end - start + 1)];
             file.readFully(data);
             return data;
+        }
+    }
+
+    // 프로필 이미지 업로드
+    public String uploadProfileImage(MultipartFile file, String userId) throws IOException {
+        String filename = file.getOriginalFilename();
+        String extension = filename.substring(filename.lastIndexOf(".")).toLowerCase();
+
+        if (filename == null || !(extension.equals(".jpg") || extension.equals(".jpeg") || extension.equals(".png"))) {
+            throw new IllegalArgumentException("지원하지 않는 이미지 형식: " + extension);
+        }
+
+        if (!Files.exists(profileImageDir)) {
+            Files.createDirectories(profileImageDir);
+        }
+
+        String uniqueFilename = userId + extension;
+        Path destinationPath = profileImageDir.resolve(uniqueFilename);
+        Files.copy(file.getInputStream(), destinationPath);
+
+        return uniqueFilename;
+    }
+
+    // 프로필 이미지 출력
+    public Resource getProfileImage(String userId) throws IOException {
+        Path imagePath = profileImageDir.resolve(userId + ".jpg");
+        if (!Files.exists(imagePath)) {
+            throw new FileNotFoundException("프로필 이미지가 존재하지 않습니다: " + userId);
+        }
+        return new ByteArrayResource(Files.readAllBytes(imagePath));
+    }
+
+    // 프로필 이미지 삭제
+    public void deleteProfileImage(String userId) throws IOException {
+        Path imagePath = profileImageDir.resolve(userId + ".jpg");
+        if (Files.exists(imagePath)) {
+            Files.delete(imagePath);
         }
     }
 

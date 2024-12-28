@@ -13,8 +13,10 @@
         내 정보
     </div>
 
-    <div class="content-body">
-        <form class="register-form">
+    <div id ="content-body" class="content-body">
+
+
+        <form id="mhyInfo-form" class="myInfo-form">
             <div class="input-group">
                 <label for="email">이메일:</label>
                 <div class="input-with-button">
@@ -74,9 +76,75 @@
     </div>
 </div>
 </body>
-<script layout:fragment="script" th:inline="javascript">
-    console.log("loaded script..");
+<!--<script type="module" layout:fragment="script" th:inline="javascript">-->
+<th:block layout:fragment="script">
+
+<script type="module">
+    console.log("loaded myInfo script..");
+
+    import { axiosGet } from '/js/fetch/standardAxios.js';
+
+
+    document.addEventListener("DOMContentLoaded", async() =>{
+
+        const response = await axiosGet({endpoint:"/api/me"});
+
+        console.log(response);
+
+        renderMyInfo(response);
+
+
+
+        function renderMyInfo(response) {
+            const container = document.getElementById("mhyInfo-form");
+            container.innerHTML = "";
+            const html = `
+                <div class="input-group">
+                    <label for="email">이메일:</label>
+                    <div class="input-with-button">
+                        <input type="email" id="email" name="email" value="${response.dto.email}" readonly>
+
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="name">이름:</label>
+                    <div class="input-with-button">
+                        <input type="text" id="name" name="name" readonly>
+
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="nickname">닉네임:</label>
+                    <div class="input-with-button">
+                        <input type="text" id="nickname" name="nickname" readonly>
+
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">비밀번호:</label>
+                    <input type="password" id="password" name="password" readonly>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">전화번호</label>
+                    <input type="text" name="phonenumber" id="phonenumber" readonly>
+                </div>
+
+                <div class="input-group">
+                    <label for="birth">생일:</label>
+                    <input type="date" id="birth" name="birth" readonly>
+                </div>
+        `;
+
+            container.innerHTML = html;
+        }
+    })
+
 </script>
+</th:block>
 </html>
 
 
