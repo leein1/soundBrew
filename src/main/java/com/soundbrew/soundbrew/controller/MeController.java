@@ -1,34 +1,17 @@
 package com.soundbrew.soundbrew.controller;
 
-<<<<<<< HEAD
-
-import com.soundbrew.soundbrew.dto.RequestDTO;
-import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.SubscriptionDTO;
-import com.soundbrew.soundbrew.dto.UserDTO;
-import com.soundbrew.soundbrew.service.SubscriptionService;
-import com.soundbrew.soundbrew.service.UserService;
-import lombok.RequiredArgsConstructor;
-=======
-import com.soundbrew.soundbrew.dto.RequestDTO;
-import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.sound.*;
-import com.soundbrew.soundbrew.service.MeService;
-import lombok.AllArgsConstructor;
->>>>>>> feature/kyoung
-import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 @RestController
 <<<<<<< HEAD
 @RequestMapping("/api/me")
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Log4j2
+
 public class MeController {
 
     private final UserService userService;
     private final SubscriptionService subscriptionService;
+    private final MeService meService;
 
 
 //    @GetMapping("/list")
@@ -288,13 +271,6 @@ public class MeController {
 
         return null;
     }
-
-=======
-@AllArgsConstructor
-@RequestMapping("/api/me")
-@Log4j2
-public class MeController {
-    private final MeService meService;
 
     @PostMapping("/tracks/{musicId}/tags")
     ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDTO tagsDto){
