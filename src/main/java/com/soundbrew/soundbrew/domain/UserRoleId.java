@@ -2,14 +2,7 @@ package com.soundbrew.soundbrew.domain;
 
 import lombok.*;
 
-<<<<<<< HEAD
 import javax.persistence.*;
-=======
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Id;
->>>>>>> feature/kyoung
 import java.io.Serializable;
 
 @Getter
@@ -23,7 +16,6 @@ public class UserRoleId implements Serializable {
 //
 //    복합키를 위한 클래스라 클래스명 끝에 Id 붙임
 //    @Embeddable , @EqualsAndhashCode 구현해야함
-<<<<<<< HEAD
 
     private int roleId;
 
@@ -36,11 +28,6 @@ public class UserRoleId implements Serializable {
 //        this.userId = userId;
 //
 //    }
-=======
-    private int role_id;
-
-    private int user_id;
->>>>>>> feature/kyoung
 
 
 }
