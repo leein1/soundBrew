@@ -115,11 +115,6 @@ public class MeController {
 
 
 //    @ApiOperation(value = "리퀘스트 테스트",notes = "more 필드 받는거확인")
-    @GetMapping("/test")
-    public ResponseEntity<ResponseDTO> test(@ModelAttribute RequestDTO requestDTO){
-
-        return null;
-    }
 
 
 
@@ -197,26 +192,12 @@ public class MeController {
 
 //    구독제 정보 수정 PATCH /me/subscription
 //    @ApiOperation(value = "subscription PATCH", notes = "PATCH 유저의 구독제 변경")
-    @PatchMapping("/subscription/{subscriptionId}")
-    public ResponseEntity updateSubscription(@PathVariable int subscriptionId,@RequestParam int userId){    //추후 토큰으로 변경
 
-
-
-
-
-        return null;
-    }
 
 
 //    구독제 정보 삭제 DELETE /me/subscription
 //    @ApiOperation(value = "subscription DELETE", notes = "DELETE 유저의 구독 취소")
-    @DeleteMapping("/subscription")
-    public ResponseEntity deleteSubscription(@RequestParam int subscriptionId, @RequestParam int userId) {  //추후 토큰으로 변경
 
-
-
-        return null;
-    }
 
 
 
@@ -227,62 +208,31 @@ public class MeController {
 
 
 //    나의 모든 앨범 - GET /me/albums
-    @GetMapping("/albums")
-    public ResponseEntity getMyAlbums(@RequestParam int userId){    //추후 토큰으로 변경
 
-        //내 앨범 요청
-        return null;
-    }
 
 
 //    나의 특정 앨범 - GET /me/albums/{albumId}
 //    메서드 이름 수정 필요
-    @GetMapping("/albums/{albumId}")
-    public ResponseEntity getMyAlbums(@PathVariable int albumId, @RequestParam int userId){    //추후 토큰으로 변경
-
-        return null;
-    }
 
 
 
-//    나의 특정 앨범수정 - PATCH /me/albums/{albumId} - 해당 행위를 /api/me에서 처리하는것이 맞는가?
-//    userid를 토큰에서 받아옴 -
-    @PatchMapping("/albums/{albumId}")
-    public ResponseEntity updateAlbum(@PathVariable int albumId, @RequestParam int userId){ //추후 토큰으로 변경
-
-        return null;
-    }
 
     
 
 
 
 //    나의 모든 음원 - GET /me/tracks
-    @GetMapping("/tracks")
-    public ResponseEntity getMyTracks(@RequestParam String nickname){    //추후 토큰으로 변경
 
-        //내 앨범 요청
-        return null;
-    }
 
 
 //    나의 특정 음원 - GET /me/tracks/{trackId}
 //    메서드 이름 수정 필요
-    @GetMapping("/tracks/{musicId}")
-    public ResponseEntity getMyTracks(@PathVariable int musicId, @RequestParam String nickname){    //추후 토큰으로 변경
 
-        //내 앨범 요청
-        return null;
-    }
 
 
 
 //   나의 특정 음원 수정 - PATCH /me/tracks/{trackId} - 해당 행위를 /api/me에서 처리하는것이 맞는가?
-    @PatchMapping("/tracks/{trackId}")
-    public ResponseEntity updateTrack(@PathVariable int trackId, @RequestParam int userId){
 
-        return null;
-    }
 
     @PostMapping("/tracks/{musicId}/tags")
     ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDTO tagsDto){
