@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.domain;
 
-import lombok.Getter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,12 +21,13 @@ public class BaseEntity {
 //    default CURRENT_TIMESTAMP 적용 됨
     @CreatedDate
     @Column(name = "create_date",updatable = false)
-    private LocalDateTime create_date;
+    private LocalDateTime createDate;
 
 //    DB에서  modify_date 는 전부
 //    default CURRENT_TIMESTAMP 및
 //    on update CURRENT_TIMESTAMP 적용 됨
     @LastModifiedDate
     @Column(name = "modify_date")
-    private LocalDateTime modify_date;
+    private LocalDateTime modifyDate;
+
 }

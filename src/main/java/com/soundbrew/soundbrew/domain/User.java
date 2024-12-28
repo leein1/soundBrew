@@ -1,24 +1,30 @@
 package com.soundbrew.soundbrew.domain;
 
+import com.soundbrew.soundbrew.dto.UserDTO;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int user_id;
+    private int userId;
+
 
     @Column(nullable = false)
-    private int subscription_id;
+    private Integer subscriptionId;
 
     @Column(length = 15, nullable = false)
     private String name;
@@ -34,7 +40,7 @@ public class User extends BaseEntity {
 //    비밀번호 변경 기록 필요
 
     @Column(length = 20, nullable = false)
-    private String phonenumber;
+    private String phoneNumber;
 
 //    번호 변경 기록 필요
 
@@ -43,10 +49,14 @@ public class User extends BaseEntity {
 
 //  이메일 인증 default false라 null해도 됨
     @Column(nullable = true)
-    private boolean email_verified;
+    private boolean emailVerified;
+
+    @Column(nullable = false)
+    private int creditBalance;
+
 
     @Column(nullable = true)
-    private  String profile_image_path;
+    private  String profileImagePath;
 
     @Column(nullable = true)
     private LocalDate birth;
@@ -54,4 +64,14 @@ public class User extends BaseEntity {
 //    BaseEntity 클래스를 상속
 //    LocalDateTime modify_date;
 //    LocalDateTime create_date;
+
+
+    public void update(String name, String nickname, String password, String phoneNumber, String email) {
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+
 }

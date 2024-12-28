@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../css/register.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        회원가입
+    </div>
+
+    <div class="content-body">
+        <form id="register-from" class="register-form">
+            <div class="input-group">
+                <label for="email">이메일:</label>
+                <div class="input-with-button">
+                    <input type="email" id="email" name="email" required>
+                    <button type="button" class="check-button">중복확인</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="name">이름:</label>
+                <div class="input-with-button">
+                    <input type="text" id="name" name="name" required>
+                    <button type="button" class="check-button">중복확인</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="nickname">닉네임:</label>
+                <div class="input-with-button">
+                    <input type="text" id="nickname" name="nickname" required>
+                    <button type="button" class="check-button">중복확인</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="password">비밀번호:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="input-group">
+                <label>전화번호:</label>
+                <div class="phone-number">
+                    <input type="text" id="phone1" value="010" readonly>
+                    <input type="text" id="phone2" maxlength="4" pattern="\d{4}" required>
+                    <input type="text" id="phone3" maxlength="4" pattern="\d{4}" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="birth">생일:</label>
+                <input type="date" id="birth" name="birth" required>
+            </div>
+
+            <input type="hidden" name="phoneNumber" id="phoneNumber">
+            <button type="submit">제출</button>
+        </form>
+
+    </div>
+
+    <div class="content-footer" style="border: 1px green solid;">
+        푸터 - 버튼 위치할 예정
+    </div>
+</div>
+</body>
+
+<script type="module" layout:fragment="script" th:inline="javascript">
+    import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+    import { axiosPost } from '/js/fetch/standardAxios.js';
+    import { inputHandler } from '/js/check/inputHandler.js';
+    import { processingRules, validationRules } from '/js/check/inputRules.js';
+
+
+
+        console.log("loaded register script..");
+
+
+        // 폼 데이터 가져오기
+        document.getElementById("register-from").addEventListener("submit", async (e) =>{
+            e.preventDefault();
+
+            const phone1 = document.getElementById('phone1').value;
+            const phone2 = document.getElementById('phone2').value;
+            const phone3 = document.getElementById('phone3').value;
+
+            if (phone2.length !== 4 || phone3.length !== 4) {
+                alert('전화번호를 올바르게 입력해주세요.');
+                return;
+            }
+
+            const fullPhoneNumber = `${phone1}${phone2}${phone3}`;
+            document.getElementById('phoneNumber').value = fullPhoneNumber;
+
+            console.log('전화번호:', fullPhoneNumber); // 확인용
+
+
+
+
+            //폼 가져오기
+            const form = document.getElementById("register-from");
+
+            //폼 데이터 직렬화
+            const jsonData = serializeFormToJSON(form);
+
+            console.warn(jsonData);
+
+            //  input value 검증
+            const{errors,processedData} = inputHandler(jsonData,form);
+
+            //  비동기 요청
+            if(!errors){
+                await axiosPost({endpoint:"/api/users",body:processedData});
+            }else{
+
+            }
+
+        });
+
+
+
+</script>
+</html>
