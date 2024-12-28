@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RootConfig {
-<<<<<<< HEAD
 
-=======
->>>>>>> feature/kyoung
     @Bean
     public ModelMapper getMapper() {
 
