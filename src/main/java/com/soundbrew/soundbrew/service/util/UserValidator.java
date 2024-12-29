@@ -9,6 +9,10 @@ public class UserValidator extends StringValidatorImpl{
     //    특수문자 1개 이상, 대문자 1개이상, 숫자 1개이상 만족해야 함
     public  boolean isPasswordFormatValid(String str) {
 
+        if(str == null || str.length() < 6 || str.length() > 16) {
+            return false;
+        }
+
         //  boolean 타입 기본값 false 특수문자, 대문자, 숫자
         boolean hasSpecialCharacters = false;
         boolean hasUpperCase = false;
