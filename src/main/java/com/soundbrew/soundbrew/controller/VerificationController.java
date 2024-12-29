@@ -1,6 +1,8 @@
 package com.soundbrew.soundbrew.controller;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.service.user.UserService;
+import com.soundbrew.soundbrew.service.verification.ActivationCodeService;
 import com.soundbrew.soundbrew.service.verification.VerificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,7 +24,8 @@ public class VerificationController {
 //    private final UserService userService;
 
 
-    private final VerificationService verificationService;
+    private final ActivationCodeService activationCodeService;
+    private final UserService userService;
 
 //    private final VerifyService verifyService;
 ////    @ApiOperation(value = "verify-password POST", notes = "POST 비밀번호 인증")
@@ -48,7 +51,7 @@ public class VerificationController {
     @PostMapping("/email")
     public ResponseEntity<ResponseDTO> sendEmail(@RequestBody String email){
 
-        ResponseDTO<String> responseDTO = verificationService.sendActivationCode(email);
+        ResponseDTO<String> responseDTO = activationCodeService.sendActivationCode(email);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -57,7 +60,7 @@ public class VerificationController {
     @PatchMapping("/email")
     public ResponseEntity<ResponseDTO> activeUser(@RequestBody String email, @RequestBody String providedActivationCode){
 
-        ResponseDTO<String> responseDTO = verificationService.activateUser(email, providedActivationCode);
+        ResponseDTO<String> responseDTO = activationCodeService.activateUser(email, providedActivationCode);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -65,9 +68,9 @@ public class VerificationController {
 
 //    비밀번호 확인 - POST /me/password
     @PostMapping("/password")
-    public ResponseEntity<ResponseDTO> verifyPassword(@RequestBody String nickname, @RequestBody String providedActivationCode){
+    public ResponseEntity<ResponseDTO> verifyPassword(@RequestBody int userId, @RequestBody String providedActivationCode){
 
-        ResponseDTO<String> responseDTO = verificationService.verifyPassword(nickname, providedActivationCode);
+        ResponseDTO<String> responseDTO = userService.verifyPassword(userId, providedActivationCode);
 
         return ResponseEntity.ok().body(responseDTO);
     }

@@ -13,6 +13,8 @@ public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
 
+
+
     @Override
     public void send(String to, String subject, String text) {
 
@@ -22,5 +24,7 @@ public class MailServiceImpl implements MailService {
         message.setText(text);
         mailSender.send(message);
     }
+
+
 
 }

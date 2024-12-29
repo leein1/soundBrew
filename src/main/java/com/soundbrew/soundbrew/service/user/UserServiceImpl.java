@@ -409,6 +409,23 @@ public class UserServiceImpl implements UserService{
         return responseDTO;
     }
 
+    @Override
+    public ResponseDTO<String> verifyPassword(int userId, String inputPassword) {
+
+        UserDTO userDTO = this.getUser(userId).getDto();
+
+        if (!userDTO.getPassword().equals(inputPassword)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("확인되었습니다.")
+                .build();
+
+        return responseDTO;
+    }
+
+
 
     //    프로필 이미지 업로드
     @Override

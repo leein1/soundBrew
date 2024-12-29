@@ -49,6 +49,8 @@ public interface UserService {
     //  비밀번호 수정
     ResponseDTO<String> updatePassword(int userId, String newPassword);
 
+    public ResponseDTO<String> verifyPassword(int userId, String inputPassword);
+
     //  프로필 이미지 관련
 
     //  프로필 이미지 업로드
