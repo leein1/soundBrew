@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.verification;
 
 import com.soundbrew.soundbrew.domain.ActivationCode;
 import com.soundbrew.soundbrew.domain.user.User;
@@ -7,6 +7,7 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.repository.ActivationCodeRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
+import com.soundbrew.soundbrew.service.mail.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;

@@ -1,9 +1,8 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.file;
 
 import com.soundbrew.soundbrew.config.FileProperties;
 import com.soundbrew.soundbrew.repository.MusicFileRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;

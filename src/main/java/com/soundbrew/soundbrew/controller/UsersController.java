@@ -2,7 +2,7 @@ package com.soundbrew.soundbrew.controller;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
-import com.soundbrew.soundbrew.service.UserService;
+import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;

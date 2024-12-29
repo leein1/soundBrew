@@ -1,12 +1,10 @@
 package com.soundbrew.soundbrew.controller;
 
-import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.service.FileService;
+import com.soundbrew.soundbrew.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

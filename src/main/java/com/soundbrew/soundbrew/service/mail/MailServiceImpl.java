@@ -1,7 +1,5 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.mail;
 
-import com.soundbrew.soundbrew.domain.ActivationCode;
-import com.soundbrew.soundbrew.repository.ActivationCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;

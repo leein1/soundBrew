@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.subscription;
 
 
 import com.soundbrew.soundbrew.domain.user.Subscription;
