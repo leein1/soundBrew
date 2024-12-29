@@ -1,11 +1,20 @@
 package com.soundbrew.soundbrew.service.user;
 
 
+import com.soundbrew.soundbrew.domain.user.Subscription;
 import com.soundbrew.soundbrew.domain.user.User;
+import com.soundbrew.soundbrew.domain.user.UserSubscription;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
+import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
+import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
+import com.soundbrew.soundbrew.repository.subscription.SubscriptionRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
+import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
+import com.soundbrew.soundbrew.service.MeServiceImpl;
+import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.util.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,8 +39,12 @@ public class UserServiceImpl implements UserService{
 
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
-//    private final SubscriptionRepository subscriptionRepository;
+    private final SubscriptionRepository subscriptionRepository;
+    private final SubscriptionService subscriptionService;
+    private final UserSubscriptionRepository userSubscriptionRepository;
+
     private final UserValidator userValidator;
+    private final MeServiceImpl meServiceImpl;
 //    private final ActivationCodeRepository activationCodeRepository;
 //    private final MailService mailService;
 //    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -59,8 +74,10 @@ public class UserServiceImpl implements UserService{
 
 //    RequestDTO 받아 ResponseDTO 반환
 
+
     @Override
-    public ResponseDTO<UserDTO> list(RequestDTO requestDTO) {
+    public ResponseDTO<UserDetailsDTO> getAllUserWithDetails(RequestDTO requestDTO) {
+
         String[] types = requestDTO.getTypes();
         String keyword = requestDTO.getKeyword();
         Pageable pageable = requestDTO.getPageable("userId");
@@ -68,25 +85,32 @@ public class UserServiceImpl implements UserService{
         log.info("UserService requestDTO : {}", requestDTO);
         log.info("UserService list() : " + pageable);
 
-        //  Page<User> result = 유저레파지토리.서치인터페이스(types,keyword,pageable)
-        Page<User> users = userRepository.findAll(pageable);
-        //  result 를 List<UserDTO> dtoList 로 변환
-        List<UserDTO> dtoList = users.getContent().stream()
-                .map(user -> modelMapper.map(user,UserDTO.class))
-                .collect(Collectors.toList());
-        //  ResponseDTO.<UserDTO>withAll() 빌드 후 리턴
+        //  Page<UserDetails> result = 유저레파지토리.서치인터페이스(types,keyword,pageable)
+        Page<UserDetailsDTO> result = userRepository.findAllUserDetails(requestDTO).orElseThrow();
 
-//        return ResponseDTO<UserDTO>.withAll()
-//                .requestDTO(requestDTO)
-//                .dtoList(dtoList)
-//                .total((int)users.getTotalElements())
-//                .build();
+        if(result.isEmpty()){
 
-        return ResponseDTO.withAll(requestDTO,dtoList,(int)users.getTotalElements());
+            List<UserDetailsDTO> userDetailsDTOList = Collections.emptyList();
+
+            return ResponseDTO.<UserDetailsDTO>withAll(requestDTO, userDetailsDTOList,0);
+        }
+
+        return ResponseDTO.withAll(requestDTO,result.getContent(),result.getSize());
     }
 
+    @Override
+    public ResponseDTO<UserDetailsDTO> getUserWithDetails(int id) {
 
-//    한명 조회 - Optional 사용으로 주석
+        UserDetailsDTO userDetailsDTO = userRepository.findUserDetailsById(id).orElseThrow();
+
+        ResponseDTO<UserDetailsDTO> responseDTO = ResponseDTO.<UserDetailsDTO>builder()
+                .dto(userDetailsDTO)
+                .build();
+
+        return responseDTO;
+    }
+
+    //    한명 조회 - Optional 사용으로 주석
 //    @Override
 //    public UserDTO getUser(int userId) {
 //
@@ -129,7 +153,7 @@ public class UserServiceImpl implements UserService{
 
     //    회원 가입
     @Override
-    public void registerUser(UserDTO userDTO) {
+    public ResponseDTO<String> registerUser(UserDTO userDTO) {
 
 //        validation 적용 해야 할거 같은데 논의 필요.
 //        UserDTO의 유효성 검사 측면
@@ -153,13 +177,22 @@ public class UserServiceImpl implements UserService{
 
 //       비밀번호 유효성 검사
         if(!userValidator.isPasswordFormatValid(userDTO.getPassword())){
-//            return false;
-            //  응답 객체 생성후 반환형 변경
-            return;
+
+           ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                    .message("비밀번호가 적절하지 않습니다.")
+                    .build();
+
+            return responseDTO;
         }
 
-        userRepository.save(userDTO.toEntity());
+            User user = userRepository.save(userDTO.toEntity());
+            String nickname = user.getNickname();
 
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                    .message(nickname + "님 회원가입을 축하합니다!")
+                    .build();
+
+            return responseDTO;
 
     }
 
@@ -250,33 +283,38 @@ public class UserServiceImpl implements UserService{
 //    }
 
 
-//    회원 정보 수정
-//    비밀번호 변경은 따로 처리할것
-//    프로필 이미지 변경 따로 처리할 것
-//    반환형 ResponseDTO로 변경
+    //    회원 정보 수정
+    //    비밀번호 변경은 따로 처리할것
+    //    프로필 이미지 변경 따로 처리할 것
+    //    반환형 ResponseDTO로 변경
     @Override
-    public ResponseDTO updateUser(UserDTO userDTO) {
+    public ResponseDTO<String> updateUser(UserDTO userDTO) {
 
 //        업데이트 방법 필요
 //        이 메서드는 userDTO에 기존 정보도 전부 받아 온다고 가정 후 작성
-        int userId = userDTO.getUserId();
+//        int userId = userDTO.getUserId();
+//
+//        User result = userRepository.findById(userId).orElseThrow();
 
-        User result = userRepository.findById(userId).orElseThrow();
+//        UserDTO existingUserDTO = this.getUser(userDTO.getUserId()).getDto();
 
 //         기존 사용자 정보 수정
-        UserDTO existingUserDTO = modelMapper.map(result, UserDTO.class);
+//        UserDTO existingUserDTO = modelMapper.map(result, UserDTO.class);
 
-        existingUserDTO.setName(userDTO.getName());
-        existingUserDTO.setNickname(userDTO.getNickname());
-        existingUserDTO.setPhoneNumber(userDTO.getPhoneNumber());
-        existingUserDTO.setEmail(userDTO.getEmail());
-        existingUserDTO.setBirth(userDTO.getBirth());
+//        existingUserDTO.setName(userDTO.getName());
+//        existingUserDTO.setNickname(userDTO.getNickname());
+//        existingUserDTO.setPhoneNumber(userDTO.getPhoneNumber());
+//        existingUserDTO.setEmail(userDTO.getEmail());
+//        existingUserDTO.setBirth(userDTO.getBirth());
 
-        userRepository.save(existingUserDTO.toEntity());
 
-        return ResponseDTO.withMessage()
-                .message("수정 되었습니다.")
-                .build();
+            userRepository.save(userDTO.toEntity());
+
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                    .message("수정 되었습니다.")
+                    .build();
+
+            return responseDTO;
 
     }
 
@@ -311,23 +349,26 @@ public class UserServiceImpl implements UserService{
 //
 //    }
 
-//    비밀번호만 수정
-//    매개변수로 비밀번호만 받을지 DTO형태로 받을지 논의 필요
+    //    비밀번호만 수정
+    //    매개변수로 비밀번호만 받을지 DTO형태로 받을지 논의 필요
     @Override
-    public String updatePassword(int userId, String newPassword) {
+    public ResponseDTO<String> updatePassword(int userId, String newPassword) {
 
-//        비밀번호가 비밀번호 양식에 맞는지 검증
+        //        비밀번호가 비밀번호 양식에 맞는지 검증
         UserValidator userValidator = new UserValidator();
 
         if(!userValidator.isPasswordFormatValid(newPassword)) {
 
-            return "비밀번호는 특수문자,대문자,숫자 각 1개 이상이 포함되어야 합니다.";
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                    .message("비밀번호는 6자리 이상 16자리 이하, 특수문자,대문자,숫자 각 1개 이상이 포함되어야 합니다.")
+                    .build();
+
+            return responseDTO;
         }
 
 //        유저가 존재 하는지 검증
 //        User user = userRepository.findById(userId).orElseThrow(() ->
 //                new NoSuchElementException(userId + " 번 회원을 찾을 수 없습니다."));
-
 
         /*
         Optional<UserDTO> optionalUserDTO = this.getUser(userId);
@@ -340,41 +381,23 @@ public class UserServiceImpl implements UserService{
         }else {
         */
 
+        //  유저 존재하는지 검증 및 DTO 변환
+        UserDTO existingUserDTO = this.getUser(userId).getDto();
 
-//        set을 위해 DTO로 변환
-        UserDTO userDTO = this.getUser(userId).getDto();
+        //  비밀번호 set
+        existingUserDTO.setPassword(newPassword);
 
-//        비밀번호 set
-        userDTO.setPassword(newPassword);
+        //  entity로 변환 후 save()
+        //  userRepository.save(existingUserDTO.toEntity());
+        this.updateUser(existingUserDTO);
 
-//        entity로 변환 후 save()
-        userRepository.save(userDTO.toEntity());
-
-        return "수정 되었습니다.";
-    }
-
-//    회원 삭제
-//    삭제시 구독 정보도 삭제 해야함
-//    삭제시 역할도 삭제 해야함
-    @Override
-    public void deleteUser(int userId) {
-
-//        유저가 존재 하는지 검증
-        User user = userRepository.findById(userId).orElseThrow();
-
-        userRepository.delete(user);
-    }
-
-    @Override
-    public ResponseDTO<String> deleteUserByNickname(String nickname) {
-        User user = userRepository.findByNickname(nickname).orElseThrow();
-
-        userRepository.delete(user);
-
-        return ResponseDTO.<String>withMessage()
-                .message("탈퇴되었습니다.")
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("수정 되었습니다.")
                 .build();
+
+        return responseDTO;
     }
+
 
     //    프로필 이미지 업로드
     @Override
@@ -388,6 +411,202 @@ public class UserServiceImpl implements UserService{
 
         }
 
+    }
+
+    //  프로필 이미지 삭제
+    @Override
+    public void deleteProfileImage(int userId) {
+
+    }
+
+    //    회원 삭제
+
+    //    삭제시 구독 정보도 삭제 해야함
+    //    삭제시 역할도 삭제 해야함
+    @Override
+    public ResponseDTO<String> deleteUser(int userId) {
+
+        User user = this.getUser(userId).getDto().toEntity();
+
+        userRepository.delete(user);
+
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("탈퇴 되었습니다.")
+                .build();
+
+        return responseDTO;
+    }
+
+    @Override
+    public ResponseDTO<String> deleteUserByNickname(String nickname) {
+
+        User user = this.getUserByNickname(nickname).getDto().toEntity();
+
+        userRepository.delete(user);
+
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("탈퇴 되었습니다.")
+                .build();
+
+        return responseDTO;
+    }
+
+
+    //  UserSubscription 관련
+
+    // 한개 조회(userId)
+    @Override
+    public ResponseDTO<UserSubscriptionDTO> getUserSubscription(int userId){
+
+       UserSubscription userSubscription = userSubscriptionRepository.findById(userId).orElseThrow();
+       UserSubscriptionDTO userSubscriptionDTO = modelMapper.map(userSubscription,UserSubscriptionDTO.class);
+
+       ResponseDTO<UserSubscriptionDTO> responseDTO = ResponseDTO.<UserSubscriptionDTO>withSingleData()
+               .dto(userSubscriptionDTO)
+               .build();
+
+       return responseDTO;
+    }
+
+    // 수정
+    @Override
+    public ResponseDTO<String> modifyUserSubscription(UserSubscriptionDTO userSubscriptionDTO){
+
+        userSubscriptionRepository.save(userSubscriptionDTO.toEntity());
+
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("수정 되었습니다.")
+                .build();
+
+        return responseDTO;
+    }
+
+
+    //  유저 구독제 등록
+    //      id만 받는다고 가정하고 작성
+    @Override
+    public ResponseDTO<String> addUserSubscription(int userId, int subscriptionId) {
+
+        /*
+            유저가 존재 하는지 검증
+        User user = userRepository.findById(userId).orElseThrow();
+
+            set을 위해 DTO로 변환
+        UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
+*/
+
+        //  검증
+        UserDTO existingUserDTO = this.getUser(userId).getDto();
+        SubscriptionDTO subscriptionDTO = subscriptionService.getSubscription(subscriptionId).getDto();
+
+        //  구독한 적이 없어야 함
+        if(existingUserDTO.subscriptionId != null){
+
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                    .message("이미 구독중인 구독제가 있습니다.")
+                    .build();
+
+            return responseDTO;
+        }
+
+        //    구독제 id set()
+        existingUserDTO.setSubscriptionId(subscriptionId);
+
+        //    user 테이블에 subscriptionId - update
+        this.updateUser(existingUserDTO);
+
+        //    UserSubscriptionDTO 준비
+        UserSubscriptionDTO userSubscriptionDTO = UserSubscriptionDTO.builder()
+                .userId(userId)
+                .subscriptionId(subscriptionId)
+                .build();
+
+        //    Entity로 변경 후  user_subscription 테이블에 save()
+        this.modifyUserSubscription(userSubscriptionDTO);
+
+        String subscriptionName = subscriptionDTO.getSubscriptionName();
+
+        return ResponseDTO.<String>withMessage()
+                .message(subscriptionName + " 을 구독하였습니다.")
+                .build();
+
+    }
+
+//    구독제 수정
+//    구독제를 중간에 더 높은 플랜 또는 낮은 플랜으로 변경할 경우???
+
+    @Override
+    public ResponseDTO<String> updateUserSubscription(int userId, int subscriptionId) {
+
+        //  검증
+        UserDTO existingUserDTO = this.getUser(userId).getDto();
+        SubscriptionDTO subscriptionDTO = subscriptionService.getSubscription(subscriptionId).getDto();
+
+
+        ///  구독한 적이 있어야 함
+        if(existingUserDTO.subscriptionId == null){
+
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                    .message("구독중인 구독제가 없습니다.")
+                    .build();
+
+            return responseDTO;
+
+        }
+
+        //    구독제 id set()
+        existingUserDTO.setSubscriptionId(subscriptionId);
+
+        //    user 테이블에 save()
+        this.updateUser(existingUserDTO);
+
+
+        //    userSubscription 테이블에 인서트 하기 위한 준비
+        //    UserSubscriptionDTO 준비
+        /*
+        !!!!!!!!!!!!!!!!!!!!!!!!!!! 잔여 크레딧 계산식 필요
+         */
+
+
+        //  입력받은 유저 아이디로 UserSubscription 조회 후 DTO로 매핑
+        UserSubscriptionDTO existingUserSubscriptionDTO = this.getUserSubscription(userId).getDto();
+
+        //  변경할 구독제 subscriptionid set()
+        existingUserSubscriptionDTO.setSubscriptionId(subscriptionId);
+
+        //    Entity로 변경 후 save()
+       this.modifyUserSubscription(existingUserSubscriptionDTO);
+
+        String subscriptionName = subscriptionDTO.getSubscriptionName();
+
+        return ResponseDTO.<String>withMessage()
+                .message(subscriptionName + " 구독제로 변경 하였습니다.")
+                .build();
+    }
+
+
+//    구독제 삭제
+    //    id만 받는다고 가정하고 작성
+    @Override
+    public ResponseDTO<String> deleteUserSubscription(int userId, int subscriptionId) {
+
+        //  검증
+        UserDTO existingUserDTO = this.getUser(userId).getDto();
+        SubscriptionDTO subscriptionDTO = subscriptionService.getSubscription(subscriptionId).getDto();
+        UserSubscriptionDTO existingUserSubscriptionDTO = this.getUserSubscription(userId).getDto();
+
+        //  User테이블에서 해당 유저의 subscriptionId null로 업데이트
+        existingUserDTO.setSubscriptionId(null);
+        this.updateUser(existingUserDTO);
+
+        //  UserSubscription 테이블에서 해당 유저의 레코드 삭제 - 크레딧 정보는 user쪽에 있으므로 삭제해도 됨
+        userSubscriptionRepository.delete(existingUserSubscriptionDTO.toEntity());
+
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("구독을 취소했습니다.")
+                .build();
+
+        return responseDTO;
     }
 
 }

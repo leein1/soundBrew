@@ -31,7 +31,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 
 
     @Override
-    public ResponseDTO<SubscriptionDTO> findAllSubscriptions() {
+    public ResponseDTO<SubscriptionDTO> getAllSubscription() {
 
         List<SubscriptionDTO> subscriptionDTOs = subscriptionRepository.findAll().stream()
                 .map(subscription -> modelMapper.map(subscription, SubscriptionDTO.class))
@@ -51,7 +51,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     }
 
     @Override
-    public ResponseDTO<SubscriptionDTO> findOneSubscription(int subscriptionId) {
+    public ResponseDTO<SubscriptionDTO> getSubscription(int subscriptionId) {
 
         Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
 
@@ -62,111 +62,109 @@ public class SubscriptionServiceImpl implements SubscriptionService{
                 .build();
     }
 
-    //    구독제 등록
-//    id만 받는다고 가정하고 작성
-    @Override
-    public ResponseDTO<String> addUserSubscription(int userId, int subscriptionId) {
-
-        //    유저가 존재 하는지 검증
-        User user = userRepository.findById(userId).orElseThrow();
-
-        //    set을 위해 DTO로 변환
-        UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
-
-        //  구독한 적이 없어야 함
-        if(existingUserDTO.subscriptionId == 0 || existingUserDTO.subscriptionId == null){
-            //    구독제 id set()
-            existingUserDTO.setSubscriptionId(subscriptionId);
-
-        } else{
-            throw new NoSuchElementException("이미 구독중인 구독제가 있습니다.");
-
-        }
 
 
-        //    user 테이블에 subscriptionId - update
-        userRepository.save(existingUserDTO.toEntity());
-
-        //    userSubscription 테이블에 인서트 하기 위한 준비
-
-        //    subscriptionId 검증
-        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
-
-        //    UserSubscriptionDTO 준비
-        UserSubscriptionDTO userSUbscriptionDTO = UserSubscriptionDTO.builder()
-                .userId(userId)
-                .subscriptionId(subscriptionId)
-                .build();
-
-        //    Entity로 변경 후  user_subscription 테이블에 save()
-        userSubscriptionRepository.save(userSUbscriptionDTO.toEntity());
-
-        return ResponseDTO.<String>withMessage()
-                .message("성공적으로 구독 하였습니다.")
-                .build();
-
-    }
-
-//    구독제 수정
-//    구독제를 중간에 더 높은 플랜 또는 낮은 플랜으로 변경할 경우???
-
-    @Override
-    public ResponseDTO<String> updateUserSubscription(int userId, int subscriptionId) {
-
-        //    유저가 존재 하는지 검증
-        User user = userRepository.findById(userId).orElseThrow();
-
-        //    set을 위해 DTO로 변환
-        UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
-
-        ///  구독한 적이 있어야 함
-        if(existingUserDTO.subscriptionId == 0 || existingUserDTO.subscriptionId == null){
-            // 예외 throw
-            throw new NoSuchElementException("구독중인 구독제가 없습니다.");
-
-        } else{
-            // 변경한 구독제 subscriptionId set()
-            existingUserDTO.setSubscriptionId(subscriptionId);
-        }
-
-        //    user 테이블에 subscriptionId - update
-        userRepository.save(existingUserDTO.toEntity());
-
-
-        //    userSubscription 테이블에 인서트 하기 위한 준비
-
-        //    subscriptionId 검증
-        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
-
-        //    UserSubscriptionDTO 준비
-        /*
-        !!!!!!!!!!!!!!!!!!!!!!!!!!! 잔여 크레딧 계산식 필요
-         */
-        UserSubscriptionDTO userSUbscriptionDTO = UserSubscriptionDTO.builder()
-                .userId(userId)
-                .subscriptionId(subscriptionId)
-                .build();
-
-        //    Entity로 변경 후 save()
-        userSubscriptionRepository.save(userSUbscriptionDTO.toEntity());
-
-        return ResponseDTO.<String>withMessage()
-                .message("성공적으로 변경 하였습니다.")
-                .build();
-    }
-
-
-//    구독제 삭제
-
-
-
-
-//    id만 받는다고 가정하고 작성
-    @Override
-    public ResponseDTO<String> deleteUserSubscription(int userId, int subscriptionId) {
-
-        return null;
-    }
+//    //    구독제 등록
+////    id만 받는다고 가정하고 작성
+//    @Override
+//    public ResponseDTO<String> addUserSubscription(int userId, int subscriptionId) {
+//
+//        //    유저가 존재 하는지 검증
+//        User user = userRepository.findById(userId).orElseThrow();
+//
+//        //    set을 위해 DTO로 변환
+//        UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
+//
+//        //  구독한 적이 없어야 함
+//        if(existingUserDTO.subscriptionId == 0 || existingUserDTO.subscriptionId == null){
+//            //    구독제 id set()
+//            existingUserDTO.setSubscriptionId(subscriptionId);
+//
+//        } else{
+//            throw new NoSuchElementException("이미 구독중인 구독제가 있습니다.");
+//
+//        }
+//
+//
+//        //    user 테이블에 subscriptionId - update
+//        userRepository.save(existingUserDTO.toEntity());
+//
+//        //    userSubscription 테이블에 인서트 하기 위한 준비
+//
+//        //    subscriptionId 검증
+//        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
+//
+//        //    UserSubscriptionDTO 준비
+//        UserSubscriptionDTO userSUbscriptionDTO = UserSubscriptionDTO.builder()
+//                .userId(userId)
+//                .subscriptionId(subscriptionId)
+//                .build();
+//
+//        //    Entity로 변경 후  user_subscription 테이블에 save()
+//        userSubscriptionRepository.save(userSUbscriptionDTO.toEntity());
+//
+//        return ResponseDTO.<String>withMessage()
+//                .message("성공적으로 구독 하였습니다.")
+//                .build();
+//
+//    }
+//
+////    구독제 수정
+////    구독제를 중간에 더 높은 플랜 또는 낮은 플랜으로 변경할 경우???
+//
+//    @Override
+//    public ResponseDTO<String> updateUserSubscription(int userId, int subscriptionId) {
+//
+//        //    유저가 존재 하는지 검증
+//        User user = userRepository.findById(userId).orElseThrow();
+//
+//        //    set을 위해 DTO로 변환
+//        UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
+//
+//        ///  구독한 적이 있어야 함
+//        if(existingUserDTO.subscriptionId == 0 || existingUserDTO.subscriptionId == null){
+//            // 예외 throw
+//            throw new NoSuchElementException("구독중인 구독제가 없습니다.");
+//
+//        } else{
+//            // 변경한 구독제 subscriptionId set()
+//            existingUserDTO.setSubscriptionId(subscriptionId);
+//        }
+//
+//        //    user 테이블에 subscriptionId - update
+//        userRepository.save(existingUserDTO.toEntity());
+//
+//
+//        //    userSubscription 테이블에 인서트 하기 위한 준비
+//
+//        //    subscriptionId 검증
+//        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
+//
+//        //    UserSubscriptionDTO 준비
+//        /*
+//        !!!!!!!!!!!!!!!!!!!!!!!!!!! 잔여 크레딧 계산식 필요
+//         */
+//        UserSubscriptionDTO userSUbscriptionDTO = UserSubscriptionDTO.builder()
+//                .userId(userId)
+//                .subscriptionId(subscriptionId)
+//                .build();
+//
+//        //    Entity로 변경 후 save()
+//        userSubscriptionRepository.save(userSUbscriptionDTO.toEntity());
+//
+//        return ResponseDTO.<String>withMessage()
+//                .message("성공적으로 변경 하였습니다.")
+//                .build();
+//    }
+//
+//
+////    구독제 삭제
+////    id만 받는다고 가정하고 작성
+//    @Override
+//    public ResponseDTO<String> deleteUserSubscription(int userId, int subscriptionId) {
+//
+//        return null;
+//    }
 
 
 }

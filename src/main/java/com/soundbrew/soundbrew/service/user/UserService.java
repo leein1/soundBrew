@@ -1,9 +1,10 @@
 package com.soundbrew.soundbrew.service.user;
 
-
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
+import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
+import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -17,34 +18,68 @@ public interface UserService {
 //    한명 조회
 //    UserDTO getUser(int userId);
 
+//    유저 기능
 
 
-//  전체 조회
-    public ResponseDTO<UserDTO> list(RequestDTO requestDTO);
+    //  조회
 
-//  한명 조회
+    //  전체 조회 유저정보 + 구독제 + 역할
+    ResponseDTO<UserDetailsDTO> getAllUserWithDetails(RequestDTO requestDTO);
+
+    //  한명 조회(userId) - 유저정보 + 구독제 정보 + 역할
+    ResponseDTO<UserDetailsDTO> getUserWithDetails(int userId);
+
+    //  한명 조회(userId) - 유저 정보만
     ResponseDTO<UserDTO> getUser(int userId);
 
-//  닉네임으로 한명 조회
+    //  한명 조회(nickname) - 유저 정보만
     ResponseDTO<UserDTO> getUserByNickname(String nickname);
 
-//  회원 가입
-    void registerUser(UserDTO userDTO);
 
-//  회원 정보 수정
-    ResponseDTO updateUser(UserDTO userDTO);
+    //  등록 및 수정
 
-//  비밀번호 수정
-    String updatePassword(int userId, String newPassword);
+    //  회원 가입
+    ResponseDTO<String> registerUser(UserDTO userDTO);
 
-//  회원 삭제
-    void deleteUser(int userId);
+    //  회원 정보 수정
+    ResponseDTO<String> updateUser(UserDTO userDTO);
 
-//  닉네임으로 유저 삭제
+    //  비밀번호 수정
+    ResponseDTO<String> updatePassword(int userId, String newPassword);
+
+    //  프로필 이미지 관련
+
+    //  프로필 이미지 업로드
+    void saveProfileImage(int userId, MultipartFile file);
+    //  프로필 이미지 삭제
+    void deleteProfileImage(int userId);
+
+
+
+    //  삭제
+
+    //  회원 삭제
+    ResponseDTO<String> deleteUser(int userId);
+
+    //  닉네임으로 유저 삭제
     ResponseDTO<String> deleteUserByNickname(String nickname);
 
-//  프로필 이미지 업로드
-    void saveProfileImage(int userId, MultipartFile file);
+
+
+
+//    유저 + 구독 기능
+    ResponseDTO<UserSubscriptionDTO> getUserSubscription(int userId);
+
+    ResponseDTO<String> modifyUserSubscription(UserSubscriptionDTO userSubscriptionDTO);
+
+    //  구독제 등록(또는 업데이트)
+    ResponseDTO<String> addUserSubscription(int userId, int subscriptionId);
+
+    //  구독제 변경
+    ResponseDTO<String> updateUserSubscription(int userId, int subscriptionId);
+
+    //  구독제 취소
+    ResponseDTO<String> deleteUserSubscription(int userId, int subscriptionId);
 
 
     //  ---------------------------------------VerifyService 로 이동
