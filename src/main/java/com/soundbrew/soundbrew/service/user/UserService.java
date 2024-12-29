@@ -32,6 +32,8 @@ public interface UserService {
     //  한명 조회(userId) - 유저 정보만
     ResponseDTO<UserDTO> getUser(int userId);
 
+    ResponseDTO<UserDTO> getUserByEmail(String email);
+
     //  한명 조회(nickname) - 유저 정보만
     ResponseDTO<UserDTO> getUserByNickname(String nickname);
 

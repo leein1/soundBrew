@@ -139,6 +139,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public ResponseDTO<UserDTO> getUserByEmail(String email) {
+
+        User user = userRepository.findByEmail(email).orElseThrow();
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+
+        return ResponseDTO.<UserDTO>withSingleData()
+                .dto(userDTO)
+                .build();
+    }
+
+    @Override
     public ResponseDTO<UserDTO> getUserByNickname(String nickname) {
 
         User result = userRepository.findByNickname(nickname).orElseThrow();
