@@ -176,11 +176,7 @@ public class AdminServiceImpl implements AdminService {
         Optional<Page<SearchTotalResultDTO>> before = albumMusicRepository.verifyAlbum(requestDTO);
         if(before.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
 
-        return null;
-//        return  ResponseDTO.<SearchTotalResultDTO>withAll()
-//                .dtoList(before.get().getContent().stream().toList())
-//                .requestDTO(requestDTO)
-//                .build();
+        return  ResponseDTO.<SearchTotalResultDTO>withAll(requestDTO,before.get().getContent(), (int) before.get().getTotalElements());
     }
 
     @Override
@@ -188,8 +184,7 @@ public class AdminServiceImpl implements AdminService {
         Optional<Page<SearchTotalResultDTO>> albumOne = albumMusicRepository.verifyAlbumOne(userId,id, requestDTO);
         if(albumOne.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>withMessage().message("찾으시는 앨범이 없습니다.").build();
 
-        return null;
-//        return ResponseDTO.<SearchTotalResultDTO>withAll().total((int) albumOne.get().getTotalElements()).requestDTO(requestDTO).dtoList(albumOne.get().getContent()).build();
+        return ResponseDTO.<SearchTotalResultDTO>withAll(requestDTO,albumOne.get().getContent(), (int) albumOne.get().getTotalElements());
     }
 
     @Transactional

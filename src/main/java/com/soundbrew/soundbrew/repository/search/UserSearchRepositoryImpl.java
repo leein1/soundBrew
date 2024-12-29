@@ -2,9 +2,9 @@ package com.soundbrew.soundbrew.repository.search;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.soundbrew.soundbrew.domain.QUser;
-import com.soundbrew.soundbrew.domain.QUserRole;
-import com.soundbrew.soundbrew.domain.QUserSubscription;
+import com.soundbrew.soundbrew.domain.user.QUser;
+import com.soundbrew.soundbrew.domain.user.QUserRole;
+import com.soundbrew.soundbrew.domain.user.QUserSubscription;
 import com.soundbrew.soundbrew.dto.*;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;

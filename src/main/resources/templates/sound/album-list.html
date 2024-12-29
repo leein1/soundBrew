@@ -57,6 +57,7 @@
                     renderSort();
                 }else{
                     const renderTotal = await axiosGet({endpoint: '/api/sounds/albums' });
+                    console.log(renderTotal);
                     renderTotalAlbums(renderTotal.dtoList);
 
                     const tagsBody = { dto: renderTotal.dtoList };
