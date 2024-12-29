@@ -24,13 +24,19 @@ public class UsersController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Object>> resgister(@RequestBody UserDTO userDTO) {
 
-        userService.registerUser(userDTO);
+        try {
+            userService.registerUser(userDTO);
 
-        ResponseDTO responseDTO = ResponseDTO.withMessage()
-                .message("회원가입에 성공 하였습니다.")
-                .build();
+            ResponseDTO responseDTO = ResponseDTO.withMessage()
+                    .message("회원가입에 성공 하였습니다.")
+                    .build();
 
-        return ResponseEntity.ok(responseDTO);
+            return ResponseEntity.ok(responseDTO);
+
+        } catch (Exception e) {
+
+            throw new RuntimeException("회원가입 중 예상치 못한 문제가 발생하였습니다. 잠시후 다시 시도 해주세요");
+        }
 
     }
 

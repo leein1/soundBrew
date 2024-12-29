@@ -10,6 +10,7 @@ import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.service.AdminService;
 import com.soundbrew.soundbrew.service.AdminServiceImpl;
+import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -30,29 +31,40 @@ public class AdminController {  //  관리자용 컨트롤러
 
     private final AdminService adminService;
     private final AdminServiceImpl adminServiceImpl;
+    private final UserService userService;
 
     //  모든 유저 조회
     @GetMapping("/users")
-    public ResponseEntity<ResponseDTO<UserDetailsDTO>> getAllUsers(RequestDTO requestDTO) {
+    public ResponseEntity<ResponseDTO<UserDetailsDTO>> getAllUsers(@RequestParam RequestDTO requestDTO) {
 
-        ResponseDTO responseDTO = adminService.getAlluser(requestDTO);
+        ResponseDTO responseDTO = userService.getAllUserWithDetails(requestDTO);
+
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<ResponseDTO<UserDetailsDTO>> getUserById(@PathVariable int userId) {
+    public ResponseEntity<ResponseDTO<UserDetailsDTO>> getUser(@PathVariable int userId) {
 
-       ResponseDTO responseDTO = adminService.getUser(userId);
+       ResponseDTO responseDTO = userService.getUserWithDetails(userId);
+
        return ResponseEntity.ok().body(responseDTO);
     }
+
+
+    // 업데이트 방식 어떻게??
     @PatchMapping("/users/{userId}")
     public ResponseEntity<ResponseDTO<UserDetailsDTO>> updateUser(@PathVariable int userId, @RequestBody UserDetailsDTO userDetailsDTO) {
+
         return null;
     }
 
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<ResponseDTO<String>> deleteUser(@PathVariable int userId) {
+
+        userService.deleteUser(userId);
+
         return null;
+
     }
 
     @PostMapping("/tags")

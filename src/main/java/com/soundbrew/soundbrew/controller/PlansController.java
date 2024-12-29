@@ -24,7 +24,7 @@ public class PlansController {
 
 
 
-        ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.findAllSubscriptions();
+        ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.getAllSubscription();
 
         log.info("responseDTO in controller : {}", responseDTO);
 

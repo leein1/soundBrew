@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/me")
@@ -123,11 +126,11 @@ public class MeController {
 //    내 정보 보기 - GET /me/{userId}
 //    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
     @GetMapping(value = "")
-    public ResponseEntity<ResponseDTO<UserDTO>> getMe() {   //추후 토큰에서 user nickname 추출 해야 함
+    public ResponseEntity<ResponseDTO<UserDTO>> getMe() {   //추후 토큰에서 user id 추출 해야 함
 
-        ResponseDTO<UserDTO> responseDTO = userService.getUserByNickname("gmail");
+            ResponseDTO<UserDTO> responseDTO = userService.getUser(16);
 
-        return ResponseEntity.ok().body(responseDTO);
+            return ResponseEntity.ok().body(responseDTO);
     }
 
 
@@ -151,9 +154,9 @@ public class MeController {
 //    비밀번호 확인 후 탈퇴 가능
 //    @ApiOperation(value = "me DELETE", notes = "DELETE 탈퇴")
     @DeleteMapping("")
-    public ResponseEntity<ResponseDTO<String>> deleteMe(@RequestParam String nickname){ //추후 토큰으로 변경
+    public ResponseEntity<ResponseDTO<String>> deleteMe(@RequestParam int userId){ //추후 토큰으로 변경
 
-        ResponseDTO<String> responseDTO = userService.deleteUserByNickname(nickname);
+        ResponseDTO<String> responseDTO = userService.deleteUser(userId);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -163,16 +166,16 @@ public class MeController {
 //    반환형으로 SubscriptionDTO ? UserSubscriptionDTO
 //    @ApiOperation(value = "subscription GET", notes = "GET 내 구독제 정보 가져오기")
     @GetMapping("/subscription")
-    public ResponseEntity<ResponseDTO<SubscriptionDTO>> getSubscription(@RequestParam("nickname") String nickname){ //추후 토큰으로 변경
+    public ResponseEntity<ResponseDTO<SubscriptionDTO>> getSubscription(@RequestParam("userId") int userId){ //추후 토큰으로 변경
 
         // user 조회
-        UserDTO userDTO = userService.getUserByNickname(nickname).getDto();
+        UserDTO userDTO = userService.getUser(userId).getDto();
 
         // user가 구독중인 subscriptionId 가져오기
         int subscriptionId = userDTO.getSubscriptionId();
 
         // subscriptionId로 구독제 정보 가져오기
-        ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.findOneSubscription(subscriptionId);
+        ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.getSubscription(subscriptionId);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -183,7 +186,7 @@ public class MeController {
     @PostMapping("/subscription/{subscriptionId}")
     public ResponseEntity addSubscription(@PathVariable int subscriptionId, @RequestParam int userId){ //추후 토큰으로 변경
 
-       ResponseDTO<String> responseDTO = subscriptionService.addUserSubscription(userId, subscriptionId);
+       ResponseDTO<String> responseDTO = userService.addUserSubscription(userId, subscriptionId);
 
        //유저 아이디 검색
         // 구독제 검색
@@ -196,46 +199,26 @@ public class MeController {
 
 //    구독제 정보 수정 PATCH /me/subscription
 //    @ApiOperation(value = "subscription PATCH", notes = "PATCH 유저의 구독제 변경")
+    @PatchMapping("/subscrion/{subscriptionId}")
+    public ResponseEntity updateSubscription(@PathVariable int subscriptionId, @RequestParam int userId){
 
+        ResponseDTO<String> responseDTO = userService.updateUserSubscription(subscriptionId, userId);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
 
 //    구독제 정보 삭제 DELETE /me/subscription
 //    @ApiOperation(value = "subscription DELETE", notes = "DELETE 유저의 구독 취소")
+    @DeleteMapping("/subscription")
+    public ResponseEntity deleteSubscription(int userId){
 
+        ResponseDTO<String> responseDTO = userService.deleteUser(userId);
 
+        return ResponseEntity.ok().body(responseDTO);
 
+    }
 
-//    구매기록보기
-//    구매하기
-//    다운로드 기록 보기
-
-
-
-//    나의 모든 앨범 - GET /me/albums
-
-
-
-//    나의 특정 앨범 - GET /me/albums/{albumId}
-//    메서드 이름 수정 필요
-
-
-
-
-    
-
-
-
-//    나의 모든 음원 - GET /me/tracks
-
-
-
-//    나의 특정 음원 - GET /me/tracks/{trackId}
-//    메서드 이름 수정 필요
-
-
-
-
-//   나의 특정 음원 수정 - PATCH /me/tracks/{trackId} - 해당 행위를 /api/me에서 처리하는것이 맞는가?
 
 
     @PostMapping("/tracks/{musicId}/tags")
