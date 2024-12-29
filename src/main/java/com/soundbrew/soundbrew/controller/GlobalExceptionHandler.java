@@ -22,8 +22,11 @@ public class GlobalExceptionHandler {
 //    비슷한 오류들 최대한 병합 - 지나친 세부 분류 X
 //    클라이언트 기준 중요해 보이는 예외들 처리
 
-    public ResponseDTO<String> buildResponseDTOwithMessage(Exception ex){
-        String exceptionMessage = ex.getMessage() != null ? ex.getMessage() : "요청 데이터에 문제가 발생했습니다.";
+
+    // 핸들러에서는 기본 메시지를 작성, 여기에서 내가 커스텀 메시지를 줬다면 변경하도록 작성
+    private ResponseDTO<String> buildResponseDTOwithMessage(Exception ex,String defaultMessage){
+//        String exceptionMessage = ex.getMessage() != null ? ex.getMessage() : "요청 데이터에 문제가 발생했습니다.";
+        String exceptionMessage = ex.getMessage() != null ? ex.getMessage() : defaultMessage;
 
 //        return createErrorResponse(HttpStatus.BAD_REQUEST, "요청 데이터에 문제가 발생했습니다.");
 
@@ -45,67 +48,62 @@ public class GlobalExceptionHandler {
 //        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
 //                .message(exceptionMessage)
 //                .build();
-
-        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
+        String defaultMessage = "요청 데이터에 문제가 발생했습니다.";
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
     }
 
     // 404 - 리소스 찾지 못한 경우
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFoundException(NoSuchElementException ex) {
+    public ResponseEntity<ResponseDTO<String>> handleNotFoundException(NoSuchElementException ex) {
 
-        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
-        return createErrorResponse(HttpStatus.NOT_FOUND, "결과를 찾을 수 없습니다.");
+        String defaultMessage = "결과를 찾을 수 없습니다.";
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
     }
 
     // 409 - 무결성 위반
     // 클라이언트에게 필요한 정보인가...?
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, Object>> handleConflictException(DataIntegrityViolationException ex) {
+    public ResponseEntity<ResponseDTO<String>> handleConflictException(DataIntegrityViolationException ex) {
 
-        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
-        return createErrorResponse(HttpStatus.CONFLICT, "데이터 처리 중 오류가 발생했습니다.");
+        String defaultMessage = "데이터 처리 중 오류가 발생했습니다.";
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(responseDTO);
     }
 
     // 500 - 데이터 베이스 관련 오류
     @ExceptionHandler({SQLException.class, DataAccessException.class})
-    public ResponseEntity<Map<String, Object>> handleDatabaseExceptions(Exception ex) {
+    public ResponseEntity<ResponseDTO<String>> handleDatabaseExceptions(Exception ex) {
 
-        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
-        return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "데이터 처리 중 오류가 발생했습니다.");
+        String defaultMessage = "데이터 처리 중 오류가 발생했습니다.";
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
     }
 
     // 500 - 런타임 오류
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeExceptions(RuntimeException ex) {
+    public ResponseEntity<ResponseDTO<String>> handleRuntimeExceptions(RuntimeException ex) {
 
-        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
-        return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도홰주세요.");
+        String defaultMessage = "서버에서 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
     }
 
     // 503 서버 자체 문제
     @ExceptionHandler({ConnectException.class, SocketTimeoutException.class})
-    public ResponseEntity<Map<String, Object>> handleServerUnavailableExceptions(Exception ex) {
+    public ResponseEntity<ResponseDTO<String>> handleServerUnavailableExceptions(Exception ex) {
 
-        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex);
-        return createErrorResponse(HttpStatus.SERVICE_UNAVAILABLE, "서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        String defaultMessage = "서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
+
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(responseDTO);
     }
 
-    // 각 핸들러에서 반환시 return ResponseEntity.~~.build()가 불편함 & 예외처리 로직 변경 가능성 있으므로 공통 응답 생성 메서드 사용
-    private ResponseEntity<Map<String, Object>> createErrorResponse(HttpStatus status, String message) {
-
-        //  한번 넣은 값 수정(삭제) 불가능, 불가능해야 할것 같아서 put 대신 of 사용
-        Map<String, Object> errorResponse = Map.of(
-
-                //  int
-                "code", status.value(),
-
-                //  String
-                "message", message
-        );
-
-        return ResponseEntity.status(status).body(errorResponse);
-    }
 }
 
