@@ -1,7 +1,7 @@
 package com.soundbrew.soundbrew.repository;
 
 import com.soundbrew.soundbrew.domain.user.Role;
-import com.soundbrew.soundbrew.repository.user.RoleRepository;
+import com.soundbrew.soundbrew.repository.role.RoleRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

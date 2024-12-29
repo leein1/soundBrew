@@ -19,28 +19,31 @@ public interface UserService {
 
 
 
-//    전체 조회
+//  전체 조회
     public ResponseDTO<UserDTO> list(RequestDTO requestDTO);
 
-//    한명 조회
+//  한명 조회
     ResponseDTO<UserDTO> getUser(int userId);
 
+//  닉네임으로 한명 조회
     ResponseDTO<UserDTO> getUserByNickname(String nickname);
-//    회원 가입
+
+//  회원 가입
     void registerUser(UserDTO userDTO);
 
-//    회원 정보 수정
+//  회원 정보 수정
     ResponseDTO updateUser(UserDTO userDTO);
 
-//    비밀번호 수정
+//  비밀번호 수정
     String updatePassword(int userId, String newPassword);
 
-//    회원 삭제
+//  회원 삭제
     void deleteUser(int userId);
 
+//  닉네임으로 유저 삭제
     ResponseDTO<String> deleteUserByNickname(String nickname);
-//    프로필 이미지 업로드
 
+//  프로필 이미지 업로드
     void saveProfileImage(int userId, MultipartFile file);
 
 

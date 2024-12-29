@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.repository.search;
+package com.soundbrew.soundbrew.repository.user;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;

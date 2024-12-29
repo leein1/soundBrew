@@ -13,7 +13,6 @@ public interface SubscriptionService {
     ResponseDTO<String> addUserSubscription(int userId, int subscriptionId);
 
     //  구독제 변경
-
     ResponseDTO<String> updateUserSubscription(int userId, int subscriptionId);
 
     //    구독제 취소

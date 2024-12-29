@@ -7,7 +7,7 @@ import com.soundbrew.soundbrew.dto.*;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
-import com.soundbrew.soundbrew.repository.user.SubscriptionRepository;
+import com.soundbrew.soundbrew.repository.subscription.SubscriptionRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
 import lombok.RequiredArgsConstructor;

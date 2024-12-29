@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.repository.user;
+package com.soundbrew.soundbrew.repository.role;
 
 
 import com.soundbrew.soundbrew.domain.user.Role;

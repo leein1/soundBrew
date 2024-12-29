@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.repository.user;
+package com.soundbrew.soundbrew.repository.subscription;
 
 import com.soundbrew.soundbrew.domain.user.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;

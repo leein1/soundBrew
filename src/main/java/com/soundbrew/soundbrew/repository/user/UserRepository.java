@@ -2,7 +2,6 @@ package com.soundbrew.soundbrew.repository.user;
 
 import com.soundbrew.soundbrew.domain.user.User;
 
-import com.soundbrew.soundbrew.repository.search.UserSearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

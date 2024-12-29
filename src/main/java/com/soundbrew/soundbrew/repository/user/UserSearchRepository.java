@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.repository.search;
+package com.soundbrew.soundbrew.repository.user;
 
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
