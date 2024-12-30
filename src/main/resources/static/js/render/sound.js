@@ -48,7 +48,7 @@ export function renderSoundOne(data, data2){
     console.log(data);
     const html = `
         <div class="content-header-info">
-            <img class="sound-image" src="${data.albumArtPath}" alt="sound Image">
+            <img class="sound-image" src="${data.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
             <div class="sound-info">
                 <div class="sound-title font-size-large">${data.musicDTO.title}</div>
                 <div class="artist-name font-size-medium">
@@ -94,7 +94,7 @@ export function renderAlbumOne(data){
 
     const html = `
         <div class="content-header-info">
-            <img class="sound-image" src="${data.dtoList[0].albumDTO.albumArtPath}" alt="sound Image">
+            <img class="sound-image" src="${data.dtoList[0].albumDTO.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
             <div class="sound-info">
                 <span>Artist</span><div class="sound-title font-size-large">${data.dtoList[0].albumDTO.nickname}</div>
                 <div class="artist-name font-size-medium">
@@ -127,7 +127,7 @@ export function renderTotalSounds(data) {
 
         musicItem.innerHTML = `
             <div class="music-item-left">
-                <img alt="앨범 이미지" class="music-album-img" src="${sound.albumDTO.albumArtPath}">
+                <img alt="앨범 이미지" class="music-album-img" src="${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
                 <div class="music-play-btn">
                     <img src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                 </div>
@@ -142,9 +142,10 @@ export function renderTotalSounds(data) {
 
             <div class="music-item-center">
                 <div class="music-info-tag">
-                    <span>${sound.tagsStreamDTO.instrumentTagName || '기타'}</span>
-                    <span>${sound.tagsStreamDTO.moodTagName || '없음'}</span>
-                    <span>${sound.tagsStreamDTO.genreTagName || '기타'}</span>
+                    <span>${(sound.tagsStreamDTO.instrumentTagName || '기타').replace(/,/g, " ")}</span>
+
+                    <span>${(sound.tagsStreamDTO.moodTagName || '없음').replace(/,/g, " ")}</span>
+                    <span>${(sound.tagsStreamDTO.genreTagName || '기타').replace(/,/g, " ")}</span>
                 </div>
             </div>
 
@@ -321,7 +322,7 @@ export function renderTotalAlbums(data) {
             <div class="list-albums-list">
                 ${data.map(album => `
                     <div class="list-album-item" data-album-name="${album.albumDTO.albumName}" data-nickname="${album.albumDTO.nickname}">
-                        <img class="list-album-image" src="${album.albumDTO.albumArtPat || '/images/sample-album-imge.png'}" alt="Album Image">
+                        <img class="list-album-image" src="${album.albumDTO.albumArtPath}" alt="Album Image" onerror="this.src='/images/album-default-image-01.jpeg'">
                         <div class="list-album-name">${album.albumDTO.albumName}</div>
                         <div class="list-album-artist">${album.albumDTO.nickname}</div>
                     </div>

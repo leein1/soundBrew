@@ -37,12 +37,16 @@ public class CustomSecurityConfig {
 
         log.info("----------------------------------- 시큐리티 설정 -----------------------------------------");
 
+<<<<<<< HEAD
         http
                 .authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/images/**").permitAll() // 정적 리소스는 인증 없이 접근 가능
                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 .and()
                 .formLogin().and().csrf().disable(); // 기본 로그인 폼 사용
+=======
+        http.formLogin().and().csrf().disable();
+>>>>>>> feature/kyoung
 
         return http.build();
     }

@@ -1,6 +1,6 @@
 document.querySelector('.menu').addEventListener('click', function() {
     var sidebar = document.querySelector('.sidebar');
-    var menuIcon = document.querySelector('.menu-icon');s
+    var menuIcon = document.querySelector('.menu-icon');
     sidebar.classList.toggle('expanded');
 
     if (sidebar.classList.contains('expanded')) {

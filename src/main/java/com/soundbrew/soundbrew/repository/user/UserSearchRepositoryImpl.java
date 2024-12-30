@@ -2,7 +2,10 @@ package com.soundbrew.soundbrew.repository.user;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+<<<<<<< HEAD:src/main/java/com/soundbrew/soundbrew/repository/user/UserSearchRepositoryImpl.java
 
+=======
+>>>>>>> feature/kyoung:src/main/java/com/soundbrew/soundbrew/repository/search/UserSearchRepositoryImpl.java
 import com.soundbrew.soundbrew.domain.user.QUser;
 import com.soundbrew.soundbrew.domain.user.QUserRole;
 import com.soundbrew.soundbrew.domain.user.QUserSubscription;

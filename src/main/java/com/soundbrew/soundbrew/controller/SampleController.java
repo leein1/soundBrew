@@ -70,4 +70,9 @@ public class SampleController {
     public String getUpload(){
         return "/sound/music-upload";
     }
+
+    @GetMapping("/soundplayer/test")
+    public String getPlayer() {
+        return "/player";
+    }
 }

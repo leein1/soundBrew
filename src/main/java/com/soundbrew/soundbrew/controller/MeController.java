@@ -5,9 +5,13 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
+<<<<<<< HEAD
 import com.soundbrew.soundbrew.service.MeService;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.user.UserService;
+=======
+import com.soundbrew.soundbrew.service.*;
+>>>>>>> feature/kyoung
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +29,8 @@ public class MeController {
 
     private final UserService userService;
     private final SubscriptionService subscriptionService;
-    private final MeService meService;
+    private final SoundsService soundsService;
+    private final TagsService tagsService;
 
 
 //    @GetMapping("/list")
@@ -230,7 +235,7 @@ public class MeController {
 
     @PostMapping("/tracks/{musicId}/tags")
     ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDTO tagsDto){
-        ResponseDTO responseDto = meService.updateLinkTags(musicId,tagsDto);
+        ResponseDTO responseDto = tagsService.updateLinkTags(musicId,tagsDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -245,14 +250,14 @@ public class MeController {
         MusicDTO musicDto = soundCreateDto.getMusicDTO();
         TagsDTO tagsDto = soundCreateDto.getTagsDTO();
 
-        ResponseDTO responseDto = meService.createSound(2,albumDto,musicDto,tagsDto);
+        ResponseDTO responseDto = soundsService.createSound(2,albumDto,musicDto,tagsDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO> updateAlbum(@PathVariable int albumId, @RequestBody AlbumDTO albumDto){
-        ResponseDTO responseDto = meService.updateAlbum(albumId,albumDto);
+        ResponseDTO responseDto = soundsService.updateAlbum(albumId,albumDto);
 
         return ResponseEntity.ok().body(responseDto);
 
@@ -260,7 +265,7 @@ public class MeController {
 
     @PatchMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO> updateMusic(@PathVariable int musicId, @RequestBody MusicDTO musicDto ){
-        ResponseDTO responseDto = meService.updateMusic(musicId,musicDto);
+        ResponseDTO responseDto = soundsService.updateMusic(musicId,musicDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -268,7 +273,7 @@ public class MeController {
     @GetMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable("musicId") int id){
         // 쿠키 -> 내이름
-        ResponseDTO<SearchTotalResultDTO> responseDto = meService.getSoundOne(2,id);
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundOne(2,id);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -276,7 +281,7 @@ public class MeController {
     @GetMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") int id, RequestDTO requestDto){
         //쿠키 -> 내이름
-        ResponseDTO<SearchTotalResultDTO> responseDto = meService.getAlbumOne(2,id,requestDto);
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(2,id,requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
     }
@@ -285,7 +290,7 @@ public class MeController {
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe(RequestDTO requestDto){
         requestDto.setKeyword("u_1");
         requestDto.setType("n");
-        ResponseDTO<SearchTotalResultDTO> responseDto = meService.getSoundMe(requestDto);
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -294,7 +299,7 @@ public class MeController {
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(RequestDTO requestDto){
         requestDto.setKeyword("u_1");
         requestDto.setType("n");
-        ResponseDTO<SearchTotalResultDTO> responseDto = meService.getSoundMe(requestDto);
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -303,7 +308,7 @@ public class MeController {
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumMe(RequestDTO requestDto){
         requestDto.setKeyword("u_1");
         requestDto.setType("n");
-        ResponseDTO<SearchTotalResultDTO> responseDto = meService.getAlbumMe(requestDto);
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumMe(requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
     }
