@@ -21,13 +21,14 @@ import static com.soundbrew.soundbrew.dto.BuilderFactory.*;
 @Service
 @RequiredArgsConstructor
 public class TagsServiceImpl implements TagsService {
-    private final MusicInstrumentTagRepository musicInstrumentTagRepository;
-    private final MusicMoodTagRepository musicMoodTagRepository;
-    private final MusicGenreTagRepository musicGenreTagRepository;
-    private final SoundProcessor soundProcessor;
     private final InstrumentTagRepository instrumentTagRepository;
     private final MoodTagRepository moodTagRepository;
     private final GenreTagRepository genreTagRepository;
+    private final MusicInstrumentTagRepository musicInstrumentTagRepository;
+    private final MusicMoodTagRepository musicMoodTagRepository;
+    private final MusicGenreTagRepository musicGenreTagRepository;
+    private final MusicRepository musicRepository;
+    private final SoundProcessor soundProcessor;
 
 
     @Override
@@ -163,6 +164,10 @@ public class TagsServiceImpl implements TagsService {
 
     private GenreTag findByGenreTagName(String keyword){
         return genreTagRepository.findByGenreTagName(keyword).orElseThrow();
+    }
+
+    private Music findByMusicId(int musicId){
+        return musicRepository.findById(musicId).orElseThrow();
     }
 }
 

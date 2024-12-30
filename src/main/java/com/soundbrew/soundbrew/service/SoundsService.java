@@ -1,13 +1,8 @@
 package com.soundbrew.soundbrew.service;
 
-import com.soundbrew.soundbrew.domain.sound.Music;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
-import org.springframework.http.HttpRange;
-
-import java.io.IOException;
-import java.util.List;
 
 public interface SoundsService {
     // total search for all user
@@ -37,5 +32,5 @@ public interface SoundsService {
     ResponseDTO<SearchTotalResultDTO> readVerifyAlbumOne(int userId, int id, RequestDTO requestDTO);
 
     ResponseDTO<SearchTotalResultDTO> getSoundOneForAdmin(int userId, int id);
-    ResponseDTO<SearchTotalResultDTO> getAlbumOneForAdmin(int userId, int id);
+    ResponseDTO<SearchTotalResultDTO> getAlbumOneForAdmin(int userId, int id,RequestDTO requestDTO);
 }

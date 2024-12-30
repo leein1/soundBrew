@@ -184,7 +184,7 @@ public class SoundsServiceImpl implements SoundsService{
     }
 
     @Override
-    public ResponseDTO<SearchTotalResultDTO> getAlbumOneForAdmin(int userId, int id) {
+    public ResponseDTO<SearchTotalResultDTO> getAlbumOneForAdmin(int userId, int id,RequestDTO requestDTO) {
         return this.getSoundOne(userId, id);
     }
 

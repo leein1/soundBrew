@@ -13,17 +13,17 @@ public interface AdminService {
 
     public ResponseDTO<UserDetailsDTO> getUser(int userId);
 
-    // Tags for admin
-    ResponseDTO createTag(TagsDTO tagsDTO);
-    ResponseDTO updateInstrumentTagSpelling(String beforeName, String afterName);
-    ResponseDTO updateMoodTagSpelling(String beforeName, String afterName);
-    ResponseDTO updateGenreTagSpelling(String beforeName, String afterName);
-    ResponseDTO<TagsDTO> getTags(List<Integer> musicIds);
-
-    ResponseDTO deleteAlbum(int albumId);
-    ResponseDTO deleteMusic(int musicId);
-
-    ResponseDTO updateVerifyAlbum(int albumId);
-    ResponseDTO<SearchTotalResultDTO> readVerifyAlbum(RequestDTO requestDTO);
-    ResponseDTO<SearchTotalResultDTO> readVerifyAlbumOne(int userId, int id, RequestDTO requestDTO);
+//    // Tags for admin
+//    ResponseDTO createTag(TagsDTO tagsDTO);
+//    ResponseDTO updateInstrumentTagSpelling(String beforeName, String afterName);
+//    ResponseDTO updateMoodTagSpelling(String beforeName, String afterName);
+//    ResponseDTO updateGenreTagSpelling(String beforeName, String afterName);
+//    ResponseDTO<TagsDTO> getTags(List<Integer> musicIds);
+//
+//    ResponseDTO deleteAlbum(int albumId);
+//    ResponseDTO deleteMusic(int musicId);
+//
+//    ResponseDTO updateVerifyAlbum(int albumId);
+//    ResponseDTO<SearchTotalResultDTO> readVerifyAlbum(RequestDTO requestDTO);
+//    ResponseDTO<SearchTotalResultDTO> readVerifyAlbumOne(int userId, int id, RequestDTO requestDTO);
 }

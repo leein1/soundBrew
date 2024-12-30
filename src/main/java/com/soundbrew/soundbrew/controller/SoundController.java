@@ -3,17 +3,13 @@ package com.soundbrew.soundbrew.controller;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
-import com.soundbrew.soundbrew.dto.sound.SoundStreamDTO;
 import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.service.SoundsService;
+import com.soundbrew.soundbrew.service.TagsService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRange;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/sounds")
 public class SoundController {
     private final SoundsService soundsService;
+    private final TagsService tagsService;
 
     @GetMapping("/tracks")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalSoundSearch(@ModelAttribute RequestDTO requestDto) {
