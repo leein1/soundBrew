@@ -49,9 +49,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         //  스프링 시큐리티 API에서 UserDetails 를 구현한 User 클래스(builder 지원)를 제공
         UserDetails userDetails = User.builder()
                 .username("user1")
-//                .password("1111") 엔코더 사용으로 주석
                 .password(passwordEncoder.encode("111"))
-                .authorities("ROLE_USER")
+                .roles("USER") // "ROLE_" 접두어를 자동으로 추가
                 .build();
 
         return userDetails;
