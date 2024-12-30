@@ -10,12 +10,9 @@ import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.service.AdminService;
 import com.soundbrew.soundbrew.service.AdminServiceImpl;
-<<<<<<< HEAD
 import com.soundbrew.soundbrew.service.user.UserService;
-=======
 import com.soundbrew.soundbrew.service.SoundsService;
 import com.soundbrew.soundbrew.service.TagsService;
->>>>>>> feature/kyoung
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -35,13 +32,10 @@ public class AdminController {  //  관리자용 컨트롤러
      */
 
     private final AdminService adminService;
-<<<<<<< HEAD
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
-=======
     private final SoundsService soundsService;
     private final TagsService tagsService;
->>>>>>> feature/kyoung
 
     //  모든 유저 조회
     @GetMapping("/users")
@@ -79,12 +73,7 @@ public class AdminController {  //  관리자용 컨트롤러
 
     @PostMapping("/tags")
     ResponseEntity<ResponseDTO> createTag(@RequestBody TagsDTO tagsDto){
-<<<<<<< HEAD
-
-        ResponseDTO responseDto = adminService.createTag(tagsDto);
-=======
         ResponseDTO responseDto = tagsService.createTag(tagsDto);
->>>>>>> feature/kyoung
 
         return ResponseEntity.ok().body(responseDto);
     }

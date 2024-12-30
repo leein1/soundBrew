@@ -5,13 +5,10 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
-<<<<<<< HEAD
-import com.soundbrew.soundbrew.service.MeService;
+import com.soundbrew.soundbrew.service.SoundsService;
+import com.soundbrew.soundbrew.service.TagsService;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.user.UserService;
-=======
-import com.soundbrew.soundbrew.service.*;
->>>>>>> feature/kyoung
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;

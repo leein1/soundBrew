@@ -13,7 +13,6 @@ import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
 import com.soundbrew.soundbrew.repository.subscription.SubscriptionRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
-import com.soundbrew.soundbrew.service.MeServiceImpl;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.util.UserValidator;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +43,6 @@ public class UserServiceImpl implements UserService{
     private final UserSubscriptionRepository userSubscriptionRepository;
 
     private final UserValidator userValidator;
-    private final MeServiceImpl meServiceImpl;
 //    private final ActivationCodeRepository activationCodeRepository;
 //    private final MailService mailService;
 //    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
