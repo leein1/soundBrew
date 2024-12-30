@@ -616,14 +616,13 @@ public class UserServiceImpl implements UserService{
 //    구독제 삭제
     //    id만 받는다고 가정하고 작성
     @Override
-    public ResponseDTO<String> deleteUserSubscription(int userId, int subscriptionId) {
+    public ResponseDTO<String> deleteUserSubscription(int userId) {
 
         //  검증
         UserDTO existingUserDTO = this.getUser(userId).getDto();
-        SubscriptionDTO subscriptionDTO = subscriptionService.getSubscription(subscriptionId).getDto();
         UserSubscriptionDTO existingUserSubscriptionDTO = this.getUserSubscription(userId).getDto();
 
-        //  User테이블에서 해당 유저의 subscriptionId null로 업데이트
+        //  User 테이블에서 해당 유저의 subscriptionId null로 업데이트
         existingUserDTO.setSubscriptionId(null);
         this.updateUser(existingUserDTO);
 

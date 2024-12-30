@@ -69,6 +69,7 @@ public class AdminController {  //  관리자용 컨트롤러
 
     @PostMapping("/tags")
     ResponseEntity<ResponseDTO> createTag(@RequestBody TagsDTO tagsDto){
+
         ResponseDTO responseDto = adminService.createTag(tagsDto);
 
         return ResponseEntity.ok().body(responseDto);

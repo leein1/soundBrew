@@ -83,7 +83,7 @@ public interface UserService {
     ResponseDTO<String> updateUserSubscription(int userId, int subscriptionId);
 
     //  구독제 취소
-    ResponseDTO<String> deleteUserSubscription(int userId, int subscriptionId);
+    ResponseDTO<String> deleteUserSubscription(int userId);
 
 
     //  ---------------------------------------VerifyService 로 이동

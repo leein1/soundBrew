@@ -166,7 +166,7 @@ public class MeController {
 //    반환형으로 SubscriptionDTO ? UserSubscriptionDTO
 //    @ApiOperation(value = "subscription GET", notes = "GET 내 구독제 정보 가져오기")
     @GetMapping("/subscription")
-    public ResponseEntity<ResponseDTO<SubscriptionDTO>> getSubscription(@RequestParam("userId") int userId){ //추후 토큰으로 변경
+    public ResponseEntity<ResponseDTO<?>> getSubscriptionInfo(@RequestParam("userId") int userId){ //추후 토큰으로 변경
 
         // user 조회
         UserDTO userDTO = userService.getUser(userId).getDto();
@@ -175,23 +175,30 @@ public class MeController {
         int subscriptionId = userDTO.getSubscriptionId();
 
         // subscriptionId로 구독제 정보 가져오기
-        ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.getSubscription(subscriptionId);
+        try {
 
-        return ResponseEntity.ok().body(responseDTO);
+            ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.getSubscription(subscriptionId);
+
+            return ResponseEntity.ok().body(responseDTO);
+
+        } catch (NoSuchElementException e) {
+
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                    .message("구독중인 구독제가 없습니다.").build();
+
+            return ResponseEntity.ok().body(responseDTO);
+        }
+
+
     }
 
 
 //    회원 구독제 등록 POST /me/subscription/{subscriptionId}
 //    @ApiOperation(value = "subscription POST", notes = "POST 유저의 구독제 구독")
     @PostMapping("/subscription/{subscriptionId}")
-    public ResponseEntity addSubscription(@PathVariable int subscriptionId, @RequestParam int userId){ //추후 토큰으로 변경
+    public ResponseEntity<ResponseDTO<String>> addSubscription(@PathVariable int subscriptionId, @RequestParam int userId){ //추후 토큰으로 변경
 
        ResponseDTO<String> responseDTO = userService.addUserSubscription(userId, subscriptionId);
-
-       //유저 아이디 검색
-        // 구독제 검색
-        //유저 정보에 구독제 정보를 업데인트
-        // 크레딧 연산
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -200,7 +207,7 @@ public class MeController {
 //    구독제 정보 수정 PATCH /me/subscription
 //    @ApiOperation(value = "subscription PATCH", notes = "PATCH 유저의 구독제 변경")
     @PatchMapping("/subscrion/{subscriptionId}")
-    public ResponseEntity updateSubscription(@PathVariable int subscriptionId, @RequestParam int userId){
+    public ResponseEntity<ResponseDTO<String>> updateSubscription(@PathVariable int subscriptionId, @RequestParam int userId){
 
         ResponseDTO<String> responseDTO = userService.updateUserSubscription(subscriptionId, userId);
 
@@ -211,9 +218,9 @@ public class MeController {
 //    구독제 정보 삭제 DELETE /me/subscription
 //    @ApiOperation(value = "subscription DELETE", notes = "DELETE 유저의 구독 취소")
     @DeleteMapping("/subscription")
-    public ResponseEntity deleteSubscription(int userId){
+    public ResponseEntity<ResponseDTO<String>> cancleSubscription(int userId){
 
-        ResponseDTO<String> responseDTO = userService.deleteUser(userId);
+        ResponseDTO<String> responseDTO = userService.deleteUserSubscription(userId);
 
         return ResponseEntity.ok().body(responseDTO);
 
