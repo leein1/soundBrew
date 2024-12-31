@@ -30,7 +30,7 @@ public class FileService {
     private final MusicFileRepository repository;
 
     //  파일 경로 새로 지정해주어야 함 - 현재 테스트용으로 되는대로 작성함
-    private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads");
+    private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "upload");
     private final Path profileImageDir = uploadDir.resolve("profile-images");
 
 
