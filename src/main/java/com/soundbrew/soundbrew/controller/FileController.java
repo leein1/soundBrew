@@ -97,49 +97,49 @@ public class FileController {
         }
     }
 
-    @GetMapping("/stream/{filename}")
-    public ResponseEntity<Resource> streamFile(
-            @PathVariable String filename,
-            @RequestParam(value = "token", required = false) String token) throws IOException {
-
-        try {
-
-            Path filePath = fileService.getFile(filename);
-            long fileSize = Files.size(filePath);
-
-            // 범위 ㅈㅔ한
-            long maxAllowedRange = 5 * 1024 * 1024; // 5MB
-
-            // 토큰이 없는 경우 시작부터 1분까지만 - 320kbps
-            if (token == null) {
-
-                long allowedEnd = 60 * 40 * 1024; // 1분 (320kbps)
-
-                byte[] data = fileService.readPartialFile(filePath, 0, Math.min(fileSize - 1, allowedEnd));
-
-                return ResponseEntity.status(206)
-                        .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath))
-                        .header(HttpHeaders.CONTENT_RANGE, "bytes 0-" + allowedEnd + "/" + fileSize)
-                        .body(new ByteArrayResource(data));
-            }
-
-            // 토큰 검증 현재는 그냥 문자열로 "user"가 아니면 오류 반환
-            fileService.validateToken(token);
-
-            // 제한범위 내 전체 파일 전송
-            byte[] data = fileService.readPartialFile(filePath, 0, Math.min(fileSize - 1, maxAllowedRange));
-
-            return ResponseEntity.status(206)
-                    .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath))
-                    .header(HttpHeaders.CONTENT_RANGE, "bytes 0-" + (Math.min(fileSize - 1, maxAllowedRange)) + "/" + fileSize)
-                    .body(new ByteArrayResource(data));
-
-        } catch (SecurityException e) {
-            return ResponseEntity.status(401).body(null);
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body(null);
-        }
-    }
+//    @GetMapping("/stream/{filename}")
+//    public ResponseEntity<Resource> streamFile(
+//            @PathVariable String filename,
+//            @RequestParam(value = "token", required = false) String token) throws IOException {
+//
+//        try {
+//
+//            Path filePath = fileService.getFile(filename);
+//            long fileSize = Files.size(filePath);
+//
+//            // 범위 ㅈㅔ한
+//            long maxAllowedRange = 5 * 1024 * 1024; // 5MB
+//
+//            // 토큰이 없는 경우 시작부터 1분까지만 - 320kbps
+//            if (token == null) {
+//
+//                long allowedEnd = 60 * 40 * 1024; // 1분 (320kbps)
+//
+//                byte[] data = fileService.readPartialFile(filePath, 0, Math.min(fileSize - 1, allowedEnd));
+//
+//                return ResponseEntity.status(206)
+//                        .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath))
+//                        .header(HttpHeaders.CONTENT_RANGE, "bytes 0-" + allowedEnd + "/" + fileSize)
+//                        .body(new ByteArrayResource(data));
+//            }
+//
+//            // 토큰 검증 현재는 그냥 문자열로 "user"가 아니면 오류 반환
+//            fileService.validateToken(token);
+//
+//            // 제한범위 내 전체 파일 전송
+//            byte[] data = fileService.readPartialFile(filePath, 0, Math.min(fileSize - 1, maxAllowedRange));
+//
+//            return ResponseEntity.status(206)
+//                    .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath))
+//                    .header(HttpHeaders.CONTENT_RANGE, "bytes 0-" + (Math.min(fileSize - 1, maxAllowedRange)) + "/" + fileSize)
+//                    .body(new ByteArrayResource(data));
+//
+//        } catch (SecurityException e) {
+//            return ResponseEntity.status(401).body(null);
+//        } catch (IOException e) {
+//            return ResponseEntity.status(500).body(null);
+//        }
+//    }
 
     @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadProfile(@RequestParam MultipartFile file, @RequestParam int userId) throws IOException {
