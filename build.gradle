@@ -76,6 +76,9 @@ dependencies {
     //QueryDSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 
+    // JSON처리
+    implementation 'com.google.code.gson:gson:2.8.9'
+
     annotationProcessor(
             "javax.persistence:javax.persistence-api",
             "javax.annotation:javax.annotation-api",

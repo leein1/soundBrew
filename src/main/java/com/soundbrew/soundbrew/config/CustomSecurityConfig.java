@@ -1,15 +1,22 @@
 package com.soundbrew.soundbrew.config;
 
+import com.soundbrew.soundbrew.handler.APILoginSuccessHandler;
 import com.soundbrew.soundbrew.handler.Custom403Handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
+import com.soundbrew.soundbrew.security.filter.APILoginFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -49,7 +56,32 @@ public class CustomSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
+
+        //  AuthenticationManager 설정
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+
+        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
+
+        //  Get AuthenticationManager
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
+
+        //  필수!!!
+        http.authenticationManager(authenticationManager);
+
+        // API 로그인 필터
+        APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
+        apiLoginFilter.setAuthenticationManager(authenticationManager);
+
+        //  API LoginSuccessHandler 성공시 핸들러 설정
+        APILoginSuccessHandler successHandler = new APILoginSuccessHandler();
+
+        // SuccessHandler 세팅
+        apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
+
+        //  API 로그인필터 위치 조정
+        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+
         // HttpSecurity 객체를 통해 보안 정책을 설정합니다.
         http.authorizeRequests() // 요청 경로별 인증 및 권한 설정 시작
                 .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
@@ -58,11 +90,13 @@ public class CustomSecurityConfig {
                 // Swagger 경로 접근 허용
                 .antMatchers("/register").permitAll()
                 //  회원가입 경로 접근 허용
-                .antMatchers("/api/users").permitAll()
+                .antMatchers("/api/users/**").permitAll()
                 // 회원가입 rest요청 허용
                 .antMatchers("/").permitAll()
                 //  메인 페이지 경로 접근 허용
-                .antMatchers("/myInfo").hasRole("USER")
+                .antMatchers("/files/**").permitAll()
+                .antMatchers("/api/sample/**").permitAll()
+                .antMatchers("/myInfo").permitAll()
                 // '/myInfo' 경로는 'ROLE_USER' 권한을 가진 사용자만 접근 가능
                 .anyRequest().authenticated()
                 // 위에서 명시적으로 설정되지 않은 모든 요청은 인증이 필요
@@ -79,6 +113,9 @@ public class CustomSecurityConfig {
 
         http.csrf().disable();
         //csrf 비활성
+
+        //  token 사용으로 세션 사용하지 않도록 지정
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         /*
         remember-me 쿠키 생성시 쿠키 값 인코딩 위한 key 와 필요한 정보를 저장하는 tokenRepository를 지정해야 한다

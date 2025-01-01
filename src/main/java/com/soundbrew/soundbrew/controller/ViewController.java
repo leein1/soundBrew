@@ -30,7 +30,7 @@ public class ViewController {
     public void getVerificationPassword(){}
 
     @GetMapping("/myInfo")
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     public void getMe(){}
 
     @GetMapping("")

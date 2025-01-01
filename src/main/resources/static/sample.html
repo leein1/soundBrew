@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Sample Client</h1>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+
+    async function callTest() {
+        try {
+            // HTTPS가 설정되지 않았다면 http://localhost:8080으로 변경
+            const response = await axios.get("http://localhost:8080/api/sample/doA");
+            console.log("Response data:", response.data);
+        } catch (error) {
+            console.error("Error occurred:", error);
+        }
+    }
+
+    callTest();
+</script>
+
+</body>
+</html>

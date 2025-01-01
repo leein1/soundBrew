@@ -79,7 +79,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 new MemberSecurityDTO(
                         userDetailsDTO.getUserDTO().email,
                         userDetailsDTO.getUserDTO().getPassword(),
-                        grantedAuthorities
+                        List.of(new SimpleGrantedAuthority("ROLE_USER"))
                         );
 
         log.info("memberSecurityDTO: {}", memberSecurityDTO);

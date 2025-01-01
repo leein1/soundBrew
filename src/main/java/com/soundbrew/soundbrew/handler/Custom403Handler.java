@@ -30,7 +30,7 @@ public class Custom403Handler implements AccessDeniedHandler {
         contains()는 application/json 이라는 문자열이 어디에 위치해도 true 반환이기 때문에(json인지 구별하기엔 불명확함)
         startsWith() 사용 - json요청은 contentType이 항상 application/json으로 시작하는 명확한 규칙이 있기 때문에
          */
-        boolean jsonRequest = contentType.startsWith("application/json");
+        boolean jsonRequest = contentType != null && contentType.startsWith("application/json");
 
         log.info("JSON Request: " + jsonRequest);
 

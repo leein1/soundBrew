@@ -24,6 +24,8 @@ public class UsersController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Object>> resgister(@RequestBody UserDTO userDTO) {
 
+        log.info("회원가입 요청 --------------------------------");
+
         try {
             userService.registerUser(userDTO);
 
