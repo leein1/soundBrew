@@ -14,10 +14,11 @@
     </div>
 
     <div class="content-body">
-        <form class="login-form">
+        <form class="login-form" action="/login" method="post">
             <div class="input-group">
                 <label for="email">이메일</label>
-                <input type="email" id="email" name="email" placeholder="이메일 입력" required>
+<!--                <input type="email" id="email" name="email" placeholder="이메일 입력" required>-->
+                    <input type="text" id="email" name="username" placeholder="이메일 입력" required>
             </div>
             <div class="input-group">
                 <label for="password">비밀번호</label>
@@ -26,6 +27,8 @@
 
             <button type="submit">로그인</button>
 
+            <label for="remember-me">자동 로그인</label>
+            <input type="checkbox" id="remember-me" name="remember-me">
         </form>
     </div>
 

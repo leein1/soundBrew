@@ -1,16 +1,22 @@
 package com.soundbrew.soundbrew.config;
 
+import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
 @Log4j2
@@ -19,53 +25,113 @@ import org.springframework.security.web.SecurityFilterChain;
 public class CustomSecurityConfig {
 
 
-    //  아무 설정도 하지 않을 경우 모든 사용자 -> 모든 경로 접근 가능
-    //  접근 제어 역할로 유추 & 웹 Filter 공부 필요
-    //  필터들이 단계별로 동작하므로 로그 설정 최대한 낮게 하여 에러 식별 가능하게 설정 -> application.properties
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//
-//        log.info("----------------------------------- 시큐리티 설정 -----------------------------------------");
-//
-//        http.formLogin();
-//
-//        return http.build();
-//    }
+    private final DataSource dataSource;
+    private final CustomUserDetailsService customUserDetailsService;
 
+    /*
+    CustomuserDetailsService 클래스와 순환참조 문제로 해당 빈 등록 PasswordEncoderConfig 클래스로 분리함
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+     */
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // HttpSecurity 객체를 통해 보안 정책을 설정합니다.
+        http.authorizeRequests() // 요청 경로별 인증 및 권한 설정 시작
+                .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                // 정적 리소스에 대한 요청은 인증 없이 접근 가능하도록 설정
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                // Swagger 경로 접근 허용
+                .antMatchers("/myInfo").hasRole("USER")
+                // '/myInfo' 경로는 'ROLE_USER' 권한을 가진 사용자만 접근 가능
+                .anyRequest().authenticated()
+                // 위에서 명시적으로 설정되지 않은 모든 요청은 인증이 필요
+                .and()
+                .formLogin() // 폼 기반 로그인 설정
+                .loginPage("/login")
+                // 사용자 정의 로그인 페이지 경로 지정 ('/member/login' 사용)
+                .permitAll()
+                // 로그인 페이지와 관련된 모든 요청은 인증 없이 접근 가능
+                .and()
+                .logout() // 로그아웃 설정
+                .permitAll();
+                 // 로그아웃 경로는 인증 여부와 관계없이 누구나 접근 가능
+
+        http.csrf().disable();
+        //csrf 비활성
+
+        /*
+        remember-me 쿠키 생성시 쿠키 값 인코딩 위한 key 와 필요한 정보를 저장하는 tokenRepository를 지정해야 한다
+        아래의 경우 토큰 지정에 persistentTokenRepository() 를 만들어서 사용
+
+        로그인 화면(html)에서도 remember-me라는 name 속성이 전달 되어야 기능함.
+         */
+        http.rememberMe()
+                .key("12345678")
+                .tokenRepository(persistentTokenRepository())
+                .userDetailsService(customUserDetailsService)
+                .tokenValiditySeconds(60*60*24*30); //30일
+
+        return http.build();
+        // 설정한 보안 정책을 기반으로 SecurityFilterChain 객체를 생성하여 반환
+    }
+
+
+    /*
+
+
+
+    아무 설정도 하지 않을 경우 모든 사용자 -> 모든 경로 접근 가능
+    접근 제어 역할로 유추 & 웹 Filter 공부 필요
+    필터들이 단계별로 동작하므로 로그 설정 최대한 낮게 하여 에러 식별 가능하게 설정 -> application.properties
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         log.info("----------------------------------- 시큐리티 설정 -----------------------------------------");
 
-        http
-                .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/images/**").permitAll() // 정적 리소스는 인증 없이 접근 가능
-                .anyRequest().authenticated() // 나머지 요청은 인증 필요
-                .and()
-                .formLogin().and().csrf().disable(); // 기본 로그인 폼 사용
+                .and().formLogin().loginPage("/member/login").permitAll();
+        // 로그인 페이지와 관련된 모든 요청은 인증 없이 접근 가능
+
 
         return http.build();
     }
 
-//    //  정적 자원 시큐리티 적용 x
-//    // 브라우저에서 /css/admin.css 정적자원 직접 호출시 로그에서 No security for GET /css/admin.css 출력됨
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//
-//        log.info("----------------------------------- 웹 설정 -----------------------------------------");
-//
-//        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-//    }
+     */
+
+/*
+    2.7 이상 버전부터 스프링에서 권장하지 않는 방법이다.
+    http 객체 설정시  .authorizeRequests() 사용 방식을 권장
 
 
-
-
-
-    //  @RequiredArgsContructor 어노테이션으로도 작동 하는지 확인 필요
+    //  정적 자원 시큐리티 적용 x
+    // 브라우저에서 /css/admin.css 정적자원 직접 호출시 로그에서 No security for GET /css/admin.css 출력됨
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public WebSecurityCustomizer webSecurityCustomizer() {
+
+        log.info("----------------------------------- 웹 설정 -----------------------------------------");
+
+        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
+
+ */
+
+
+
+
+
 
 
 
