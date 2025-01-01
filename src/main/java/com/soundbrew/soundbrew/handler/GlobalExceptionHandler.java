@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.controller;
+package com.soundbrew.soundbrew.handler;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
