@@ -10,11 +10,10 @@ import java.util.Optional;
 
 public interface UserSearchRepository {
 
-    ResponseDTO<UserDTO> searchTest();
-
     Optional<UserDetailsDTO> findUserDetailsById(int userId);
+
+    Optional<UserDetailsDTO> findUserDetailsByUsername(String username);
 
     Optional<Page<UserDetailsDTO>> findAllUserDetails(RequestDTO requestDTO);
 
-    Optional<UserDetailsDTO> findUserWithRoleById(int userId);
 }

@@ -28,32 +28,6 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
     private final QUserRole userRole = QUserRole.userRole;
     private final QUserSubscription userSubscription = QUserSubscription.userSubscription;
 
-//    public ResponseDTO<UserDTO> searchTest() {
-//        QUser user = QUser.user;
-//
-//        List<User> resultList = jpaQueryFactory.selectFrom(user)
-//                .where(user.nickname.contains("lee"))
-//                .fetch();
-//
-//        List<UserDTO> userDTOList = resultList.stream()
-//                .map(u -> modelMapper.map(u, UserDTO.class))
-//                .collect(Collectors.toList());
-//
-//        int totalCount = (int) jpaQueryFactory.selectFrom(user)
-//                .where(user.nickname.contains("lee"))
-//                .fetchCount();
-//
-//        return ResponseDTO.<UserDTO>withAll()
-//                .dtoList(userDTOList)
-//                .total(totalCount)
-//                .build();
-//    }
-
-    @Override
-    public ResponseDTO<UserDTO> searchTest() {
-        return null;
-    }
-
 //    @Override
 //    public UserDetailsDTO findUserDetailsById(int userId) {
 //        QUser user = QUser.user;
@@ -143,6 +117,49 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
     }
 
     @Override
+    public Optional<UserDetailsDTO> findUserDetailsByUsername(String username) {
+        return Optional.ofNullable(jpaQueryFactory.select(Projections.bean(UserDetailsDTO.class,
+                        Projections.bean(UserDTO.class,
+                                user.userId,
+                                user.subscriptionId,
+                                user.name,
+                                user.nickname,
+                                user.password,
+                                user.phoneNumber,
+                                user.email,
+                                user.emailVerified,
+                                user.creditBalance,
+                                user.profileImagePath,
+                                user.birth,
+                                user.createDate, // BaseDTO의 필드
+                                user.modifyDate  // BaseDTO의 필드
+
+                        ).as("userDTO"),
+
+                        Projections.bean(UserRoleDTO.class,
+                                userRole.id.roleId,
+                                userRole.id.userId
+                        ).as("userRoleDTO"),
+
+                        Projections.bean(UserSubscriptionDTO.class,
+                                userSubscription.userId,
+                                userSubscription.subscriptionId,
+                                userSubscription.firstBillingDate,
+                                userSubscription.nextBillingDate,
+                                userSubscription.paymentStatus,
+                                userSubscription.createDate,
+                                userSubscription.modifyDate
+
+                        ).as("userSubscriptionDTO")
+                ))
+                .from(user)
+                .join(userRole).on(user.userId.eq(userRole.id.userId))
+                .leftJoin(userSubscription).on(user.userId.eq(userSubscription.userId))
+                .where(user.email.eq(username))
+                .fetchOne());
+    }
+
+    @Override
     public Optional<Page<UserDetailsDTO>> findAllUserDetails(RequestDTO requestDTO) {
 
         List<UserDetailsDTO> userDetailsList = jpaQueryFactory
@@ -194,11 +211,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
 
         return Optional.of(new PageImpl<>(userDetailsList, requestDTO.getPageable(), total));
     }
-
-    @Override
-    public Optional<UserDetailsDTO> findUserWithRoleById(int userId) {
-        return Optional.empty();
-    }
+}
 
 //    public Optional<Page<UserDetailsDTO>> findAllUserDetails(Pageable pageable) {
 //
@@ -242,7 +255,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
 //
 //        return Optional.of(new PageImpl<>(userDetailsList, pageable, total));
 //    }
-}
+
 
 
 //    @Override

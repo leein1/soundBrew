@@ -6,12 +6,11 @@ import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.domain.user.UserSubscription;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
-import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
-import com.soundbrew.soundbrew.dto.user.UserDTO;
-import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
-import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
+import com.soundbrew.soundbrew.dto.user.*;
+import com.soundbrew.soundbrew.repository.role.RoleRepository;
 import com.soundbrew.soundbrew.repository.subscription.SubscriptionRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
+import com.soundbrew.soundbrew.repository.user.UserRoleRepository;
 import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.util.UserValidator;
@@ -20,10 +19,13 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,14 +37,19 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl implements UserService{
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final SubscriptionService subscriptionService;
     private final UserSubscriptionRepository userSubscriptionRepository;
-
+    private final RoleRepository roleRepository;
     private final UserValidator userValidator;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRoleRepository userRoleRepository;
+
 //    private final ActivationCodeRepository activationCodeRepository;
 //    private final MailService mailService;
 //    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -161,6 +168,7 @@ public class UserServiceImpl implements UserService{
     }
 
     //    회원 가입
+    @Transactional
     @Override
     public ResponseDTO<String> registerUser(UserDTO userDTO) {
 
@@ -194,14 +202,32 @@ public class UserServiceImpl implements UserService{
             return responseDTO;
         }
 
-            User user = userRepository.save(userDTO.toEntity());
-            String nickname = user.getNickname();
+        //  입력한 비밀번호 - 인코딩 전
+        String beforeEncodePassword = userDTO.getPassword();
+        //  비밀번호 인코딩
+        userDTO.setPassword(passwordEncoder.encode(beforeEncodePassword));
 
-            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                    .message(nickname + "님 회원가입을 축하합니다!")
-                    .build();
+        //  실제 save()
+        User user = userRepository.save(userDTO.toEntity());
+        log.info("user save() : {} ", user.toString());
+        entityManager.flush();
 
-            return responseDTO;
+        //  역할 테이블 save()
+        UserRoleDTO userRoleDTO = UserRoleDTO.builder()
+                .roleId(5)
+                .userId(user.getUserId())
+                .build();
+
+        log.info("UserRoleDTO build : {}", userRoleDTO.toEntity().toString());
+
+        userRoleRepository.save(userRoleDTO.toEntity());
+
+        String nickname = user.getNickname();
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message(nickname + "님 회원가입을 축하합니다!")
+                .build();
+
+        return responseDTO;
 
     }
 

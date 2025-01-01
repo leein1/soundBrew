@@ -4,15 +4,10 @@ import com.soundbrew.soundbrew.handler.Custom403Handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
@@ -61,6 +56,12 @@ public class CustomSecurityConfig {
                 // 정적 리소스에 대한 요청은 인증 없이 접근 가능하도록 설정
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 // Swagger 경로 접근 허용
+                .antMatchers("/register").permitAll()
+                //  회원가입 경로 접근 허용
+                .antMatchers("/api/users").permitAll()
+                // 회원가입 rest요청 허용
+                .antMatchers("/").permitAll()
+                //  메인 페이지 경로 접근 허용
                 .antMatchers("/myInfo").hasRole("USER")
                 // '/myInfo' 경로는 'ROLE_USER' 권한을 가진 사용자만 접근 가능
                 .anyRequest().authenticated()
