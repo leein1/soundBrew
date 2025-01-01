@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.repository.user;
+package com.soundbrew.soundbrew.repository.user.search;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -193,6 +193,11 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
                 .fetchOne();
 
         return Optional.of(new PageImpl<>(userDetailsList, requestDTO.getPageable(), total));
+    }
+
+    @Override
+    public Optional<UserDetailsDTO> findUserWithRoleById(int userId) {
+        return Optional.empty();
     }
 
 //    public Optional<Page<UserDetailsDTO>> findAllUserDetails(Pageable pageable) {

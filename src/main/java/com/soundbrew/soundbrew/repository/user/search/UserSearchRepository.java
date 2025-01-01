@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.repository.user;
+package com.soundbrew.soundbrew.repository.user.search;
 
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
@@ -10,9 +10,11 @@ import java.util.Optional;
 
 public interface UserSearchRepository {
 
-    public ResponseDTO<UserDTO> searchTest();
+    ResponseDTO<UserDTO> searchTest();
 
-    public Optional<UserDetailsDTO> findUserDetailsById(int userId);
+    Optional<UserDetailsDTO> findUserDetailsById(int userId);
 
-    public Optional<Page<UserDetailsDTO>> findAllUserDetails(RequestDTO requestDTO);
+    Optional<Page<UserDetailsDTO>> findAllUserDetails(RequestDTO requestDTO);
+
+    Optional<UserDetailsDTO> findUserWithRoleById(int userId);
 }
