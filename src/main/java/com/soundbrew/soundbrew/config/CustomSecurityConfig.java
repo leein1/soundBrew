@@ -1,6 +1,6 @@
 package com.soundbrew.soundbrew.config;
 
-import com.soundbrew.soundbrew.handler.Custom403handler;
+import com.soundbrew.soundbrew.handler.Custom403Handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -50,7 +50,7 @@ public class CustomSecurityConfig {
     //  403 예외 처리를 위한 핸들러 주입
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        return new Custom403handler();
+        return new Custom403Handler();
     }
 
     @Bean

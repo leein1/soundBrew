@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Log4j2
-public class Custom403handler implements AccessDeniedHandler {
+public class Custom403Handler implements AccessDeniedHandler {
 
     /*
         해당 핸들러 작동을 위해 CustomSecurityConfig에 빈 처리 + 예외 지정 해줌
