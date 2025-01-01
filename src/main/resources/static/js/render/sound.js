@@ -120,7 +120,6 @@ export function renderAlbumOne(data){
 export function renderTotalSounds(data) {
     const container = document.getElementById("render-sounds-container");
     container.innerHTML = ''; // 기존 내용 초기화
-
     data.forEach((sound) => {
         const musicItem = document.createElement('div');
         musicItem.classList.add('music-item');
@@ -128,12 +127,16 @@ export function renderTotalSounds(data) {
         musicItem.innerHTML = `
             <div class="music-item-left">
                 <img alt="앨범 이미지" class="music-album-img" src="${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
-                <div class="music-play-btn">
+                <div class="music-play-btn" data-sound-id="${sound.musicDTO.filePath}" data-sound-album="${sound.albumDTO.albumName}" data-sound-title="${sound.musicDTO.title}" data-sound-art="${sound.albumDTO.albumArtPath}">
                     <img src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                 </div>
                 <div class="music-info">
-                    <h3>${sound.albumDTO.albumName}</h3>
-                    <p>${sound.musicDTO.title}</p>
+                        <h3 class="album-name" data-album-name="${sound.albumDTO.albumName}" data-nickname="${sound.albumDTO.nickname}">
+                            ${sound.albumDTO.albumName}
+                        </h3>
+                        <p class="track-title" data-track-title="${sound.musicDTO.title}" data-nickname="${sound.albumDTO.nickname}">
+                            ${sound.musicDTO.title}
+                        </p>
                 </div>
                 <div class="music-info-time">
                     <p>${sound.musicDTO.musicDuration || '0:00'}</p>
@@ -143,7 +146,6 @@ export function renderTotalSounds(data) {
             <div class="music-item-center">
                 <div class="music-info-tag">
                     <span>${(sound.tagsStreamDTO.instrumentTagName || '기타').replace(/,/g, " ")}</span>
-
                     <span>${(sound.tagsStreamDTO.moodTagName || '없음').replace(/,/g, " ")}</span>
                     <span>${(sound.tagsStreamDTO.genreTagName || '기타').replace(/,/g, " ")}</span>
                 </div>
@@ -161,6 +163,56 @@ export function renderTotalSounds(data) {
         container.appendChild(musicItem);
     });
 }
+
+//export function renderPlayer(){
+//    const container = document.getElementById("render-sounds-player-container");
+//    container.innerHTML='';
+//
+//    const item = document.createElement('div');
+//    item.classList.add('audio-player');
+//
+//    item.innerHtML = `
+//        <div class="audio-player-bar">
+//            <!-- Player container -->
+//            <div class="player-container">
+//                <!-- Top Layer -->
+//                <div class="player-top-layer">
+//                    <div class="progress-container">
+//                        <input type="range" id="progress-bar" value="0" min="0" max="100">
+//                    </div>
+//                </div>
+//
+//                <!-- Bottom Layer -->
+//                <div class="player-bottom-layer">
+//                    <div class="player-item-left">
+//                        <img alt="앨범 이미지" class="music-album-img" src="${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
+//                        <div class="player-play-btn" >
+//                            <img id="play-pause-btn" src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
+//                        </div>
+//                        <div class="player-info">
+//                            <h3>title</h3>
+//                            <p>albumName</p>
+//                            <h2>filePath</h2>
+//                        </div>
+//                        <div class="player-info-time">
+//                            <!--                    <p>${sound.musicDTO.musicDuration || '0:00'}</p>-->
+//                            <p class="time" id="current-time">0:00</p>
+//                            <p class="time" id="total-time">0:00</p>
+//                        </div>
+//                    </div>
+//                    <div id="waveform"></div>
+//                    <div class="volume-container">
+//                        <img src="/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="다운로드">
+//                        <img src="/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">
+//                        <img src="/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="공유">
+//                        <input type="range" id="volume-bar" value="100" min="0" max="100">
+//                    </div>
+//                </div>
+//            </div>
+//        </div>
+//    `;
+//    container.appendChild(item);
+//}
 
 export function renderSort() {
     const container = document.getElementById("render-result-sort-container");

@@ -26,11 +26,7 @@ public class SampleRestController {
         long start = 0;
         if (rangeHeader != null) {
             // 클라이언트가 Range 헤더를 보냈을 경우 시작 위치를 계산
-            start = HttpRange.parseRanges(rangeHeader)
-                    .stream()
-                    .findFirst()
-                    .orElseThrow()
-                    .getRangeStart(Long.MAX_VALUE);
+            start = HttpRange.parseRanges(rangeHeader).stream().findFirst().orElseThrow().getRangeStart(Long.MAX_VALUE);
         }
 
         range = HttpRange.createByteRange(start, start + FIXED_RANGE_SIZE - 1);

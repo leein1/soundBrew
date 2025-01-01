@@ -9,7 +9,7 @@
 
     <!-- module css -->
     <link th:href="@{/css/sound/music.css}" rel="stylesheet">
-
+    <link href="/css/sound/player.css" rel="stylesheet">
 </head>
 
 <body>
@@ -24,10 +24,51 @@
         <!-- music body -->
         <hr style="border: 1px solid #eee; margin-top: 20px; margin-bottom: 20px;">
     <div id="render-sounds-container" class="render-sounds-container"></div>
+
+    <div class="audio-player-bar">
+            <!-- Player container -->
+            <div class="player-container">
+                <!-- Top Layer -->
+                <div class="player-top-layer">
+                    <div class="progress-container">
+                        <input type="range" id="progress-bar" value="0" min="0" max="100">
+                    </div>
+                </div>
+
+                <!-- Bottom Layer -->
+                <div class="player-bottom-layer">
+                    <div class="player-item-left">
+                        <img alt="앨범 이미지" class="music-album-img" src="" onerror="this.src='/images/album-default-image-01.jpeg'">
+                        <div class="player-play-btn" >
+                            <img id="play-pause-btn" src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
+                        </div>
+                        <div class="player-info">
+                            <h3>title</h3>
+                            <p>albumName</p>
+                            <h2 hidden>filePath</h2>
+                        </div>
+                        <div class="player-info-time">
+                            <!--                    <p>${sound.musicDTO.musicDuration || '0:00'}</p>-->
+                            <p class="time" id="current-time">0:00</p>
+                            <p class="time" id="total-time">0:00</p>
+                        </div>
+                    </div>
+                    <div id="waveform"></div>
+                    <div class="volume-container">
+                        <img src="/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="다운로드">
+                        <img src="/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">
+                        <img src="/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="공유">
+                        <input type="range" id="volume-bar" value="100" min="0" max="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
 
 <th:block layout:fragment="script">
+    <script src="https://unpkg.com/wavesurfer.js"></script>
     <script type="module">
         import { axiosGet, axiosPost, axiosPut, axiosDelete } from '/js/fetch/standardAxios.js';
         import { inputProcessor, inputValidator, inputHandler } from '/js/check/inputHandler.js';
@@ -64,6 +105,7 @@
                     renderSort();
                 }else{
                     const renderTotal = await axiosGet({endpoint:'/api/sounds/tracks'});
+                    console.log(renderTotal);
                     renderTotalSounds(renderTotal.dtoList);
 
                     const tagsBody = { dto: renderTotal.dtoList };
@@ -80,9 +122,7 @@
             // 페이지 로딩시 파라미터 존재 유무 확인 및 초기 화면 구성
             // 페이지 로딩시 파라미터 존재 유무 확인 및 초기 화면 구성
 
-
-
-            // ** 다운로드순, 이름순, 길이순에 사용되는 정렬 **
+                        // ** 다운로드순, 이름순, 길이순에 사용되는 정렬 **
             // 정렬 버튼 클릭 시 드롭다운 메뉴 표시/숨기기
             // #sortIcon과 #sortKeyword 둘 다 클릭 시 동일한 동작 적용
             // #sortIcon : "정렬" 옆 이모티콘 의미 / sortKeyword : "정렬" 단어 부분 의미
@@ -165,13 +205,9 @@
             // 정렬 버튼 클릭 시 드롭다운 메뉴 표시/숨기기
             // #sortIcon과 #sortKeyword 둘 다 클릭 시 동일한 동작 적용
             // #sortIcon : "정렬" 옆 이모티콘 의미 / sortKeyword : "정렬" 단어 부분 의미
-
-
-
-
         });
-
     </script>
     <script src="/js/sound/soundTagsModule.js"></script>
+    <script src="/js/sound/soundPlaying.js"></script>
 </th:block>
 </html>
