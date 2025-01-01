@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.config;
 
+import com.soundbrew.soundbrew.handler.Custom403handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -43,6 +45,12 @@ public class CustomSecurityConfig {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
         tokenRepository.setDataSource(dataSource);
         return tokenRepository;
+    }
+
+    //  403 예외 처리를 위한 핸들러 주입
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new Custom403handler();
     }
 
     @Bean
@@ -82,6 +90,9 @@ public class CustomSecurityConfig {
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(customUserDetailsService)
                 .tokenValiditySeconds(60*60*24*30); //30일
+
+        //  403 예외 처리
+        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
         return http.build();
         // 설정한 보안 정책을 기반으로 SecurityFilterChain 객체를 생성하여 반환
