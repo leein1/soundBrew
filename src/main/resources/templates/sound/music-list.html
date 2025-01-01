@@ -105,8 +105,8 @@
                     renderSort();
                 }else{
                     const renderTotal = await axiosGet({endpoint:'/api/sounds/tracks'});
-                    console.log(renderTotal);
                     renderTotalSounds(renderTotal.dtoList);
+                    renderPagination(renderTotal);
 
                     const tagsBody = { dto: renderTotal.dtoList };
                     const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
@@ -205,6 +205,33 @@
             // 정렬 버튼 클릭 시 드롭다운 메뉴 표시/숨기기
             // #sortIcon과 #sortKeyword 둘 다 클릭 시 동일한 동작 적용
             // #sortIcon : "정렬" 옆 이모티콘 의미 / sortKeyword : "정렬" 단어 부분 의미
+
+
+
+            function renderPagination(responseDTO) {
+                const paginationDiv = document.querySelector('.pagination');
+                paginationDiv.innerHTML = ''; // 기존 버튼 초기화
+
+                // 이전 버튼
+                if (responseDTO.prev) {
+                    const prevButton = `<a href="#" class="page-link" data-page="${responseDTO.page - 1}">«</a>`;
+                    paginationDiv.insertAdjacentHTML('beforeend', prevButton);
+                }
+
+                // 페이지 번호 버튼
+                for (let i = responseDTO.start; i <= responseDTO.end; i++) {
+                    const activeClass = responseDTO.page === i ? 'active' : '';
+                    const pageButton = `<a href="#" class="page-link ${activeClass}" data-page="${i}">${i}</a>`;
+                    paginationDiv.insertAdjacentHTML('beforeend', pageButton);
+                }
+
+                // 다음 버튼
+                if (responseDTO.next) {
+                    const nextButton = `<a href="#" class="page-link" data-page="${responseDTO.page + 1}">»</a>`;
+                    paginationDiv.insertAdjacentHTML('beforeend', nextButton);
+                }
+            }
+
         });
     </script>
     <script src="/js/sound/soundTagsModule.js"></script>

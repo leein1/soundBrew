@@ -31,6 +31,8 @@ public class FileService {
 
     private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads");
     private final Path profileImageDir = uploadDir.resolve("profile-images");
+    private final Path albumImageDir = uploadDir.resolve("album-images");
+    private final Path soundDir = uploadDir.resolve("sounds");
 
     // 공용 메서드: 디렉토리 생성
     private void ensureDirectoryExists(Path directory) throws IOException {
@@ -65,28 +67,50 @@ public class FileService {
         }
     }
 
-    // 파일 업로드
-    public String uploadFile(MultipartFile file, String title) throws IOException {
-        validateFileExtension(file.getOriginalFilename(), List.of(".mp3", ".wav"));
+    // 공용 메서드: 파일 업로드
+    private String uploadFile(MultipartFile file, Path uploadDir, List<String> validExtensions, String filenamePrefix) throws IOException {
+        // 확장자 검증
+        validateFileExtension(file.getOriginalFilename(), validExtensions);
+
+        // 디렉토리 존재 확인 및 생성
         ensureDirectoryExists(uploadDir);
 
-        String uniqueFilename = UUID.randomUUID() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        // 고유 파일 이름 생성
+        String uniqueFilename = filenamePrefix + UUID.randomUUID() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         Path destinationPath = uploadDir.resolve(uniqueFilename);
+
+        // 파일 복사
         Files.copy(file.getInputStream(), destinationPath);
 
         return uniqueFilename;
     }
 
-    // 파일 다운로드
-    public Resource downloadFile(String filename) throws IOException {
-        Path filePath = uploadDir.resolve(filename);
+    // 음원 파일 업로드
+    public String uploadSoundFile(MultipartFile file, String title) throws IOException {
+        return uploadFile(file, soundDir, List.of(".mp3", ".wav"), title);
+    }
+
+    // 앨범 이미지 업로드
+    public String uploadAlbumImage(MultipartFile file, String title) throws IOException {
+        return uploadFile(file, albumImageDir, List.of(".jpg", ".jpeg", ".png"), title);
+    }
+
+    // 프로필 이미지 업로드
+    public String uploadProfileImage(MultipartFile file, String userId) throws IOException {
+        return uploadFile(file, profileImageDir, List.of(".jpg", ".jpeg", ".png"), userId);
+    }
+
+
+    //  음원 파일 다운로드
+    public Resource downloadSoundFile(String filename) throws IOException {
+        Path filePath = soundDir.resolve(filename);
         return new ByteArrayResource(readFile(filePath));
     }
 
     // 파일 스트리밍
     public ResponseDTO<SoundStreamDTO> streamSound(HttpRange range, String fileName) throws IOException {
         final long FIXED_RANGE_SIZE = 2 * 1024 * 1024; // 2 MB
-        Path filePath = uploadDir.resolve(fileName);
+        Path filePath = soundDir.resolve(fileName);
 
         byte[] data;
         long fileLength = Files.size(filePath);
@@ -104,17 +128,7 @@ public class FileService {
                 .build();
     }
 
-    // 프로필 이미지 업로드
-    public String uploadProfileImage(MultipartFile file, String userId) throws IOException {
-        validateFileExtension(file.getOriginalFilename(), List.of(".jpg", ".jpeg", ".png"));
-        ensureDirectoryExists(profileImageDir);
 
-        String uniqueFilename = userId + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-        Path destinationPath = profileImageDir.resolve(uniqueFilename);
-        Files.copy(file.getInputStream(), destinationPath);
-
-        return uniqueFilename;
-    }
 
     // 프로필 이미지 가져오기
     public Resource getProfileImage(String userId) throws IOException {

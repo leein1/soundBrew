@@ -50,7 +50,6 @@
         const activeMusicItem = document.querySelector(`.music-play-btn[data-sound-id="${activeSoundId}"]`).closest('.music-item-left');
         if (activePlayBtn && activeMusicItem) {
             activePlayBtn.src = '/images/pause_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg';
-            activeMusicItem.classList.add('active-music'); // 하이라이트 효과 추가
         }
     }
 

@@ -107,8 +107,17 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
+        // 2. 전체 레코드 수 쿼리 실행
+        long total = queryFactory
+                .select(albumMusic.countDistinct()) // 중복 제거된 경우
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
+                .where(builder) // 동일 조건 사용
+                .fetchOne();
+
         // 페이징 결과를 Page로 래핑하여 반환
-        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
 
         // Optional로 반환
         return Optional.of(pageResult);
@@ -189,8 +198,23 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
+        // 2. 전체 레코드 수 쿼리 실행
+        long total = queryFactory
+                .select(album.albumId.countDistinct())
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder) // 동일한 조건 사용
+                .fetchOne(); // 단일 결과 반환
+
         // 페이징 결과를 Page로 래핑하여 반환
-        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
 
         // Optional로 반환
         return Optional.of(pageResult);
