@@ -49,6 +49,7 @@
 
                     const renderTotal = await axiosGet({endpoint: '/api/sounds/albums'+queryParams});
                     renderTotalAlbums(renderTotal.dtoList);
+                    renderPagination(renderTotal);
 
                     const tagsBody = { dto: renderTotal.dtoList };
                     const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
@@ -59,6 +60,7 @@
                     const renderTotal = await axiosGet({endpoint: '/api/sounds/albums' });
                     console.log(renderTotal);
                     renderTotalAlbums(renderTotal.dtoList);
+                    renderPagination(renderTotal);
 
                     const tagsBody = { dto: renderTotal.dtoList };
                     const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
@@ -189,6 +191,7 @@
             // 음원 스트리밍 관련 함수 정의
         });
     </script>
+    <script src="/js/pagination.js"></script>
     <script src="/js/sound/soundTagsModule.js"></script>
     <script src="/js/sound/sort.js" ></script>
 </th:block>

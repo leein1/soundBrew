@@ -128,8 +128,6 @@ public class FileService {
                 .build();
     }
 
-
-
     // 프로필 이미지 가져오기
     public Resource getProfileImage(String userId) throws IOException {
         Path imagePath = profileImageDir.resolve(userId + ".jpg");

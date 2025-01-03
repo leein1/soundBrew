@@ -26,7 +26,7 @@ public class Music extends BaseEntity {
     @Column(nullable = true, length = 50)
     private String nickname;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 50, nullable = false)
     private String title;
 
     @Column(length = 255, nullable = false)

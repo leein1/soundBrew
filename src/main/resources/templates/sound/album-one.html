@@ -98,6 +98,7 @@
 
                  renderAlbumOne(response);
                  renderTotalSounds(response.dtoList);
+                 renderPagination(response);
 
                  const tagsBody = { dto: response.dtoList };
                  const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
@@ -233,6 +234,7 @@
      });
 
     </script>
+    <script src="/js/pagination.js"></script>
     <script src="/js/sound/soundTagsModule.js"></script>
     <script src="/js/sound/soundPlaying.js"></script>
 
