@@ -1,9 +1,11 @@
 package com.soundbrew.soundbrew.config;
 
-import com.soundbrew.soundbrew.handler.APILoginSuccessHandler;
+import com.soundbrew.soundbrew.security.handler.APILoginSuccessHandler;
 import com.soundbrew.soundbrew.handler.Custom403Handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.filter.APILoginFilter;
+import com.soundbrew.soundbrew.security.filter.TokenCheckFilter;
+import com.soundbrew.soundbrew.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +33,7 @@ public class CustomSecurityConfig {
 
     private final DataSource dataSource;
     private final CustomUserDetailsService customUserDetailsService;
+    private final JWTUtil jwtUtil;
 
     /*
     CustomuserDetailsService 클래스와 순환참조 문제로 해당 빈 등록 PasswordEncoderConfig 클래스로 분리함
@@ -55,6 +58,10 @@ public class CustomSecurityConfig {
         return new Custom403Handler();
     }
 
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil){
+        return new TokenCheckFilter(jwtUtil);
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
 
@@ -74,13 +81,13 @@ public class CustomSecurityConfig {
         apiLoginFilter.setAuthenticationManager(authenticationManager);
 
         //  API LoginSuccessHandler 성공시 핸들러 설정
-        APILoginSuccessHandler successHandler = new APILoginSuccessHandler();
+        APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
 
         // SuccessHandler 세팅
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
 
-        //  API 로그인필터 위치 조정
-        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+        //  API 로그인필터 위치 조정 /api로 시작하는 모든 경로는 TokenCheckFilter 동작
+        http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         // HttpSecurity 객체를 통해 보안 정책을 설정합니다.
         http.authorizeRequests() // 요청 경로별 인증 및 권한 설정 시작
