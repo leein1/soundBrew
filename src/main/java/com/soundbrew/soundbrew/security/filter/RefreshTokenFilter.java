@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Map;
 
 @Log4j2
@@ -60,6 +62,38 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         try{
             refreshClaims = checkRefreshToken(refreshToken);
             log.info(refreshClaims);
+
+            //  refreshToken 유효시간이 얼마 안 남았을때
+            Integer exp = (Integer) refreshClaims.get("exp");
+            Date expTime = new Date(Instant.ofEpochMilli(exp).toEpochMilli()* 1000);
+            Date current = new Date(System.currentTimeMillis());
+
+            //  만료 시간 현재 시간 간격 계산
+            // 3일 미만일 경우 Refresh Token 새로 발급
+            long gapTime = (expTime.getTime() - current.getTime());
+
+            log.info("-----------------------------------");
+            log.info("current : {}", current);
+            log.info("exp : {}", exp);
+            log.info("gap : {}", gapTime);
+
+            String username = (String) refreshClaims.get("username");
+
+            //  여기까지 도달할 경우 무조건 AccessToken새로 발급
+            String accessTokenValue = jwtUtil.generateToken(Map.of("username",username),1);
+            String refreshTokenValue = tokens.get("refreshToken");
+
+            // refreshToken이 3일도 안 남은 경우
+            if(gapTime < (1000* 60 * 60 * 24 * 3)){
+                log.info("new Refresh Token Required.....");
+                refreshTokenValue = jwtUtil.generateToken(Map.of("username",username),30);
+            }
+
+            log.info("Refresh Token Success.....");
+            log.info("accessTokenValue : {}", accessTokenValue);
+            log.info("refreshTokenValue : {}", refreshTokenValue);
+
+
         }catch (RefreshTokenException refreshTokenException){
             refreshTokenException.sendResponseError(response);
             return; // 더 이상 실행할 코드 x
@@ -108,5 +142,6 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         return null;
     }
 
+    
 
 }
