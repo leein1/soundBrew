@@ -7,6 +7,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -142,6 +143,20 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         return null;
     }
 
-    
+    private void sendTokens(String accessTokenValue, String refreshTokenValue, HttpServletResponse response){
+
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        Gson gson = new Gson();
+
+        String jsonStr = gson.toJson(Map.of("accessToken", accessTokenValue,"refreshToken",refreshTokenValue));
+
+        try{
+            response.getWriter().println(jsonStr);
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
