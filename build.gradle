@@ -79,6 +79,9 @@ dependencies {
     // JSON처리
     implementation 'com.google.code.gson:gson:2.8.9'
 
+    //  jjwt
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
     annotationProcessor(
             "javax.persistence:javax.persistence-api",
             "javax.annotation:javax.annotation-api",
