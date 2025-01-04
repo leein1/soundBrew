@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.config;
 
+import com.soundbrew.soundbrew.security.filter.RefreshTokenFilter;
 import com.soundbrew.soundbrew.security.handler.APILoginSuccessHandler;
 import com.soundbrew.soundbrew.handler.Custom403Handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
@@ -77,9 +78,11 @@ public class CustomSecurityConfig {
         http.authenticationManager(authenticationManager);
 
         // API 로그인 필터
+//        APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
+//        apiLoginFilter.setAuthenticationManager(authenticationManager);
+
         APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
         apiLoginFilter.setAuthenticationManager(authenticationManager);
-
         //  API LoginSuccessHandler 성공시 핸들러 설정
         APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
 
@@ -87,10 +90,18 @@ public class CustomSecurityConfig {
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
 
         //  API 로그인필터 위치 조정 /api로 시작하는 모든 경로는 TokenCheckFilter 동작
-        http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil),TokenCheckFilter.class);
+//        http.addFilterAfter(tokenCheckFilter(jwtUtil), RefreshTokenFilter.class);
+        // 필터 순서 정의
+        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // apiLoginFilter 먼저 실행
+        http.addFilterAfter(new RefreshTokenFilter("/refreshToken",jwtUtil), APILoginFilter.class);                   // refreshTokenFilter는 apiLoginFilter 이후
+        http.addFilterAfter(tokenCheckFilter(jwtUtil), RefreshTokenFilter.class);
 
         // HttpSecurity 객체를 통해 보안 정책을 설정합니다.
         http.authorizeRequests() // 요청 경로별 인증 및 권한 설정 시작
+                .antMatchers("/generateToken").permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 // 정적 리소스에 대한 요청은 인증 없이 접근 가능하도록 설정
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
