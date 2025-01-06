@@ -53,10 +53,12 @@ public class AccessTokenException extends RuntimeException {
 
         try{
             response.getWriter().println(responseStr);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 
 
 }

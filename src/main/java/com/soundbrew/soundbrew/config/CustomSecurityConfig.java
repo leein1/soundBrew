@@ -9,12 +9,14 @@ import com.soundbrew.soundbrew.security.filter.TokenCheckFilter;
 import com.soundbrew.soundbrew.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,7 +30,7 @@ import javax.sql.DataSource;
 @Configuration
 @Log4j2
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CustomSecurityConfig {
 
 
@@ -102,8 +104,8 @@ public class CustomSecurityConfig {
         // HttpSecurity 객체를 통해 보안 정책을 설정합니다.
         http.authorizeRequests() // 요청 경로별 인증 및 권한 설정 시작
                 .antMatchers("/generateToken").permitAll()
-                .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                // 정적 리소스에 대한 요청은 인증 없이 접근 가능하도록 설정
+//                .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+//                // 정적 리소스에 대한 요청은 인증 없이 접근 가능하도록 설정
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 // Swagger 경로 접근 허용
                 .antMatchers("/register").permitAll()
@@ -152,6 +154,11 @@ public class CustomSecurityConfig {
 
         return http.build();
         // 설정한 보안 정책을 기반으로 SecurityFilterChain 객체를 생성하여 반환
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
 
