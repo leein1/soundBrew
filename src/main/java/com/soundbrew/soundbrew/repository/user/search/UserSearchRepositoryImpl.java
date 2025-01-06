@@ -117,7 +117,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
     }
 
     @Override
-    public Optional<UserDetailsDTO> findUserDetailsByUsername(String username) {
+    public Optional<UserDetailsDTO> findUserDetailsByEmail(String email) {
         return Optional.ofNullable(jpaQueryFactory.select(Projections.bean(UserDetailsDTO.class,
                         Projections.bean(UserDTO.class,
                                 user.userId,
@@ -155,7 +155,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
                 .from(user)
                 .join(userRole).on(user.userId.eq(userRole.id.userId))
                 .leftJoin(userSubscription).on(user.userId.eq(userSubscription.userId))
-                .where(user.email.eq(username))
+                .where(user.email.eq(email))
                 .fetchOne());
     }
 

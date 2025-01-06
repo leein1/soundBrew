@@ -3,15 +3,19 @@ package com.soundbrew.soundbrew.dto.user;
 import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.dto.BaseDTO;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO extends BaseDTO {
+public class UserDTO extends BaseDTO{
 
     public int userId;
 
@@ -45,24 +49,6 @@ public class UserDTO extends BaseDTO {
 
     public LocalDate birth;
 
-    // BaseDTO의 필드 포함
-//    public UserDTO(int userId, Integer subscriptionId, String name, String nickname, String password,
-//                   String phoneNumber, String email, boolean emailVerified, int creditBalance,
-//                   String profileImagePath, LocalDate birth, LocalDateTime createDate, LocalDateTime modifyDate) {
-//        super.setCreateDate(createDate);
-//        super.setModifyDate(modifyDate);
-//        this.userId = userId;
-//        this.subscriptionId = subscriptionId;
-//        this.name = name;
-//        this.nickname = nickname;
-//        this.password = password;
-//        this.phoneNumber = phoneNumber;
-//        this.email = email;
-//        this.emailVerified = emailVerified;
-//        this.creditBalance = creditBalance;
-//        this.profileImagePath = profileImagePath;
-//        this.birth = birth;
-//    }
 
     public User toEntity() {
         return User.builder()

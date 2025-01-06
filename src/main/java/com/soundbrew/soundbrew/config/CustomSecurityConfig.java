@@ -38,29 +38,13 @@ public class CustomSecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
 
-    /*
-    CustomuserDetailsService 클래스와 순환참조 문제로 해당 빈 등록 PasswordEncoderConfig 클래스로 분리함
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-     */
-
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        return tokenRepository;
-    }
-
-    //  403 예외 처리를 위한 핸들러 주입
+//  AccessDeniedHandler 빈 등록
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new Custom403Handler();
     }
 
+ // TokenCheckFilter 생성
     private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil){
         return new TokenCheckFilter(jwtUtil);
     }
@@ -70,90 +54,48 @@ public class CustomSecurityConfig {
 
         //  AuthenticationManager 설정
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
         authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
-
-        //  Get AuthenticationManager
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
-
-        //  필수!!!
         http.authenticationManager(authenticationManager);
 
         // API 로그인 필터
-//        APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
-//        apiLoginFilter.setAuthenticationManager(authenticationManager);
-
         APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
         apiLoginFilter.setAuthenticationManager(authenticationManager);
-        //  API LoginSuccessHandler 성공시 핸들러 설정
         APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
-
-        // SuccessHandler 세팅
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
 
-        //  API 로그인필터 위치 조정 /api로 시작하는 모든 경로는 TokenCheckFilter 동작
-//        http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil),TokenCheckFilter.class);
-//        http.addFilterAfter(tokenCheckFilter(jwtUtil), RefreshTokenFilter.class);
-        // 필터 순서 정의
+        // 필터 추가 + 순서
         http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // apiLoginFilter 먼저 실행
         http.addFilterAfter(new RefreshTokenFilter("/refreshToken",jwtUtil), APILoginFilter.class);                   // refreshTokenFilter는 apiLoginFilter 이후
         http.addFilterAfter(tokenCheckFilter(jwtUtil), RefreshTokenFilter.class);
 
-        // HttpSecurity 객체를 통해 보안 정책을 설정합니다.
-        http.authorizeRequests() // 요청 경로별 인증 및 권한 설정 시작
-                .antMatchers("/generateToken").permitAll()
-//                .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
-//                // 정적 리소스에 대한 요청은 인증 없이 접근 가능하도록 설정
-                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                // Swagger 경로 접근 허용
-                .antMatchers("/register").permitAll()
-                //  회원가입 경로 접근 허용
-                .antMatchers("/api/users/**").permitAll()
-                // 회원가입 rest요청 허용
-                .antMatchers("/").permitAll()
-                //  메인 페이지 경로 접근 허용
-                .antMatchers("/files/**").permitAll()
-                .antMatchers("/api/sample/**").permitAll()
-                .antMatchers("/myInfo").permitAll()
-                // '/myInfo' 경로는 'ROLE_USER' 권한을 가진 사용자만 접근 가능
+        // HttpSecurity 설정
+        http.authorizeRequests()
+                .antMatchers("/generateToken",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/register",
+                        "/api/users/**",
+                        "/",
+                        "/files/**",
+                        "/api/sample/**",
+                        "/myInfo").permitAll()
                 .anyRequest().authenticated()
-                // 위에서 명시적으로 설정되지 않은 모든 요청은 인증이 필요
-                .and()
-                .formLogin() // 폼 기반 로그인 설정
-                .loginPage("/login")
-                // 사용자 정의 로그인 페이지 경로 지정 ('/member/login' 사용)
-                .permitAll()
-                // 로그인 페이지와 관련된 모든 요청은 인증 없이 접근 가능
-                .and()
-                .logout() // 로그아웃 설정
-                .permitAll();
-                 // 로그아웃 경로는 인증 여부와 관계없이 누구나 접근 가능
 
+                .and()
+                .formLogin().loginPage("/login").permitAll()
+
+                .and()
+                .logout().permitAll();
+
+        //  csrf 비활성 / 세션 비활성
         http.csrf().disable();
-        //csrf 비활성
-
-        //  token 사용으로 세션 사용하지 않도록 지정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        /*
-        remember-me 쿠키 생성시 쿠키 값 인코딩 위한 key 와 필요한 정보를 저장하는 tokenRepository를 지정해야 한다
-        아래의 경우 토큰 지정에 persistentTokenRepository() 를 만들어서 사용
-
-        로그인 화면(html)에서도 remember-me라는 name 속성이 전달 되어야 기능함.
-         */
-        http.rememberMe()
-                .key("12345678")
-                .tokenRepository(persistentTokenRepository())
-                .userDetailsService(customUserDetailsService)
-                .tokenValiditySeconds(60*60*24*30); //30일
 
         //  403 예외 처리
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
         return http.build();
-        // 설정한 보안 정책을 기반으로 SecurityFilterChain 객체를 생성하여 반환
     }
 
     @Bean

@@ -214,7 +214,7 @@ public class UserServiceImpl implements UserService{
 
         //  역할 테이블 save()
         UserRoleDTO userRoleDTO = UserRoleDTO.builder()
-                .roleId(5)
+                .roleId(1)
                 .userId(user.getUserId())
                 .build();
 

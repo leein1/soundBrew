@@ -40,7 +40,7 @@ public class UserRepositoryTests {
     @Test
     public void testFindUserDetailsByEmail(){
 
-        UserDetailsDTO userDetailsDTO = userRepository.findUserDetailsByUsername("14_insert_test@test.com").orElseThrow();
+        UserDetailsDTO userDetailsDTO = userRepository.findUserDetailsByEmail("14_insert_test@test.com").orElseThrow();
         log.info(userDetailsDTO.toString());
     }
 

@@ -12,7 +12,7 @@ public interface UserSearchRepository {
 
     Optional<UserDetailsDTO> findUserDetailsById(int userId);
 
-    Optional<UserDetailsDTO> findUserDetailsByUsername(String username);
+    Optional<UserDetailsDTO> findUserDetailsByEmail(String email);
 
     Optional<Page<UserDetailsDTO>> findAllUserDetails(RequestDTO requestDTO);
 
