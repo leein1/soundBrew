@@ -50,7 +50,7 @@
                     const renderTotal = await axiosGet({endpoint: '/api/sounds/albums'+queryParams});
                     renderTotalAlbums(renderTotal.dtoList);
                     renderPagination(renderTotal);
-
+renderSearch();
                     const tagsBody = { dto: renderTotal.dtoList };
                     const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
 
@@ -61,7 +61,7 @@
                     console.log(renderTotal);
                     renderTotalAlbums(renderTotal.dtoList);
                     renderPagination(renderTotal);
-
+renderSearch();
                     const tagsBody = { dto: renderTotal.dtoList };
                     const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
 

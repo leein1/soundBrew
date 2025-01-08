@@ -67,14 +67,14 @@
                 <div class="user">회원가입</div>
             </div><!-- end navigation -->
 
-            <div class="searchbar">
-                <div class="searchbar-container">
-                    <span class="searchbar-icon">
-                        <img th:src="@{/images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="Search Icon">
-                    </span>
-                    <input type="text" placeholder="검색...">
-                </div>
-            </div><!-- end searchbar -->
+<!--            <div class="searchbar">-->
+<!--                <div class="searchbar-container">-->
+<!--                    <span class="searchbar-icon">-->
+<!--                        <img th:src="@{/images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="Search Icon">-->
+<!--                    </span>-->
+                    <div id="searchContainer" class="searchContainer"></div>
+<!--                </div>-->
+<!--            </div>&lt;!&ndash; end searchbar &ndash;&gt;-->
 
             <div class="content" layout:fragment="content">
                 <span class="play-trigger" style="cursor: pointer; color: blue;">재생</span>
@@ -162,6 +162,8 @@
     <!-- 사이드바 확장 js -->
     <script th:src="@{/js/sidebarExpand.js}"></script>
 
+    <!-- 검색바 기능 -->
+    <script src="/js/search.js"></script>
 <th:block  layout:fragment="script">
 </th:block>
 </body>

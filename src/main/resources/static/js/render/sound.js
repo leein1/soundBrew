@@ -164,82 +164,6 @@ export function renderTotalSounds(data) {
     });
 }
 
-//export function renderPlayer(){
-//    const container = document.getElementById("render-sounds-player-container");
-//    container.innerHTML='';
-//
-//    const item = document.createElement('div');
-//    item.classList.add('audio-player');
-//
-//    item.innerHtML = `
-//        <div class="audio-player-bar">
-//            <!-- Player container -->
-//            <div class="player-container">
-//                <!-- Top Layer -->
-//                <div class="player-top-layer">
-//                    <div class="progress-container">
-//                        <input type="range" id="progress-bar" value="0" min="0" max="100">
-//                    </div>
-//                </div>
-//
-//                <!-- Bottom Layer -->
-//                <div class="player-bottom-layer">
-//                    <div class="player-item-left">
-//                        <img alt="앨범 이미지" class="music-album-img" src="${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
-//                        <div class="player-play-btn" >
-//                            <img id="play-pause-btn" src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
-//                        </div>
-//                        <div class="player-info">
-//                            <h3>title</h3>
-//                            <p>albumName</p>
-//                            <h2>filePath</h2>
-//                        </div>
-//                        <div class="player-info-time">
-//                            <!--                    <p>${sound.musicDTO.musicDuration || '0:00'}</p>-->
-//                            <p class="time" id="current-time">0:00</p>
-//                            <p class="time" id="total-time">0:00</p>
-//                        </div>
-//                    </div>
-//                    <div id="waveform"></div>
-//                    <div class="volume-container">
-//                        <img src="/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="다운로드">
-//                        <img src="/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">
-//                        <img src="/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="공유">
-//                        <input type="range" id="volume-bar" value="100" min="0" max="100">
-//                    </div>
-//                </div>
-//            </div>
-//        </div>
-//    `;
-//    container.appendChild(item);
-//}
-
-export function renderSort() {
-    const container = document.getElementById("render-result-sort-container");
-    container.innerHTML='';
-
-    const item = document.createElement('div');
-    item.classList.add('music-sort');
-
-    item.innerHTML = `
-        <div class="music-sort">
-            <span class="music-sort-left" id="sortKeyword">정렬
-                <img src="/images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정렬" id="sortIcon">
-            </span>
-            <!-- 정렬 드롭다운 -->
-            <div class="music-sort-menu" id="musicSortMenu">
-                <ul>
-                    <li data-sort="newest">Newest</li>
-                    <li data-sort="oldest">Oldest</li>
-                    <li data-sort="download">Download</li>
-                </ul>
-            </div>
-        </div>
-    `;
-
-    container.appendChild(item);
-}
-
 export function renderManageAlbums(data) {
     const container = document.getElementById("render-albums-manage-container");
     const noAlbumsMessage = document.getElementById("no-albums-message");
@@ -364,7 +288,7 @@ export function renderManageTracks(data){
 //}
 
 export function renderTotalAlbums(data) {
-    const container = document.getElementById("render-albums-container");
+    const container = document.getElementById("render-sounds-container");
     container.innerHTML = ''; // 기존 내용 초기화
 
     const albumListHTML = `
@@ -384,4 +308,17 @@ export function renderTotalAlbums(data) {
     `;
 
     container.innerHTML = albumListHTML;
+
+    const albumItems = document.querySelectorAll('.list-album-item');
+    albumItems.forEach(item => {
+        item.addEventListener('click', async () => {
+            alert("!!");
+            const albumName = item.dataset.albumName;
+            const nickname = item.dataset.nickname;
+            // 페이지 이동
+            window.location.href = `/sounds/albums/one?nickname=${nickname}&albumName=${albumName}`;
+
+            //const response = await axiosGet({endpoint:'/api/sounds/albums/'+ nickname +'/title/'+ albumName +'}'  });
+        });
+    });
 }

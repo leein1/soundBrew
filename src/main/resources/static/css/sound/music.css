@@ -8,6 +8,7 @@
 
 .music-sort{
     /* align-items: center; */
+    display: flex;
     margin-bottom: 5px;
     color: #555;
 }

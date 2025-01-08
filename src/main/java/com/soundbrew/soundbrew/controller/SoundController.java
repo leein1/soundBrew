@@ -33,13 +33,20 @@ public class SoundController {
         return  ResponseEntity.ok().body(responseDto);
     }
 
-    @PostMapping("/tags")
-    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@RequestBody Map<String, List<SearchTotalResultDTO>> requestBody) { // 검색한 결과를 바탕으로 태그를 하나하나 담은 리스트 결과화.
+    @PostMapping("/tags") // 특정 앨범, 특정 곡의 전체 태그 버튼들
+    ResponseEntity<ResponseDTO<TagsDTO>> tagsSearchAfter(@RequestBody Map<String, List<SearchTotalResultDTO>> requestBody) { // 검색한 결과를 바탕으로 태그를 하나하나 담은 리스트 결과화.
         List<SearchTotalResultDTO> sounds = requestBody.containsKey("dtoList") ? requestBody.get("dtoList") : requestBody.get("dto");
 
-        ResponseDTO<TagsDTO> responseDto = tagsService.totalTagsSearch(sounds);
+        ResponseDTO<TagsDTO> responseDto = tagsService.tagsSearchAfter(sounds);
 
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/tags") // 메인 페이지의 전체 태그 버튼들
+    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@ModelAttribute RequestDTO requestDTO){
+        ResponseDTO<TagsDTO> responseDTO = tagsService.getAllTags(requestDTO);
+
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/tracks/{nickname}/title/{title}")

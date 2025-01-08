@@ -259,7 +259,7 @@ html, body {
 /* article ----------------------------------------------------- */
 
 .article {
-
+    margin-bottom: 80px;
     margin-left: 80px;
     flex: 1;
     overflow: hidden;
@@ -369,7 +369,6 @@ html, body {
     justify-content: center;
     align-items: center;
     margin: 20px 0;
-    border: 1px solid black;
 }
 
 .page-link {

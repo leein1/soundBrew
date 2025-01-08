@@ -1,4 +1,8 @@
-function renderPagination(responseDTO) {
+import { axiosGet } from "/js/fetch/standardAxios.js";
+import { renderTotalSounds,renderTotalAlbums } from '/js/render/sound.js';
+import { globalState } from '/js/globalState.js';
+
+export function renderPagination(responseDTO) {
     const container = document.getElementById("pagination-container");
     if (!responseDTO || responseDTO.total === 0) {
         container.innerHTML = ''; // 공란으로 설정
@@ -15,11 +19,20 @@ function renderPagination(responseDTO) {
     `;
 
     for (let i = start; i <= end; i++) {
-        pageHTML += `
-            <a class="page-link ${i === page ? 'active' : ''}" data-page="${i}">
-                ${i}
-            </a>
-        `;
+        if (i === page) {
+            // 현재 페이지는 비활성화된 상태로 렌더링
+            pageHTML += `
+                <span class="page-link active" aria-disabled="true">
+                    ${i}
+                </span>
+            `;
+        } else {
+            pageHTML += `
+                <a class="page-link" data-page="${i}">
+                    ${i}
+                </a>
+            `;
+        }
     }
 
     pageHTML += `
@@ -29,29 +42,37 @@ function renderPagination(responseDTO) {
 
     container.innerHTML = pageHTML;
 
-    // 페이지 링크 클릭 이벤트 바인딩 (이벤트 위임 사용)
-    container.addEventListener("click", function(event) {
-        if (event.target.classList.contains("page-link")) {
-            const selectedPage = parseInt(event.target.getAttribute("data-page"));
-            console.log("Page selected:", selectedPage);
+    // 기존 이벤트 리스너를 중복으로 추가하지 않도록 먼저 제거
+    container.removeEventListener("click", handlePaginationClick);
 
-            // 모든 링크에서 active 클래스 제거
-            const pageLinks = container.querySelectorAll(".page-link");
-            pageLinks.forEach(link => link.classList.remove("active"));
-
-            // 현재 클릭된 링크에 active 클래스 추가
-            event.target.classList.add("active");
-
-            alert("??");
-
-            // 페이지 데이터 새로고침
-            fetchNewPageData(selectedPage);
-        }
-    });
+    // 새로 이벤트 리스너 추가
+    container.addEventListener("click", handlePaginationClick);
 }
 
-function fetchNewPageData(selectedPage) {
-    alert("!!");
+async function handlePaginationClick(event) {
+    const target = event.target;
+
+    if (target.classList.contains("page-link") && !target.classList.contains("active")) {
+        const selectedPage = parseInt(target.getAttribute("data-page"));
+
+        try {
+            // 새로운 데이터 가져오기
+            const response = await fetchNewPageData(selectedPage);
+            const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
+            // 새 데이터를 기반으로 페이지 다시 렌더링
+            if(endpoint === '/api/sounds/albums'){
+                renderTotalAlbums(response.dtoList);
+            }else {
+                renderTotalSounds(response.dtoList);
+            }
+            renderPagination(response); // 페이지네이션 다시 렌더링
+        } catch (error) {
+            console.error("Error fetching new page data:", error);
+        }
+    }
+}
+
+async function fetchNewPageData(selectedPage) {
     // 현재 URL에서 파라미터 가져오기
     const currentParams = new URLSearchParams(window.location.search);
 
@@ -65,8 +86,12 @@ function fetchNewPageData(selectedPage) {
     const newUrl = `${window.location.pathname}?${newQueryString}`;
 
     // 새로운 URL로 페이지의 상태를 갱신
-    window.history.pushState(null, '', newUrl);
+    window.history.pushState({ point: window.location.pathname, params: newQueryString }, '', newUrl);
 
-    // 페이지 새로 고침
-    window.location.reload();
+    //전역 상태 변수
+    const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
+
+    // 서버에서 새로운 데이터를 가져옴
+    return await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
 }
+

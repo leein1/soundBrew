@@ -75,11 +75,11 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         }
 
         List<SearchTotalResultDTO> results = queryFactory.select(Projections.bean(SearchTotalResultDTO.class,
-                       Projections.bean(AlbumDTO.class,
-                            album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname
+                        Projections.bean(AlbumDTO.class,
+                                album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname
                         ).as("albumDTO"),
                         Projections.bean(MusicDTO.class,
-                            music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
+                                music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
                         ).as("musicDTO"),
                         Projections.bean(TagsStreamDTO.class,
                                 Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
@@ -107,13 +107,28 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
-        // 2. 전체 레코드 수 쿼리 실행
-        long total = queryFactory
-                .select(albumMusic.countDistinct()) // 중복 제거된 경우
+        // 서브쿼리를 사용하여 필터링된 ID 가져오기
+        List<AlbumMusicId> filteredIds = queryFactory
+                .select(albumMusic.id)  // 필요한 ID만 가져옴
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
                 .leftJoin(music).on(albumMusic.music.eq(music))
-                .where(builder) // 동일 조건 사용
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder)  // 기본 검색 조건 적용
+                .groupBy(albumMusic.id)  // 그룹화하여 ID 추출
+                .having(havingBuilder)  // 조건을 HAVING으로 필터링
+                .fetch();  // 필터링된 ID 가져오기
+
+        // 페이징 결과를 Page로 래핑하여 반환z
+        long total = queryFactory
+                .select(Expressions.asNumber(1).count())
+                .from(albumMusic)
+                .where(albumMusic.id.in(filteredIds))  // 서브쿼리로 필터링된 ID로 총 갯수 계산
                 .fetchOne();
 
         // 페이징 결과를 Page로 래핑하여 반환
@@ -167,6 +182,8 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
             }
         }
 
+
+
         // 쿼리 생성
         List<SearchTotalResultDTO> results = queryFactory
                 .select(Projections.bean(SearchTotalResultDTO.class,
@@ -198,9 +215,9 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
-        // 2. 전체 레코드 수 쿼리 실행
-        long total = queryFactory
-                .select(album.albumId.countDistinct())
+        // 서브쿼리를 사용하여 필터링된 ID 가져오기
+        List<Integer> filteredAlbumIds = queryFactory
+                .select(album.albumId)  // 앨범 ID만 가져옴
                 .from(albumMusic)
                 .leftJoin(album).on(albumMusic.album.eq(album))
                 .leftJoin(music).on(albumMusic.music.eq(music))
@@ -210,8 +227,17 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
                 .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
-                .where(builder) // 동일한 조건 사용
-                .fetchOne(); // 단일 결과 반환
+                .where(builder)  // 기본 검색 조건 적용
+                .groupBy(album.albumId)  // 앨범 단위로 그룹화
+                .having(havingBuilder)  // 조건을 HAVING으로 필터링
+                .fetch();  // 필터링된 앨범 ID 가져오기
+        // 페이징 결과를 Page로 래핑하여 반환z
+        long total = queryFactory
+                .select(album.albumId.countDistinct())  // 고유 앨범 ID 개수 계산
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .where(album.albumId.in(filteredAlbumIds))  // 필터링된 앨범 ID로 조건 추가
+                .fetchOne();
 
         // 페이징 결과를 Page로 래핑하여 반환
         Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
@@ -291,7 +317,31 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
-        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
+        // 서브쿼리를 사용하여 필터링된 ID 가져오기
+        List<AlbumMusicId> filteredIds = queryFactory
+                .select(albumMusic.id)  // 필요한 ID만 가져옴
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder)  // 기본 검색 조건 적용
+                .groupBy(albumMusic.id)  // 그룹화하여 ID 추출
+                .having(havingBuilder)  // 조건을 HAVING으로 필터링
+                .fetch();  // 필터링된 ID 가져오기
+
+        // 페이징 결과를 Page로 래핑하여 반환z
+        long total = queryFactory
+                .select(Expressions.asNumber(1).count())
+                .from(albumMusic)
+                .where(albumMusic.id.in(filteredIds))  // 서브쿼리로 필터링된 ID로 총 갯수 계산
+                .fetchOne();
+
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
 
         return Optional.of(pageResult);
     }
@@ -368,7 +418,31 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
-        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
+// 서브쿼리를 사용하여 필터링된 ID 가져오기
+        List<AlbumMusicId> filteredIds = queryFactory
+                .select(albumMusic.id)  // 필요한 ID만 가져옴
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder)  // 기본 검색 조건 적용
+                .groupBy(albumMusic.id)  // 그룹화하여 ID 추출
+                .having(havingBuilder)  // 조건을 HAVING으로 필터링
+                .fetch();  // 필터링된 ID 가져오기
+
+        // 페이징 결과를 Page로 래핑하여 반환z
+        long total = queryFactory
+                .select(Expressions.asNumber(1).count())
+                .from(albumMusic)
+                .where(albumMusic.id.in(filteredIds))  // 서브쿼리로 필터링된 ID로 총 갯수 계산
+                .fetchOne();
+
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
 
         return Optional.of(pageResult);
     }
@@ -421,8 +495,22 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
+        // 2. 전체 레코드 수 쿼리 실행
+        long total = queryFactory
+                .select(albumMusic.countDistinct())
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder) // 동일 조건 사용
+                .fetchOne();
         // 페이징 결과를 Page로 래핑하여 반환
-        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
 
         // Optional로 반환
         return Optional.of(pageResult);
@@ -476,7 +564,22 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .limit(requestDTO.getPageable().getPageSize()) // 페이지 크기
                 .fetch(); // 여러 개의 결과를 가져옴
 
-        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), results.size());
+        // 2. 전체 레코드 수 쿼리 실행
+        long total = queryFactory
+                .select(albumMusic.countDistinct())
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder) // 동일 조건 사용
+                .fetchOne();
+
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
 
         return Optional.of(pageResult);
     }
