@@ -11,7 +11,11 @@
     display: flex;
     margin-bottom: 5px;
     color: #555;
+    margin-top: 50px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
 }
+
 .music-sort-left{
     display: flex;
     justify-items: center;
@@ -49,8 +53,9 @@
 .music-item{
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
 .music-item-left,
@@ -94,6 +99,7 @@
 .music-play-btn img,
 .music-actions img,
 .music-sort img,
+.viewToggleBtn img,
 .music-tag-sort-list img{
     width: 20px;
     height: 20px;
@@ -169,6 +175,7 @@
     justify-content: left;
     align-items: center;
     color: #555;
+    margin-top: 10px;
     border-bottom: 1px  solid #ddd;
 }
 .music-tag-sort-toggle{
@@ -216,6 +223,7 @@
 
 }
 .tag-item {
+    color: #555;
     border-radius: 4px;
     margin: 5px;
 }
@@ -250,8 +258,15 @@
     order: 0;
 }
 
-.music-sort{
-    margin-top: 50px;
+
+.viewToggleBtn{
+    font-size: 16px;
+    margin-top: 5px;
+    color: #555555;
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
 }
+
 
     

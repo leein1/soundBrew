@@ -47,7 +47,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
 
         BooleanBuilder havingBuilder = new BooleanBuilder();
         for(String instrument : instruments) {
-            havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).matches("%"+instrument+"%"));
+            havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).contains(instrument));
         }
         for(String genre: genres){
             havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).contains(genre));
@@ -70,7 +70,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                 .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
                 .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
-                .groupBy(instrumentTag.instrumentTagName, moodTag.moodTagName, genreTag.genreTagName) // Add GROUP BY clause
+                .groupBy(music.musicId) // Add GROUP BY clause
                 .having(havingBuilder) // Now the HAVING clause can be used correctly
                 .fetch();
 

@@ -1,6 +1,7 @@
 import { axiosGet } from "/js/fetch/standardAxios.js";
 import { renderTotalSounds,renderTotalAlbums } from '/js/render/sound.js';
-import { globalState } from '/js/globalState.js';
+// import { globalState } from '/js/globalState.js';
+import { router } from '/js/router.js';
 
 export function renderPagination(responseDTO) {
     const container = document.getElementById("pagination-container");
@@ -53,45 +54,38 @@ async function handlePaginationClick(event) {
     const target = event.target;
 
     if (target.classList.contains("page-link") && !target.classList.contains("active")) {
-        const selectedPage = parseInt(target.getAttribute("data-page"));
+        const selectedPage = target.getAttribute("data-page");
 
-        try {
-            // 새로운 데이터 가져오기
-            const response = await fetchNewPageData(selectedPage);
-            const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
-            // 새 데이터를 기반으로 페이지 다시 렌더링
-            if(endpoint === '/api/sounds/albums'){
-                renderTotalAlbums(response.dtoList);
-            }else {
-                renderTotalSounds(response.dtoList);
-            }
-            renderPagination(response); // 페이지네이션 다시 렌더링
-        } catch (error) {
-            console.error("Error fetching new page data:", error);
-        }
+        const currentParams = new URLSearchParams(window.location.search);
+        currentParams.set('page', selectedPage);
+
+        const newQueryString = currentParams.toString();
+
+        const newUrl = `${window.location.pathname}?${newQueryString}`;
+
+        router.navigate(newUrl);
     }
 }
-
-async function fetchNewPageData(selectedPage) {
-    // 현재 URL에서 파라미터 가져오기
-    const currentParams = new URLSearchParams(window.location.search);
-
-    // 'page' 파라미터 갱신 (이미 있으면 갱신, 없으면 추가)
-    currentParams.set('page', selectedPage);
-
-    // 새로 갱신된 쿼리 문자열 생성
-    const newQueryString = currentParams.toString();
-
-    // 현재 URL의 pathname에 새로운 쿼리 문자열을 붙여서 새로운 URL 생성
-    const newUrl = `${window.location.pathname}?${newQueryString}`;
-
-    // 새로운 URL로 페이지의 상태를 갱신
-    window.history.pushState({ point: window.location.pathname, params: newQueryString }, '', newUrl);
-
-    //전역 상태 변수
-    const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
-
-    // 서버에서 새로운 데이터를 가져옴
-    return await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
-}
-
+//
+// async function fetchNewPageData(selectedPage) {
+//     // 현재 URL에서 파라미터 가져오기
+//     const currentParams = new URLSearchParams(window.location.search);
+//
+//     // 'page' 파라미터 갱신 (이미 있으면 갱신, 없으면 추가)
+//     currentParams.set('page', selectedPage);
+//
+//     // 새로 갱신된 쿼리 문자열 생성
+//     const newQueryString = currentParams.toString();
+//
+//     // 현재 URL의 pathname에 새로운 쿼리 문자열을 붙여서 새로운 URL 생성
+//     const newUrl = `${window.location.pathname}?${newQueryString}`;
+//     // 새로운 URL로 페이지의 상태를 갱신
+//     window.history.pushState({ point: window.location.pathname, params: newQueryString }, '', newUrl);
+//
+//     //전역 상태 변수
+//     const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
+//
+//     // 서버에서 새로운 데이터를 가져옴
+//     return await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
+// }
+//

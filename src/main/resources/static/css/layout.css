@@ -314,7 +314,11 @@ html, body {
 
 .searchbar {
     /* background-color: #ffffff; */
-    height: 80px;
+    border: 2px solid;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    height: 40px;
     display: flex;
     align-items: center;
 }
@@ -326,15 +330,26 @@ html, body {
     margin: 0 auto;
     position: relative;
 }
+.search-area{
+    margin-left: 50px;
+
+}
+
+.searchType{
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #555;
+}
 
 .searchbar-container input {
-    /* border: 1px solid #000000; */
-    outline: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    width: 100%;
-    font-size: 16px;
-    padding-left: 50px;
+    border: none; /* 테두리 제거 */
+    outline: none; /* 포커스 시 아웃라인 제거 */
+    flex: 1; /* 남은 공간을 차지하도록 설정 */
+    max-width: 100%; /* 부모 요소의 너비를 넘지 않도록 제한 */
+    padding-left: 10px;
+    border-radius: 5px;
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
 }
 
 .searchbar-container .searchbar-icon {

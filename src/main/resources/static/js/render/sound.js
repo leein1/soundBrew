@@ -45,6 +45,13 @@ export function renderTagsFromSearch(data) {
 export function renderSoundOne(data, data2){
     const container = document.getElementById("render-sound-one-container");
     container.innerHTML = '';
+
+    const resetTotal = document.getElementById("render-sounds-container");
+    resetTotal.innerHTML = '';
+
+    const container2 = document.getElementById("render-album-info-container");
+    container2.innerHTML='';
+
     console.log(data);
     const html = `
         <div class="content-header-info">
@@ -91,6 +98,14 @@ export function renderSoundOne(data, data2){
 export function renderAlbumOne(data){
     const container = document.getElementById("render-album-info-container");
     container.innerHTML= '';
+
+    const resetTotal = document.getElementById("render-sounds-container");
+    console.log(resetTotal+"reset");
+    resetTotal.innerHTML='';
+
+    const resetContainer02 = document.getElementById("render-sound-one-container");
+    console.log(resetContainer02+"reset");
+    resetContainer02.innerHTML='';
 
     const html = `
         <div class="content-header-info">

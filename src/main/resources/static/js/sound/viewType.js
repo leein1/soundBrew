@@ -1,0 +1,62 @@
+import { axiosGet } from "/js/fetch/standardAxios.js";
+import { renderTotalSounds,renderTotalAlbums } from '/js/render/sound.js';
+import { renderPagination } from "/js/pagination.js";
+import { globalStateManager } from '/js/globalState.js';
+import {router} from "/js/router.js";
+
+export function renderViewType(){
+    const container = document.getElementById("render-view-type-container");
+    container.innerHTML='';
+
+    const item = document.createElement('div');
+    item.classList.add('view-type');
+
+    item.innerHTML=`
+        <span id="viewToggleBtn" class="viewToggleBtn">
+            <img src="/images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정렬">
+            <span>앨범으로 보기</span>
+        </span>
+    `;
+
+    container.appendChild(item);
+
+    document.getElementById('viewToggleBtn').addEventListener('click', toggleView);
+}
+
+// '앨범' / '트랙' 보기 토글 함수
+async function toggleView() {
+    const button = document.getElementById('viewToggleBtn');
+    const currentView = globalStateManager.getState().currentView;
+    // alert("=뷰 타입 클릭 ! : "+currentView);
+
+    const textNode = button.querySelector('span');
+
+    if (currentView === 'albums') {
+        // '앨범'에서 '트랙' 보기로 변경
+        // globalStateManager.dispatch({ type: 'SET_VIEW', payload: 'tracks' });
+        textNode.textContent = '앨범으로 보기';
+    } else {
+        // '트랙'에서 '앨범' 보기로 변경
+        // globalStateManager.dispatch({ type: 'SET_VIEW', payload: 'albums' });
+        textNode.textContent = '트랙으로 보기';
+    }
+
+    // 상태 변경 후 데이터를 새로 호출
+    await updateViewData();
+}
+
+// 현재 상태에 맞는 데이터 호출
+async function updateViewData() {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.delete('page');
+
+    const currentView = globalStateManager.getState().currentView;
+    alert("currentView : "+currentView)
+    const currentURL = currentView === '/tracks' ? '/sounds/tracks' : '/sounds/albums' ;
+    a
+    const newQueryString = currentParams.toString();
+
+    const newUrl = `${currentURL}?${newQueryString}`;
+
+    router.navigate(newUrl);
+}

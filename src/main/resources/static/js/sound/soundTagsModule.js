@@ -1,7 +1,4 @@
-import {axiosGet} from "/js/fetch/standardAxios.js";
-import {renderPagination} from "/js/pagination.js";
-import {renderTotalSounds,renderTotalAlbums} from "/js/render/sound.js";
-import { globalState } from '/js/globalState.js';
+import { router } from '/js/router.js';
 
 export function renderTagsFromSearch(data, initialParams = {}) {
     const container = document.getElementById("render-tags-sort-container");
@@ -13,10 +10,8 @@ export function renderTagsFromSearch(data, initialParams = {}) {
                 <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
                 <span class="music-tag-sort-toggle" data-type="instrument">악기</span>
 
-
                 <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
                 <span class="music-tag-sort-toggle" data-type="mood">분위기</span>
-
 
                 <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
                 <span class="music-tag-sort-toggle" data-type="genre">장르</span>
@@ -59,16 +54,16 @@ export function renderTagsFromSearch(data, initialParams = {}) {
     });
 
     document.querySelectorAll('.tag-item').forEach(tag => {
-        tag.addEventListener('click', () => {
+        tag.addEventListener('click', async () => {
             const type = tag.dataset.type;
             const value = tag.dataset.value;
 
             if (tag.classList.contains('active')) {
                 deactivateTag(tag);
-                performSearch({ [type]: value }, true); // true로 비활성화 작업임을 전달
+                await performSearch({[type]: value}, true); // true로 비활성화 작업임을 전달
             } else {
                 activateTag(tag);
-                performSearch({ [type]: value });
+                await performSearch({[type]: value});
             }
         });
     });
@@ -143,27 +138,34 @@ export function renderTagsFromSearch(data, initialParams = {}) {
             }
         });
 
-        const state = data;
-
         currentParams.delete('page');
+
         const newQueryString = currentParams.toString();
 
-        const newUrl = window.location.pathname + '?' + newQueryString;
-        window.history.pushState({ point: window.location.pathname, params: newQueryString }, '', newUrl);
+        const newUrl = `${window.location.pathname}?${newQueryString}`;
 
-        //전역 상태 변수
-        const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
-        // 데이터를 가져오는 부분
-        const response = await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
-        const tags = await axiosGet({ endpoint:`/api/sounds/tags?${newQueryString}`});
+        router.navigate(newUrl);
+        // const state = data;
+        //
+        // currentParams.delete('page');
+        // const newQueryString = currentParams.toString();
+        //
+        // const newUrl = window.location.pathname + '?' + newQueryString;
+        // window.history.pushState({ point: window.location.pathname, params: newQueryString }, '', newUrl);
+        //
+        // //전역 상태 변수
+        // const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
+        // // 데이터를 가져오는 부분
+        // const response = await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
+        // const tags = await axiosGet({ endpoint:`/api/sounds/tags?${newQueryString}`});
 
-        // 렌더링 호출
-        renderTagsFromSearch(tags);
-        if(endpoint === '/api/sounds/albums'){
-            renderTotalAlbums(response.dtoList);
-        }else {
-            renderTotalSounds(response.dtoList);
-        }
-        renderPagination(response); // 페이지네이션 다시 렌더링
+        // // 렌더링 호출
+        // renderTagsFromSearch(tags);
+        // if(endpoint === '/api/sounds/albums'){
+        //     renderTotalAlbums(response.dtoList);
+        // }else {
+        //     renderTotalSounds(response.dtoList);
+        // }
+        // renderPagination(response); // 페이지네이션 다시 렌더링
     }
 }

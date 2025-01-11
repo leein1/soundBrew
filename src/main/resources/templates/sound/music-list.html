@@ -10,12 +10,16 @@
     <!-- module css -->
     <link th:href="@{/css/sound/music.css}" rel="stylesheet">
     <link th:href="@{/css/sound/album.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/sound.css}" rel="stylesheet">
+
     <link href="/css/sound/player.css" rel="stylesheet">
 </head>
 
 <body>
     <div layout:fragment="content">
         <div class="content-header">
+            <div id="render-view-type-container" class="render-view-type-container"></div>
+
             <!-- tag body -->
             <div id="render-tags-sort-container" class="render-tags-sort-container"></div>
 
@@ -23,8 +27,9 @@
             <div id="render-result-sort-container" class="render-result-sort-container"></div>
         </div>
         <!-- music body -->
-        <hr style="border: 1px solid #eee; margin-top: 20px; margin-bottom: 20px;">
     <div id="render-sounds-container" class="render-sounds-container"></div>
+    <div id="render-sound-one-container" class="render-sound-one-container"></div>
+    <div id="render-album-info-container" class="render-album-info-container"></div>
 
     <div class="audio-player-bar">
             <!-- Player container -->
@@ -70,74 +75,129 @@
 
 <th:block layout:fragment="script">
     <script src="https://unpkg.com/wavesurfer.js"></script>
+
     <script type="module">
+        // import store from '/js/globalState.js';
+        // import { globalState,dispatch,actions } from '/js/globalState.js';
+        import { router } from '/js/router.js';
         import {axiosGet} from '/js/fetch/standardAxios.js';
         import {renderTotalSounds,renderTotalAlbums} from '/js/render/sound.js';
         import {renderPagination} from "/js/pagination.js";
         import {renderSort} from "/js/sound/sort.js";
         import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
-        import {globalState} from "/js/globalState.js";
+        import {renderViewType} from "/js/sound/viewType.js";
+        import {initializeMusicPlayer} from '/js/sound/soundPlaying.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
+            initializeMusicPlayer();
             try {
-                const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
-                const queryParams = window.location.search;
+                // alert("addEventListener");
+                // 뷰 모드 확인 (기본값 tracks)
+                // const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
 
                 // 파라미터가 있으면 쿼리 문자열을 포함한 URL 사용
-                const tracksEndpoint = queryParams ? `${endpoint}${queryParams}` : endpoint;
-                const tagsEndpoint = queryParams ? `/api/sounds/tags${queryParams}` : '/api/sounds/tags';
+                // const queryParams = window.location.search; // 쿼리 파라미터 들고오기
+                // const tagsEndpoint = queryParams ? `/api/sounds/tags${queryParams}` : '/api/sounds/tags';
 
-                window.history.pushState({ point: window.location.pathname }, '', window.location.pathname);
+                // window.history.pushState({ point: window.location.pathname }, '', window.location.pathname);
 
-                const renderTotal = await axiosGet({ endpoint:`${tracksEndpoint}` });
+                // dispatch({ type: actions.SET_VIEW, payload: 'tracks' });
 
-                if(endpoint === '/api/sounds/albums'){
-                    renderTotalAlbums(renderTotal.dtoList);
-                }else {
-                    renderTotalSounds(renderTotal.dtoList);
-                }
-                renderPagination(renderTotal);
-                renderSearch();
+                // renderViewType(); // 뷰 타입 컴포넌트
+                // renderSearch(); // 검색바 컴포넌트
+                // renderSort(); // 정렬 영역 컴포넌트
 
-                const renderTags = await axiosGet({ endpoint:`${tagsEndpoint}` });
-                renderTagsFromSearch(renderTags);
-                renderSort();
+                // const renderTags = await axiosGet({endpoint: `${tagsEndpoint}`});
+                // renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트\
+
+                // const renderTotal = await axiosGet({ endpoint:`${tracksEndpoint}` });
+                // if(endpoint === '/api/sounds/albums'){
+                //     renderTotalAlbums(renderTotal.dtoList); // 앨범 리스트 컴포넌트
+                // }else {
+                //     renderTotalSounds(renderTotal.dtoList); // 트랙 리스트 컴포넌트
+                // }
+
+                // renderPagination(renderTotal); // 페이징 컴포넌트
             } catch (error) {
                 console.error('Error occurred while rendering:', error);
             }
 
-            window.addEventListener('popstate', async (event) => {
-                // 'state' 객체에서 point와 params를 가져옴
-                const state = event.state;
-                alert("back event");
+            //
+            // // [URL 파라미터에서 태그 추출]
+            // export function extractTagsFromURL() {
+            //     const urlParams = new URLSearchParams(window.location.search);
+            //
+            //     const instrumentTags = urlParams.has('more[instrument]') ? urlParams.get('more[instrument]').split(',') : [];
+            //     const moodTags = urlParams.has('more[mood]') ? urlParams.get('more[mood]').split(',') : [];
+            //     const genreTags = urlParams.has('more[genre]') ? urlParams.get('more[genre]').split(',') : [];
+            //
+            //     // 추출한 태그들을 상태에 반영
+            //     dispatch({ type: actions.SET_INSTRUMENT_TAGS, payload: instrumentTags });
+            //     dispatch({ type: actions.SET_MOOD_TAGS, payload: moodTags });
+            //     dispatch({ type: actions.SET_GENRE_TAGS, payload: genreTags });
+            // }
+            //
+            // // 상태와 URL 파라미터 비교 함수
+            // export function compareTagsWithUrlParams() {
+            //     const urlParams = new URLSearchParams(window.location.search);
+            //     const instrumentTags = urlParams.has('more[instrument]') ? urlParams.get('more[instrument]').split(',') : [];
+            //     const moodTags = urlParams.has('more[mood]') ? urlParams.get('more[mood]').split(',') : [];
+            //     const genreTags = urlParams.has('more[genre]') ? urlParams.get('more[genre]').split(',') : [];
+            //
+            //     const currentInstrumentTags = globalState.instrumentTags;
+            //     const currentMoodTags = globalState.moodTags;
+            //     const currentGenreTags = globalState.genreTags;
+            //
+            //     console.log("현재 상태에 올라온 태그 : "+currentInstrumentTags+currentMoodTags+currentGenreTags);
+            //     console.log("지금 파라미터에 있는 태그 : "+instrumentTags+moodTags+genreTags);
+            //     // 각각의 태그 비교
+            //     const isInstrumentChanged = !arraysAreEqual(currentInstrumentTags, instrumentTags);
+            //     const isMoodChanged = !arraysAreEqual(currentMoodTags, moodTags);
+            //     const isGenreChanged = !arraysAreEqual(currentGenreTags, genreTags);
+            //
+            //     // 하나라도 달라지면 true 반환
+            //     return isInstrumentChanged || isMoodChanged || isGenreChanged;
+            // }
+            //
+            // // 배열 비교 함수
+            // function arraysAreEqual(arr1, arr2) {
+            //     if (arr1.length !== arr2.length) return false;
+            //     for (let i = 0; i < arr1.length; i++) {
+            //         if (arr1[i] !== arr2[i]) return false;
+            //     }
+            //     return true;
+            // }
 
-                if (state) {
-                    const { point, params } = state;
-
-                    try {
-                        const endpoint = point === '/sounds/tracks' ? '/api/sounds/tracks' : '/api/sounds/albums';
-                        console.log("endpoint : "+endpoint);
-
-                        const renderTotal = await axiosGet({ endpoint: `${endpoint}?${params}` });
-                        if(endpoint === '/api/sounds/albums'){
-                            renderTotalAlbums(renderTotal.dtoList);
-                        } else {
-                            renderTotalSounds(renderTotal.dtoList);
-                        }
-                        renderPagination(renderTotal);
-
-                        const renderTags = await axiosGet({ endpoint: `/api/sounds/tags?${params}` });
-                        renderTagsFromSearch(renderTags);
-
-                        console.log("renderTags : "+renderTags);
-                    } catch (error) {
-                        console.error('API 요청 실패:', error);
-                    }
-                }
-            });
-
+            // window.addEventListener('popstate', async (event) => {
+            //     const state = event.state;
+            //     alert("back event");
+            //
+            //     if (state) {
+            //         const { point, params } = state;
+            //
+            //         try {
+            //             const endpoint = point === '/sounds/tracks' ? '/api/sounds/tracks' : '/api/sounds/albums';
+            //             console.log("endpoint : "+endpoint);
+            //
+            //             const renderTotal = await axiosGet({ endpoint: `${endpoint}?${params}` });
+            //             if(endpoint === '/api/sounds/albums'){
+            //                 renderTotalAlbums(renderTotal.dtoList);
+            //             } else {
+            //                 renderTotalSounds(renderTotal.dtoList);
+            //             }
+            //             renderPagination(renderTotal);
+            //
+            //             const renderTags = await axiosGet({ endpoint: `/api/sounds/tags?${params}` });
+            //             renderTagsFromSearch(renderTags);
+            //
+            //             console.log("renderTags : "+renderTags);
+            //         } catch (error) {
+            //             console.error('API 요청 실패:', error);
+            //         }
+            //     }
+            // });
         });
     </script>
-    <script src="/js/sound/soundPlaying.js"></script>
+<!--    <script src="/js/sound/soundPlaying.js"></script>-->
 </th:block>
 </html>
