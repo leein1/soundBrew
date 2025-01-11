@@ -36,7 +36,7 @@ export class Router {
 
     //상태 업데이트
     updateStateFromURL() {
-        alert("!!! 상태 업데이트 !!!");
+        // alert("!!! 상태 업데이트 !!!");
         const path = window.location.pathname; // 예: "/sounds/tracks/one"
 
         // "/sounds/tracks/one"에서 첫 번째 칸("sounds") 제거
@@ -75,7 +75,7 @@ router.addRoute('/sounds/tracks',async () => {
     // }
 
     const response = await axiosGet({endpoint: `/api/sounds/tracks${queryParams}`});
-    // console.log(response);
+
     renderTotalSounds(response.dtoList);
     renderPagination(response);
 });
@@ -96,13 +96,15 @@ router.addRoute('/sounds/tracks/one',async (context) => {
     const urlParams = new URLSearchParams(window.location.search);
     const nickname = urlParams.get('nickname');
     const title = urlParams.get('title');
-    // alert("nickname : "+ nickname + " , trackTitle : "+title);
 
     const response = await axiosGet({endpoint: '/api/sounds/tracks/' + nickname + '/title/' + title});
     const tagsBody = {dto: [response.dto]};
     const renderTags = await axiosPost({endpoint: '/api/sounds/tags', body: tagsBody});
 
     renderSoundOne(response.dto, renderTags);
+    //얘는 페이징이 없음 ( 지우거나 해야함)
+    const container = document.querySelector('.pagination-container');
+    container.innerHTML='';
 });
 
 router.addRoute('/sounds/albums/one',async (context) => {
@@ -113,6 +115,7 @@ router.addRoute('/sounds/albums/one',async (context) => {
 
     const response = await axiosGet({endpoint: '/api/sounds/albums/' + nickname + '/title/' + albumName});
     renderAlbumOne(response);
+
     renderTotalSounds(response.dtoList);
     renderPagination(response);
 
@@ -120,7 +123,6 @@ router.addRoute('/sounds/albums/one',async (context) => {
     const renderTags = await axiosPost({endpoint: '/api/sounds/tags', body: tagsBody});
 
     renderTagsFromSearch(renderTags);
-    // renderSort();
 });
 
 // router.addRoute('',()=>{

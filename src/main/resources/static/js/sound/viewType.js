@@ -27,17 +27,14 @@ export function renderViewType(){
 async function toggleView() {
     const button = document.getElementById('viewToggleBtn');
     const currentView = globalStateManager.getState().currentView;
-    // alert("=뷰 타입 클릭 ! : "+currentView);
 
     const textNode = button.querySelector('span');
 
-    if (currentView === 'albums') {
+    if (currentView === '/albums') {
         // '앨범'에서 '트랙' 보기로 변경
-        // globalStateManager.dispatch({ type: 'SET_VIEW', payload: 'tracks' });
         textNode.textContent = '앨범으로 보기';
     } else {
         // '트랙'에서 '앨범' 보기로 변경
-        // globalStateManager.dispatch({ type: 'SET_VIEW', payload: 'albums' });
         textNode.textContent = '트랙으로 보기';
     }
 
@@ -51,9 +48,9 @@ async function updateViewData() {
     currentParams.delete('page');
 
     const currentView = globalStateManager.getState().currentView;
-    alert("currentView : "+currentView)
-    const currentURL = currentView === '/tracks' ? '/sounds/tracks' : '/sounds/albums' ;
-    a
+    // alert("currentView : "+currentView)
+    const currentURL = currentView === '/tracks' ? '/sounds/albums' : '/sounds/tracks' ;
+
     const newQueryString = currentParams.toString();
 
     const newUrl = `${currentURL}?${newQueryString}`;

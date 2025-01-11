@@ -9,7 +9,6 @@
 .music-sort{
     /* align-items: center; */
     display: flex;
-    margin-bottom: 5px;
     color: #555;
     margin-top: 50px;
     border-bottom: 1px solid #ddd;

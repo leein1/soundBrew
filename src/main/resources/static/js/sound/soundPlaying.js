@@ -3,7 +3,7 @@ import {router} from "/js/router.js";
 
 // Main Function to Initialize All Event Listeners and Wavesurfer
 export function initializeMusicPlayer() {
-    // alert("install soundplaying");
+    alert("install soundplaying");
     // Initialize Wavesurfer
     const wavesurfer = WaveSurfer.create({
         container: '#waveform',
@@ -20,7 +20,7 @@ export function initializeMusicPlayer() {
     const currentTimeDisplay = document.getElementById('current-time');
     const totalTimeDisplay = document.getElementById('total-time');
     const volumeBar = document.getElementById('volume-bar');
-    const clickContainer = document.getElementById('render-sounds-container');
+    const clickContainer = document.getElementById('content-body');
     let loadedSoundId = '';
 
     // Function Definitions
@@ -120,7 +120,7 @@ export function initializeMusicPlayer() {
         // 앨범 이름 클릭 처리
         const albumNameElement = event.target.closest('.album-name');
         if (albumNameElement) {
-            alert("앨범 클릭, 다음에 상태 변경 확인해보기;");
+            // alert("앨범 클릭, 다음에 상태 변경 확인해보기;");
             const albumName = albumNameElement.dataset.albumName;
             const nickname = albumNameElement.dataset.nickname;
             const newUrl = `/sounds/albums/one?nickname=${nickname}&albumName=${albumName}`;

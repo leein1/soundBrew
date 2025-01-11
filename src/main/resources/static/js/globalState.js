@@ -96,9 +96,9 @@ function displaySearchBar(state) {
         searchItem.style.display = 'block'; //보임
     }else if (state.currentView === '/albums') {
         searchItem.style.display = 'block'; //보임
-    }else if (state.currentView === '/track/one'){
+    }else if (state.currentView === '/tracks/one'){
         searchItem.style.display = 'none'; // 한개 트랙에는 안보임
-    }else if(state.currentView === '/album/one'){
+    }else if(state.currentView === '/albums/one'){
         searchItem.style.display = 'none'; // 한개 앨범에는 안보임
     }
 }
@@ -113,9 +113,9 @@ function displaySortBar(state){
         sortItem.style.display = 'block'; //보임
     }else if (state.currentView === '/albums') { // 앨범 리스트일때
         sortItem.style.display = 'block'; //보임
-    }else if (state.currentView === '/track/one'){ // 트랙 1개일때
+    }else if (state.currentView === '/tracks/one'){ // 트랙 1개일때
         sortItem.style.display = 'none'; // 안보임
-    }else if(state.currentView === '/album/one'){ // 앨범 1개일때
+    }else if(state.currentView === '/albums/one'){ // 앨범 1개일때
         sortItem.style.display = 'block'; //보임
     }
 }
@@ -130,35 +130,53 @@ function displayViewTypeBar(state){
         // alert("viewTypeBar!!!");
         viewTypeItem.style.display = 'block'; // 보임
     }else if (state.currentView === '/albums') { // 앨범 리스트일때
-        viewTypeItem.style.display = 'none'; // 보임
-    }else if (state.currentView === '/track/one'){ // 트랙 1개일때
+        viewTypeItem.style.display = 'block'; // 보임
+    }else if (state.currentView === '/tracks/one'){ // 트랙 1개일때
         viewTypeItem.style.display = 'none'; // 한개 트랙에는 안보임
-    }else if(state.currentView === '/album/one'){ // 앨범 1개일때
+    }else if(state.currentView === '/albums/one'){ // 앨범 1개일때
         viewTypeItem.style.display = 'none'; // 안보임
     }
 }
 
 function displayTagsBar(state){
-    alert("displayTagsBar");
+    // alert("displayTagsBar");
     let tagsBarItem = document.querySelector('.music-tag-sort');
-
+    // alert("tagsBarItem : "+tagsBarItem);
     if(tagsBarItem){
         if (state.currentView === '/tracks') { // 트랙 리스트일때
             tagsBarItem.style.display = 'block'; // 보임
         }else if (state.currentView === '/albums') { // 앨범 리스트일때
             tagsBarItem.style.display = 'block'; // 보임
-        }else if (state.currentView === '/track/one'){ // 트랙 1개일때
+        }else if (state.currentView === '/tracks/one'){ // 트랙 1개일때
             tagsBarItem.style.display = 'none'; // 한개 트랙에는 안보임
-        }else if(state.currentView === '/album/one'){ // 앨범 1개일때
-            tagsBarItem.style.display = 'block'; // 안보임
+        }else if(state.currentView === '/albums/one'){ // 앨범 1개일때
+            tagsBarItem.style.display = 'block'; // 보임
         }
     }
 }
+
+function displayAlbumInfoBar(state){
+    let albumInfoBar = document.querySelector('.render-album-info-container');
+    // alert("tagsBarItem : "+tagsBarItem);
+    if(albumInfoBar){
+        if (state.currentView === '/tracks') { // 트랙 리스트일때
+            albumInfoBar.innerHTML = ''; // 보임
+        }else if (state.currentView === '/albums') { // 앨범 리스트일때
+            albumInfoBar.innerHTML = ''; // 보임
+        }else if (state.currentView === '/tracks/one'){ // 트랙 1개일때
+            albumInfoBar.innerHTML = ''; // 보임
+        }else if(state.currentView === '/albums/one'){ // 앨범 1개일때
+            console.log("album-info");
+        }
+    }
+}
+
 // 구독 설정
 globalStateManager.subscribe('currentView', displaySearchBar);
 globalStateManager.subscribe('currentView', displaySortBar);
 globalStateManager.subscribe('currentView', displayViewTypeBar);
 globalStateManager.subscribe('currentView', displayTagsBar);
+globalStateManager.subscribe('currentView', displayAlbumInfoBar);
 
 // 최초 로드 시, dispatch로 상태 설정
 globalStateManager.dispatch({
