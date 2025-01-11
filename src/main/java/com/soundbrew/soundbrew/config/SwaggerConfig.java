@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
         bearerFormat = "JWT"
 )
 
+
 /*
 Authorization 헤더(BearerAuth)를 전역 추가
  */

@@ -36,18 +36,18 @@ public class UserSubscriptionDTO extends BaseDTO {
 //
 //    private LocalDateTime modify_date;
 
-    // QueryDSL용 생성자
-    public UserSubscriptionDTO(int userId, int subscriptionId, LocalDateTime firstBillingDate,
-                               LocalDateTime nextBillingDate, String paymentStatus,
-                               LocalDateTime createDate, LocalDateTime modifyDate) {
-        super.setCreateDate(createDate);
-        super.setModifyDate(modifyDate);// BaseDTO의 필드 초기화
-        this.userId = userId;
-        this.subscriptionId = subscriptionId;
-        this.firstBillingDate = firstBillingDate;
-        this.nextBillingDate = nextBillingDate;
-        this.paymentStatus = paymentStatus;
-    }
+//    // QueryDSL용 생성자
+//    public UserSubscriptionDTO(int userId, int subscriptionId, LocalDateTime firstBillingDate,
+//                               LocalDateTime nextBillingDate, String paymentStatus,
+//                               LocalDateTime createDate, LocalDateTime modifyDate) {
+//        super.setCreateDate(createDate);
+//        super.setModifyDate(modifyDate);// BaseDTO의 필드 초기화
+//        this.userId = userId;
+//        this.subscriptionId = subscriptionId;
+//        this.firstBillingDate = firstBillingDate;
+//        this.nextBillingDate = nextBillingDate;
+//        this.paymentStatus = paymentStatus;
+//    }
 
     public UserSubscription toEntity(){
 

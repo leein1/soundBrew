@@ -33,28 +33,37 @@ public class TokenCheckFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        log.info("-------------------------------------Token Check Filter.doFilterInternal-----------------------");
+
         String path = request.getRequestURI();
+        log.info("Token Check Filter requestPath : {}", path);
 
         if(!path.startsWith("/api/")){
+
+            log.info("request 요청이 /api가 아님 ");
 
             filterChain.doFilter(request, response);
             return;
         }
 
-        log.info("Token Check Filter");
-        log.info("JWTUtil: {}", jwtUtil);
 
-//        filterChain.doFilter(request, response);
+        log.info("Token Check Filter JWTUtil: {}", jwtUtil);
+
 
         try{
+
             validateAccessToken(request);
             filterChain.doFilter(request, response);
+
         }catch (AccessTokenException accessTokenException){
+
             accessTokenException.sendResponseError(response);
         }
     }
 
     private Map<String,Object> validateAccessToken(HttpServletRequest request) throws AccessTokenException {
+
+        log.info("-------------------------------------Token Check Filter.validateAccessToken-----------------------");
 
         String headerStr = request.getHeader("Authorization");
 
@@ -65,6 +74,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         //Bearer 생략
         String tokenType = headerStr.substring(0,6);
         String tokenStr = headerStr.substring(7);
+        log.info("tokenType : {}, tokenStr : {}", tokenType,tokenStr);
 
         if(tokenType.equalsIgnoreCase("Bearer") == false){
             throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.BADTYPE);
@@ -74,6 +84,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             Map<String,Object> values = jwtUtil.validateToken(tokenStr);
 
             return values;
+
         }catch (MalformedJwtException malformedJwtException){
 
             log.error("MalformedJwtException-----------------------------------------------------------------");

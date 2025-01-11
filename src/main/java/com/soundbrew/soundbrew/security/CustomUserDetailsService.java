@@ -24,14 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-
+//    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.info("이메일 기반 정보 조회(username - 유저 엔티티의 email),{}", username);
+        log.info("---------------이메일 기반 정보 조회(username - 유저 엔티티의 email) , {}", username);
 
         //  실제 유저 정보 이메일로 조회
         //  매개변수로 들어가는 username은 login.html 폼에서 제출한 username이다 -> email

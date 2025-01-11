@@ -130,7 +130,7 @@ public class MeController {
     @GetMapping(value = "")
     public ResponseEntity<ResponseDTO<UserDTO>> getMe() {   //추후 토큰에서 user id 추출 해야 함
 
-            ResponseDTO<UserDTO> responseDTO = userService.getUser(16);
+            ResponseDTO<UserDTO> responseDTO = userService.getUser(57);
 
             return ResponseEntity.ok().body(responseDTO);
     }

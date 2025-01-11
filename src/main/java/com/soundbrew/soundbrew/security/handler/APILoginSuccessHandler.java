@@ -29,12 +29,14 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         
         log.info(authentication);
         log.info(authentication.getName());
-        
+
+        //  JWTUtil에 전달될 valueMap
         Map<String,Object> claim = Map.of("username", authentication.getName());
+
         // Access Token 기간 1일
-        String accessToken = jwtUtil.generateToken(claim,1);
+        String accessToken = jwtUtil.generateToken(claim,2);
         //  Refresh Token 기간 30일
-        String refreshToken = jwtUtil.generateToken(claim,30);
+        String refreshToken = jwtUtil.generateToken(claim,5);
 
         Gson gson = new Gson();
 

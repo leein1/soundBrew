@@ -28,7 +28,7 @@ public class JWTUtil {
     //  문자열을 생성
     public String generateToken(Map<String, Object> valueMap, int days) {
 
-        log.info("-------------키 생성 : " + key);
+        log.info("-------------JWTUTIL.generateToken 키 생성 : " + key);
 
         //  헤더부분
         Map<String,Object> headers = new HashMap<>();
@@ -39,8 +39,7 @@ public class JWTUtil {
         Map<String,Object> payload = new HashMap<>();
         payload.putAll(valueMap);
 
-        //  테스트를 위해 유효기간을 짧게 지정함
-        int time = (60*24) * days; //   나중에 60*24 변경
+        int time = (1) * days; //   나중에 일 단위로 변경 해야 함
 
         String jwtStr = Jwts.builder()
                 .setHeader(headers)
@@ -57,13 +56,14 @@ public class JWTUtil {
     //  토큰을 검증
     public Map<String, Object> validateToken(String token) throws JwtException {
 
+        log.info("JWTUtil.validateToken : {}", token);
+
         Map<String,Object> claims = null;
 
         claims = Jwts.parser()
                 .setSigningKey(key.getBytes()) //setKey
                 .parseClaimsJws(token)  // 파싱 + 검증, 실패시 에러
                 .getBody();
-
 
         return claims;
     }

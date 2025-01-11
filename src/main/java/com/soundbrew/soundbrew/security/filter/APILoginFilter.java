@@ -29,6 +29,7 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private Map<String,String> parseRequestJSON(HttpServletRequest request) {
 
+        log.info("--------------------------- APILoginFilter.parseRequestJSON ----------------------");
         //  JSON 데이터를 분석, email,password 값 Map으로 처리
         try(Reader reader = new InputStreamReader(request.getInputStream())) {
 
@@ -47,7 +48,7 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
-        log.info("-------------------------API Login Filter ----------------------------");
+        log.info("-------------------------API Login Filter.attemptAuthentication ----------------------------");
 
         if(request.getMethod().equalsIgnoreCase("GET")) {
 
@@ -57,7 +58,7 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
 
         Map<String,String> jsonData = parseRequestJSON(request);
 
-        log.info(jsonData);
+        log.info("json Data : {}", jsonData);
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(jsonData.get("username"), jsonData.get("password"));

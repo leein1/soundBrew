@@ -22,8 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
 
@@ -34,7 +32,6 @@ import javax.sql.DataSource;
 public class CustomSecurityConfig {
 
 
-    private final DataSource dataSource;
     private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
 
@@ -64,10 +61,19 @@ public class CustomSecurityConfig {
         APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
 
-        // 필터 추가 + 순서
-        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // apiLoginFilter 먼저 실행
-        http.addFilterAfter(new RefreshTokenFilter("/refreshToken",jwtUtil), APILoginFilter.class);                   // refreshTokenFilter는 apiLoginFilter 이후
-        http.addFilterAfter(tokenCheckFilter(jwtUtil), RefreshTokenFilter.class);
+        // 필터 순서
+//        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 가장 먼저 실행
+//        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // 로그인 필터
+//        http.addFilterAfter(tokenCheckFilter(jwtUtil), APILoginFilter.class); // 액세스 토큰 검증은 로그인 필터 이후
+
+//        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), TokenCheckFilter.class);
+
+
+        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 리프레시 토큰 처리
+        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // 로그인 처리
+        http.addFilterAfter(tokenCheckFilter(jwtUtil), APILoginFilter.class); // 액세스 토큰 검증
 
         // HttpSecurity 설정
         http.authorizeRequests()
