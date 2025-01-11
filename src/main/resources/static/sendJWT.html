@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="result">
+
+
+</div>
+<button class="btn1">CALL SERVER</button>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+    const callServer = async() => {
+        console.log("서버 호출 1");
+
+        const accessToken = localStorage.getItem("accessToken");
+
+        if(!accessToken){
+            throw 'Connot Find Access Token';
+        }
+
+        const authHeader = {"Authorization": `Bearer ${accessToken}`};
+
+        const res = await axios.get("http://localhost:8080/api/sample/doA",{headers:authHeader});
+
+        return res.data
+    }
+
+    const resultDiv = document.querySelector(".result");
+
+    document.querySelector(".btn1").addEventListener("click", () =>{
+
+        callServer().then(result => {
+            console.log(result);
+        }).catch(error => {
+            alert(error);
+        })
+
+    },false)
+</script>
+
+
+</body>
+</html>
