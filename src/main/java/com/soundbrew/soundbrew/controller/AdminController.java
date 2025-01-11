@@ -106,7 +106,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/tags")
+    @GetMapping("/tags") // 관리자모드 태그 정보
     ResponseEntity<ResponseDTO<TagsDTO>> getTags(@RequestParam(required = false) List<Integer> musicIds){ // 아티스트(내)의 음악들 ( List<Integer>)의 태그들
         ResponseDTO<TagsDTO> responseDto = tagsService.getTags(musicIds);
 

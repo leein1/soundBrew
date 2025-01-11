@@ -23,7 +23,7 @@ public class RequestDTO {
     int page = 1;
 
     @Builder.Default
-    int size = 10;
+    int size = 1;
 
     String keyword;
 

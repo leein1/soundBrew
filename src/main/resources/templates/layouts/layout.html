@@ -67,34 +67,33 @@
                 <div class="user">회원가입</div>
             </div><!-- end navigation -->
 
-            <div class="searchbar">
-                <div class="searchbar-container">
-                    <span class="searchbar-icon">
-                        <img th:src="@{/images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="Search Icon">
-                    </span>
-                    <input type="text" placeholder="검색...">
-                </div>
-            </div><!-- end searchbar -->
+<!--            <div class="searchbar">-->
+<!--                <div class="searchbar-container">-->
+<!--                    <span class="searchbar-icon">-->
+<!--                        <img th:src="@{/images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="Search Icon">-->
+<!--                    </span>-->
+                    <div id="searchContainer" class="searchContainer"></div>
+<!--                </div>-->
+<!--            </div>&lt;!&ndash; end searchbar &ndash;&gt;-->
 
             <div class="content" layout:fragment="content">
                 <span class="play-trigger" style="cursor: pointer; color: blue;">재생</span>
             </div><!-- end content -->
 
+            <div class="pagination-container" id="pagination-container"></div>
             <div class="footer">
                 푸터 영역
             </div><!-- end footer -->
-            
 
-            <div class="pagination">
-                <!-- 나중에 페이징 처리 수정 필요 -->
-                <a href="#" class="page-link">«</a>
-                <a href="#" class="page-link active">1</a>
-                <a href="#" class="page-link">2</a>
-                <a href="#" class="page-link">3</a>
-                <a href="#" class="page-link">4</a>
-                <a href="#" class="page-link">5</a>
-                <a href="#" class="page-link">»</a>
-            </div><!-- end pagination -->
+<!--                &lt;!&ndash; 나중에 페이징 처리 수정 필요 &ndash;&gt;-->
+<!--                <a href="#" class="page-link">«</a>-->
+<!--                <a href="#" class="page-link active">1</a>-->
+<!--                <a href="#" class="page-link">2</a>-->
+<!--                <a href="#" class="page-link">3</a>-->
+<!--                <a href="#" class="page-link">4</a>-->
+<!--                <a href="#" class="page-link">5</a>-->
+<!--                <a href="#" class="page-link">»</a>-->
+
 
 
         </div><!-- end article -->
@@ -163,8 +162,8 @@
     <!-- 사이드바 확장 js -->
     <script th:src="@{/js/sidebarExpand.js}"></script>
 
-    <!-- 뮤직 플레이어 js -->
-    <script th:src="@{js/musicPlayer.js}"></script>
+    <!-- 검색바 기능 -->
+    <script src="/js/search.js"></script>
 <th:block  layout:fragment="script">
 </th:block>
 </body>

@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.sound.*;
+import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 import com.soundbrew.soundbrew.dto.sound.TagsDTO;
@@ -10,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.soundbrew.soundbrew.dto.BuilderFactory.*;
@@ -32,13 +30,58 @@ public class TagsServiceImpl implements TagsService {
 
 
     @Override
-    public ResponseDTO<TagsDTO> totalTagsSearch(List<SearchTotalResultDTO> sounds) {
+    public ResponseDTO<TagsDTO> tagsSearchAfter(List<SearchTotalResultDTO> sounds) {
         TagsDTO tagsDTO = new TagsDTO();
         Set<String> instTagSet = new HashSet<>();
         Set<String> moodTagSet = new HashSet<>();
         Set<String> genreTagSet = new HashSet<>();
 
         for (SearchTotalResultDTO sound : sounds) {
+            soundProcessor.addTagsToSet(sound.getTagsStreamDTO().getInstrumentTagName(), instTagSet);
+            soundProcessor.addTagsToSet(sound.getTagsStreamDTO().getMoodTagName(), moodTagSet);
+            soundProcessor.addTagsToSet(sound.getTagsStreamDTO().getGenreTagName(), genreTagSet);
+        }
+
+        tagsDTO.setInstrument(new ArrayList<>(instTagSet));
+        tagsDTO.setMood(new ArrayList<>(moodTagSet));
+        tagsDTO.setGenre(new ArrayList<>(genreTagSet));
+
+        return ResponseDTO.<TagsDTO>withSingleData().dto(tagsDTO).build();
+    }
+
+    @Override
+    @Transactional
+    public ResponseDTO<TagsDTO> getTags(List<Integer> musicIds) {
+        TagsDTO tagsDTO = new TagsDTO();
+
+        if (musicIds == null || musicIds.isEmpty()) {
+            tagsDTO.setMood(moodTagRepository.findAll().stream()
+                    .map(MoodTag::getMoodTagName)
+                    .collect(Collectors.toList()));
+
+            tagsDTO.setInstrument(instrumentTagRepository.findAll().stream()
+                    .map(InstrumentTag::getInstrumentTagName)
+                    .collect(Collectors.toList()));
+
+            tagsDTO.setGenre(genreTagRepository.findAll().stream()
+                    .map(GenreTag::getGenreTagName)
+                    .collect(Collectors.toList()));
+        }
+
+        return ResponseDTO.<TagsDTO>builder().dtoList(List.of(tagsDTO)).build();
+    }
+
+    @Override
+    public ResponseDTO<TagsDTO> getAllTags(RequestDTO requestDTO){
+        Optional<List<SearchTotalResultDTO>> result = musicRepository.getAllTags(requestDTO);
+        System.out.println(result.get());
+        if(result.get().isEmpty()) return ResponseDTO.<TagsDTO>withMessage().message("검색된 태그가 없습니다.").build();
+        TagsDTO tagsDTO = new TagsDTO();
+        Set<String> instTagSet = new HashSet<>();
+        Set<String> moodTagSet = new HashSet<>();
+        Set<String> genreTagSet = new HashSet<>();
+
+        for (SearchTotalResultDTO sound : result.get()) {
             soundProcessor.addTagsToSet(sound.getTagsStreamDTO().getInstrumentTagName(), instTagSet);
             soundProcessor.addTagsToSet(sound.getTagsStreamDTO().getMoodTagName(), moodTagSet);
             soundProcessor.addTagsToSet(sound.getTagsStreamDTO().getGenreTagName(), genreTagSet);
@@ -130,28 +173,6 @@ public class TagsServiceImpl implements TagsService {
 
         genreTag.update(afterName);
         return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
-    }
-
-    @Override
-    @Transactional
-    public ResponseDTO<TagsDTO> getTags(List<Integer> musicIds) {
-        TagsDTO tagsDTO = new TagsDTO();
-
-        if (musicIds == null || musicIds.isEmpty()) {
-            tagsDTO.setMood(moodTagRepository.findAll().stream()
-                    .map(MoodTag::getMoodTagName)
-                    .collect(Collectors.toList()));
-
-            tagsDTO.setInstrument(instrumentTagRepository.findAll().stream()
-                    .map(InstrumentTag::getInstrumentTagName)
-                    .collect(Collectors.toList()));
-
-            tagsDTO.setGenre(genreTagRepository.findAll().stream()
-                    .map(GenreTag::getGenreTagName)
-                    .collect(Collectors.toList()));
-        }
-
-        return ResponseDTO.<TagsDTO>builder().dtoList(List.of(tagsDTO)).build();
     }
 
     private InstrumentTag findByInstrumentTagName(String keyword){

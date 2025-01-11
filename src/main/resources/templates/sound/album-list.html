@@ -49,7 +49,8 @@
 
                     const renderTotal = await axiosGet({endpoint: '/api/sounds/albums'+queryParams});
                     renderTotalAlbums(renderTotal.dtoList);
-
+                    renderPagination(renderTotal);
+renderSearch();
                     const tagsBody = { dto: renderTotal.dtoList };
                     const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
 
@@ -59,7 +60,8 @@
                     const renderTotal = await axiosGet({endpoint: '/api/sounds/albums' });
                     console.log(renderTotal);
                     renderTotalAlbums(renderTotal.dtoList);
-
+                    renderPagination(renderTotal);
+renderSearch();
                     const tagsBody = { dto: renderTotal.dtoList };
                     const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
 
@@ -183,9 +185,13 @@
             // #sortIcon과 #sortKeyword 둘 다 클릭 시 동일한 동작 적용
             // #sortIcon : "정렬" 옆 이모티콘 의미 / sortKeyword : "정렬" 단어 부분 의미
 
-
+            // 음원 스트리밍 관련 함수 정의
+            // 음원 스트리밍 관련 함수 정의
+            // 음원 스트리밍 관련 함수 정의
+            // 음원 스트리밍 관련 함수 정의
         });
     </script>
+    <script src="/js/pagination.js"></script>
     <script src="/js/sound/soundTagsModule.js"></script>
     <script src="/js/sound/sort.js" ></script>
 </th:block>

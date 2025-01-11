@@ -17,23 +17,21 @@
 </body>
 <th:block layout:fragment="script">
     <script type="module">
-        import { axiosGet, axiosPost, axiosPut, axiosDelete } from '/js/fetch/standardAxios.js';
-        import { inputProcessor, inputValidator, inputHandler } from '/js/check/inputHandler.js';
-        import { serializeFormToJSON } from '/js/serialize/formTojson.js'
-        import {renderSoundOne, renderTagsFromSearch, renderSort} from '/js/render/sound.js';
+        import { axiosGet, axiosPost } from '/js/fetch/standardAxios.js';
+        import {renderSoundOne} from '/js/render/sound.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // API 호출 및 렌더링 처리
-                const nickname ="u_1";
-                const title ="Gentle Breeze";
+            try{
+                const queryParams = new URLSearchParams( window.location.search);
+                const nickname = queryParams.get('nickname');
+                const albumName = queryParams.get('title');
 
-                const response = await axiosGet({endpoint:'/api/sounds/tracks/'+nickname+'/title/'+title});
+                const response = await axiosGet({endpoint:'/api/sounds/tracks/'+nickname+'/title/'+albumName});
                 const tagsBody = { dto: [response.dto] };
                 const renderTags = await axiosPost({endpoint:'/api/sounds/tags',body:tagsBody});
 
                 renderSoundOne(response.dto,renderTags);
-            } catch (error) {
+            }catch (error) {
                 console.error('Error occurred while rendering:', error);
             }
         });

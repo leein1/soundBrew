@@ -21,18 +21,18 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: #222;
+            background: white;
             color: #fff;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.4);
         }
 
         /* Player container */
         .player-container {
             display: flex;
             flex-direction: column; /* 위아래 배치 */
-            gap: 10px;
+            gap: 0;
         }
 
         .player-top-layer {
@@ -44,18 +44,19 @@
         }
 
         #waveform {
-            width: 100%;
-            height: 50px;
+            width:40%;
+            width: 600px;  /* 원하는 픽셀 값으로 설정 */
+            height: 50px;  /* 높이도 원래대로 설정 */
         }
 
         .player-bottom-layer {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 30px;
-            margin-bottom: 30px;
+            margin-top: 15px;
+            margin-bottom: 15px;
             margin-left: 15px;
-            margin-rigth:15px;ßßßßßßßßß
+            margin-rigth:15px;
         }
 
         /* Controls and progress bar */
@@ -74,7 +75,8 @@
         }
 
         .progress-container{
-            width:100%
+            width:100%;
+            display: flex;
         }
 
 /* 슬라이더 바 스타일 */
@@ -82,23 +84,20 @@
     -webkit-appearance: none; /* 기본 브라우저 스타일 제거 */
     appearance: none;
     width: 100%;
-    height: 6px;
-    border-radius: 3px;
+    height: 3px;
     outline: none;
     cursor: pointer;
+    margin:0;
 }
 
-/* 슬라이더 버튼(Thumb) */
+/* 슬라이더 버튼(Thumb) 없애기 */
 .progress-container input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 12px;
-    height: 12px;
-    background: #fff;
-    border: 2px solid #4caf50;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
+    width: 0;
+    height: 0;
+    background: none; /* 배경 제거 */
+    border: none; /* 테두리 제거 */
 }
 
 
@@ -106,7 +105,7 @@
             width: 60%;
             -webkit-appearance: none;
             appearance: none;
-            background: #444;
+            background: #555;
             height: 4px;
             border-radius: 2px;
             outline: none;
@@ -116,7 +115,7 @@
         .player-bottom-layer input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            background: #fff;
+            background: black;
             width: 10px;
             height: 10px;
             border-radius: 50%;
@@ -126,16 +125,62 @@
         .volume-container {
             display: flex;
             align-items: center;
-            width: 20%;
+            gap:10px;
+            width: 10%;
         }
 
         .volume-container input[type="range"] {
             width: 100%;
         }
+        .player-item-left,
+    .player-item-center,
+    .player-item-right{
+        display: flex;
+        gap:30px;
+        align-items: center;
+
+    }
+    .player-play-btn {
+        align-content: center;
+    }
+    .player-play-btn img{
+        width: 35px;
+        height: 35px;
+    }
+    .player-info h3 {
+        font-size: 18px;
+        color: black;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .player-info-time {
+        align-content: center;
+    }
+
+    .player-info-tag span,
+    .player-info p,
+    .player-info-time p {
+        font-size: 14px;
+        color: #555;
+        margin: 0;
+    }
+    .volume-container img{
+        width: 35px;
+        height: 35px;
+    }
+        .music-album-img{
+        width: 50px;
+        height: 50px;
+    }
+
     </style>
 </head>
 <body>
+<style>
 
+
+</style>
 <div class="audio-player-bar">
     <!-- Player container -->
     <div class="player-container">
@@ -148,11 +193,26 @@
 
         <!-- Bottom Layer -->
         <div class="player-bottom-layer">
-            <button id="play-pause-btn">▶</button>
-            <span class="time" id="current-time">0:00</span>
-            <span class="time" id="total-time">0:00</span>
+            <div class="player-item-left">
+                <img alt="앨범 이미지" class="music-album-img" src="${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
+                <div class="player-play-btn" >
+                    <img id="play-pause-btn" src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
+                </div>
+                <div class="player-info">
+                    <h3>${sound.musicDTO.title}</h3>
+                    <p>${sound.albumDTO.albumName}</p>
+                </div>
+                <div class="player-info-time">
+                    <!--                    <p>${sound.musicDTO.musicDuration || '0:00'}</p>-->
+                    <p class="time" id="current-time">0:00</p>
+                    <p class="time" id="total-time">0:00</p>
+                </div>
+            </div>
             <div id="waveform"></div>
             <div class="volume-container">
+                <img src="/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="다운로드">
+                <img src="/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">
+                <img src="/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="공유">
                 <input type="range" id="volume-bar" value="100" min="0" max="100">
             </div>
         </div>
@@ -160,7 +220,7 @@
 </div>
 
 <!-- Audio element -->
-<audio id="audio" src="/js/sound/soundstest.mp3"></audio>
+<audio id="audio" src="/js/sound/testsound2.mp3"></audio>
 
 <!-- Include Wavesurfer.js -->
 <script src="https://unpkg.com/wavesurfer.js"></script>
@@ -169,10 +229,10 @@
     const wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: '#ddd',
-        progressColor: '#4caf50',
+        progressColor: '#005da0',
         cursorColor: '#fff',
         height: 50,
-        barWidth: 2,
+        barWidth: 1,
     });
 
     // Load the audio file
@@ -188,10 +248,10 @@
     playPauseBtn.addEventListener('click', () => {
         if (wavesurfer.isPlaying()) {
             wavesurfer.pause();
-            playPauseBtn.textContent = '▶';
+            playPauseBtn.src =  '/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg';
         } else {
             wavesurfer.play();
-            playPauseBtn.textContent = '⏸';
+            playPauseBtn.src = '/images/pause_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg';
         }
     });
 
@@ -202,11 +262,20 @@
         progressBar.max = Math.floor(duration); // Set progress bar max value to duration
     });
 
-    // Update current time and progress bar during playback
-    wavesurfer.on('audioprocess', function() {
+    // Update current time, progress bar, and progress bar background during playback
+    wavesurfer.on('audioprocess', function () {
         const currentTime = wavesurfer.getCurrentTime();
+        const duration = wavesurfer.getDuration();
         currentTimeDisplay.textContent = formatTime(currentTime);
-        progressBar.value = Math.floor(currentTime); // Update progress bar
+
+        // 슬라이더 업데이트
+        progressBar.value = Math.floor(currentTime);
+
+        // 진행 퍼센트 계산 및 배경 업데이트
+        const percentage = (currentTime / duration) * 100;
+        progressBar.style.background = `
+            linear-gradient(to right, #005da0 ${percentage}%, #ddd ${percentage}%)
+        `;
     });
 
     // Seek in audio using the progress bar

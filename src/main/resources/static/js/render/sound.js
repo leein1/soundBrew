@@ -1,4 +1,5 @@
 export function renderTagsFromSearch(data) {
+    // const container = document.getElementById("render-tags-sort-container");
     const container = document.getElementById("render-tags-sort-container");
     container.innerHTML = ''; // 기존 내용 초기화
 
@@ -43,8 +44,10 @@ export function renderTagsFromSearch(data) {
 }
 
 export function renderSoundOne(data, data2){
-    const container = document.getElementById("render-sound-one-container");
+    // const container = document.getElementById("render-sound-one-container");
+    const container = document.getElementById("content-body");
     container.innerHTML = '';
+
     console.log(data);
     const html = `
         <div class="content-header-info">
@@ -90,6 +93,7 @@ export function renderSoundOne(data, data2){
 
 export function renderAlbumOne(data){
     const container = document.getElementById("render-album-info-container");
+    // const container = document.getElementById("content-body");
     container.innerHTML= '';
 
     const html = `
@@ -118,9 +122,10 @@ export function renderAlbumOne(data){
 
 //<div id="render-sounds-container" class="content-body"></div>
 export function renderTotalSounds(data) {
-    const container = document.getElementById("render-sounds-container");
-    container.innerHTML = ''; // 기존 내용 초기화
+    // const container = document.getElementById("render-sounds-container");
+    const container = document.getElementById("content-body");
 
+    container.innerHTML = ''; // 기존 내용 초기화
     data.forEach((sound) => {
         const musicItem = document.createElement('div');
         musicItem.classList.add('music-item');
@@ -128,12 +133,16 @@ export function renderTotalSounds(data) {
         musicItem.innerHTML = `
             <div class="music-item-left">
                 <img alt="앨범 이미지" class="music-album-img" src="${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
-                <div class="music-play-btn">
+                <div class="music-play-btn" data-sound-id="${sound.musicDTO.filePath}" data-sound-album="${sound.albumDTO.albumName}" data-sound-title="${sound.musicDTO.title}" data-sound-art="${sound.albumDTO.albumArtPath}">
                     <img src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                 </div>
                 <div class="music-info">
-                    <h3>${sound.albumDTO.albumName}</h3>
-                    <p>${sound.musicDTO.title}</p>
+                        <h3 class="album-name" data-album-name="${sound.albumDTO.albumName}" data-nickname="${sound.albumDTO.nickname}">
+                            ${sound.albumDTO.albumName}
+                        </h3>
+                        <p class="track-title" data-track-title="${sound.musicDTO.title}" data-nickname="${sound.albumDTO.nickname}">
+                            ${sound.musicDTO.title}
+                        </p>
                 </div>
                 <div class="music-info-time">
                     <p>${sound.musicDTO.musicDuration || '0:00'}</p>
@@ -143,7 +152,6 @@ export function renderTotalSounds(data) {
             <div class="music-item-center">
                 <div class="music-info-tag">
                     <span>${(sound.tagsStreamDTO.instrumentTagName || '기타').replace(/,/g, " ")}</span>
-
                     <span>${(sound.tagsStreamDTO.moodTagName || '없음').replace(/,/g, " ")}</span>
                     <span>${(sound.tagsStreamDTO.genreTagName || '기타').replace(/,/g, " ")}</span>
                 </div>
@@ -160,32 +168,6 @@ export function renderTotalSounds(data) {
 
         container.appendChild(musicItem);
     });
-}
-
-export function renderSort() {
-    const container = document.getElementById("render-result-sort-container");
-    container.innerHTML='';
-
-    const item = document.createElement('div');
-    item.classList.add('music-sort');
-
-    item.innerHTML = `
-        <div class="music-sort">
-            <span class="music-sort-left" id="sortKeyword">정렬
-                <img src="/images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정렬" id="sortIcon">
-            </span>
-            <!-- 정렬 드롭다운 -->
-            <div class="music-sort-menu" id="musicSortMenu">
-                <ul>
-                    <li data-sort="newest">Newest</li>
-                    <li data-sort="oldest">Oldest</li>
-                    <li data-sort="download">Download</li>
-                </ul>
-            </div>
-        </div>
-    `;
-
-    container.appendChild(item);
 }
 
 export function renderManageAlbums(data) {
@@ -312,7 +294,8 @@ export function renderManageTracks(data){
 //}
 
 export function renderTotalAlbums(data) {
-    const container = document.getElementById("render-albums-container");
+    // const container = document.getElementById("render-sounds-container");
+    const container = document.getElementById("content-body");
     container.innerHTML = ''; // 기존 내용 초기화
 
     const albumListHTML = `
@@ -332,4 +315,17 @@ export function renderTotalAlbums(data) {
     `;
 
     container.innerHTML = albumListHTML;
+
+    const albumItems = document.querySelectorAll('.list-album-item');
+    albumItems.forEach(item => {
+        item.addEventListener('click', async () => {
+            alert("!!");
+            const albumName = item.dataset.albumName;
+            const nickname = item.dataset.nickname;
+            // 페이지 이동
+            window.location.href = `/sounds/albums/one?nickname=${nickname}&albumName=${albumName}`;
+
+            //const response = await axiosGet({endpoint:'/api/sounds/albums/'+ nickname +'/title/'+ albumName +'}'  });
+        });
+    });
 }
