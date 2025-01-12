@@ -39,7 +39,7 @@ public class JWTUtil {
         Map<String,Object> payload = new HashMap<>();
         payload.putAll(valueMap);
 
-        int time = (1) * days; //   나중에 일 단위로 변경 해야 함
+        int time = (2) * days; //   나중에 일 단위로 변경 해야 함
 
         String jwtStr = Jwts.builder()
                 .setHeader(headers)
@@ -60,10 +60,18 @@ public class JWTUtil {
 
         Map<String,Object> claims = null;
 
-        claims = Jwts.parser()
-                .setSigningKey(key.getBytes()) //setKey
-                .parseClaimsJws(token)  // 파싱 + 검증, 실패시 에러
-                .getBody();
+        try {
+
+            claims = Jwts.parser()
+                    .setSigningKey(key.getBytes()) //setKey
+                    .parseClaimsJws(token)  // 파싱 + 검증, 실패시 에러
+                    .getBody();
+
+        }catch (Exception e){
+
+            log.error("JWT 검증 실패: {}", e.getMessage());
+            throw e;
+        }
 
         return claims;
     }

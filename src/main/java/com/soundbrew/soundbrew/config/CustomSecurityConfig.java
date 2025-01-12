@@ -35,13 +35,13 @@ public class CustomSecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
 
-//  AccessDeniedHandler 빈 등록
+    //  AccessDeniedHandler 빈 등록
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new Custom403Handler();
     }
 
- // TokenCheckFilter 생성
+    // TokenCheckFilter 생성
     private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil){
         return new TokenCheckFilter(jwtUtil);
     }
@@ -77,6 +77,8 @@ public class CustomSecurityConfig {
 
         // HttpSecurity 설정
         http.authorizeRequests()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+
                 .antMatchers("/generateToken",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
@@ -84,8 +86,8 @@ public class CustomSecurityConfig {
                         "/api/users/**",
                         "/",
                         "/files/**",
-                        "/api/sample/**",
-                        "/myInfo").permitAll()
+                        "/api/**",  // 모든 API 요청을 인증 없이 허용
+                        "/api/sample/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
@@ -93,6 +95,14 @@ public class CustomSecurityConfig {
 
                 .and()
                 .logout().permitAll();
+
+        // 요청 경로별 권한 설정
+//        http.authorizeHttpRequests((requests) -> requests
+//                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+//                .requestMatchers("/generateToken", "/swagger-ui/**", "/v3/api-docs/**", "/register", "/api/users/**", "/", "/files/**", "/api/sample/**").permitAll()
+//                .requestMatchers("/api/me").authenticated()
+//                .anyRequest().authenticated()
+//        );
 
         //  csrf 비활성 / 세션 비활성
         http.csrf().disable();
@@ -104,10 +114,10 @@ public class CustomSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+//    }
 
 
     /*

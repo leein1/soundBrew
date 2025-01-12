@@ -38,7 +38,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         log.info("Token Check Filter requestPath : {}", path);
 
-        if(!path.startsWith("/api/")){
+        if(!path.startsWith("/api/") && !path.equals("/myInfo") ){
 
             log.info("request 요청이 /api가 아님 ");
 
@@ -82,6 +82,9 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
         try{
             Map<String,Object> values = jwtUtil.validateToken(tokenStr);
+
+            log.info("TokenCheckFilter.validateAccessToken() 실행 문제 없음");
+            log.info("TokenCheckFilter.validateAccessToken values : {}", values);
 
             return values;
 

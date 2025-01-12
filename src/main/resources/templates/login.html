@@ -40,5 +40,62 @@
 </body>
 <script layout:fragment="script" th:inline="javascript">
     console.log("loaded script..");
+
+
+    //
+    //     document.querySelector("#btn1").addEventListener("click",()=>{
+    //     const data = {username:"test@test.com",password:"testTEST123!@#"}
+    //
+    //     axios.post("http://localhost:8080/generateToken", data).then(res => {
+    //
+    //     const accessToken = res.data.accessToken
+    //     const refreshToken = res.data.refreshToken
+    //
+    //     localStorage.setItem("accessToken", accessToken)
+    //     localStorage.setItem("refreshToken", refreshToken)
+    //
+    //     console.log(res.data.accessToken)
+    // })
+    // },false)
+
+    document.querySelector("button[type='submit']").addEventListener("click", async (event) => {
+        event.preventDefault(); // 폼의 기본 동작 막기
+
+        // 사용자 입력 값 가져오기
+        const username = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+
+        // 요청 데이터 구성
+        const data = { username, password };
+
+        try {
+            // 토큰 요청
+            const tokenResponse = await axios.post("http://localhost:8080/generateToken", data);
+            const accessToken = tokenResponse.data.accessToken;
+            const refreshToken = tokenResponse.data.refreshToken;
+
+            // 토큰을 localStorage에 저장
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("refreshToken", refreshToken);
+
+            console.log("Access Token:", accessToken);
+            console.log("Refresh Token:", refreshToken);
+
+            // /myInfo로 GET 요청
+            const myInfoResponse = await axios.get("http://localhost:8080/myInfo", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+
+            console.log("My Info request 보냄");
+
+        } catch (err) {
+            console.error("Error:", err);
+            alert("로그인 실패 또는 정보 요청 실패. 이메일과 비밀번호를 확인하세요.");
+        }
+    }, false);
+
 </script>
+
 </html>

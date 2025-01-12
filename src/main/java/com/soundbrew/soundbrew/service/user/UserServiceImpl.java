@@ -212,7 +212,7 @@ public class UserServiceImpl implements UserService{
         log.info("user save() : {} ", user.toString());
         entityManager.flush();
 
-        //  역할 테이블 save()
+        //  user_role 역할 테이블 save()
         UserRoleDTO userRoleDTO = UserRoleDTO.builder()
                 .roleId(1)
                 .userId(user.getUserId())

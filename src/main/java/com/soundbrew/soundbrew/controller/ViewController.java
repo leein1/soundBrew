@@ -26,12 +26,17 @@ public class ViewController {
         }
     }
 
+
+
     @GetMapping("/verificationPassword")
     public void getVerificationPassword(){}
 
     @GetMapping("/myInfo")
 //    @PreAuthorize("hasRole('USER')")
-    public void getMe(){}
+    public void getMe(){
+
+        log.warn("----------------------------------ViewController /MyInfo 호출");
+    }
 
     @GetMapping("")
     public String getMain(){
