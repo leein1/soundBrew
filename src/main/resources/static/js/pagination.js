@@ -62,7 +62,6 @@ async function handlePaginationClick(event) {
         const newQueryString = currentParams.toString();
 
         const newUrl = `${window.location.pathname}?${newQueryString}`;
-
         router.navigate(newUrl);
     }
 }

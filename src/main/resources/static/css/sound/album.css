@@ -17,13 +17,18 @@
     gap: 20px;
     
 }
+.album-info-text{
+    border-bottom: 1px solid #ddd;
+    padding-top: 25px;
+    padding-bottom: 50px;
+}
 
 .list-album-item {
-    background-color: #eee;
-    text-align: center;
-    border-radius: 15px;
-    padding: 10px;
-    max-width: 250px; /* 최대 크기를 300px로 제한 */
+background-color: #eee;
+text-align: center;
+border-radius: 15px;
+padding: 10px;
+max-width: 250px; /* 최대 크기를 300px로 제한 */
     margin: 0 auto; /* 가운데 정렬 */
 }
 /* 호버 시 스타일 */

@@ -109,11 +109,12 @@ router.addRoute('/sounds/tracks/one',async (context) => {
 
 router.addRoute('/sounds/albums/one',async (context) => {
     const urlParams = new URLSearchParams(window.location.search);
+    const newQueryString = urlParams.toString();
     const nickname = urlParams.get('nickname');
     const albumName = urlParams.get('albumName');
     // alert("nickname : "+ nickname + " , albumName : "+albumName);
 
-    const response = await axiosGet({endpoint: '/api/sounds/albums/' + nickname + '/title/' + albumName});
+    const response = await axiosGet({endpoint: `/api/sounds/albums/` + nickname + `/title/` + albumName+`?${newQueryString}`});
     renderAlbumOne(response);
 
     renderTotalSounds(response.dtoList);
