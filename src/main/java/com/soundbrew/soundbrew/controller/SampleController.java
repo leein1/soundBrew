@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Log4j2
@@ -30,10 +31,10 @@ public class SampleController {
 //        return "renderTest";
 //    }
 //
-    @GetMapping("/sounds/tracks")
-    public String getTracks(){
-        return "/sound/music-list";
-    }
+//    @GetMapping("/sounds/tracks")
+//    public String getTracks(){
+//        return "/sound/music-list";
+//    }
 //
 //    @GetMapping("/sounds/albums")
 //    public String getAlbums(){
@@ -75,4 +76,10 @@ public class SampleController {
 //    public String getPlayer() {
 //        return "/player";
 //    }
+
+    @RequestMapping(value = { "/sounds/**" })
+    public String spaHandler() {
+        // 모든 SPA 요청을 sound/music-list.html로 리다이렉트
+        return "/sound/music-list";
+    }
 }

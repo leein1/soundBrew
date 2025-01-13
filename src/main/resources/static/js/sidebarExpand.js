@@ -4,9 +4,9 @@ document.querySelector('.menu').addEventListener('click', function() {
     sidebar.classList.toggle('expanded');
 
     if (sidebar.classList.contains('expanded')) {
-        menuIcon.src = '../images/close_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
+        menuIcon.src = '/images/close_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
     } else {
-        menuIcon.src = '../images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
+        menuIcon.src = '/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
     }
 });
 
@@ -21,8 +21,8 @@ document.querySelector('.navigation-menu').addEventListener('click', function() 
 
     // 확장 상태에 따라 메뉴 아이콘 변경
     if (sidebar.classList.contains('expanded')) {
-        menuIcon.src = '../images/close_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
+        menuIcon.src = '/images/close_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
     } else {
-        menuIcon.src = '../images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
+        menuIcon.src = '/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
     }
 });

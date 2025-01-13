@@ -11,7 +11,7 @@ function renderSearch() {
             <div class="searchbar-container">
                 <div class="search-area">
                     <span class="searchbar-icon">
-                        <img src="../images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="Search Icon">
+                        <img src="/images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="Search Icon">
                     </span>
                     <!-- 검색 타입 드롭다운 -->
                     <select id="searchType" class="searchType">
