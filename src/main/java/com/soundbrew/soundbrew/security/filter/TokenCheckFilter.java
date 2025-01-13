@@ -7,6 +7,9 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -14,7 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -38,9 +43,11 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         log.info("Token Check Filter requestPath : {}", path);
 
-        if(!path.startsWith("/api/") && !path.equals("/myInfo") ){
+        if(!path.equals("/myInfo") ){
 
-            log.info("request 요청이 /api가 아님 ");
+//            !path.startsWith("/api/") &&
+
+                    log.info("request 요청이 /api가 아님 ");
 
             filterChain.doFilter(request, response);
             return;
@@ -52,12 +59,38 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
         try{
 
-            validateAccessToken(request);
+            //  전달받은 토큰 검증
+            Map<String,Object> values = validateAccessToken(request);
+
+            // username roles 추출
+            String username = (String) values.get("username");
+            List<String> roles = (List<String>) values.get("roles");
+
+            log.info("Token Check Filter username - 인증 정보 생성 시작");
+
+
+            //  인증 정보 생성
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    username,
+                    null,
+                    roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+            );
+
+            //  SecurityContextHolder 설정
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            log.info("SecurityContext set");
+
+            //  SecurityConfig 다음 실행
             filterChain.doFilter(request, response);
 
         }catch (AccessTokenException accessTokenException){
 
-            accessTokenException.sendResponseError(response);
+//            accessTokenException.sendResponseError(response);
+
+            //  메시지를 보내는 것이 아닌 컨텍스트 초기화 후 401 에러 반환
+            log.error("Token 검증 실패: {}", accessTokenException.getMessage());
+            SecurityContextHolder.clearContext(); // 인증 실패 시 컨텍스트 초기화
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"); // 401 응답 반환
         }
     }
 

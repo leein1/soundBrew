@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -30,8 +31,17 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         log.info(authentication);
         log.info(authentication.getName());
 
+        //  권한 정보 가져오기
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .toList();
+
         //  JWTUtil에 전달될 valueMap
-        Map<String,Object> claim = Map.of("username", authentication.getName());
+        Map<String,Object> claim = Map.of(
+                "username", authentication.getName(),
+                "roles", roles
+        );
+
 
         // Access Token 기간 1일
         String accessToken = jwtUtil.generateToken(claim,2);

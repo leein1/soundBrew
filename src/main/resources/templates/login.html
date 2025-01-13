@@ -88,7 +88,17 @@
                 }
             });
 
-            console.log("My Info request 보냄");
+            console.log("My Info response:", myInfoResponse.data);
+
+            // 서버에서 반환한 HTML을 현재 페이지에 렌더링
+            // 이 부분이 없으면 화면 이동이 일어나지 않고, response로 myInfo.html의 내용이 반환만 됨
+            // 현재 테스트를 위해서 /login 에서 로그인 성공시 바로 /myInfo로 요청을 보내도록 되어 있는데
+            // 실제 환경에서는 이전에 어느 경로(ex - 내 정보보기)에서 /login으로 이동했는지 확인 후 로그인 성공시 이전 경로(내 정보보기)로 리다이렉트 필요
+            // or 로그인 성공시 무조건 "/" 로 리다이렉트
+            document.open();
+            document.write(myInfoResponse.data);
+            document.close();
+
 
         } catch (err) {
             console.error("Error:", err);
