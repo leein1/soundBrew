@@ -14,7 +14,7 @@
     </div>
 
     <div class="content-body">
-        <form class="login-form" action="/login" method="post">
+        <form id="loginForm" class="login-form" action="/login" method="post">
             <div class="input-group">
                 <label for="email">이메일</label>
 <!--                <input type="email" id="email" name="email" placeholder="이메일 입력" required>-->
@@ -61,50 +61,53 @@
     document.querySelector("button[type='submit']").addEventListener("click", async (event) => {
         event.preventDefault(); // 폼의 기본 동작 막기
 
-        // 사용자 입력 값 가져오기
         const username = document.querySelector("#email").value;
         const password = document.querySelector("#password").value;
 
-        // 요청 데이터 구성
         const data = { username, password };
 
         try {
-            // 토큰 요청
+            alert(data.toString())
+            // /generateToken으로 로그인 요청
             const tokenResponse = await axios.post("http://localhost:8080/generateToken", data);
             const accessToken = tokenResponse.data.accessToken;
             const refreshToken = tokenResponse.data.refreshToken;
+            const redirectUrl = tokenResponse.data.redirectUrl;
 
-            // 토큰을 localStorage에 저장
-            localStorage.setItem("accessToken", accessToken);
-            localStorage.setItem("refreshToken", refreshToken);
+            if (accessToken && refreshToken) {
+                localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("refreshToken", refreshToken);
+                console.log("Tokens stored successfully.");
+            } else {
+                console.error("Tokens are missing in the response.");
+            }
 
-            console.log("Access Token:", accessToken);
-            console.log("Refresh Token:", refreshToken);
+            alert("Access Token:" + accessToken);
+            alert("Refresh Token:" + refreshToken);
+            alert("Redirect URL:" + redirectUrl);
 
-            // /myInfo로 GET 요청
-            const myInfoResponse = await axios.get("http://localhost:8080/myInfo", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
+            if (redirectUrl) {
+                // Axios로 보호된 리소스 요청
+                const resourceResponse = await axios.get(redirectUrl, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
 
-            console.log("My Info response:", myInfoResponse.data);
+                // HTML 응답 렌더링
+                document.open();
+                document.write(resourceResponse.data);
+                document.close();
 
-            // 서버에서 반환한 HTML을 현재 페이지에 렌더링
-            // 이 부분이 없으면 화면 이동이 일어나지 않고, response로 myInfo.html의 내용이 반환만 됨
-            // 현재 테스트를 위해서 /login 에서 로그인 성공시 바로 /myInfo로 요청을 보내도록 되어 있는데
-            // 실제 환경에서는 이전에 어느 경로(ex - 내 정보보기)에서 /login으로 이동했는지 확인 후 로그인 성공시 이전 경로(내 정보보기)로 리다이렉트 필요
-            // or 로그인 성공시 무조건 "/" 로 리다이렉트
-            document.open();
-            document.write(myInfoResponse.data);
-            document.close();
+                // 브라우저 URL도 변경
+                window.history.pushState({}, "", redirectUrl);
+            }
 
-
-        } catch (err) {
-            console.error("Error:", err);
-            alert("로그인 실패 또는 정보 요청 실패. 이메일과 비밀번호를 확인하세요.");
+        } catch (error) {
+            console.error("Error during login or resource access:", error);
+            alert("로그인 또는 리소스 요청 중 문제가 발생했습니다.");
         }
-    }, false);
+    });
 
 </script>
 

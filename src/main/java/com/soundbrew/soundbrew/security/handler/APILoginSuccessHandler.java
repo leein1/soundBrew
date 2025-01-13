@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.soundbrew.soundbrew.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.catalina.authenticator.SavedRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -42,15 +44,27 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
                 "roles", roles
         );
 
-
         // Access Token 기간 1일
         String accessToken = jwtUtil.generateToken(claim,2);
         //  Refresh Token 기간 30일
         String refreshToken = jwtUtil.generateToken(claim,5);
 
-        Gson gson = new Gson();
+        // Referer 헤더에서 이전 요청 URL 추적
+        String referer = request.getHeader(HttpHeaders.REFERER);
+        String redirectUrl = "/";
 
-        Map<String,String> keyMap = Map.of("accessToken",accessToken,"refreshToken",refreshToken);
+        if (referer != null && !referer.endsWith("/login")) {
+            redirectUrl = referer;
+        }
+
+        Map<String,String> keyMap = Map.of(
+                "accessToken",accessToken,
+                "refreshToken",refreshToken,
+                "redirectUrl", redirectUrl
+
+        );
+
+        Gson gson = new Gson();
 
         String jsonStr = gson.toJson(keyMap);
 
