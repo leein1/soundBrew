@@ -1,3 +1,5 @@
+import {router} from "/js/router.js";
+
 export function renderTagsFromSearch(data) {
     // const container = document.getElementById("render-tags-sort-container");
     const container = document.getElementById("render-tags-sort-container");
@@ -114,10 +116,42 @@ export function renderAlbumOne(data){
             <p class="album-description">
                 ${data.dtoList[0].albumDTO.description}
             </p>
+            <button class="album-btn show-more-btn">더보기</button>
         </div>
     `;
 
     container.innerHTML = html;
+
+    const showMoreBtn = document.querySelector('.show-more-btn');
+    const albumInfoText = document.querySelector('.album-info-text');
+    const albumDescription = document.querySelector('.album-description');
+
+    // 텍스트 높이 측정하여 더보기 버튼 표시 여부 결정
+    function checkTextOverflow() {
+        const fullHeight = albumDescription.scrollHeight;
+        console.log(fullHeight);
+        const clampHeight = albumInfoText.clientHeight;
+        console.log(clampHeight);
+        if (fullHeight > clampHeight) {
+            showMoreBtn.style.display = 'block'; // 글이 잘리면 더보기 버튼 보이기
+        } else {
+            showMoreBtn.style.display = 'none'; // 글이 짧으면 더보기 버튼 숨기기
+        }
+    }
+
+    // 페이지 로드 후 더보기 버튼 체크
+    window.addEventListener('load', checkTextOverflow);
+    window.addEventListener('resize', checkTextOverflow); // 창 크기 조정 시에도 체크
+
+    showMoreBtn.addEventListener('click', function() {
+        albumInfoText.classList.toggle('expanded');
+
+        if (albumInfoText.classList.contains('expanded')) {
+            showMoreBtn.textContent = '접기';
+        } else {
+            showMoreBtn.textContent = '더보기';
+        }
+    });
 }
 
 //<div id="render-sounds-container" class="content-body"></div>
@@ -323,8 +357,9 @@ export function renderTotalAlbums(data) {
             const albumName = item.dataset.albumName;
             const nickname = item.dataset.nickname;
             // 페이지 이동
-            window.location.href = `/sounds/albums/one?nickname=${nickname}&albumName=${albumName}`;
+            const newURL = `/sounds/albums/one?nickname=${nickname}&albumName=${albumName}`;
 
+            router.navigate(newURL);
             //const response = await axiosGet({endpoint:'/api/sounds/albums/'+ nickname +'/title/'+ albumName +'}'  });
         });
     });

@@ -3,7 +3,7 @@ import {router} from "/js/router.js";
 
 // Main Function to Initialize All Event Listeners and Wavesurfer
 export function initializeMusicPlayer() {
-    alert("install soundplaying");
+    // alert("install soundplaying");
     // Initialize Wavesurfer
     const wavesurfer = WaveSurfer.create({
         container: '#waveform',
