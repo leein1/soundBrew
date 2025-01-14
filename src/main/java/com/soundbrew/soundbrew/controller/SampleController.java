@@ -78,8 +78,19 @@ public class SampleController {
 //    }
 
     @RequestMapping(value = { "/sounds/**" })
-    public String spaHandler() {
+    public String soundSPA() {
         // 모든 SPA 요청을 sound/music-list.html로 리다이렉트
         return "/sound/music-list";
     }
+
+//    @RequestMapping("/me/sounds/main")
+//    @RequestMapping("/me/sounds/tracks")
+//    @RequestMapping("/me/sounds/album")
+//    @RequestMapping("/me/sounds/tags")
+//    @RequestMapping("/me/sounds/register")
+    @RequestMapping("/me/sounds")
+    public String   soundManageSPA(){
+        return "/sound/music-manage";
+    }
+
 }

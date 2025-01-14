@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TokenCheckFilter extends OncePerRequestFilter {
 
-    /*
+    /*`
     현재 사용자가 로그인한 사용자인지 체크하는 체크용 필터와 유사하게 JWT 토큰을 검사하는 역할
 
     OncePerRequestFilter를 상속해서 구성하며 해당 필터는 하나의 요청에 대해 한번씩 동작하는 필터 -> 서블릿 API의 필터와 유사
