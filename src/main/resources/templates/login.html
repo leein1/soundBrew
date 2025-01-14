@@ -42,76 +42,10 @@
     <script type="module">
         import { getLoginFormProcess } from "/js/security/login.js";
 
-<<<<<<< HEAD
-
-    //
-    //     document.querySelector("#btn1").addEventListener("click",()=>{
-    //     const data = {username:"test@test.com",password:"testTEST123!@#"}
-    //
-    //     axios.post("http://localhost:8080/generateToken", data).then(res => {
-    //
-    //     const accessToken = res.data.accessToken
-    //     const refreshToken = res.data.refreshToken
-    //
-    //     localStorage.setItem("accessToken", accessToken)
-    //     localStorage.setItem("refreshToken", refreshToken)
-    //
-    //     console.log(res.data.accessToken)
-    // })
-    // },false)
-
-    document.querySelector("button[type='submit']").addEventListener("click", async (event) => {
-        event.preventDefault(); // 폼의 기본 동작 막기
-
-        const username = document.querySelector("#email").value;
-        const password = document.querySelector("#password").value;
-
-        const data = { username, password };
-
-        try {
-            alert(data.toString())
-            // /generateToken으로 로그인 요청
-            const tokenResponse = await axios.post("http://localhost:8080/generateToken", data);
-            const accessToken = tokenResponse.data.accessToken;
-            const refreshToken = tokenResponse.data.refreshToken;
-            const redirectUrl = tokenResponse.data.redirectUrl;
-
-            if (accessToken && refreshToken) {
-                localStorage.setItem("accessToken", accessToken);
-                localStorage.setItem("refreshToken", refreshToken);
-                console.log("Tokens stored successfully.");
-            } else {
-                console.error("Tokens are missing in the response.");
-            }
-
-            alert("Access Token:" + accessToken);
-            alert("Refresh Token:" + refreshToken);
-            alert("Redirect URL:" + redirectUrl);
-
-            if (redirectUrl) {
-                // Axios로 보호된 리소스 요청
-                const resourceResponse = await axios.get(redirectUrl, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
-
-                window.location.href = "/"
-            }
-
-        } catch (error) {
-            console.error("Error during login or resource access:", error);
-            alert("로그인 또는 리소스 요청 중 문제가 발생했습니다.");
-        }
-    });
-
-</script>
-=======
         document.addEventListener("DOMContentLoaded", () => {
             getLoginFormProcess();
         });
     </script>
 </th:block>>
->>>>>>> fa90d183807ac72e449d59b967408905bcd9ea59
 
 </html>
