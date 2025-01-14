@@ -204,45 +204,45 @@ export function renderTotalSounds(data) {
     });
 }
 
-export function renderManageAlbums(data) {
-    const container = document.getElementById("render-albums-manage-container");
-    const noAlbumsMessage = document.getElementById("no-albums-message");
-
-    // 기존 데이터 초기화
-    container.innerHTML = '';
-
-    if (data.length === 0) {
-        // 데이터가 없으면 메시지 표시
-        noAlbumsMessage.style.display = 'table-row';
-    } else {
-        // 데이터가 있으면 메시지 숨김
-        noAlbumsMessage.style.display = 'none';
-
-        // 데이터 렌더링
-        const manageHTML = data.map(manage => `
-            <tr>
-                <td>${manage.albumId}</td>
-                <td>${manage.nickname}</td>
-                <td>
-                    <span class="current-value" data-field="albumName">${manage.albumName}</span>
-                    <input type="text" class="editable-field" data-field="albumName" value="${manage.albumName}" style="display: none;">
-                </td>
-                <td>
-                    <span class="current-value" data-field="description">${manage.albumDescription}</span>
-                    <input type="text" class="editable-field" data-field="description" value="${manage.albumDescription}" style="display: none;">
-                </td>
-                <td>${manage.create_date}</td>
-                <td>${manage.modify_date}</td>
-                <td>
-                    <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                    <button class="apply-button" style="display: none;" onclick="applyChanges(this, ${manage.albumId})">적용</button>
-                    <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
-                </td>
-            </tr>
-        `).join('');
-        container.innerHTML = manageHTML;
-    }
-}
+// export function renderManageAlbums(data) {
+//     const container = document.getElementById("render-albums-manage-container");
+//     const noAlbumsMessage = document.getElementById("no-albums-message");
+//
+//     // 기존 데이터 초기화
+//     container.innerHTML = '';
+//
+//     if (data.length === 0) {
+//         // 데이터가 없으면 메시지 표시
+//         noAlbumsMessage.style.display = 'table-row';
+//     } else {
+//         // 데이터가 있으면 메시지 숨김
+//         noAlbumsMessage.style.display = 'none';
+//
+//         // 데이터 렌더링
+//         const manageHTML = data.map(manage => `
+//             <tr>
+//                 <td>${manage.albumId}</td>
+//                 <td>${manage.nickname}</td>
+//                 <td>
+//                     <span class="current-value" data-field="albumName">${manage.albumName}</span>
+//                     <input type="text" class="editable-field" data-field="albumName" value="${manage.albumName}" style="display: none;">
+//                 </td>
+//                 <td>
+//                     <span class="current-value" data-field="description">${manage.albumDescription}</span>
+//                     <input type="text" class="editable-field" data-field="description" value="${manage.albumDescription}" style="display: none;">
+//                 </td>
+//                 <td>${manage.create_date}</td>
+//                 <td>${manage.modify_date}</td>
+//                 <td>
+//                     <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
+//                     <button class="apply-button" style="display: none;" onclick="applyChanges(this, ${manage.albumId})">적용</button>
+//                     <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+//                 </td>
+//             </tr>
+//         `).join('');
+//         container.innerHTML = manageHTML;
+//     }
+// }
 
 export function renderManageTracks(data){
     const container = document.getElementById("render-tracks-manage-container");

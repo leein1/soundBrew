@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link th:href="@{/css/manage-albums.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/manage-albums.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -54,31 +54,108 @@
     import { axiosGet, axiosPost, axiosPatch, axiosDelete } from '/js/fetch/standardAxios.js';
     import { inputHandler } from '/js/check/inputHandler.js';
     import { processingRules, validationRules } from '/js/check/inputRules.js';
-    import { renderManageAlbums } from '/js/render/sound.js';
 
-    document.addEventListener('DOMContentLoaded', async () => {
         try {
             // API 호출 및 렌더링 처리
             const renderTotal = await axiosGet({endpoint:'/api/me/albums'});
+
             console.log(renderTotal);
-            renderManageAlbums(renderTotal.dtoList);
+            // renderManageAlbums(renderTotal.dtoList);
+
+            const container = document.getElementById("render-albums-manage-container");
+            const noAlbumsMessage = document.getElementById("no-albums-message");
+
+            // 기존 데이터 초기화
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                // 데이터가 없으면 메시지 표시
+                noAlbumsMessage.style.display = 'table-row';
+            } else {
+                // 데이터가 있으면 메시지 숨김
+                noAlbumsMessage.style.display = 'none';
+
+                // 데이터 렌더링
+                const manageHTML = data.map(renderTotal => `
+                    <tr>
+                        <td>${renderTotal.albumDTO.albumId}</td>
+                        <td>${renderTotal.albumDTO.nickname}</td>
+                        <td>
+                            <span class="current-value" data-field="albumName">${renderTotal.albumDTO.albumName}</span>
+                            <input type="text" class="editable-field" data-field="albumName" value="${renderTotal.albumDTO.albumName}" style="display: none;">
+                        </td>
+                        <td>
+                            <span class="current-value" data-field="description">${renderTotal.albumDTO.description}</span>
+                            <input type="text" class="editable-field" data-field="description" value="${renderTotal.albumDTO.description}" style="display: none;">
+                        </td>
+                        <td>${renderTotal.albumDTO.createDate}</td>
+                        <td>${renderTotal.albumDTO.modifyDate}</td>
+                        <td>
+                            <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
+                            <button class="apply-button" style="display: none;" onclick="applyChanges(this, ${renderTotal.albumDTO.albumId})">적용</button>
+                            <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+                        </td>
+                    </tr>
+                `).join('');
+                container.innerHTML = manageHTML;
+            }
 
         } catch (error) {
             console.error('Error occurred while rendering:', error);
         }
 
         // 폼을 서버로 전송하는 함수
-    async function sendUpdateRequest(albumId, formData) {
-        const response = serializeFormToJSON(formData);
-        const { errors, processedData } = inputHandler(response);
+        async function sendUpdateRequest(albumId, formData) {
+            const response = serializeFormToJSON(formData);
+            const { errors, processedData } = inputHandler(response);
 
-        if (!errors) {
-            await axiosPatch({ endpoint: '/api/me/albums/' + albumId, body: processedData });
-            location.reload();  // 새로고침
+            if (!errors) {
+                await axiosPatch({ endpoint: '/api/me/albums/' + albumId, body: processedData });
+                location.reload();  // 새로고침
+            }
         }
+        // window.sendUpdateRequest=sendUpdateRequest;
+
+    function renderManageAlbums(data) {
+        // const container = document.getElementById("render-albums-manage-container");
+        // const noAlbumsMessage = document.getElementById("no-albums-message");
+        //
+        // // 기존 데이터 초기화
+        // container.innerHTML = '';
+        //
+        // if (data.length === 0) {
+        //     // 데이터가 없으면 메시지 표시
+        //     noAlbumsMessage.style.display = 'table-row';
+        // } else {
+        //     // 데이터가 있으면 메시지 숨김
+        //     noAlbumsMessage.style.display = 'none';
+        //
+        //     // 데이터 렌더링
+        //     const manageHTML = data.map(manage => `
+        //     <tr>
+        //         <td>${manage.albumId}</td>
+        //         <td>${manage.nickname}</td>
+        //         <td>
+        //             <span class="current-value" data-field="albumName">${manage.albumName}</span>
+        //             <input type="text" class="editable-field" data-field="albumName" value="${manage.albumName}" style="display: none;">
+        //         </td>
+        //         <td>
+        //             <span class="current-value" data-field="description">${manage.albumDescription}</span>
+        //             <input type="text" class="editable-field" data-field="description" value="${manage.albumDescription}" style="display: none;">
+        //         </td>
+        //         <td>${manage.create_date}</td>
+        //         <td>${manage.modify_date}</td>
+        //         <td>
+        //             <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
+        //             <button class="apply-button" style="display: none;" onclick="applyChanges(this, ${manage.albumId})">적용</button>
+        //             <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+        //         </td>
+        //     </tr>
+        // `).join('');
+        //     container.innerHTML = manageHTML;
+        // }
     }
-    window.sendUpdateRequest=sendUpdateRequest;
-    });
+
 </script>
 </th:block>
 <!-- 다크모드 js -->

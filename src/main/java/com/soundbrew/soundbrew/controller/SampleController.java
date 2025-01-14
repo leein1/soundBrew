@@ -89,8 +89,23 @@ public class SampleController {
 //    @RequestMapping("/me/sounds/tags")
 //    @RequestMapping("/me/sounds/register")
     @RequestMapping("/me/sounds")
-    public String   soundManageSPA(){
+    public String soundManageSPA(){
         return "/sound/music-manage";
+    }
+
+    @RequestMapping("/me/a")
+    public String a(){
+        return "/sound/manage/manage-albums";
+    }
+
+    @RequestMapping("/me/b")
+    public String b(){
+        return "/sound/manage/manage-musics";
+    }
+
+    @RequestMapping("/me/c")
+    public String c(){
+        return "/sound/manage/manage-tags";
     }
 
 }
