@@ -38,9 +38,11 @@
     </div>
 </div>
 </body>
-<script layout:fragment="script" th:inline="javascript">
-    console.log("loaded script..");
+<th:block layout:fragment="script">
+    <script type="module">
+        import { getLoginFormProcess } from "/js/security/login.js";
 
+<<<<<<< HEAD
 
     //
     //     document.querySelector("#btn1").addEventListener("click",()=>{
@@ -104,5 +106,12 @@
     });
 
 </script>
+=======
+        document.addEventListener("DOMContentLoaded", () => {
+            getLoginFormProcess();
+        });
+    </script>
+</th:block>>
+>>>>>>> fa90d183807ac72e449d59b967408905bcd9ea59
 
 </html>
