@@ -94,13 +94,7 @@
                     },
                 });
 
-                // HTML 응답 렌더링
-                document.open();
-                document.write(resourceResponse.data);
-                document.close();
-
-                // 브라우저 URL도 변경
-                window.history.pushState({}, "", redirectUrl);
+                window.location.href = "/"
             }
 
         } catch (error) {

@@ -41,6 +41,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         //  JWTUtil에 전달될 valueMap
         Map<String,Object> claim = Map.of(
                 "username", authentication.getName(),
+
                 "roles", roles
         );
 

@@ -85,12 +85,13 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
         }catch (AccessTokenException accessTokenException){
 
-//            accessTokenException.sendResponseError(response);
+
 
             //  메시지를 보내는 것이 아닌 컨텍스트 초기화 후 401 에러 반환
             log.error("Token 검증 실패: {}", accessTokenException.getMessage());
             SecurityContextHolder.clearContext(); // 인증 실패 시 컨텍스트 초기화
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"); // 401 응답 반환
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"); // 401 응답 반환
+            accessTokenException.sendResponseError(response);
         }
     }
 
