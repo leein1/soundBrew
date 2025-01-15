@@ -3,7 +3,7 @@ const BASE_URL = "http://localhost:8080";
 // Axios 기본 설정
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
-    headers: { 'Content-Type': 'application/json' },
+    // headers: { 'Content-Type': 'application/json' },
 });
 
 // 토큰 재발급 함수
@@ -65,11 +65,17 @@ const addAuthHeader = async (options) => {
 // API 요청 처리 함수
 const fetchData = async ({ endpoint, body = null, useToken = false, params = {}, method = 'GET' }) => {
     const options = {
+        headers: { 'Content-Type': 'application/json' },
         method,
         url: endpoint,
         params,
         data: body,
     };
+
+    // FormData인 경우 Content-Type을 설정하지 않도록 함
+    if (body instanceof FormData) {
+        delete options.headers['Content-Type']; // FormData는 자동으로 처리하므로 Content-Type을 삭제
+    }
 
     // 토큰 사용 여부에 따라 처리
     if (useToken) {

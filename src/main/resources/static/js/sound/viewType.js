@@ -1,6 +1,3 @@
-import { axiosGet } from "/js/fetch/standardAxios.js";
-import { renderTotalSounds,renderTotalAlbums } from '/js/render/sound.js';
-import { renderPagination } from "/js/pagination.js";
 import { globalStateManager } from '/js/globalState.js';
 import {router} from "/js/router.js";
 

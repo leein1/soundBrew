@@ -7,72 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link th:href="@{/css/sound/manage-main.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/manage-albums.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/manage-tags.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/music-upload.css}" rel="stylesheet">
 </head>
 
 <body>
-    <div layout:fragment="content">
-    <div class="content-header">
-        Sounds Manage
-    </div>
-    <div class="content-body">
-        <div class="question-list">
-            <div class="frequently-list">
-                <span class="question-title">Sounds Manage</span>
-                <div><span class="sub-text">아티스트를 위한 음원 등록, 등록했던 앨범과 음원 정보 수정하기</span></div>
-                <li id="upload-sound">
-                    <span class="main-text">음원 업로드</span><br>
-                    <span class="sub-text">Album, Music, Instrument Tag, Mood Tag, Genre Tag</span>
-                    <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                </li>
-                <li id="edit-album">
-                    <span class="main-text">앨범 정보 수정</span><br>
-                    <span class="sub-text">Title, Description</span>
-                    <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                </li>
-                <li id="edit-music">
-                    <span class="main-text">음원 정보 수정</span><br>
-                    <span class="sub-text">Title, Description, soundType</span>
-                    <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                </li>
-                <li id="edit-tags">
-                    <span class="main-text">태그 정보 수정</span><br>
-                    <span class="sub-text">Instrument Tag, Mood Tag, Genre Tag</span>
-                    <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                </li>
-
-            </div>
-
-        </div>
-    </div>
-    </div><!-- end article -->
+<div layout:fragment="content">
+    <div class="content-header">Sounds Manage</div>
+    <div class="content-body" id="content-body"></div>
+</div><!-- end article -->
 </body>
 
 <th:block layout:fragment="script">
     <script type="module">
-        document.getElementById("upload-sound").addEventListener("click", function () {
-            alert("음원 업로드 페이지로 이동합니다.");
-            // 페이지 이동 예시
-            // window.location.href = "/upload-sound";
-        });
-
-        document.getElementById("edit-album").addEventListener("click", function () {
-            alert("앨범 정보 수정 페이지로 이동합니다.");
-            // 페이지 이동 예시
-            // window.location.href = "/edit-album";
-        });
-
-        document.getElementById("edit-music").addEventListener("click", function () {
-            alert("음원 정보 수정 페이지로 이동합니다.");
-            // 페이지 이동 예시
-            // window.location.href = "/edit-music";
-        });
-
-        document.getElementById("edit-tags").addEventListener("click", function () {
-            alert("태그 정보 수정 페이지로 이동합니다.");
-            // 페이지 이동 예시
-            // window.location.href = "/edit-tags";
-        });
-
+        import { router } from '/js/meSoundRouter.js';
     </script>
 </th:block>
 

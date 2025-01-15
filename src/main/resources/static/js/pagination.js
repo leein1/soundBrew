@@ -1,7 +1,6 @@
-import { axiosGet } from "/js/fetch/standardAxios.js";
-import { renderTotalSounds,renderTotalAlbums } from '/js/render/sound.js';
-// import { globalState } from '/js/globalState.js';
-import { router } from '/js/router.js';
+import { router as defaultRouter } from '/js/router.js';
+import { router as meSoundRouter } from '/js/meSoundRouter.js';
+import { globalStateManager } from "/js/globalState.js";
 
 export function renderPagination(responseDTO) {
     const container = document.getElementById("pagination-container");
@@ -51,6 +50,19 @@ export function renderPagination(responseDTO) {
 }
 
 async function handlePaginationClick(event) {
+    //상태관리에서 때옴
+    const myState = globalStateManager.getState().currentView;
+    const stateActions = {
+        '/tracks': defaultRouter,
+        '/albums': defaultRouter,
+        '/tracks/one': defaultRouter,
+        '/albums/one': defaultRouter,
+        '/sounds' : meSoundRouter,
+        '/sounds/albums' : meSoundRouter,
+        '/sounds/tracks' : meSoundRouter,
+        '/sounds/tags' : meSoundRouter,
+    };
+
     const target = event.target;
 
     if (target.classList.contains("page-link") && !target.classList.contains("active")) {
@@ -62,29 +74,8 @@ async function handlePaginationClick(event) {
         const newQueryString = currentParams.toString();
 
         const newUrl = `${window.location.pathname}?${newQueryString}`;
-        router.navigate(newUrl);
+
+        const selectedRouter = stateActions[myState];
+        selectedRouter.navigate(newUrl);
     }
 }
-//
-// async function fetchNewPageData(selectedPage) {
-//     // 현재 URL에서 파라미터 가져오기
-//     const currentParams = new URLSearchParams(window.location.search);
-//
-//     // 'page' 파라미터 갱신 (이미 있으면 갱신, 없으면 추가)
-//     currentParams.set('page', selectedPage);
-//
-//     // 새로 갱신된 쿼리 문자열 생성
-//     const newQueryString = currentParams.toString();
-//
-//     // 현재 URL의 pathname에 새로운 쿼리 문자열을 붙여서 새로운 URL 생성
-//     const newUrl = `${window.location.pathname}?${newQueryString}`;
-//     // 새로운 URL로 페이지의 상태를 갱신
-//     window.history.pushState({ point: window.location.pathname, params: newQueryString }, '', newUrl);
-//
-//     //전역 상태 변수
-//     const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
-//
-//     // 서버에서 새로운 데이터를 가져옴
-//     return await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
-// }
-//

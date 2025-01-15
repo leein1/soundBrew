@@ -3,7 +3,6 @@ package com.soundbrew.soundbrew.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -88,7 +87,7 @@ public class SampleController {
 //    @RequestMapping("/me/sounds/album")
 //    @RequestMapping("/me/sounds/tags")
 //    @RequestMapping("/me/sounds/register")
-    @RequestMapping("/me/sounds")
+    @RequestMapping({"/me/sounds", "/me/sounds/**"})
     public String soundManageSPA(){
         return "/sound/music-manage";
     }
@@ -100,12 +99,12 @@ public class SampleController {
 
     @RequestMapping("/me/b")
     public String b(){
-        return "/sound/manage/manage-musics";
+        return "/sound/music-upload";
     }
 
     @RequestMapping("/me/c")
     public String c(){
-        return "/sound/manage/manage-tags";
+        return "admin2";
     }
 
 }
