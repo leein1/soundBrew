@@ -42,8 +42,8 @@ public class CustomSecurityConfig {
     }
 
     // TokenCheckFilter 생성
-    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil){
-        return new TokenCheckFilter(jwtUtil);
+    private TokenCheckFilter tokenCheckFilter(){
+        return new TokenCheckFilter(jwtUtil,customUserDetailsService);
     }
 
     @Bean
@@ -73,7 +73,7 @@ public class CustomSecurityConfig {
 
         http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 리프레시 토큰 처리
         http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // 로그인 처리
-        http.addFilterAfter(tokenCheckFilter(jwtUtil), APILoginFilter.class); // 액세스 토큰 검증
+        http.addFilterBefore(tokenCheckFilter(), UsernamePasswordAuthenticationFilter.class); // 액세스 토큰 검증
 
         // HttpSecurity 설정
         http.authorizeRequests()
@@ -87,7 +87,9 @@ public class CustomSecurityConfig {
                         "/",
                         "/files/**",
                         "/sounds/tracks",
-                        "/api/**",  // 모든 API 요청을 인증 없이 허용
+//                        "/api/**",  // 모든 API 요청을 인증 없이 허용
+                        "/fonts/**",
+                        "/myInfo",
                         "/api/sample/**").permitAll()
                 .anyRequest().authenticated()
 
