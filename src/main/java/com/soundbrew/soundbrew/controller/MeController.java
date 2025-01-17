@@ -34,7 +34,7 @@ public class MeController {
     private final TagsService tagsService;
     private final AuthenticationService authenticationService;
 
-//
+
 //    내 정보 보기 - GET /me/{userId}
 //    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
     @GetMapping(value = "")
@@ -45,6 +45,7 @@ public class MeController {
         ResponseDTO<UserDTO> responseDTO = userService.getUser(userId);
 
         log.info("******************************************" + responseDTO.toString());
+
         return ResponseEntity.ok().body(responseDTO);
     }
 

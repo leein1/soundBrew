@@ -110,7 +110,7 @@
                 <div class="input-group">
                     <label for="name">이름:</label>
                     <div class="input-with-button">
-                        <input type="text" id="name" name="name" readonly>
+                        <input type="text" id="name" name="name" value="${response.dto.name}" readonly>
 
                     </div>
                 </div>
@@ -118,24 +118,19 @@
                 <div class="input-group">
                     <label for="nickname">닉네임:</label>
                     <div class="input-with-button">
-                        <input type="text" id="nickname" name="nickname" readonly>
+                        <input type="text" id="nickname" name="nickname" value="${response.dto.nickname}" readonly>
 
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label for="password">비밀번호:</label>
-                    <input type="password" id="password" name="password" readonly>
-                </div>
-
-                <div class="input-group">
                     <label for="password">전화번호</label>
-                    <input type="text" name="phonenumber" id="phonenumber" readonly>
+                    <input type="text" name="phonenumber" id="phonenumber" value="${response.dto.phoneNumber}"readonly>
                 </div>
 
                 <div class="input-group">
                     <label for="birth">생일:</label>
-                    <input type="date" id="birth" name="birth" readonly>
+                    <input type="date" id="birth" name="birth" value="${response.dto.birth}" readonly>
                 </div>
         `;
 
