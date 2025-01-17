@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link th:href="@{/css/sound/manage-main.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/manage-albums.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/manage-tags.css}" rel="stylesheet">
+    <link th:href="@{/css/sound/music-upload.css}" rel="stylesheet">
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="content-header">Sounds Manage</div>
+    <div class="content-body" id="content-body"></div>
+</div><!-- end article -->
+</body>
+
+<th:block layout:fragment="script">
+    <script type="module">
+        import { router } from '/js/meSoundRouter.js';
+    </script>
+</th:block>
+
+</html>

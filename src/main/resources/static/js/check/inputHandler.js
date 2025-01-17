@@ -134,8 +134,6 @@ export function inputHandler(input, form) {
 
     if (Object.keys(errors).length > 0) {
         const firstErrorMessage = errors[firstErrorField][0];
-        alert(`Validation Error: ${firstErrorMessage}`);
-
         // 수정된 부분: firstErrorField 그대로 사용
         const firstErrorFieldOriginal = firstErrorField;
 
