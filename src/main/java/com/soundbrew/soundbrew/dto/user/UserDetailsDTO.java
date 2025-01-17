@@ -23,6 +23,16 @@ public class UserDetailsDTO implements UserDetails {
 
     private List<GrantedAuthority> authorities;
 
+    public UserDetailsDTO(String username, int userId, String nickname, List<GrantedAuthority> roles){
+
+        // 생성자 내부에서 UserDTO를 직접 초기화
+        this.userDTO = new UserDTO();
+        this.userDTO.email = username;
+        this.userDTO.userId = userId;
+        this.userDTO.nickname = nickname;
+        this.authorities = roles;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
