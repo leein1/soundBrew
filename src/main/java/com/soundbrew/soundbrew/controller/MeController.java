@@ -5,6 +5,8 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
+import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
+import com.soundbrew.soundbrew.service.AuthenticationService;
 import com.soundbrew.soundbrew.service.SoundsService;
 import com.soundbrew.soundbrew.service.TagsService;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
@@ -12,9 +14,11 @@ import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -28,17 +32,20 @@ public class MeController {
     private final SubscriptionService subscriptionService;
     private final SoundsService soundsService;
     private final TagsService tagsService;
-
+    private final AuthenticationService authenticationService;
 
 //
 //    내 정보 보기 - GET /me/{userId}
 //    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
     @GetMapping(value = "")
-    public ResponseEntity<ResponseDTO<UserDTO>> getMe() {   //추후 토큰에서 user id 추출 해야 함
+    public ResponseEntity<ResponseDTO<UserDTO>> getMe(Authentication authentication) {   //추후 토큰에서 user id 추출 해야 함
 
-            ResponseDTO<UserDTO> responseDTO = userService.getUser(57);
+        int userId = authenticationService.getUserId(authentication);
 
-            return ResponseEntity.ok().body(responseDTO);
+        ResponseDTO<UserDTO> responseDTO = userService.getUser(userId);
+
+        log.info("******************************************" + responseDTO.toString());
+        return ResponseEntity.ok().body(responseDTO);
     }
 
 
