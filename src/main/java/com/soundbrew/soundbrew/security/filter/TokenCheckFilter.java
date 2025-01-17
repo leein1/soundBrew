@@ -1,5 +1,7 @@
 package com.soundbrew.soundbrew.security.filter;
 
+import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
+import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.exception.AccessTokenException;
 import com.soundbrew.soundbrew.util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -8,8 +10,11 @@ import io.jsonwebtoken.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -34,6 +39,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
      */
 
     private final JWTUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -43,9 +49,9 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         log.info("Token Check Filter requestPath : {}", path);
 
-        if(!path.equals("/myInfo") ){
+        if(!path.startsWith("/api/")){
 
-//            !path.startsWith("/api/") &&
+//            !path.startsWith("/api/") &&!path.equals("/myInfo")
 
                     log.info("request 요청이 /api가 아님 ");
 
@@ -62,18 +68,25 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             //  전달받은 토큰 검증
             Map<String,Object> values = validateAccessToken(request);
 
-            // username roles 추출
-            String username = (String) values.get("username");
-            List<String> roles = (List<String>) values.get("roles");
+
 
             log.info("Token Check Filter username - 인증 정보 생성 시작");
 
+            // username roles 추출
+            String username = (String) values.get("username");
+            int userId = (int)values.get("userId");
+            String nickname = (String) values.get("nickname");
+            List<String> roles = (List<String>) values.get("roles");
+
+            List<GrantedAuthority> authorities = roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
 
             //  인증 정보 생성
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    username,
+                    new UserDetailsDTO(username,userId,nickname,authorities),
                     null,
-                    roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                    authorities
             );
 
             //  SecurityContextHolder 설정
