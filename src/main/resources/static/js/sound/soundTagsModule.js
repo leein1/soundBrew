@@ -145,27 +145,5 @@ export function renderTagsFromSearch(data, initialParams = {}) {
         const newUrl = `${window.location.pathname}?${newQueryString}`;
 
         router.navigate(newUrl);
-        // const state = data;
-        //
-        // currentParams.delete('page');
-        // const newQueryString = currentParams.toString();
-        //
-        // const newUrl = window.location.pathname + '?' + newQueryString;
-        // window.history.pushState({ point: window.location.pathname, params: newQueryString }, '', newUrl);
-        //
-        // //전역 상태 변수
-        // const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
-        // // 데이터를 가져오는 부분
-        // const response = await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
-        // const tags = await axiosGet({ endpoint:`/api/sounds/tags?${newQueryString}`});
-
-        // // 렌더링 호출
-        // renderTagsFromSearch(tags);
-        // if(endpoint === '/api/sounds/albums'){
-        //     renderTotalAlbums(response.dtoList);
-        // }else {
-        //     renderTotalSounds(response.dtoList);
-        // }
-        // renderPagination(response); // 페이지네이션 다시 렌더링
     }
 }

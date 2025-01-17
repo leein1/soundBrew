@@ -76,7 +76,9 @@ public class FileService {
         ensureDirectoryExists(uploadDir);
 
         // 고유 파일 이름 생성
-        String uniqueFilename = filenamePrefix + UUID.randomUUID() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        String filenameFixed = filenamePrefix.replaceAll("\\..*$", "-");
+        System.err.println(filenameFixed);
+        String uniqueFilename = filenameFixed + UUID.randomUUID() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         Path destinationPath = uploadDir.resolve(uniqueFilename);
 
         // 파일 복사
@@ -133,6 +135,11 @@ public class FileService {
         Path imagePath = profileImageDir.resolve(userId + ".jpg");
         return new ByteArrayResource(readFile(imagePath));
     }
+
+//    // 앨범 이미지 가져오기
+//    public Resource getAlbumImage(){
+//
+//    }
 
     // 프로필 이미지 삭제
     public void deleteProfileImage(String userId) throws IOException {

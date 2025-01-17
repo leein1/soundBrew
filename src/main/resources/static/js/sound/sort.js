@@ -24,7 +24,6 @@ export function renderSort() {
         </div>
 
     `;
-
     container.appendChild(item);
 
     setupDropdownEvents();
@@ -91,66 +90,3 @@ function highlightCurrentSort() {
         if (activeItem) activeItem.classList.add('active');
     }
 }
-
-// // URL 업데이트 및 데이터 호출
-// async function updateSortParam(sortValue) {
-//     const currentParams = new URLSearchParams(window.location.search);
-//
-//     currentParams.set('more[sort]', sortValue);
-//     currentParams.delete('page');
-//
-//     const newQueryString = currentParams.toString();
-//     const newUrl = `${window.location.pathname}?${newQueryString}`;
-//
-//     window.history.pushState({ point: window.location.pathname, params: newQueryString }, '', newUrl);
-//
-//     // 전역 상태 변수
-//     const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
-//
-//     // 데이터 호출
-//     return await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
-// }
-
-// // '앨범' / '트랙' 보기 토글 함수
-// async function toggleView() {
-//     const button = document.getElementById('viewToggleBtn');
-//     const currentView = globalState.currentView;
-//
-//     if (currentView === 'albums') {
-//         // '앨범'에서 '트랙' 보기로 변경
-//         dispatch({type: actions.SET_VIEW, payload: 'tracks'});
-//         button.textContent = '앨범으로 보기';
-//     } else {
-//         // '트랙'에서 '앨범' 보기로 변경
-//         dispatch({type: actions.SET_VIEW, payload: 'albums'});
-//         button.textContent = '트랙으로 보기';
-//     }
-//
-//     // 상태 변경 후 데이터를 새로 호출
-//     await updateViewData();
-// }
-
-// // 현재 상태에 맞는 데이터 호출
-// async function updateViewData() {
-//     const currentParams = new URLSearchParams(window.location.search);
-//     currentParams.delete('page');
-//
-//     const newQueryString = currentParams.toString();
-//     const newUrl = `${window.location.pathname}?${newQueryString}`;
-//
-//     window.history.pushState(newUrl, '', newUrl);
-//
-//     const endpoint = globalState.currentView === 'albums' ? '/api/sounds/albums' : '/api/sounds/tracks';
-//
-//     try {
-//         const response = await axiosGet({ endpoint: `${endpoint}?${newQueryString}` });
-//         if(endpoint === '/api/sounds/albums'){
-//             renderTotalAlbums(response.dtoList);
-//         }else {
-//             renderTotalSounds(response.dtoList);
-//         }
-//         renderPagination(response);
-//     } catch (error) {
-//         console.error("Error fetching updated data:", error);
-//     }
-// }

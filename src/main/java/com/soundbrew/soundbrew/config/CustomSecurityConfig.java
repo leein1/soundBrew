@@ -84,7 +84,7 @@ public class CustomSecurityConfig {
                         "/v3/api-docs/**",
                         "/register",
                         "/api/users/**",
-                        "/",
+                        "/**",
                         "/files/**",
                         "/sounds/tracks",
 //                        "/api/**",  // 모든 API 요청을 인증 없이 허용

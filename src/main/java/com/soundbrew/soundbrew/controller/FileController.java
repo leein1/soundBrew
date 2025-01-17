@@ -39,24 +39,24 @@ public class FileController {
                 case "ALBUM": uniqueFilename = fileService.uploadAlbumImage(file, identifier);break;
                 default: throw new IllegalArgumentException("지원하지 않는 업로드 타입입니다.");
             }
-
-            return ResponseEntity.ok("성공: " + uniqueFilename);
+//            System.err.println("uniqueFilename : "+uniqueFilename);
+            return ResponseEntity.ok().body(uniqueFilename);
 
         } catch (IllegalArgumentException e) { return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IOException e) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패: 서버 오류"); }
     }
 
-    @PostMapping(value = "/music", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/tracks", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadMusic(@RequestParam("file") MultipartFile file, @RequestParam("title") String title) {
         return handleFileUpload(file, title, "SOUND");
     }
 
-    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/profiles", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadProfile(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId) {
         return handleFileUpload(file, Integer.toString(userId), "PROFILE");
     }
 
-    @PostMapping(value = "/album", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/albums", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAlbumImage(@RequestParam("file") MultipartFile file, @RequestParam("title") String title) {
         return handleFileUpload(file, title, "ALBUM");
     }

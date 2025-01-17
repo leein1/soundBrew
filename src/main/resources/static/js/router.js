@@ -1,12 +1,11 @@
 import {axiosGet,axiosPost} from '/js/fetch/standardAxios.js';
 import { extractTagsFromURL } from "/js/globalState.js";
-import {renderTotalSounds,renderTotalAlbums,renderSoundOne,renderAlbumOne} from '/js/render/sound.js';
+import {renderTotalSounds,renderTotalAlbums,renderSoundOne,renderAlbumOne} from '/js/sound/sound.js';
 import {renderPagination} from "/js/pagination.js";
 import {renderSort} from "/js/sound/sort.js";
 import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
 import {renderViewType} from "/js/sound/viewType.js";
 import {globalStateManager} from "/js/globalState.js";
-
 
 export class Router {
     constructor() {
@@ -69,19 +68,27 @@ router.addRoute('/sounds/tracks',async () => {
     // alert("addRoute : "+queryParams);
 
     // if(compareTagsWithUrlParams()){
+    renderSearch();
+    renderSort();
+    renderViewType();
+
         const renderTags = await axiosGet({endpoint: `/api/sounds/tags${queryParams}`});
         renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
         extractTagsFromURL();
     // }
 
     const response = await axiosGet({endpoint: `/api/sounds/tracks${queryParams}`});
-
+    console.log(response);
     renderTotalSounds(response.dtoList);
     renderPagination(response);
 });
 
 router.addRoute('/sounds/albums', async () => {
     const queryParams = window.location.search; // 쿼리 파라미터 들고오기
+
+    renderSearch();
+    renderSort();
+    renderViewType();
 
     const renderTags = await axiosGet({endpoint: `/api/sounds/tags${queryParams}`});
     renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
@@ -114,6 +121,8 @@ router.addRoute('/sounds/albums/one',async (context) => {
     const albumName = urlParams.get('albumName');
     // alert("nickname : "+ nickname + " , albumName : "+albumName);
 
+    renderSort();
+
     const response = await axiosGet({endpoint: `/api/sounds/albums/` + nickname + `/title/` + albumName+`?${newQueryString}`});
     renderAlbumOne(response);
 
@@ -125,6 +134,14 @@ router.addRoute('/sounds/albums/one',async (context) => {
 
     renderTagsFromSearch(renderTags);
 });
+
+// router.addRoute('',()=>{
+//
+// });
+
+// router.addRoute('',()=>{
+//
+// });
 
 // router.addRoute('',()=>{
 //

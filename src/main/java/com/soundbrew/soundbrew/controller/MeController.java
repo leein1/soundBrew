@@ -171,12 +171,11 @@ public class MeController {
         ResponseDTO responseDto = soundsService.updateAlbum(albumId,albumDto);
 
         return ResponseEntity.ok().body(responseDto);
-
     }
 
     @PatchMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO> updateMusic(@PathVariable int musicId, @RequestBody MusicDTO musicDto ){
-        ResponseDTO responseDto = soundsService.updateMusic(musicId,musicDto);
+        ResponseDTO responseDto = soundsService.updateMusic(2,musicDto);
 
         return ResponseEntity.ok().body(responseDto);
     }

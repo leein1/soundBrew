@@ -3,7 +3,6 @@ package com.soundbrew.soundbrew.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -78,8 +77,34 @@ public class SampleController {
 //    }
 
     @RequestMapping(value = { "/sounds/**" })
-    public String spaHandler() {
+    public String soundSPA() {
         // 모든 SPA 요청을 sound/music-list.html로 리다이렉트
         return "/sound/music-list";
     }
+
+//    @RequestMapping("/me/sounds/main")
+//    @RequestMapping("/me/sounds/tracks")
+//    @RequestMapping("/me/sounds/album")
+//    @RequestMapping("/me/sounds/tags")
+//    @RequestMapping("/me/sounds/register")
+    @RequestMapping({"/me/sounds", "/me/sounds/**"})
+    public String soundManageSPA(){
+        return "/sound/music-manage";
+    }
+
+    @RequestMapping("/me/a")
+    public String a(){
+        return "/sound/manage/manage-albums";
+    }
+
+    @RequestMapping("/me/b")
+    public String b(){
+        return "/sound/music-upload";
+    }
+
+    @RequestMapping("/me/c")
+    public String c(){
+        return "admin2";
+    }
+
 }
