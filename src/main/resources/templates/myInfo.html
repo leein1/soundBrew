@@ -87,7 +87,7 @@
 
     document.addEventListener("DOMContentLoaded", async() =>{
 
-        const response = await axiosGet({endpoint:"/api/me"});
+        const response = await axiosGet({endpoint:"/api/me", useToken:true});
 
         console.log(response);
 
@@ -141,7 +141,7 @@
 
             container.innerHTML = html;
         }
-    })
+    }) // 302줄 <----------------------
 
 </script>
 </th:block>
