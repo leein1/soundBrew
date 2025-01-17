@@ -40,7 +40,6 @@ const addAuthHeader = async (options) => {
     options.headers = { Authorization: `Bearer ${token}` };
 
     try {
-        alert(options.url);
         const response = await axiosInstance(options);
         return response.data;
     } catch (error) {

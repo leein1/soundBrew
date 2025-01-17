@@ -39,7 +39,7 @@ public class FileController {
                 case "ALBUM": uniqueFilename = fileService.uploadAlbumImage(file, identifier);break;
                 default: throw new IllegalArgumentException("지원하지 않는 업로드 타입입니다.");
             }
-
+//            System.err.println("uniqueFilename : "+uniqueFilename);
             return ResponseEntity.ok().body(uniqueFilename);
 
         } catch (IllegalArgumentException e) { return ResponseEntity.badRequest().body(e.getMessage());

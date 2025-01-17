@@ -78,7 +78,7 @@ router.addRoute('/sounds/tracks',async () => {
     // }
 
     const response = await axiosGet({endpoint: `/api/sounds/tracks${queryParams}`});
-
+    console.log(response);
     renderTotalSounds(response.dtoList);
     renderPagination(response);
 });
