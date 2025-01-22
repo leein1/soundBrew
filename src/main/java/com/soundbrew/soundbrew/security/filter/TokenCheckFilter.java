@@ -41,6 +41,12 @@ public class TokenCheckFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
 
+    //  토큰 검증 필요 없는 경로
+    private static final List<String> EXCLUDE_PATHS = List.of(
+            "/api/sounds/tracks",
+            "/api/sounds/tags"
+    );
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -49,18 +55,25 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         log.info("Token Check Filter requestPath : {}", path);
 
+        // 제외 리스트에 포함된 경로는 통과
+        if (EXCLUDE_PATHS.contains(path)) {
+
+            log.info("TokenCheckFilter 제외 요청 경로 : {}", path);
+            filterChain.doFilter(request, response);
+
+            return;
+        }
+
         if(!path.startsWith("/api/")){
 
-//            !path.startsWith("/api/") &&!path.equals("/myInfo")
-
-                    log.info("request 요청이 /api가 아님 ");
-
+            log.info("request 요청이 /api가 아님 ");
             filterChain.doFilter(request, response);
+
             return;
         }
 
 
-        log.info("Token Check Filter JWTUtil: {}", jwtUtil);
+        log.info("Token Check Filter JWTUtil:{}", jwtUtil);
 
 
         try{
