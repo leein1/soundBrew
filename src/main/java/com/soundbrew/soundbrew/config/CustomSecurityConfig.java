@@ -120,7 +120,6 @@ public class CustomSecurityConfig {
                 "/sounds/tracks",
 //                        "/api/**",  // 모든 API 요청을 인증 없이 허용
                 "/myInfo",
-                "/api/me",
                 "/api/sample/**"
         );
     }
