@@ -49,7 +49,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         log.info("Token Check Filter requestPath : {}", path);
 
-        if(!path.startsWith("/api/")){
+        if(path.startsWith("/api/sounds/tracks")|| path.startsWith("/api/sounds/tags") || !path.startsWith("/api/")){
 
 //            !path.startsWith("/api/") &&!path.equals("/myInfo")
 
