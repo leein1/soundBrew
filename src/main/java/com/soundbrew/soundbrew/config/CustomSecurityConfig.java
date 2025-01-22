@@ -24,6 +24,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Configuration
 @Log4j2
@@ -72,25 +73,14 @@ public class CustomSecurityConfig {
 
 
         http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 리프레시 토큰 처리
-        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // 로그인 처리
-        http.addFilterBefore(tokenCheckFilter(), UsernamePasswordAuthenticationFilter.class); // 액세스 토큰 검증
+        http.addFilterAfter(apiLoginFilter, RefreshTokenFilter.class); // 로그인 처리
+        http.addFilterAfter(tokenCheckFilter(), APILoginFilter.class); // 액세스 토큰 검증
 
         // HttpSecurity 설정
         http.authorizeRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-
-                .antMatchers("/generateToken",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/register",
-                        "/api/users/**",
-//                        "/**",
-                        "/files/**",
-                        "/sounds/tracks",
-//                        "/api/**",  // 모든 API 요청을 인증 없이 허용
-                        "/fonts/**",
-                        "/myInfo",
-                        "/api/sample/**").permitAll()
+                .antMatchers(publicPaths().toArray(new String[0])).permitAll()  // 인증 불필요 경로
+                .antMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
 
                 .and()
@@ -115,6 +105,23 @@ public class CustomSecurityConfig {
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
         return http.build();
+    }
+
+    private List<String> publicPaths(){
+        return List.of(
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/fonts/**",
+                "/generateToken",
+                "/register",
+                "/api/users/**",
+                "/",
+                "/files/**",
+                "/sounds/tracks",
+//                        "/api/**",  // 모든 API 요청을 인증 없이 허용
+                "/myInfo",
+                "/api/sample/**"
+        );
     }
 
 //    @Bean
