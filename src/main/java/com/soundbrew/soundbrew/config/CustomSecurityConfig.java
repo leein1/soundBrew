@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.config;
 
+import com.soundbrew.soundbrew.dto.paths.PublicPathsProperties;
 import com.soundbrew.soundbrew.security.filter.RefreshTokenFilter;
 import com.soundbrew.soundbrew.security.handler.APILoginSuccessHandler;
 import com.soundbrew.soundbrew.handler.Custom403Handler;
@@ -35,6 +36,7 @@ public class CustomSecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
+    private final PublicPathsProperties publicPathsProperties;
 
     //  AccessDeniedHandler 빈 등록
     @Bean
@@ -44,7 +46,7 @@ public class CustomSecurityConfig {
 
     // TokenCheckFilter 생성
     private TokenCheckFilter tokenCheckFilter(){
-        return new TokenCheckFilter(jwtUtil,customUserDetailsService);
+        return new TokenCheckFilter(jwtUtil,customUserDetailsService,publicPathsProperties);
     }
 
     @Bean
@@ -79,7 +81,8 @@ public class CustomSecurityConfig {
         // HttpSecurity 설정
         http.authorizeRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .antMatchers(publicPaths().toArray(new String[0])).permitAll()  // 인증 불필요 경로
+//                .antMatchers(publicPaths().toArray(new String[0])).permitAll()  // 인증 불필요 경로
+                .antMatchers(publicPathsProperties.getPaths().toArray(new String[0])).permitAll()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
 

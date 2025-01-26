@@ -1,9 +1,11 @@
 package com.soundbrew.soundbrew.security.filter;
 
+import com.soundbrew.soundbrew.dto.paths.PublicPathsProperties;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.exception.AccessTokenException;
 import com.soundbrew.soundbrew.util.JWTUtil;
+import groovy.lang.GString;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -15,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -40,6 +43,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
+    private final PublicPathsProperties publicPathsProperties;
 
     //  토큰 검증 필요 없는 경로
     private static final List<String> EXCLUDE_PATHS = List.of(
@@ -55,23 +59,38 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         log.info("Token Check Filter requestPath : {}", path);
 
-        // 제외 리스트에 포함된 경로는 통과
-        if (EXCLUDE_PATHS.contains(path)) {
-
-            log.info("TokenCheckFilter 제외 요청 경로 : {}", path);
-            filterChain.doFilter(request, response);
-
-            return;
-        }
+//        // 제외 리스트에 포함된 경로는 통과
+//        if (EXCLUDE_PATHS.contains(path)) {
+//
+//            log.info("TokenCheckFilter 제외 요청 경로 : {}", path);
+//            filterChain.doFilter(request, response);
+//
+//            return;
+//        }
+//
+//        if(!path.startsWith("/api/")){
+//
+//            log.info("request 요청이 /api가 아님 ");
+//            filterChain.doFilter(request, response);
+//
+//            return;
+//        }
 
         if(!path.startsWith("/api/")){
-
+//
             log.info("request 요청이 /api가 아님 ");
             filterChain.doFilter(request, response);
 
             return;
         }
 
+        if(isPublicPath(path)){
+
+            log.info("TokenCheckFilter 제외 경로 :{}", path);
+            filterChain.doFilter(request,response);
+
+            return;
+        }
 
         log.info("Token Check Filter JWTUtil:{}", jwtUtil);
 
@@ -119,6 +138,22 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 //            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"); // 401 응답 반환
             accessTokenException.sendResponseError(response);
         }
+    }
+
+    private boolean isPublicPath(String path) {
+        log.info("Public paths loaded: {}", publicPathsProperties.getPaths());
+
+        List<String> publicPaths = publicPathsProperties.getPaths();
+
+        for (String publicPath : publicPaths) {
+            boolean matched = new AntPathMatcher().match(publicPath, path);
+//            log.info("Checking match: {} <-> {}, result: {}", publicPath, path, matched);
+            if (matched) {
+                log.info("Public path match: {}", path);
+                return true;
+            }
+        }
+        return false;
     }
 
     private Map<String,Object> validateAccessToken(HttpServletRequest request) throws AccessTokenException {

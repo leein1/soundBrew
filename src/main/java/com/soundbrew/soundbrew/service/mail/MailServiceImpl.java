@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.service.mail;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
 
+//    private final JavaMailSender mailSender;
     private final JavaMailSender mailSender;
-
 
 
     @Override

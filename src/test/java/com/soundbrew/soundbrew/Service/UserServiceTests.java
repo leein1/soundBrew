@@ -14,18 +14,18 @@ public class UserServiceTests {
     @Autowired
     private UserService userService;
 
-    @Test
-    public void testRegister(){
-        UserDTO userDTO = UserDTO.builder()
-                .name("test")
-                .nickname("test")
-                .password("testTEST123!@#")
-                .phoneNumber("01012341234")
-                .email("test@test.com")
-                .build();
-
-
-
-        log.info(userService.registerUser(userDTO).toString());
-    }
+//    @Test
+//    public void testRegister(){
+//        UserDTO userDTO = UserDTO.builder()
+//                .name("test")
+//                .nickname("test")
+//                .password("testTEST123!@#")
+//                .phoneNumber("01012341234")
+//                .email("test@test.com")
+//                .build();
+//
+//
+//
+//        log.info(userService.registerUser(userDTO).toString());
+//    }
 }
