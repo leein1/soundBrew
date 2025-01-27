@@ -56,7 +56,7 @@
             </div> -->
 
             <div class="input-group">
-                <label for="password">전화번호</label>
+                <label for="phonenumber">전화번호</label>
                 <input type="text" name="phonenumber" id="phonenumber" readonly>
             </div>
 
@@ -89,7 +89,7 @@
 
         const response = await axiosGet({endpoint:"/api/me", useToken:true});
 
-        console.log(response);
+        alert(response);
 
         renderMyInfo(response);
 
