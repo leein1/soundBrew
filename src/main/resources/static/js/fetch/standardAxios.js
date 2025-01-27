@@ -84,6 +84,7 @@ const fetchData = async ({ endpoint, body = null, useToken = false, params = {},
     try {
         const response = await axiosInstance(options);
         return response.data;
+        // return response;
     } catch (error) {
         if (error.response) {
             return error.response; // 서버 응답 반환
