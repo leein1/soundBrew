@@ -823,16 +823,13 @@ export async function renderSoundUpload(){
         const jsonData = serializeFormToJSON(form);
 
         const { errors, processedData } = inputHandler(jsonData, form);
-        console.log("error");
-        console.log(errors);
-        console.log("=====");
-
+        console.log("1 : "+form);
         const handle = {
             onSuccess: (data) => {
                 alert('음원이 성공적으로 업로드되었습니다!');
                 router.navigate("/me/sounds");
             },
         };
-        const response = await axiosPost({ endpoint: '/api/me/sounds', body: processedData,handle });
+        const response = await axiosPost({ endpoint: '/api/me/sounds', body: processedData, handle });
     });
 }
