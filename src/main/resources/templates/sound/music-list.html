@@ -18,6 +18,7 @@
 
 <body>
     <div layout:fragment="content">
+
         <div class="content-header">
             <div id="render-album-info-container" class="render-album-info-container"></div>
 
@@ -43,14 +44,14 @@
                 <!-- Bottom Layer -->
                 <div class="player-bottom-layer">
                     <div class="player-item-left">
-                        <img alt="앨범 이미지" class="music-album-img" src="" onerror="this.src='/images/album-default-image-01.jpeg'">
+                        <img alt="앨범 이미지" class="player-album-img" src="" onerror="this.src='/images/album-default-image-01.jpeg'">
                         <div class="player-play-btn" >
                             <img id="play-pause-btn" src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                         </div>
                         <div class="player-info">
-                            <h3>title</h3>
-                            <p>albumName</p>
-                            <h2 hidden>filePath</h2>
+                            <h3>제목</h3>
+                            <p>앨범</p>
+                            <h2 hidden>음원</h2>
                         </div>
                         <div class="player-info-time">
                             <!--                    <p>${sound.musicDTO.musicDuration || '0:00'}</p>-->
@@ -58,12 +59,12 @@
                             <p class="time" id="total-time">0:00</p>
                         </div>
                     </div>
-                    <div id="waveform"></div>
+                    <div class="waveform" id="waveform"></div>
                     <div class="volume-container">
                         <img src="/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="다운로드">
                         <img src="/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">
                         <img src="/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="공유">
-                        <input type="range" id="volume-bar" value="100" min="0" max="100">
+                        <input type="range" id="volume-bar" class="volume-bar" value="100" min="0" max="100">
                     </div>
                 </div>
             </div>

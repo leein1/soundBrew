@@ -43,8 +43,8 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
     //  토큰 검증 필요 없는 경로
     private static final List<String> EXCLUDE_PATHS = List.of(
-            "/api/sounds/tracks",
-            "/api/sounds/tags"
+    "/api/admin/tags"
+
     );
 
     @Override
@@ -69,6 +69,27 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             log.info("request 요청이 /api가 아님 ");
             filterChain.doFilter(request, response);
 
+            return;
+        }
+
+        if(path.startsWith("/api/sounds/")){
+            log.info("request 요청이 /api가 아님 ");
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if(path.startsWith("/api/me/")){
+            log.info("request 요청이 /api가 아님 ");
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if(path.startsWith("/stream/")){
+            log.info("request 요청이 /api가 아님 ");
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if(path.startsWith("/test-s3")){
+            log.info("request 요청이 /api가 아님 ");
+            filterChain.doFilter(request, response);
             return;
         }
 

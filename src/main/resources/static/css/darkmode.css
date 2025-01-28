@@ -42,22 +42,46 @@
     filter: invert(100%);
 }
 
-
-
 .sidebar.dark-mode .toggle-container img{
-    filter: invert(100%);
-
+    filter: brightness(0) saturate(100%) invert(81%) sepia(46%) saturate(5000%) hue-rotate(356deg) brightness(103%) contrast(105%);
 }
 
+.navigation.dark-mode .navigation-menu-icon{
+    filter: invert(100%);
+}
 
+.sitename.dark-mode img{
+    filter: invert(100%);
+}
+
+.audio-player-bar.dark-mode{
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+.pagination-container.dark-mode{
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+.footer.dark-mode{
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
 
 .navigation.dark-mode{
     background-color: var(--background-color-dark);
     color: var(--text-color-dark);
 }
 
-.navigation.dark-mode .navigation-menu-icon{
-    filter: invert(100%);
+.searchContainer.dark-mode input{
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+.searchContainer.dark-mode select{
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
 }
 
 .music-player.dark-mode{
@@ -65,6 +89,32 @@
     color: var(--text-color-dark) ;
 }
 
+.content.dark-mode span{
+    background-color: unset;
+}
 
+.myImage.dark-mode section{
+    background-color: unset;
+}
+
+.myTrack.dark-mode section{
+    background-color: unset;
+}
+
+.myForm.dark-mode section{
+    background-color: unset;
+}
+
+/*.music-tag-sort.dark-mode{*/
+/*    color: var(--text-color-dark) ;*/
+/*}*/
+
+/*.viewToggleBtn.dark-mode {*/
+/*    color: var(--text-color-dark) ;*/
+/*}*/
+
+.music-sort.dark-mode li{
+    background-color: var(--background-color-dark);
+}
 
 

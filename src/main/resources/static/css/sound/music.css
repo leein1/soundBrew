@@ -9,7 +9,7 @@
 .music-sort{
     /* align-items: center; */
     display: flex;
-    color: #555;
+    /*color: #555;*/
     margin-top: 50px;
     border-bottom: 1px solid #ddd;
     padding-bottom: 5px;
@@ -41,28 +41,79 @@
     cursor: pointer;
     font-size: 14px;
     border-bottom: 1px solid #ddd;
-    color: #555;
+    /*color: #555;*/
 }
 
 .music-sort-menu ul li:hover, .music-tag-sort-menu ul li:hover{
     background-color: #f1f1f1;
 }
 
-
-.music-item{
+.music-item {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
-    padding-bottom: 10px;
+    align-items: center;
+    padding: 10px;
     border-bottom: 1px solid #ddd;
 }
-
-.music-item-left,
-.music-item-center,
-.music-item-right{
+/*.music-item{*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    margin-top: 10px;*/
+/*    padding-bottom: 10px;*/
+/*    border-bottom: 1px solid #ddd;*/
+/*    overflow-x: scroll;*/
+/*    white-space: nowrap;*/
+/*}*/
+.music-item-left {
     display: flex;
-
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0; /* 왼쪽 영역 크기 고정 */
 }
+.music-item-center {
+    flex: 1; /* 태그 영역이 유동적으로 확장되도록 설정 */
+    overflow: hidden; /* 태그가 공간을 초과하지 않도록 제한 */
+}
+.music-info-tag {
+    display: flex;
+    flex-wrap: nowrap; /* 태그를 한 줄로 배치 */
+    gap: 5px;
+    justify-content: center;
+    overflow-x: auto; /* 가로 스크롤 활성화 */
+    white-space: nowrap; /* 태그 줄바꿈 방지 */
+}
+.music-item-right {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0; /* 오른쪽 버튼 크기 고정 */
+}
+
+.copy-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #555555;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    opacity: 0;
+    z-index: 1000;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    pointer-events: none;
+}
+.copy-alert.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+/*.music-item-left,*/
+/*.music-item-center,*/
+/*.music-item-right{*/
+/*    display: flex;*/
+
+/*}*/
 
 .music-play-btn img{
     width: 30px;
@@ -71,7 +122,7 @@
 
 .music-play-btn,
 .music-info,
-.music-info-tag,
+/*.music-info-tag,*/
 .music-info-time{
     margin-left: 20px;
 }
@@ -86,11 +137,11 @@
 .music-info p,
 .music-info-time p {
     font-size: 12px; /* 앨범명 크기 */
-    color: #555; /* 앨범명 색상 */
+    /*color: #555; !* 앨범명 색상 *!*/
     margin: 5px 0 0;
 }
 
-.music-album-img{
+.player-album-img{
     width: 50px;
     height: 50px;
 }
@@ -103,12 +154,12 @@
     width: 20px;
     height: 20px;
 }
-.music-info-tag{
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    
-}
+/*.music-info-tag{*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 3px;*/
+/*    */
+/*}*/
 .music-play-btn,
 .music-actions,
 .music-info-time{
@@ -129,7 +180,7 @@
     border-radius: 15px;
     margin-top: 15px;
     margin-right: 5px;
-    color: #555;
+    /*color: #555;*/
     font-size: 12px;
     cursor: pointer;
 }
@@ -173,7 +224,7 @@
     display: flex;
     justify-content: left;
     align-items: center;
-    color: #555;
+    /*color: #555;*/
     margin-top: 10px;
     border-bottom: 1px  solid #ddd;
 }
@@ -212,17 +263,17 @@
 .tag-section.fade-out {
     animation: fadeOut 0.3s forwards;
 }
-
 .tag-section {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
     opacity: 0; /* 초기 상태 */
     animation: fadeIn 0.3s forwards; /* 애니메이션 적용 */
     margin: 10px 0;
 
 }
 .tag-item {
-    color: #555;
+    /*color: #555;*/
     border-radius: 4px;
     margin: 5px;
 }
@@ -246,7 +297,7 @@
     cursor: pointer;
     padding: 5px;
     font-size: 12px;
-    color: #555;
+    /*color: #555;*/
     order: 1;
 }
 
@@ -261,11 +312,20 @@
 .viewToggleBtn{
     font-size: 16px;
     margin-top: 5px;
-    color: #555555;
+    /*color: #555555;*/
     display: flex;
     border-bottom: 1px solid #ddd;
     padding-bottom: 5px;
 }
 
+@media (max-width: 768px) {
 
-    
+}
+
+@media (max-width: 576px) {
+    .music-info-tag{
+        display: none;
+    }
+
+
+}

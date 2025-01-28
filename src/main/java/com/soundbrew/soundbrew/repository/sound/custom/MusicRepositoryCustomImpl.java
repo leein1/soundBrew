@@ -7,10 +7,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.RequestDTO;
-import com.soundbrew.soundbrew.dto.sound.MusicDTO;
-import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
-import com.soundbrew.soundbrew.dto.sound.TagsDTO;
-import com.soundbrew.soundbrew.dto.sound.TagsStreamDTO;
+import com.soundbrew.soundbrew.dto.sound.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.*;
@@ -18,6 +15,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+    private final QAlbum album = QAlbum.album;
+    private final QAlbumMusic albumMusic = QAlbumMusic.albumMusic;
     private final QMusic music = QMusic.music;
     private final QMusicInstrumentTag musicInstrumentTag =QMusicInstrumentTag.musicInstrumentTag;
     private final QInstrumentTag instrumentTag = QInstrumentTag.instrumentTag;
@@ -85,6 +84,9 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
         builder.and(music.title.eq(title));
 
         SearchTotalResultDTO result = queryFactory.select(Projections.bean(SearchTotalResultDTO.class,
+                        Projections.bean(AlbumDTO.class,
+                                album.albumArtPath
+                        ).as("albumDTO"),
                         Projections.bean(MusicDTO.class,
                                 music.musicId, music.title, music.filePath, music.price, music.description, music.nickname, music.createDate, music.modifyDate
                         ).as("musicDTO"),
@@ -94,7 +96,9 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                             Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
                         ).as("tagsStreamDTO")
                 ))
-                .from(music)
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
                 .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
                 .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
                 .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
@@ -103,6 +107,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
                 .where(builder) // 조건 추가
                 .groupBy(
+                        album.albumArtPath,
                         music.musicId, music.title, music.filePath, music.price, music.description,
                         music.nickname, music.createDate, music.modifyDate
                 )
@@ -119,6 +124,9 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
 
         SearchTotalResultDTO result = queryFactory
                 .select(Projections.bean(SearchTotalResultDTO.class,
+                        Projections.bean(AlbumDTO.class,
+                                album.albumArtPath
+                        ).as("albumDTO"),
                         Projections.bean(MusicDTO.class,
                                 music.musicId, music.title, music.filePath, music.price, music.description, music.nickname, music.createDate, music.modifyDate
                         ).as("musicDTO"),
@@ -128,7 +136,9 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                                 Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
                         ).as("tagsStreamDTO")
                 ))
-                .from(music)
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
                 .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
                 .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
                 .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
@@ -137,6 +147,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
                 .where(builder) // 조건 추가
                 .groupBy(
+                        album.albumArtPath,
                         music.musicId, music.title, music.filePath, music.price, music.description,
                         music.nickname, music.createDate, music.modifyDate
                 )

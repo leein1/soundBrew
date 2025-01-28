@@ -58,104 +58,25 @@
         </div> <!-- end sidebar -->
 
         <div class="article">
-            
             <div class="navigation">
                 <div class="navigation-menu">
                     <img class="navigation-menu-icon" th:src="@{/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 </div>
-                <div class="sitename font-size-small">사이트이름</div>
+                <div class="sitename font-size-small" id="sitename"><img src="/images/SoundBrew.svg"></div>
                 <div class="user">회원가입</div>
             </div><!-- end navigation -->
-
-<!--            <div class="searchbar">-->
-<!--                <div class="searchbar-container">-->
-<!--                    <span class="searchbar-icon">-->
-<!--                        <img th:src="@{/images/search_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="Search Icon">-->
-<!--                    </span>-->
-                    <div id="searchContainer" class="searchContainer"></div>
-<!--                </div>-->
-<!--            </div>&lt;!&ndash; end searchbar &ndash;&gt;-->
-
+            <div id="searchContainer" class="searchContainer"></div>
             <div class="content" layout:fragment="content">
                 <span class="play-trigger" style="cursor: pointer; color: blue;">재생</span>
             </div><!-- end content -->
-
             <div class="pagination-container" id="pagination-container"></div>
             <div class="footer">
                 푸터 영역
             </div><!-- end footer -->
-
-<!--                &lt;!&ndash; 나중에 페이징 처리 수정 필요 &ndash;&gt;-->
-<!--                <a href="#" class="page-link">«</a>-->
-<!--                <a href="#" class="page-link active">1</a>-->
-<!--                <a href="#" class="page-link">2</a>-->
-<!--                <a href="#" class="page-link">3</a>-->
-<!--                <a href="#" class="page-link">4</a>-->
-<!--                <a href="#" class="page-link">5</a>-->
-<!--                <a href="#" class="page-link">»</a>-->
-
-
-
         </div><!-- end article -->
        
     </div><!-- end main -->
     
-    
-    <div class="music-player" id="musicPlayer">
-
-        <!-- 1. 앨범이미지, 곡정보, 시작버튼 -->
-        <div class="player-left">
-            <div class="music-player-img">
-                <img th:src="@{/images/library_add_check_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg}" alt="앨범이미지">
-            </div>
-
-            <div class="music-player-info">
-                <span class="music-player-info-title">Henglias</span>
-                <span class="music-player-info-writer">Jonsi</span>
-            </div>
-
-            <div class="music-player-play" id="playButton">
-                <img th:src="@{/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="플레이">
-            </div>
-        </div><!-- end player-left -->
-
-        <!-- 2. 러닝타임, 웨이브파형 -->
-        <div class="player-middle">
-            <div class="music-player-time">
-                02:47/03:43
-            </div>
-
-            <div class="music-player-waveform">
-                <span>(Song WaveForm)</span>
-            </div>
-        </div><!-- end player-middle -->
-
-        <!-- 3. 다운로드, 좋아요, 음량, 복사 -->
-        <div class="player-right">
-            <div class="music-player-volume">
-                <img th:src="@{/images/volume_up_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="볼륨">
-            </div>
-
-            <div class="music-player-slider">
-                <input type="range" class="volume-slider" min="0" max="100" value="50">
-            </div>
-
-            <div class="music-player-download">
-                <img th:src="@{/images/download_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg}" alt="다운로드">
-            </div>
-
-            <div class="music-player-favorite">
-                <img th:src="@{/images/heart_plus_50dp_32ADE6_FILL0_wght400_GRAD0_opsz48.svg}" alt="좋아요">
-            </div>
-
-            <div class="music-player-copy">
-                <img th:src="@{/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}" alt="링크복사" id="copyLinkButton">
-            </div>
-
-            <div class="copy-notification" id="copyNotification">링크가 복사되었습니다!</div>
-        </div><!-- end player-right -->
-    </div><!-- end music-player -->
-
     <!-- 다크모드 js -->
     <script th:src="@{/js/darkmode.js}"></script>
 
@@ -164,7 +85,15 @@
 
     <!-- 검색바 기능 -->
     <script src="/js/search.js"></script>
-<th:block  layout:fragment="script">
+
+    <script type="module">
+        import {router} from '/js/router.js';
+
+        document.getElementById("sitename").addEventListener("click",()=>{
+           router.navigate("/sounds/tracks");
+        });
+    </script>
+    <th:block layout:fragment="script">
 </th:block>
 </body>
 </html>

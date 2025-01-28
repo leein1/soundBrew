@@ -19,6 +19,7 @@
 .question-list{
     /* border: 1px solid black;  */
     display: flex;
+    flex: 1;
 }
 
 .main-text {
@@ -34,7 +35,6 @@
 
 .frequently-list , .additional-list{
     /* border: 1px solid black;  */
-    width: 50%;
     padding: 10px;
 }
 .linkDiv{
@@ -46,7 +46,6 @@
 .frequently-list > li , .additional-list > li{
     /* border: 1px solid black;  */
     border-radius: 100px;
-    width: 100%;
     padding: 20px;
     margin-top: 40px;
     list-style: none;

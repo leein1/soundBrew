@@ -33,17 +33,17 @@ export const validationRules = {
         required: true,
         minLength:2,
         maxLength:255,
-        pattern: /^[a-zA-Z0-9\-!@?.]+$/,
+        pattern: /^[a-zA-Z0-9\-!@?._/()\s'"]+$/,
     },
     'albumDTO.description':{
         required: true,
         maxLength: 500,
-        pattern: /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ!?\s]+$/ // 한글 초성도 됨 , 느낌표 물음표 가능, 공백도 됨
+        pattern: /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ!?.,/'_"-()\s]+$/ // 한글 초성도 됨 , 느낌표 물음표 가능, 공백도 됨
     },
     'musicDTO.description':{
         required: true,
         maxLength: 500,
-        pattern: /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ!?\s]+$/ // 한글 초성도 됨 , 느낌표 물음표 가능, 공백도 됨
+        pattern: /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ!?.,/'_"-()\s]+$/ // 한글 초성도 됨 , 느낌표 물음표 가능, 공백도 됨
     },
     'musicDTO.title':{
         required:true,
@@ -57,15 +57,15 @@ export const validationRules = {
     },
     'tagsDTO.instrument':{
         required:true,
-        pattern: /^[a-z0-9]+$/, // 소문자 숫자
+        pattern: /^[a-z0-9.,()-_\s]+$/, // 소문자 숫자
     },
     'tagsDTO.mood':{
         required:true,
-        pattern: /^[a-z0-9]+$/, // 소문자 숫자 허용
+        pattern: /^[a-z0-9.,()-_\s]+$/, // 소문자 숫자 허용
     },
     'tagsDTO.genre':{
         required:true,
-        pattern: /^[a-z0-9]+$/, // 소문자 숫자 허용
+        pattern: /^[a-z0-9.,()-_\s]+$/, // 소문자 숫자 허용
     },
 };
 

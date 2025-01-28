@@ -72,9 +72,19 @@ router.addRoute('/sounds/tracks',async () => {
     renderSort();
     renderViewType();
 
-        const renderTags = await axiosGet({endpoint: `/api/sounds/tags${queryParams}`});
-        renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
-        extractTagsFromURL();
+        const handle = {
+            onSuccess: (data) => {
+                console.log("이 말이 뜨면 ok 이며, 동시에 custom을 했다는 것 : ", data);
+            },
+            onBadRequest: (data) => {
+                console.error("이 말이 뜨면 badRequest 이며, 동시에 custom을 했다는 것:");
+            },
+        };
+
+        // const renderTags = await axiosGet({endpoint: `/api/sounds/tags${queryParams}`,handle});
+        //
+        // renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
+        // extractTagsFromURL();
     // }
 
     const response = await axiosGet({endpoint: `/api/sounds/tracks${queryParams}`});

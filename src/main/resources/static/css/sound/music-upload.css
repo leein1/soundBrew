@@ -7,14 +7,21 @@ form {
 
 /* 각 섹션 스타일 */
 section {
+    padding: 20px;
     border-radius: 5px;
     background-color: #f9f9f9;
 }
 
+h1{
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 section h2 {
+    overflow: hidden;
+    white-space: nowrap;
     margin-bottom: 10px;
     font-size: 14px;
-    color: #333;
 }
 
 /* Select div 스타일 */
@@ -85,14 +92,6 @@ button:disabled {
     padding: 3px 3px;
     background-color: #e0e0e0;
     border-radius: 4px;
-}
-
-.close-modal {
-    position: absolute;
-    top: 0;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
 }
 
 /* 태그 리스트 스타일 */
@@ -178,9 +177,13 @@ button:hover {
     background-color: #ff8a80;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    font-size: 16px;
 }
 
 .close-modal:hover {

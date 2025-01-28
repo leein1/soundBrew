@@ -27,6 +27,22 @@ function renderSearch() {
     // Append the constructed searchItem
     container.appendChild(searchItem);
 
+    function setSearchParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const keyword = urlParams.get("keyword");
+        const type = urlParams.get("type");
+
+        if (keyword) {
+            document.getElementById("searchKeyword").value = keyword;
+        }
+        if (type) {
+            document.getElementById("searchType").value = type;
+        }
+    }
+
+    window.onload=setSearchParams;
+    window.addEventListener("popstate", setSearchParams);
+
     // Add event listener for the input field to handle Enter key
     document.getElementById('searchKeyword').addEventListener('keydown', handleEnterSearch);
 }

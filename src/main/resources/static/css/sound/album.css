@@ -68,23 +68,23 @@ max-width: 250px; /* 최대 크기를 300px로 제한 */
     text-decoration: underline;
 }
 
-/* Media query for smaller monitors (3 items per row) */
-@media (max-width: 1200px) {
-    .list-albums-list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 3개 아이템 표시 */
-    }
-}
+/*!* Media query for smaller monitors (3 items per row) *!*/
+/*@media (max-width: 1200px) {*/
+/*    .list-albums-list {*/
+/*        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); !* 3개 아이템 표시 *!*/
+/*    }*/
+/*}*/
 
-/* Media query for tablets and small screens (2 items per row) */
-@media (max-width: 768px) {
-    .list-albums-list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 2개 아이템 표시 */
-    }
-}
+/*!* Media query for tablets and small screens (2 items per row) *!*/
+/*@media (max-width: 768px) {*/
+/*    .list-albums-list {*/
+/*        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); !* 2개 아이템 표시 *!*/
+/*    }*/
+/*}*/
 
-/* Media query for mobile (1 item per row) */
-@media (max-width: 480px) {
-    .list-albums-list {
-        grid-template-columns: 1fr; /* 1개 아이템 표시 */
-    }
-}
+/*!* Media query for mobile (1 item per row) *!*/
+/*@media (max-width: 480px) {*/
+/*    .list-albums-list {*/
+/*        grid-template-columns: 1fr; !* 1개 아이템 표시 *!*/
+/*    }*/
+/*}*/

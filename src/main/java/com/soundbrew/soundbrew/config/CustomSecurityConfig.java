@@ -116,9 +116,14 @@ public class CustomSecurityConfig {
                 "/register",
                 "/api/users/**",
                 "/",
+                "/api/admin/tags",
+                "/test-s3",
+                "/me/**",
+                "/api/me/**",
                 "/files/**",
-                "/sounds/tracks",
+                "/sounds/**",
                 "/api/sounds/**",
+                "/stream/**",
 //                        "/api/**",  // 모든 API 요청을 인증 없이 허용
                 "/myInfo",
                 "/api/sample/**"

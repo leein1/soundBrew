@@ -512,7 +512,7 @@ export async function renderSoundUpload(){
 
     const renderHTML= `
         <h1>음악 업로드 페이지</h1>
-        <form id="myImage">
+        <form id="myImage" class="myImage">
             <section>
                 <h2>앨범 이미지를 선택해주세요.</h2>
                 <input type="file" id="file-upload" name="file" accept=".jpg,.jpeg,.png">
@@ -521,7 +521,7 @@ export async function renderSoundUpload(){
             </section>
         </form>
         
-        <form id="myTrack">
+        <form id="myTrack" class="myTrack">
             <section>
                 <h2>음원 파일을 선택해주세요.</h2>
                 <input type="file" id="file-upload" name="file" accept=".mp3,.wav">
@@ -530,7 +530,7 @@ export async function renderSoundUpload(){
             </section>
         </form>
         
-        <form id="myForm">
+        <form id="myForm" class="myForm">
             <!-- 싱글/앨범 선택 -->
             <section>
                 <h2>싱글인지 앨범인지 선택해주세요.</h2>
@@ -660,6 +660,12 @@ export async function renderSoundUpload(){
         });
     }
 
+    tagSearch.addEventListener("input", () => {
+        const searchQuery = tagSearch.value.toLowerCase();
+        const filteredTags = allTags.filter(({ tag }) => tag.toLowerCase().includes(searchQuery));
+        renderTagList(filteredTags);
+    });
+
     function closeTagModal() {
         tagModal.classList.add("hidden");
     }
@@ -711,18 +717,23 @@ export async function renderSoundUpload(){
 
         // 유효성 검증 통과 후 서버 요청
         const formData = new FormData(imageForm); // FormData 객체로 전송
-        const response = await axiosPost({endpoint: "/api/files/albums", body: formData});
 
-        if(response.status){
-            alert("업로드에 실패했습니다. 다시 시도해주세요.");
-            return;
-        }else{
-            alert("파일 업로드 완료 : "+response.data || "업로드가 성공적으로 완료되었습니다!");
-            uploadImage = response;
-            imageForm.querySelectorAll('input, button').forEach(element => {
-                element.disabled = true;
-            });
-        }
+        imageForm.querySelectorAll('input, button').forEach(element => {
+            element.disabled = true;
+        });
+
+        const handle = {
+            onForbidden: (data) => {
+                const imageForm = document.getElementById("myImage");
+                alert("업로드에 실패했습니다. 다시 시도해주세요.");
+                imageForm.querySelectorAll('input, button').forEach(element => {
+                    element.disabled = false;
+                });
+                return;
+            },
+        };
+
+        await axiosPost({endpoint: "/api/files/albums", body: formData,handle});
     });
 
     trackForm.addEventListener("submit", async function (e) {
@@ -766,19 +777,21 @@ export async function renderSoundUpload(){
 
         // 유효성 검증 통과 후 서버 요청
         const formData = new FormData(trackForm); // FormData 객체로 전송
+        trackForm.querySelectorAll('input, button').forEach(element => {
+            element.disabled = true;
+        });
+
+        const handle = {
+            onForbidden: (data) => {
+                const trackForm = document.getElementById("myTrack");
+                alert("업로드에 실패했습니다. 다시 시도해주세요.");
+                trackForm.querySelectorAll('input, button').forEach(element => {
+                    element.disabled = false;
+                });
+                return;
+            },
+        };
         const response = await axiosPost({ endpoint: "/api/files/tracks", body: formData });
-
-        if(response.status){
-            alert("업로드에 실패했습니다. 다시 시도해주세요.");
-            return;
-        }else{
-            alert("파일 업로드 완료 : "+response.data || "업로드가 성공적으로 완료되었습니다!");
-            uploadTrack = response;
-            trackForm.querySelectorAll('input, button').forEach(element => {
-                element.disabled = true;
-            });
-
-        }
     });
 
     form.addEventListener("submit", async function (event) {
@@ -814,12 +827,12 @@ export async function renderSoundUpload(){
         console.log(errors);
         console.log("=====");
 
-        if (!errors) {
-            const response = await axiosPost({ endpoint: '/api/me/sounds', body: processedData });
-            alert('음원이 성공적으로 업로드되었습니다!');
-            router.navigate("/me/sounds");
-        } else {
-            alert("음원 업로드 과정에서 오류가 발생했습니다.");
-        }
+        const handle = {
+            onSuccess: (data) => {
+                alert('음원이 성공적으로 업로드되었습니다!');
+                router.navigate("/me/sounds");
+            },
+        };
+        const response = await axiosPost({ endpoint: '/api/me/sounds', body: processedData,handle });
     });
 }
