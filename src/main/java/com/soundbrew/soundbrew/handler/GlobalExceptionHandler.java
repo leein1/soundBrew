@@ -17,6 +17,10 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /*
+    예외 처리에 대한 고민 더 필요 할거 같음
+     */
+
 //    응답코드 내림차순 정렬
 //    비슷한 오류들 최대한 병합 - 지나친 세부 분류 X
 //    클라이언트 기준 중요해 보이는 예외들 처리
@@ -85,7 +89,7 @@ public class GlobalExceptionHandler {
     }
 
     // 500 - 런타임 오류
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler({ConnectException.class, SocketTimeoutException.class, RuntimeException.class})
     public ResponseEntity<ResponseDTO<String>> handleRuntimeExceptions(RuntimeException ex) {
 
         String defaultMessage = "서버에서 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
@@ -95,14 +99,14 @@ public class GlobalExceptionHandler {
     }
 
     // 503 서버 자체 문제
-    @ExceptionHandler({ConnectException.class, SocketTimeoutException.class})
-    public ResponseEntity<ResponseDTO<String>> handleServerUnavailableExceptions(Exception ex) {
-
-        String defaultMessage = "서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
-        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
-
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(responseDTO);
-    }
+//    @ExceptionHandler({ConnectException.class, SocketTimeoutException.class})
+//    public ResponseEntity<ResponseDTO<String>> handleServerUnavailableExceptions(Exception ex) {
+//
+//        String defaultMessage = "서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+//        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
+//
+//        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(responseDTO);
+//    }
 
 }
 
