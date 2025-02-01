@@ -1,11 +1,10 @@
 package com.soundbrew.soundbrew.security.filter;
 
-import com.soundbrew.soundbrew.dto.paths.PublicPathsProperties;
+import com.soundbrew.soundbrew.config.PublicPathsProperties;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.exception.AccessTokenException;
 import com.soundbrew.soundbrew.util.JWTUtil;
-import groovy.lang.GString;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -15,8 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -46,10 +43,10 @@ public class TokenCheckFilter extends OncePerRequestFilter {
     private final PublicPathsProperties publicPathsProperties;
 
     //  토큰 검증 필요 없는 경로
-    private static final List<String> EXCLUDE_PATHS = List.of(
-            "/api/sounds/tracks",
-            "/api/sounds/tags"
-    );
+//    private static final List<String> EXCLUDE_PATHS = List.of(
+//            "/api/sounds/tracks",
+//            "/api/sounds/tags"
+//    );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

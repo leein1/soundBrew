@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.dto.paths;
+package com.soundbrew.soundbrew.config;
 
 import lombok.Getter;
 import lombok.Setter;

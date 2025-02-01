@@ -29,7 +29,7 @@ public class UsersController {
 
 //    @ApiOperation(value = "users POST", notes = "POST 방식으로 회원 등록")
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDTO<Object>> resgister(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<ResponseDTO<String>> resgister(@RequestBody UserDTO userDTO) {
 
         log.info("회원가입 요청 --------------------------------");
 

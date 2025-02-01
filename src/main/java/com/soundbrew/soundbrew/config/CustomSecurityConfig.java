@@ -1,6 +1,5 @@
 package com.soundbrew.soundbrew.config;
 
-import com.soundbrew.soundbrew.dto.paths.PublicPathsProperties;
 import com.soundbrew.soundbrew.security.filter.RefreshTokenFilter;
 import com.soundbrew.soundbrew.security.handler.APILoginSuccessHandler;
 import com.soundbrew.soundbrew.handler.Custom403Handler;
@@ -13,18 +12,17 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.sql.DataSource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Configuration
@@ -37,6 +35,7 @@ public class CustomSecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
     private final PublicPathsProperties publicPathsProperties;
+    private final MaintenanceConfig maintenanceConfig;
 
     //  AccessDeniedHandler 빈 등록
     @Bean
@@ -57,6 +56,24 @@ public class CustomSecurityConfig {
         authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
         http.authenticationManager(authenticationManager);
+
+        //  유지보수 상태 확인
+        http.addFilterBefore((request,response,filterChain) -> {
+
+            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
+            if(maintenanceConfig.isMode()){
+                httpServletResponse.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
+                httpServletResponse.setHeader("Retry-After", "3600");
+                httpServletResponse.setCharacterEncoding("UTF-8"); // 응답 인코딩 설정
+                httpServletResponse.setContentType("text/plain; charset=UTF-8"); // Content-Type 설정
+                httpServletResponse.getWriter().print("서버가 유지 보수 중입니다. 나중에 다시 시도 해주세요.");
+                return;
+            }
+
+            filterChain.doFilter(request, response);
+
+        }, UsernamePasswordAuthenticationFilter.class);
 
         // API 로그인 필터
         APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
