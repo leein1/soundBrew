@@ -1,9 +1,9 @@
 package com.soundbrew.soundbrew.controller;
 
-import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.SoundStreamDTO;
 import com.soundbrew.soundbrew.service.file.FileService;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
@@ -14,10 +14,12 @@ import java.io.IOException;
 
 @RestController
 @AllArgsConstructor
-public class SampleRestController {
+@RequestMapping("/api/stream")
+@Log4j2
+public class FileStreamController {
     private final FileService fileService;
 
-    @GetMapping("/stream/{fileName}")
+    @GetMapping("/{fileName}")
     ResponseEntity<byte[]> streamSound(@RequestHeader(value = HttpHeaders.RANGE, required = false) String rangeHeader, @PathVariable String fileName) throws IOException {
         final long FIXED_RANGE_SIZE = 2 * 1024 * 1024; // 2 MB
         HttpRange range;
