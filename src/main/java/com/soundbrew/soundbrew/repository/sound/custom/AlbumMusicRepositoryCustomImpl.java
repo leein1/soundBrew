@@ -469,7 +469,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         List<SearchTotalResultDTO> results = queryFactory
                 .select(Projections.bean(SearchTotalResultDTO.class,
                         Projections.bean(AlbumDTO.class,
-                                album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname, album.createDate, album.modifyDate
+                                album.albumId,album.userId, album.albumName, album.albumArtPath, album.description, album.nickname, album.createDate, album.modifyDate
                         ).as("albumDTO"),
                         Projections.bean(TagsStreamDTO.class,
                                 Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
@@ -488,7 +488,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
                 .where(builder) // 조건 추가
                 .groupBy(
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,album.createDate, album.modifyDate
+                        album.albumId,album.userId, album.albumName, album.albumArtPath, album.description, album.nickname,album.createDate, album.modifyDate
                 )
                 .orderBy(orderSpecifier) // 동적 정렬 추가
                 .offset(requestDTO.getPageable().getOffset()) // 페이징 시작 위치

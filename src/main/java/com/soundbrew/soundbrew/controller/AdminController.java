@@ -54,7 +54,6 @@ public class AdminController {  //  관리자용 컨트롤러
        return ResponseEntity.ok().body(responseDTO);
     }
 
-
     // 업데이트 방식 어떻게??
     @PatchMapping("/users/{userId}")
     public ResponseEntity<ResponseDTO<UserDetailsDTO>> updateUser(@PathVariable int userId, @RequestBody UserDetailsDTO userDetailsDTO) {
@@ -106,13 +105,6 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/tags") // 관리자모드 태그 정보
-    ResponseEntity<ResponseDTO<TagsDTO>> getTags(@RequestParam(required = false) List<Integer> musicIds){ // 아티스트(내)의 음악들 ( List<Integer>)의 태그들
-        ResponseDTO<TagsDTO> responseDto = tagsService.getTags(musicIds);
-
-        return  ResponseEntity.ok().body(responseDto);
-    }
-
     // sounds for admin
     @DeleteMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO> deleteAlbum(@PathVariable int albumId){
@@ -148,8 +140,8 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("/albums/{userId}/{albumId}/verify")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> readVerifyAlbumOne(int userId, int albumId, RequestDTO requestDTO){
+    @GetMapping("/albums/{userId}/title/{albumId}/verify")
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> readVerifyAlbumOne(@PathVariable("userId") int userId, @PathVariable("albumId") int albumId, RequestDTO requestDTO){
         ResponseDTO<SearchTotalResultDTO> responseDTO = soundsService.readVerifyAlbumOne(userId,albumId,requestDTO);
 
         return ResponseEntity.ok().body(responseDTO);
@@ -174,5 +166,19 @@ public class AdminController {  //  관리자용 컨트롤러
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOneForAdmin(userId,id,requestDTO);
 
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/tracks")
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTracks(@ModelAttribute RequestDTO requestDTO ){
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDTO);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/albums")
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbums(@ModelAttribute RequestDTO requestDTO){
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumMe(requestDTO);
+
+        return  ResponseEntity.ok().body(responseDto);
     }
 }

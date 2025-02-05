@@ -7,6 +7,7 @@ export class GlobalState {
             instrumentTags: [],
             moodTags: [],
             genreTags: [],
+            isFirstTagLoad:true,
         };
 
         // Pub/Sub 관련
@@ -49,6 +50,9 @@ export class GlobalState {
             case 'SET_GENRE_TAGS':
                 this.setState({ genreTags: action.payload });
                 break;
+            case 'SET_TAG_LOAD_STATUS':
+                this.setState(({ isFirstTagLoad: action.payload}));
+                break;
             default:
                 break;
         }
@@ -73,20 +77,37 @@ export class GlobalState {
 export const globalStateManager = new GlobalState();
 
 // 액션 정의
-const actions = {
+// document.addEventListener('DOMContentLoaded', () => {
+export const actions = {
     SET_VIEW: 'SET_VIEW',
     SET_LOGIN_STATUS: 'SET_LOGIN_STATUS',
     SET_INSTRUMENT_TAGS: 'SET_INSTRUMENT_TAGS',
     SET_MOOD_TAGS: 'SET_MOOD_TAGS',
     SET_GENRE_TAGS: 'SET_GENRE_TAGS',
+    SET_TAG_LOAD_STATUS:'SET_TAG_LOAD_STATUS',
 };
 
 function displaySearchBar(state) {
     const stateActions = {
-        '/tracks': 'block',
-        '/albums': 'block',
-        '/tracks/one': 'none',
-        '/albums/one': 'none',
+        //sounds
+        '/sounds/tracks': 'block',
+        '/sounds/albums': 'block',
+        '/sounds/tracks/one': 'none',
+        '/sounds/albums/one': 'none',
+        //me
+        '/me/sounds/upload':'none',
+        '/me/sounds':'none',
+        '/me/sounds/albums':'none',
+        '/me/sounds/tracks':'none',
+        '/me/sounds/tags':'none',
+        //admin
+        '/admin/tracks':'block',
+        '/admin/albums':'block',
+        '/admin/albums/verify':'none',
+        '/admin/tags/spelling':'none',
+        '/admin/tags/new':'none',
+        '/admin/albums/one/verify':'none',
+        '/admin/sounds':'none',
     };
 
     const searchItem = document.querySelector('.search-sort');
@@ -102,10 +123,24 @@ function displaySearchBar(state) {
 function displaySortBar(state){
     // alert("displaySortBar");
     const stateActions={
-        '/tracks': 'block',
-        '/albums': 'block',
-        '/tracks/one': 'none',
-        '/albums/one': 'block',
+        '/sounds/tracks': 'block',
+        '/sounds/albums': 'block',
+        '/sounds/tracks/one': 'none',
+        '/sounds/albums/one': 'block',
+        //me
+        '/me/sounds/upload':'none',
+        '/me/sounds':'none',
+        '/me/sounds/albums':'none',
+        '/me/sounds/tracks':'none',
+        '/me/sounds/tags':'none',
+        //admin
+        '/admin/sounds':'none',
+        '/admin/tracks':'none',
+        '/admin/albums':'none',
+        '/admin/albums/verify':'none',
+        '/admin/tags/spelling':'none',
+        '/admin/tags/new':'none',
+        '/admin/albums/one/verify':'none',
     };
 
     let sortItem = document.querySelector('.music-sort');
@@ -121,10 +156,24 @@ function displaySortBar(state){
 function displayViewTypeBar(state){
     // alert("viewTypeBar : "+state.currentView);
     const stateActions={
-        '/tracks': 'block',
-        '/albums': 'block',
-        '/tracks/one': 'none',
-        '/albums/one': 'none',
+        '/sounds/tracks': 'block',
+        '/sounds/albums': 'block',
+        '/sounds/tracks/one': 'none',
+        '/sounds/albums/one': 'none',
+        //me
+        '/me/sounds/upload':'none',
+        '/me/sounds':'none',
+        '/me/sounds/albums':'none',
+        '/me/sounds/tracks':'none',
+        '/me/sounds/tags':'none',
+        //admin
+        '/admin/sounds':'none',
+        '/admin/tracks':'none',
+        '/admin/albums':'none',
+        '/admin/albums/verify':'none',
+        '/admin/tags/spelling':'none',
+        '/admin/tags/new':'none',
+        '/admin/albums/one/verify':'none',
     };
 
     let viewTypeItem = document.querySelector('.view-type');
@@ -140,10 +189,24 @@ function displayViewTypeBar(state){
 function displayTagsBar(state){
     // alert("displayTagsBar");
     const stateActions={
-        '/tracks': 'block',
-        '/albums': 'block',
-        '/tracks/one': 'none',
-        '/albums/one': 'block',
+        '/sounds/tracks': 'block',
+        '/sounds/albums': 'block',
+        '/sounds/tracks/one': 'none',
+        '/sounds/albums/one': 'block',
+        //me
+        '/me/sounds/upload':'none',
+        '/me/sounds':'none',
+        '/me/sounds/albums':'none',
+        '/me/sounds/tracks':'none',
+        '/me/sounds/tags':'none',
+        //admin
+        '/admin/sounds':'none',
+        '/admin/tracks':'none',
+        '/admin/albums':'none',
+        '/admin/albums/verify':'none',
+        '/admin/tags/spelling':'none',
+        '/admin/tags/new':'none',
+        '/admin/albums/one/verify':'block',
     };
 
     let tagsBarItem = document.querySelector('.music-tag-sort');
@@ -158,14 +221,90 @@ function displayTagsBar(state){
 
 function displayPaginationBar(state){
     // 페이지 바에 대해서, 가리거나 등등.
+    const stateActions = {
+        //sounds
+        '/sounds/tracks': 'block',
+        '/sounds/albums': 'block',
+        '/sounds/tracks/one': 'none',
+        '/sounds/albums/one': 'block',
+        //me
+        '/me/sounds/upload':'none',
+        '/me/sounds':'none',
+        '/me/sounds/albums':'block',
+        '/me/sounds/tracks':'block',
+        '/me/sounds/tags':'block',
+        //admin
+        '/admin/tracks':'block',
+        '/admin/albums':'block',
+        '/admin/albums/verify':'block',
+        '/admin/tags/spelling':'none',
+        '/admin/tags/new':'none',
+        '/admin/albums/one/verify':'block',
+        '/admin/sounds':'none',
+    };
+
+    const pageItem = document.querySelector('.pagination-container');
+    const displayStyle = stateActions[state.currentView];
+
+    if(pageItem) {
+        if (displayStyle !== undefined) {
+            pageItem.style.display = displayStyle;
+        }
+    }
+}
+
+function displayAudioBar(state){
+    const stateActions = {
+        //sounds
+        '/sounds/tracks': 'block',
+        '/sounds/albums': 'block',
+        '/sounds/tracks/one': 'none',
+        '/sounds/albums/one': 'block',
+        //me
+        '/me/sounds/upload':'none',
+        '/me/sounds':'none',
+        '/me/sounds/albums':'none',
+        '/me/sounds/tracks':'none',
+        '/me/sounds/tags':'none',
+        //admin
+        '/admin/sounds':'none',
+        '/admin/tracks':'none',
+        '/admin/albums':'none',
+        '/admin/albums/verify':'none',
+        '/admin/tags/spelling':'none',
+        '/admin/tags/new':'none',
+        '/admin/albums/one/verify':'block',
+    };
+
+    let albumInfoBar = document.querySelector('.audio-player-bar');
+    const displayAudio = stateActions[state.currentView];
+
+    if(albumInfoBar) {
+        if (displayAudio !== undefined) {
+            albumInfoBar.style.display = displayAudio;
+        }
+    }
 }
 
 function displayAlbumInfoBar(state){
     const stateActions={
-        '/tracks': '',
-        '/albums': '',
-        '/tracks/one': '',
+        '/sounds/tracks': '',
+        '/sounds/albums': '',
+        '/sounds/tracks/one': '',
         // '/albums/one': 'block', 이 뷰 상태일때는 보여줘야 하므로 초기화 하지 않음.
+        //me
+        '/me/sounds/upload':'',
+        '/me/sounds':'',
+        '/me/sounds/albums':'',
+        '/me/sounds/tracks':'',
+        '/me/sounds/tags':'',
+        //admin
+        '/admin/tracks':'',
+        '/admin/albums':'',
+        '/admin/albums/verify':'',
+        '/admin/tags/spelling':'',
+        '/admin/tags/new':'',
+        '/admin/albums/one/verify':'block',
     };
 
     let albumInfoBar = document.querySelector('.render-album-info-container');
@@ -179,6 +318,7 @@ function displayAlbumInfoBar(state){
 }
 
 // 구독 설정
+globalStateManager.subscribe('currentView', displayAudioBar);
 globalStateManager.subscribe('currentView', displaySearchBar);
 globalStateManager.subscribe('currentView', displaySortBar);
 globalStateManager.subscribe('currentView', displayViewTypeBar);
@@ -211,49 +351,3 @@ globalStateManager.dispatch({
     type: 'SET_GENRE_TAGS',
     payload: []  // 초기 genreTags 상태 설정
 });
-
-
-// [URL 파라미터에서 태그 추출]
-export function extractTagsFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    const instrumentTags = urlParams.has('more[instrument]') ? urlParams.get('more[instrument]').split(',') : [];
-    const moodTags = urlParams.has('more[mood]') ? urlParams.get('more[mood]').split(',') : [];
-    const genreTags = urlParams.has('more[genre]') ? urlParams.get('more[genre]').split(',') : [];
-
-    // 추출한 태그들을 상태에 반영
-    globalStateManager.dispatch({ type: actions.SET_INSTRUMENT_TAGS, payload: instrumentTags });
-    globalStateManager.dispatch({ type: actions.SET_MOOD_TAGS, payload: moodTags });
-    globalStateManager.dispatch({ type: actions.SET_GENRE_TAGS, payload: genreTags });
-}
-
-// 상태와 URL 파라미터 비교 함수
-export function compareTagsWithUrlParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const instrumentTags = urlParams.has('more[instrument]') ? urlParams.get('more[instrument]').split(',') : [];
-    const moodTags = urlParams.has('more[mood]') ? urlParams.get('more[mood]').split(',') : [];
-    const genreTags = urlParams.has('more[genre]') ? urlParams.get('more[genre]').split(',') : [];
-
-    const currentInstrumentTags = globalStateManager.getState().instrumentTags;
-    const currentMoodTags = globalStateManager.getState().moodTags;
-    const currentGenreTags = globalStateManager.getState().genreTags;
-
-    console.log("현재 상태에 올라온 태그 : "+currentInstrumentTags+currentMoodTags+currentGenreTags);
-    console.log("지금 파라미터에 있는 태그 : "+instrumentTags+moodTags+genreTags);
-    // 각각의 태그 비교
-    const isInstrumentChanged = !arraysAreEqual(currentInstrumentTags, instrumentTags);
-    const isMoodChanged = !arraysAreEqual(currentMoodTags, moodTags);
-    const isGenreChanged = !arraysAreEqual(currentGenreTags, genreTags);
-
-    // 하나라도 달라지면 true 반환
-    return isInstrumentChanged || isMoodChanged || isGenreChanged;
-}
-
-// 배열 비교 함수
-function arraysAreEqual(arr1, arr2) {
-    if (arr1.length !== arr2.length) return false;
-    for (let i = 0; i < arr1.length; i++) {
-        if (arr1[i] !== arr2[i]) return false;
-    }
-    return true;
-}

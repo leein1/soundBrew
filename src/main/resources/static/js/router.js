@@ -1,5 +1,5 @@
 import {axiosGet,axiosPost} from '/js/fetch/standardAxios.js';
-import { extractTagsFromURL } from "/js/globalState.js";
+import { extractTagsFromURL,compareTagsWithUrlParams } from "/js/tagStateUtil.js";
 import {renderTotalSounds,renderTotalAlbums,renderSoundOne,renderAlbumOne} from '/js/sound/sound.js';
 import {renderPagination} from "/js/pagination.js";
 import {renderSort} from "/js/sound/sort.js";
@@ -30,7 +30,8 @@ export class Router {
         }
 
         // 여기서 상태 업데이트 추가
-        this.updateStateFromURL();
+        this.updateTagLoadingStateFromURL() // 뷰 업데이트 보다 먼저 해야함.
+        this.updateStateFromURL(); // 뷰 업데이트
     }
 
     //상태 업데이트
@@ -38,14 +39,24 @@ export class Router {
         // alert("!!! 상태 업데이트 !!!");
         const path = window.location.pathname; // 예: "/sounds/tracks/one"
 
-        // "/sounds/tracks/one"에서 첫 번째 칸("sounds") 제거
-        const segments = path.split('/').filter(Boolean); // 빈 문자열 제거
-        const updatedPath = '/' + segments.slice(1).join('/'); // 첫 번째 요소 제거 후 다시 경로 생성
+        // const segments = path.split('/').filter(Boolean); // 빈 문자열 제거
+        // const firstSegment = segments[0]; // 첫 번째 요소 가져오기
 
-        // 결과적으로 "/tracks/one"과 같은 값이 updatedPath에 저장됨
-
+        // alert("segments : "+segments);
+        // alert("firstSegment : "+firstSegment);
         // 필요하면 상태 업데이트 로직에 활용
-        globalStateManager.dispatch({ type: 'SET_VIEW', payload: updatedPath });
+        globalStateManager.dispatch({ type: 'SET_VIEW', payload: path });
+    }
+
+    //태그 첫 로딩 초기화
+    updateTagLoadingStateFromURL(){
+        const viewState = globalStateManager.getState().currentView;
+        const path = window.location.pathname;
+
+        if(viewState !== path){
+            globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: true});
+            // alert("globalStateManager.getState().isFirstTagLoad : "+globalStateManager.getState().isFirstTagLoad);
+        }
     }
 
     // 라우터 시작
@@ -61,38 +72,56 @@ export class Router {
 }
 
 export const router = new Router();
-// alert("router");
 
-router.addRoute('/sounds/tracks',async () => {
-    const queryParams = window.location.search; // 쿼리 파라미터 들고오기
-    // alert("addRoute : "+queryParams);
+router.addRoute('/sounds/tracks', async () => {
+    const queryParams = window.location.search; // 현재 URL 쿼리 파라미터 가져오기
 
-    // if(compareTagsWithUrlParams()){
-    renderSearch();
-    renderSort();
-    renderViewType();
+    // 초기 로딩이거나, 태그가 변경된 경우 API 호출
+    if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
+        renderSearch();
+        renderSort();
+        renderViewType();
 
-        const renderTags = await axiosGet({endpoint: `/api/sounds/tags${queryParams}`});
-        renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
-        extractTagsFromURL();
-    // }
+        // const handle = {
+        //     onSuccess: (data) => {
+        //         console.log("태그 데이터를 성공적으로 불러왔음:", data);
+        //     },
+        //     onBadRequest: (data) => {
+        //         console.error("태그 데이터 요청 실패:", data);
+        //     },
+        // };
 
-    const response = await axiosGet({endpoint: `/api/sounds/tracks${queryParams}`});
+        // 태그 API 호출
+        const renderTags = await axiosGet({ endpoint: `/api/sounds/tags/mapped${queryParams}` });
+
+        renderTagsFromSearch(renderTags); // 태그 UI 렌더링
+        extractTagsFromURL(); // 태그 상태 업데이트
+
+        // 최초 호출 이후에는 상태를 false로 변경
+        globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
+    }
+    // 트랙 데이터를 항상 가져옴 (검색 결과는 항상 갱신해야 하므로)
+    const response = await axiosGet({ endpoint: `/api/sounds/tracks${queryParams}` });
+
     console.log(response);
-    renderTotalSounds(response.dtoList);
-    renderPagination(response);
+    renderTotalSounds(response.dtoList); // 트랙 리스트 렌더링
+    renderPagination(response); // 페이지네이션 렌더링
 });
 
 router.addRoute('/sounds/albums', async () => {
     const queryParams = window.location.search; // 쿼리 파라미터 들고오기
 
-    renderSearch();
-    renderSort();
-    renderViewType();
+    if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
+        renderSearch();
+        renderSort();
+        renderViewType();
 
-    const renderTags = await axiosGet({endpoint: `/api/sounds/tags${queryParams}`});
-    renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
-    extractTagsFromURL()
+        const renderTags = await axiosGet({endpoint: `/api/sounds/tags/mapped${queryParams}`});
+        renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
+        extractTagsFromURL();
+        // 최초 호출 이후에는 플래그를 false로 변경
+        globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
+    }
 
     const response = await axiosGet({endpoint: `/api/sounds/albums${queryParams}`});
     renderTotalAlbums(response.dtoList);
@@ -119,9 +148,6 @@ router.addRoute('/sounds/albums/one',async (context) => {
     const newQueryString = urlParams.toString();
     const nickname = urlParams.get('nickname');
     const albumName = urlParams.get('albumName');
-    // alert("nickname : "+ nickname + " , albumName : "+albumName);
-
-    renderSort();
 
     const response = await axiosGet({endpoint: `/api/sounds/albums/` + nickname + `/title/` + albumName+`?${newQueryString}`});
     renderAlbumOne(response);
@@ -129,23 +155,18 @@ router.addRoute('/sounds/albums/one',async (context) => {
     renderTotalSounds(response.dtoList);
     renderPagination(response);
 
-    const tagsBody = {dto: response.dtoList};
-    const renderTags = await axiosPost({endpoint: '/api/sounds/tags', body: tagsBody});
+    // 초기 로딩이거나, 태그가 변경된 경우 API 호출
+    if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
+        renderSort();
 
-    renderTagsFromSearch(renderTags);
+        const tagsBody = {dto: response.dtoList};
+        const renderTags = await axiosPost({endpoint: '/api/sounds/tags', body: tagsBody});
+
+        renderTagsFromSearch(renderTags);
+
+        globalStateManager.dispatch({type: 'SET_TAG_LOAD_STATUS', payload: false});
+    }
 });
-
-// router.addRoute('',()=>{
-//
-// });
-
-// router.addRoute('',()=>{
-//
-// });
-
-// router.addRoute('',()=>{
-//
-// });
 
 router.start();
 

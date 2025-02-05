@@ -51,7 +51,11 @@ public class SoundController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-
+    // ** 음원들과 매핑 되어있는 전체 태그를 표시 **
+    @GetMapping("/tags/mapped") // 메인 페이지의 전체 태그 버튼들
+    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@ModelAttribute RequestDTO requestDTO){
+        ResponseDTO<TagsDTO> responseDTO = tagsService.getAllTags(requestDTO);
+    }
 
     @GetMapping("/tracks/{nickname}/title/{title}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundsOne(@PathVariable String nickname, @PathVariable String title){
@@ -61,12 +65,18 @@ public class SoundController {
     }
 
     @GetMapping("/albums/{nickname}/title/{albumName}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumsOne(@PathVariable String nickname, @PathVariable String albumName, RequestDTO requestDto){
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumsOne(@PathVariable String nickname, @PathVariable String albumName, @ModelAttribute RequestDTO requestDto){
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(nickname,albumName,requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
+    // ** 그냥 존재하는 모든 태그들을 표시 **
+    @GetMapping("/tags") // 관리자모드 태그 정보
+    ResponseEntity<ResponseDTO<TagsDTO>> getTags(){
+        ResponseDTO<TagsDTO> responseDto = tagsService.getTags();
 
+        return  ResponseEntity.ok().body(responseDto);
+    }
 
 }

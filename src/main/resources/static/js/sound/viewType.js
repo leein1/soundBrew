@@ -11,7 +11,7 @@ export function renderViewType(){
     item.innerHTML=`
         <span id="viewToggleBtn" class="viewToggleBtn">
             <img src="/images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정렬">
-            <span>앨범으로 보기</span>
+            <span>뷰 타입 변경</span>
         </span>
     `;
 
@@ -22,15 +22,20 @@ export function renderViewType(){
 
 // '앨범' / '트랙' 보기 토글 함수
 async function toggleView() {
+    // alert("리스트 뷰 타입 토글");
     const button = document.getElementById('viewToggleBtn');
     const currentView = globalStateManager.getState().currentView;
+    // alert(currentView);
+    // console.log(currentView);
 
     const textNode = button.querySelector('span');
 
-    if (currentView === '/albums') {
+    if (currentView === '/sounds/albums') {
+        // alert("앨범으로 보기 로 변경되야함");
         // '앨범'에서 '트랙' 보기로 변경
         textNode.textContent = '앨범으로 보기';
     } else {
+        // alert("트랙으로 보기 로 변경되야함");
         // '트랙'에서 '앨범' 보기로 변경
         textNode.textContent = '트랙으로 보기';
     }
@@ -46,7 +51,7 @@ async function updateViewData() {
 
     const currentView = globalStateManager.getState().currentView;
     // alert("currentView : "+currentView)
-    const currentURL = currentView === '/tracks' ? '/sounds/albums' : '/sounds/tracks' ;
+    const currentURL = currentView === '/sounds/tracks' ? '/sounds/albums' : '/sounds/tracks' ;
 
     const newQueryString = currentParams.toString();
 

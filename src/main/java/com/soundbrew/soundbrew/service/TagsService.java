@@ -21,6 +21,6 @@ public interface TagsService {
     ResponseDTO updateInstrumentTagSpelling(String beforeName, String afterName);
     ResponseDTO updateMoodTagSpelling(String beforeName, String afterName);
     ResponseDTO updateGenreTagSpelling(String beforeName, String afterName);
-    ResponseDTO<TagsDTO> getTags(List<Integer> musicIds);
+    ResponseDTO<TagsDTO> getTags();
     ResponseDTO<TagsDTO> getAllTags(RequestDTO requestDTO);
 }

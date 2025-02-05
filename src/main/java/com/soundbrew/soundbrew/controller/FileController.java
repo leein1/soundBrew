@@ -66,6 +66,7 @@ public class FileController {
 
         try {
             Resource resource = fileService.downloadSoundFile(filename);
+//            Path filePath = Path.of(fileService.getFile(filename));
             Path filePath = fileService.getFile(filename);
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath))

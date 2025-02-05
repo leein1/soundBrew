@@ -14,7 +14,7 @@
         left: 0;
         width: 100%;
         background: white;
-        color: #fff;
+        /*color: #fff;*/
         display: flex;
         flex-direction: column;
         box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.4);
@@ -131,7 +131,7 @@ border: none; /* 테두리 제거 */
     display: flex;
     gap:15px;
     align-items: center;
-
+    white-space: nowrap;
 }
 .player-play-btn {
     align-content: center;
@@ -142,7 +142,7 @@ border: none; /* 테두리 제거 */
 }
 .player-info h3 {
     font-size: 18px;
-    color: black;
+    /*color: black;*/
     font-weight: bold;
     margin: 0;
 }
@@ -155,7 +155,7 @@ border: none; /* 테두리 제거 */
 .player-info p,
 .player-info-time p {
     font-size: 14px;
-    color: #555;
+    /*color: #555;*/
     margin: 0;
 }
 .volume-container img{
@@ -169,4 +169,37 @@ border: none; /* 테두리 제거 */
     .active-music {
     background-color: rgba(0, 93, 160, 0.1);
     border-left: 4px solid #005da0;
+}
+
+@media (max-width: 1200px) {
+    .volume-container{
+     width: 15%;
+    }
+    .volume-bar{
+        display: none;
+    }
+}
+    
+@media (max-width: 768px) {
+    .audio-player-bar {
+        margin-left: 0;
+    }
+
+    .player-info-time{
+        display: none;
+    }
+
+    .player-item-left{
+        margin-right: 10px;
+    }
+
+    .waveform{
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .player-album-img{
+        display: none;
+    }
 }

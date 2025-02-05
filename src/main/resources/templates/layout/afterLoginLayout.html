@@ -14,26 +14,34 @@
 
         <div class="sidebar">
             <div class="menu" >
-                <img class="menu-icon" src="../../../../../../../Desktop/뷰%20작업/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                <img class="menu-icon" th:src="@{/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
             </div>
 
             <hr class="divider">
-            
-            <div class="profile" >
-                <img src="../../../../../../../Desktop/뷰%20작업/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="User Profile" class="profile-image">
-                <button class="primary-button none-display" onclick="openModal('profile-modal')" >프로필 사진 변경</button> 
-            </div>
-            
-            <div class="info1">
-                <span class="nickname" >닉네임</span>
-                <span class="plans" >BASIC</span>
+
+            <div id="guest-view">
+                <div class="profile">
+                    <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
+                    <button class="primary-button none-display">로그인</button>
+                </div>
             </div>
 
-            <div class="info2" >
-                <span class="credit" >100C</span>
-                <span class="subscription" >구독제</span>
+            <div id="user-view" style="display: none;">
+                <div class="profile" >
+                    <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
+                    <button class="primary-button none-display" onclick="openModal('profile-modal')" >프로필 사진 변경</button>
+                </div>
+
+                <div class="info1">
+                    <span class="nickname" >닉네임</span>
+                    <span class="plans" >BASIC</span>
+                </div>
+
+                <div class="info2" >
+                    <span class="credit" >100C</span>
+                    <span class="subscription" >구독제</span>
+                </div>
             </div>
-        
 
             <hr class="divider">
             
@@ -50,19 +58,18 @@
                     <li >내 앨범 조회</li>
                 </ul>
             </div>
-            
-            
-            <div class="sidebar-item" >
+
+            <div class="sidebar-item">
                 <img class="sidebar-icon" src="../../../../../../../Desktop/뷰%20작업/images/home_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
                 <span class="sidebar-text">홈</span>
             </div>
 
-            <div class="sidebar-item" >
+            <div class="sidebar-item">
                 <img class="sidebar-icon" src="../../../../../../../Desktop/뷰%20작업/images/music_note_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
                 <span class="sidebar-text">곡</span>
             </div>
 
-            <div class="sidebar-item"">
+            <div class="sidebar-item">
                 <img class="sidebar-icon" src="../../../../../../../Desktop/뷰%20작업/images/graphic_eq_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
                 <span class="sidebar-text">효과음</span>
             </div>

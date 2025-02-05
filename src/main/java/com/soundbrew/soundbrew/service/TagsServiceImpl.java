@@ -51,22 +51,19 @@ public class TagsServiceImpl implements TagsService {
 
     @Override
     @Transactional
-    public ResponseDTO<TagsDTO> getTags(List<Integer> musicIds) {
+    public ResponseDTO<TagsDTO> getTags() {
         TagsDTO tagsDTO = new TagsDTO();
+        tagsDTO.setMood(moodTagRepository.findAll().stream()
+                .map(MoodTag::getMoodTagName)
+                .collect(Collectors.toList()));
 
-        if (musicIds == null || musicIds.isEmpty()) {
-            tagsDTO.setMood(moodTagRepository.findAll().stream()
-                    .map(MoodTag::getMoodTagName)
-                    .collect(Collectors.toList()));
+        tagsDTO.setInstrument(instrumentTagRepository.findAll().stream()
+                .map(InstrumentTag::getInstrumentTagName)
+                .collect(Collectors.toList()));
 
-            tagsDTO.setInstrument(instrumentTagRepository.findAll().stream()
-                    .map(InstrumentTag::getInstrumentTagName)
-                    .collect(Collectors.toList()));
-
-            tagsDTO.setGenre(genreTagRepository.findAll().stream()
-                    .map(GenreTag::getGenreTagName)
-                    .collect(Collectors.toList()));
-        }
+        tagsDTO.setGenre(genreTagRepository.findAll().stream()
+                .map(GenreTag::getGenreTagName)
+                .collect(Collectors.toList()));
 
         return ResponseDTO.<TagsDTO>builder().dtoList(List.of(tagsDTO)).build();
     }

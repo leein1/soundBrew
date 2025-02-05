@@ -1,3 +1,5 @@
+import {handleResponse} from "/js/handleResponse.js";
+
 const BASE_URL = "http://localhost:8080";
 
 // Axios 기본 설정
@@ -28,20 +30,24 @@ const callRefresh = async () => {
 };
 
 // 토큰 포함된 요청 처리 유틸리티
-const addAuthHeader = async (options) => {
+const addAuthHeader = async (options, handle = {}) => {
     let token = localStorage.getItem("accessToken");
 
-    if (!token) {
-        alert("액세스 토큰이 없습니다, 다시 로그인을 진행해주세요");
-        window.location.href = "/login"; // 로그인 페이지로 리다이렉트
-        return null;
-    }
+    // if (!token) {
+    //     alert("액세스 토큰이 없습니다, 다시 로그인을 진행해주세요");
+    //     window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+    //     return null;
+    // }
 
-    options.headers = { Authorization: `Bearer ${token}` };
+    options.headers = {
+        ...options.headers,
+        Authorization: `Bearer ${token}`
+    };
 
     try {
         const response = await axiosInstance(options);
-        return response.data;
+        // response.response가 아니라 response를 참조해야 합니다.
+        return handleResponse(response.status, response.data, handle);
     } catch (error) {
         if (error.response?.status === 401) {
             console.log("만료된 액세스 토큰, 재발급 시도 중...");
@@ -49,22 +55,30 @@ const addAuthHeader = async (options) => {
                 const newToken = await callRefresh();
                 options.headers = { Authorization: `Bearer ${newToken}` };
                 const retryResponse = await axiosInstance(options); // 재요청
-                return retryResponse.data;
+                return handleResponse(retryResponse.status, retryResponse.data, handle);
             } catch (refreshError) {
                 alert("인증 정보가 유효하지 않습니다. 다시 로그인하세요.");
                 window.location.href = "/login"; // 로그인 페이지로 리다이렉트
                 throw refreshError;
             }
         } else {
-            throw error; // 다른 에러는 그대로 던짐
+            // error.response를 올바르게 참조해야 합니다.
+            throw handleResponse(error.response?.status, error.response?.data, handle);
         }
     }
 };
 
 // API 요청 처리 함수
-const fetchData = async ({ endpoint, body = null, useToken = false, params = {}, method = 'GET' }) => {
+const fetchData = async ({
+                             endpoint,
+                             body = null,
+                             useToken = false,
+                             params = {},
+                             method = "GET",
+                             handle = null,
+                         }) => {
     const options = {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         method,
         url: endpoint,
         params,
@@ -73,21 +87,20 @@ const fetchData = async ({ endpoint, body = null, useToken = false, params = {},
 
     // FormData인 경우 Content-Type을 설정하지 않도록 함
     if (body instanceof FormData) {
-        delete options.headers['Content-Type']; // FormData는 자동으로 처리하므로 Content-Type을 삭제
+        delete options.headers["Content-Type"]; // FormData는 자동으로 처리되므로 Content-Type을 삭제
     }
 
-    // 토큰 사용 여부에 따라 처리
     if (useToken) {
-        return await addAuthHeader(options);
+        return await addAuthHeader(options, handle);
     }
 
     try {
         const response = await axiosInstance(options);
-        return response.data;
-        // return response;
+        // response.response가 아니라 response를 참조해야 합니다.
+        return handleResponse(response.status, response.data, handle);
     } catch (error) {
         if (error.response) {
-            return error.response; // 서버 응답 반환
+            return handleResponse(error.response.status, error.response.data, handle);
         } else {
             console.error("네트워크 오류:", error.message);
             throw error;
@@ -95,18 +108,19 @@ const fetchData = async ({ endpoint, body = null, useToken = false, params = {},
     }
 };
 
+
 // 각 HTTP 메서드별 래퍼 함수
-export const axiosGet = async ({ endpoint, useToken = false, params = {} }) =>
-    fetchData({ endpoint, useToken, params, method: 'GET' });
+export const axiosGet = async ({ endpoint, useToken = true, params = {} , handle = null}) =>
+    fetchData({ endpoint, useToken, params, method: 'GET', handle});
 
-export const axiosPost = async ({ endpoint, body = {}, useToken = false, params = {} }) =>
-    fetchData({ endpoint, body, useToken, params, method: 'POST' });
+export const axiosPost = async ({ endpoint, body = {}, useToken = true, params = {} , handle = null}) =>
+    fetchData({ endpoint, body, useToken, params, method: 'POST', handle});
 
-export const axiosDelete = async ({ endpoint, body = {}, useToken = false, params = {} }) =>
-    fetchData({ endpoint, body, useToken, params, method: 'DELETE' });
+export const axiosDelete = async ({ endpoint, body = {}, useToken = true, params = {}, handle = null }) =>
+    fetchData({ endpoint, body, useToken, params, method: 'DELETE', handle});
 
-export const axiosPatch = async ({ endpoint, body = {}, useToken = false, params = {} }) =>
-    fetchData({ endpoint, body, useToken, params, method: 'PATCH' });
+export const axiosPatch = async ({ endpoint, body = {}, useToken = true, params = {}, handle = null }) =>
+    fetchData({ endpoint, body, useToken, params, method: 'PATCH', handle });
 
-export const axiosPut = async ({ endpoint, body = {}, useToken = false, params = {} }) =>
-    fetchData({ endpoint, body, useToken, params, method: 'PUT' });
+export const axiosPut = async ({ endpoint, body = {}, useToken = true, params = {}, handle = null }) =>
+    fetchData({ endpoint, body, useToken, params, method: 'PUT', handle });
