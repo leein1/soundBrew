@@ -37,12 +37,12 @@ public class UserRepositoryTests {
         log.info(userDetailsDTO.toString());
     }
 
-    @Test
-    public void testFindUserDetailsByEmail(){
-
-        UserDetailsDTO userDetailsDTO = userRepository.findUserDetailsByEmail("14_insert_test@test.com").orElseThrow();
-        log.info(userDetailsDTO.toString());
-    }
+//    @Test
+//    public void testFindUserDetailsByEmail(){
+//
+//        UserDetailsDTO userDetailsDTO = userRepository.findUserDetailsByEmail("14_insert_test@test.com").orElseThrow();
+//        log.info(userDetailsDTO.toString());
+//    }
 
     @Test
     public void testExistsByEmail(){
@@ -58,6 +58,13 @@ public class UserRepositoryTests {
         String nickname = "test";
 
         log.info(userRepository.existsByNickname(nickname));
+    }
+
+    @Test
+    public void testFindByUserId(){
+        int userId = 57;
+
+        log.info(userRepository.findByUserId(userId).toString());
     }
 
 

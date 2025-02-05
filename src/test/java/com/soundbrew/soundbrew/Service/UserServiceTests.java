@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Log4j2
@@ -14,18 +15,20 @@ public class UserServiceTests {
     @Autowired
     private UserService userService;
 
-//    @Test
-//    public void testRegister(){
-//        UserDTO userDTO = UserDTO.builder()
-//                .name("test")
-//                .nickname("test")
-//                .password("testTEST123!@#")
-//                .phoneNumber("01012341234")
-//                .email("test@test.com")
-//                .build();
-//
-//
-//
-//        log.info(userService.registerUser(userDTO).toString());
-//    }
+    @Transactional
+    @Test
+    public void testRegister(){
+        UserDTO userDTO = UserDTO.builder()
+                .name("leeinwon")
+                .nickname("leeinwon")
+                .password("testTEST123!@#")
+                .phoneNumber("01012341234")
+                .email("inwon.private@icloud.com")
+                .build();
+
+
+
+        log.info(userService.registerUser(userDTO).toString());
+    }
+
 }
