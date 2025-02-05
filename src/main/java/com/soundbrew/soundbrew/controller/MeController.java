@@ -160,6 +160,8 @@ public class MeController {
 //        int userId = authenticationService.getUserId(authentication);
 
         ResponseDTO responseDto = tagsService.updateLinkTags(musicId,tagsDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
 
@@ -253,58 +255,6 @@ public class MeController {
 
         return  ResponseEntity.ok().body(responseDto);
     }
-
-    @GetMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") int id, RequestDTO requestDto){
-        //쿠키 -> 내이름
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(2,id,requestDto);
-
-        return  ResponseEntity.ok().body(responseDto);
-    }
-
-    @PatchMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO> updateAlbum(@PathVariable int albumId, @RequestBody AlbumDTO albumDto){
-
-        ResponseDTO responseDto = soundsService.updateAlbum(albumId,albumDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
-    @GetMapping("/tracks")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe(RequestDTO requestDto){
-        requestDto.setKeyword("u_1");
-        requestDto.setType("n");
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
-    @GetMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable("musicId") int id, Authentication authentication){
-
-        int userId = authenticationService.getUserId(authentication);
-        // 쿠키 -> 내이름
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundOne(userId,id);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
-    @PostMapping("/tracks/{musicId}/tags")
-    ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDTO tagsDto){
-
-        ResponseDTO responseDto = tagsService.updateLinkTags(musicId,tagsDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
-    @PatchMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO> updateMusic(@PathVariable int musicId, @RequestBody MusicDTO musicDto ){
-
-        ResponseDTO responseDto = soundsService.updateMusic(2,musicDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
 
     @GetMapping("/tags")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(RequestDTO requestDto){
