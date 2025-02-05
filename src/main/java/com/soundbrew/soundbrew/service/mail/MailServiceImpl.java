@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
 
-//    private final JavaMailSender mailSender;
     private final JavaMailSender mailSender;
+
 
 
     @Override

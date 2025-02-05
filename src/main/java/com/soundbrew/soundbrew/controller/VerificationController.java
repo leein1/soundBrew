@@ -46,36 +46,40 @@ public class VerificationController {
 
 
 
-//    인증 메일 발송 -  POST /me/email-verification
-    @PostMapping("/email")
-    public ResponseEntity<ResponseDTO> sendEmail(@RequestBody String email){
+    //  유저 활성화
+    @PostMapping("/activation")
+    public ResponseEntity<ResponseDTO<String>> sendEmail(@RequestBody String activationCode){
 
-        ResponseDTO<String> responseDTO = activationCodeService.sendActivationCode(email);
+        log.info("Activation code is {}", activationCode);
+
+        ResponseDTO<String> responseDTO = activationCodeService.activateUser(activationCode);
 
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    메일 인증 - PATCH /me/email-verification/{token}
     @PatchMapping("/email")
     public ResponseEntity<ResponseDTO> activeUser(@RequestBody String email, @RequestBody String providedActivationCode){
 
-        ResponseDTO<String> responseDTO = activationCodeService.activateUser(email, providedActivationCode);
+//        ResponseDTO<String> responseDTO = activationCodeService.activateUser(email, providedActivationCode);
 
-        return ResponseEntity.ok().body(responseDTO);
+//        return ResponseEntity.ok().body(responseDTO);
+
+        return null;
     }
 
 
 //    비밀번호 확인 - POST /me/password
     @PostMapping("/password")
-    public ResponseEntity<ResponseDTO> verifyPassword(@RequestBody int userId, @RequestBody String providedActivationCode){
+    public ResponseEntity<ResponseDTO> verifyPassword(@RequestBody int userId, @RequestBody String providedPassword){
 
-        ResponseDTO<String> responseDTO = userService.verifyPassword(userId, providedActivationCode);
+        ResponseDTO<String> responseDTO = userService.verifyPassword(userId, providedPassword);
 
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    // 비밀번호 분실시
     @PatchMapping("/password")
-    public ResponseEntity<ResponseDTO> changePassword(@RequestBody String nickname, @RequestBody String providedActivationCode){
+    public ResponseEntity<ResponseDTO> changePassword(@RequestBody int userId, @RequestBody String newPassword){
 
         // 입력받은 비밀번호가 없다면 자체적으로 비밀번호 reset
         // 입력받은 비밀번호가 있다면 입력받은것으로 변경

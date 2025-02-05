@@ -7,6 +7,7 @@ import com.soundbrew.soundbrew.domain.user.UserSubscription;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.*;
+import com.soundbrew.soundbrew.repository.ActivationCodeRepository;
 import com.soundbrew.soundbrew.repository.role.RoleRepository;
 import com.soundbrew.soundbrew.repository.subscription.SubscriptionRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
@@ -14,6 +15,7 @@ import com.soundbrew.soundbrew.repository.user.UserRoleRepository;
 import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.util.UserValidator;
+import com.soundbrew.soundbrew.service.verification.ActivationCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -49,8 +51,7 @@ public class UserServiceImpl implements UserService{
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
-
-//    private final ActivationCodeRepository activationCodeRepository;
+    private final ActivationCodeService activationCodeService;
 //    private final MailService mailService;
 //    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -195,26 +196,30 @@ public class UserServiceImpl implements UserService{
 //       비밀번호 유효성 검사
         if(!userValidator.isPasswordFormatValid(userDTO.getPassword())){
 
-           ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                    .message("비밀번호가 적절하지 않습니다.")
-                    .build();
+            throw new IllegalArgumentException("비밀번호가 적절하지 않습니다.");
 
-            return responseDTO;
+//           ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+//                    .message("비밀번호가 적절하지 않습니다.")
+//                    .build();
+//
+//            return responseDTO;
         }
+
+        // user,user_role table save, email send 예외처리 이상함
 
         //  입력한 비밀번호 - 인코딩 전
         String beforeEncodePassword = userDTO.getPassword();
         //  비밀번호 인코딩
         userDTO.setPassword(passwordEncoder.encode(beforeEncodePassword));
 
-        //  실제 save()
+        //  user 테이블 save()
         User user = userRepository.save(userDTO.toEntity());
         log.info("user save() : {} ", user.toString());
         entityManager.flush();
 
         //  user_role 역할 테이블 save()
         UserRoleDTO userRoleDTO = UserRoleDTO.builder()
-                .roleId(1)
+                .roleId(1) // 회원
                 .userId(user.getUserId())
                 .build();
 
@@ -222,12 +227,17 @@ public class UserServiceImpl implements UserService{
 
         userRoleRepository.save(userRoleDTO.toEntity());
 
-        String nickname = user.getNickname();
-        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                .message(nickname + "님 회원가입을 축하합니다!")
-                .build();
+        //  메일 전송
+        ResponseDTO<String> responseDTO = activationCodeService.sendActivationCode(user);
+
+//            String nickname = user.getNickname();
+//            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+//                    .message(nickname + "님 회원가입을 축하합니다!")
+//                    .build();
 
         return responseDTO;
+
+
 
     }
 
@@ -451,25 +461,25 @@ public class UserServiceImpl implements UserService{
 
 
 
-    //    프로필 이미지 업로드
-    @Override
-    public void saveProfileImage(int userId, MultipartFile file) {
-
-        //  유저 여부 확인
-        User user = userRepository.findById(userId).orElseThrow();
-
-        //  파일 확인
-        if(file.isEmpty() || file.getContentType().equals("image/jpeg")){
-
-        }
-
-    }
-
-    //  프로필 이미지 삭제
-    @Override
-    public void deleteProfileImage(int userId) {
-
-    }
+//    //    프로필 이미지 업로드
+//    @Override
+//    public void saveProfileImage(int userId, MultipartFile file) {
+//
+//        //  유저 여부 확인
+//        User user = userRepository.findById(userId).orElseThrow();
+//
+//        //  파일 확인
+//        if(file.isEmpty() || file.getContentType().equals("image/jpeg")){
+//
+//        }
+//
+//    }
+//
+//    //  프로필 이미지 삭제
+//    @Override
+//    public void deleteProfileImage(int userId) {
+//
+//    }
 
     //    회원 삭제
 

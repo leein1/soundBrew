@@ -16,6 +16,9 @@ public class ViewController {
     @GetMapping("/register")
     public void getRegister(){}
 
+    @GetMapping("/activation")
+    public void getActivation(){}
+
     @GetMapping("/login")
     public void getLogin(String error, String logout){
         log.info("login get-------------------------------");
