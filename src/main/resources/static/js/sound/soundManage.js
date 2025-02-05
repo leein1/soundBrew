@@ -1,7 +1,8 @@
-import { router } from '/js/meSoundRouter.js';
-import { serializeFormToJSON } from '/js/serialize/formToJson.js';
-import { inputHandler } from '/js/check/inputHandler.js';
-import { axiosGet, axiosPost, axiosPatch, axiosDelete } from '/js/fetch/standardAxios.js';
+import {router} from '/js/meSoundRouter.js';
+import {serializeFormToJSON} from '/js/serialize/formToJson.js';
+import {inputHandler} from '/js/check/inputHandler.js';
+import {axiosPatch, axiosPost} from '/js/fetch/standardAxios.js';
+import { formatDate} from "/js/formatDate.js";
 
 // 전역 함수로 enableEditing
 window.enableEditing = function(button) {
@@ -71,8 +72,6 @@ window.applyAlbumsChanges = async function(button, albumId) {
     container.innerHTML = '';  // 기존 폼 비우기
 
     const formData = createFormData(row);  // 폼 데이터 생성
-    alert("formData : "+ formData);
-    console.log(formData);
 
     // 폼을 body에 추가
     container.appendChild(formData);
@@ -124,35 +123,107 @@ window.sendAlbumsUpdateRequest = async function(albumId, formData) {
 
     const { errors, processedData } = inputHandler(response,formData);
 
-    if (!errors) {
-        await axiosPatch({ endpoint: '/api/me/albums/' + albumId, body: processedData });
-        router.navigate('/me/sounds/albums');
-    }else {
-        alert("입력한 정보에서 오류가 발생했습니다.");
-        router.navigate('/me/sounds/albums');
-        return null;
+    const handle= {
+        onBadRequest: ()=>{
+            alert("입력한 정보에서 오류가 발생했습니다.");
+            router.navigate("/me/sounds/albums");
+        },
+        onSuccess:()=>{
+            alert("입력한 정보로 수정했습니다.")
+            router.navigate("/me/sounds/albums");
+        },
     }
+
+    if (!errors) {
+        await axiosPatch({endpoint: '/api/me/albums/' + albumId, body: processedData,handle});
+    }
+
 }
 
 // 폼을 서버로 전송하는 함수
-window.sendTracksUpdateRequest = async function(musicId, formData) {
+window.sendTracksUpdateRequest = async function (musicId, formData) {
     const response = serializeFormToJSON(formData);
 
-    const { errors, processedData } = inputHandler(response,formData);
+    const {errors, processedData} = inputHandler(response, formData);
+
+    const handle = {
+        onBadRequest: () => {
+            alert("입력한 정보에서 오류가 발생했습니다.");
+            router.navigate("/me/sounds/tracks");
+        },
+        onSuccess: () => {
+            alert("입력한 정보로 수정했습니다.")
+            router.navigate("/me/sounds/tracks");
+        },
+    }
 
     if (!errors) {
-        await axiosPatch({ endpoint: '/api/me/tracks/' + musicId, body: processedData });
-        router.navigate("/me/sounds/tracks");
-    }else {
-        alert("입력된 정보에서 오류가 발생했습니다.");
-        router.navigate("/me/sounds/tracks");
+        await axiosPatch({endpoint: '/api/me/tracks/' + musicId, body: processedData, handle});
+    }
+};
+
+export async function renderMyTracks(data){
+    try{
+        const container = document.getElementById("content-body");
+        container.innerHTML = '';
+
+        // 앨범 정보가 있으면 테이블 렌더링
+        if (data.dtoList && data.dtoList.length > 0) {
+            // 데이터 렌더링
+            const manageHTML = `
+                <h3>음원 정보 수정</h3>
+                <div id="render-update" class="render-update"></div>
+                <div class="table-wrapper">
+                    <table class="table-container">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>아티스트Id</th>
+                                <th>음원 제목</th>
+                                <th>음원 설명</th>
+                                <th>업로드일</th>
+                                <th>수정일</th>
+                                <th>작업</th>
+                            </tr>
+                        </thead>
+                            ${data.dtoList.map(manage => `
+                                <tr>
+                                    <td>${manage.musicDTO.musicId}</td>
+                                    <td>${manage.musicDTO.nickname}</td>
+                                    <td>
+                                        <span class="current-value" data-field="title">${manage.musicDTO.title}</span>
+                                        <input type="text" class="editable-field" data-field="title" value="${manage.musicDTO.title}" style="display: none;">
+                                    </td>
+                                    <td>
+                                        <span class="current-value" data-field="description">${manage.musicDTO.description}</span>
+                                        <input type="text" class="editable-field" data-field="description" value="${manage.musicDTO.description}" style="display: none;">
+                                    </td>
+                                    <td>${formatDate(manage.musicDTO.createDate)}</td>
+                                    <td>${formatDate(manage.musicDTO.modifyDate)}</td>
+                                    <td>
+                                        <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
+                                        <button class="apply-button" style="display: none;" onclick="applyTracksChanges(this, ${manage.musicDTO.musicId})">적용</button>
+                                        <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            container.innerHTML=manageHTML;
+
+        }else {
+            container.innerHTML = '<p>트랙이 없습니다.</p>';
+        }
+    }catch (error) {
+        console.error('Error occurred while rendering:', error);
     }
 }
 
 export async function renderMyAlbums(data) {
     try {
         // API 호출 및 렌더링 처리
-        console.log(data.dtoList);
         const container = document.getElementById("content-body");
         container.innerHTML = '';
 
@@ -161,42 +232,44 @@ export async function renderMyAlbums(data) {
             const manageHTML = `
                 <h3>앨범 정보 수정</h3>
                 <div id="render-update" class="render-update"></div>
-                <table class="table-container">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>아티스트Id</th>
-                            <th>앨범 제목</th>
-                            <th>앨범 설명</th>
-                            <th>업로드일</th>
-                            <th>수정일</th>
-                            <th>작업</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.dtoList.map(item => `
+                <div class="table-wrapper">
+                    <table class="table-container">
+                        <thead>
                             <tr>
-                                <td>${item.albumDTO.albumId}</td>
-                                <td>${item.albumDTO.nickname}</td>
-                                <td>
-                                    <span class="current-value" data-field="albumName">${item.albumDTO.albumName}</span>
-                                    <input type="text" class="editable-field" data-field="albumName" value="${item.albumDTO.albumName}" style="display: none;">
-                                </td>
-                                <td>
-                                    <span class="current-value" data-field="description">${item.albumDTO.description}</span>
-                                    <input type="text" class="editable-field" data-field="description" value="${item.albumDTO.description}" style="display: none;">
-                                </td>
-                                <td>${item.albumDTO.createDate}</td>
-                                <td>${item.albumDTO.modifyDate}</td>
-                                <td>
-                                    <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                                    <button class="apply-button" style="display: none;" onclick="applyAlbumsChanges(this, ${item.albumDTO.albumId})">적용</button>
-                                    <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
-                                </td>
+                                <th>ID</th>
+                                <th>아티스트Id</th>
+                                <th>앨범 제목</th>
+                                <th>앨범 설명</th>
+                                <th>업로드일</th>
+                                <th>수정일</th>
+                                <th>작업</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            ${data.dtoList.map(item => `
+                                <tr>
+                                    <td>${item.albumDTO.albumId}</td>
+                                    <td>${item.albumDTO.nickname}</td>
+                                    <td>
+                                        <span class="current-value" data-field="albumName">${item.albumDTO.albumName}</span>
+                                        <input type="text" class="editable-field" data-field="albumName" value="${item.albumDTO.albumName}" style="display: none;">
+                                    </td>
+                                    <td>
+                                        <span class="current-value" data-field="description">${item.albumDTO.description}</span>
+                                        <input type="text" class="editable-field" data-field="description" value="${item.albumDTO.description}" style="display: none;">
+                                    </td>
+                                    <td>${formatDate(item.albumDTO.createDate)}</td>
+                                    <td>${formatDate(item.albumDTO.modifyDate)}</td>
+                                    <td>
+                                        <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
+                                        <button class="apply-button" style="display: none;" onclick="applyAlbumsChanges(this, ${item.albumDTO.albumId})">적용</button>
+                                        <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
             `;
 
             container.innerHTML = manageHTML;
@@ -210,66 +283,8 @@ export async function renderMyAlbums(data) {
     }
 }
 
-export async function renderMyTracks(data){
-    try{
-        const container = document.getElementById("content-body");
-        container.innerHTML = '';
-
-        // 앨범 정보가 있으면 테이블 렌더링
-        if (data.dtoList && data.dtoList.length > 0) {
-            // 데이터 렌더링
-            const manageHTML = `
-                <h3>앨범 정보 수정</h3>
-                <div id="render-update" class="render-update"></div>
-                <table class="table-container">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>아티스트Id</th>
-                            <th>앨범 제목</th>
-                            <th>앨범 설명</th>
-                            <th>업로드일</th>
-                            <th>수정일</th>
-                            <th>작업</th>
-                        </tr>
-                    </thead>
-                        ${data.dtoList.map(manage => `
-                            <tr>
-                                <td>${manage.musicDTO.musicId}</td>
-                                <td>${manage.musicDTO.nickname}</td>
-                                <td>
-                                    <span class="current-value" data-field="title">${manage.musicDTO.title}</span>
-                                    <input type="text" class="editable-field" data-field="title" value="${manage.musicDTO.title}" style="display: none;">
-                                </td>
-                                <td>
-                                    <span class="current-value" data-field="description">${manage.musicDTO.description}</span>
-                                    <input type="text" class="editable-field" data-field="description" value="${manage.musicDTO.description}" style="display: none;">
-                                </td>
-                                <td>${manage.musicDTO.createDate}</td>
-                                <td>${manage.musicDTO.modifyDate}</td>
-                                <td>
-                                    <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                                    <button class="apply-button" style="display: none;" onclick="applyTracksChanges(this, ${manage.musicDTO.musicId})">적용</button>
-                                    <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            container.innerHTML=manageHTML;
-
-        }else {
-            container.innerHTML = '<p>트랙이 없습니다.</p>';
-        }
-    }catch (error) {
-        console.error('Error occurred while rendering:', error);
-    }
-}
-
 export async function renderMyTags(data){
     const container = document.getElementById("content-body");
-    console.log(data);
     // 기존 데이터 초기화
     container.innerHTML = '';
 
@@ -284,7 +299,7 @@ export async function renderMyTags(data){
                 </ul>
                 <button type="button" class="close-modal">닫기</button>
             </div>
-            <section>
+            <section class="uplaod-section">
                 <form id="myForm">
                     <h2>곡에 적절한 태그를 선택해주세요.</h2>
                     <ul id="selected-tags">
@@ -295,45 +310,47 @@ export async function renderMyTags(data){
                 </form>
             </section>
         </div>
-        <h3>앨범 정보 수정</h3>
-        <table class="table-container">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>아티스트</th>
-                    <th>타이틀</th>
-                    <th>악기 태그</th>
-                    <th>무드 태그</th>
-                    <th>장르 태그</th>
-                    <th>생성일</th>
-                    <th>수정일</th>
-                    <th>작업</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${data.dtoList.map(manage => `
+        <h3>태그 정보 수정</h3>
+        <div class="table-wrapper">
+            <table class="table-container">
+                <thead>
                     <tr>
-                        <td>${manage.musicDTO.musicId}</td>
-                        <td>${manage.musicDTO.nickname}</td>
-                        <td>${manage.musicDTO.title}</td>
-                        <td>
-                            <span class="current-value" data-field="instTags">${manage.tagsStreamDTO.instrumentTagName}</span>
-                        </td>
-                        <td>
-                            <span class="current-value" data-field="moodTags">${manage.tagsStreamDTO.moodTagName}</span>
-                        </td>
-                        <td>
-                            <span class="current-value" data-field="genreTags">${manage.tagsStreamDTO.genreTagName}</span>
-                        </td>
-                        <td>${manage.musicDTO.createDate}</td>
-                        <td>${manage.musicDTO.modifyDate}</td>
-                        <td>
-                            <button type="button" class="open-modal">태그 찾기</button>
-                        </td>
+                        <th>ID</th>
+                        <th>아티스트</th>
+                        <th>타이틀</th>
+                        <th>악기 태그</th>
+                        <th>무드 태그</th>
+                        <th>장르 태그</th>
+                        <th>생성일</th>
+                        <th>수정일</th>
+                        <th>작업</th>
                     </tr>
-                `).join('')}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    ${data.dtoList.map(manage => `
+                        <tr>
+                            <td>${manage.musicDTO.musicId}</td>
+                            <td>${manage.albumDTO.nickname}</td>
+                            <td>${manage.musicDTO.title}</td>
+                            <td>
+                                <span class="current-value" data-field="instTags">${manage.tagsStreamDTO.instrumentTagName}</span>
+                            </td>
+                            <td>
+                                <span class="current-value" data-field="moodTags">${manage.tagsStreamDTO.moodTagName}</span>
+                            </td>
+                            <td>
+                                <span class="current-value" data-field="genreTags">${manage.tagsStreamDTO.genreTagName}</span>
+                            </td>
+                            <td>${formatDate(manage.musicDTO.createDate)}</td>
+                            <td>${formatDate(manage.musicDTO.modifyDate)}</td>
+                            <td>
+                                <button type="button" class="open-modal">태그 찾기</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
     `;
     container.innerHTML = manageHTML;
 
@@ -344,6 +361,15 @@ export async function renderMyTags(data){
     const selectedTagsElement = document.getElementById("selected-tags");
     const resetTagsButton = document.querySelector(".reset-tags");
     const form = document.getElementById("myForm");
+    const tagSearchInput = document.getElementById("tag-search");
+
+    tagSearchInput.addEventListener("input", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredTags = allTags.filter(({ tag }) =>
+            tag.toLowerCase().includes(searchTerm)
+        );
+        renderTagList(filteredTags);
+    });
 
     // 모달 열기
     document.addEventListener("click", (e) => {
@@ -379,7 +405,7 @@ export async function renderMyTags(data){
     // 태그 불러오기
     async function fetchTags() {
         try {
-            const response = await axios.get('/api/admin/tags');
+            const response = await axios.get('/api/sounds/tags');
             const { dtoList } = response.data;
 
             allTags = [
@@ -429,14 +455,19 @@ export async function renderMyTags(data){
         const jsonData = serializeFormToJSON(form);
         const {errors,processedData} = inputHandler(jsonData, form);
 
-        if(!errors){
-            await axiosPost({endpoint: `/api/me/tracks/`+currentMusicId+`/tags`, body:processedData });
-            router.navigate("/me/sounds/tags");
+        const handle= {
+            onBadRequest: ()=>{
+                alert("입력한 정보에서 오류가 발생했습니다.");
+                router.navigate("/me/sounds/tags");
+            },
+            onSuccess:()=>{
+                alert("입력한 정보로 수정했습니다.")
+                router.navigate("/me/sounds/tags")
+            },
         }
 
-        if(errors){
-            alert("입력한 정보에서 오류가 발생했습니다.");
-            router.navigate("/me/sounds/tags");
+        if(!errors){
+            await axiosPost({endpoint: `/api/me/tracks/`+currentMusicId+`/tags`, body:processedData,handle });
         }
     });
 }
@@ -513,26 +544,26 @@ export async function renderSoundUpload(){
     const renderHTML= `
         <h1>음악 업로드 페이지</h1>
         <form id="myImage" class="myImage">
-            <section>
+            <section class="upload-section">
                 <h2>앨범 이미지를 선택해주세요.</h2>
                 <input type="file" id="file-upload" name="file" accept=".jpg,.jpeg,.png">
-                <input type="text" id="title" name="title" placeholder="제목 (자동 입력됨)" readonly>
+                <input type="text" id="title" name="title" placeholder="제목 (자동 입력됨)" readonly hidden>
                 <button type="submit" class="upload">업로드</button>
             </section>
         </form>
         
         <form id="myTrack" class="myTrack">
-            <section>
+            <section class="upload-section">
                 <h2>음원 파일을 선택해주세요.</h2>
                 <input type="file" id="file-upload" name="file" accept=".mp3,.wav">
-                <input type="text" id="title" name="title" placeholder="제목 (자동 입력됨)" readonly>
+                <input type="text" id="title" name="title" placeholder="제목 (자동 입력됨)" readonly hidden>
                 <button type="submit" class="upload">업로드</button>
             </section>
         </form>
         
         <form id="myForm" class="myForm">
             <!-- 싱글/앨범 선택 -->
-            <section>
+            <section class="upload-section">
                 <h2>싱글인지 앨범인지 선택해주세요.</h2>
                 <div class="select-div">
                     <select id="group-type" name="groupType">
@@ -543,27 +574,27 @@ export async function renderSoundUpload(){
             </section>
     
             <!-- 앨범 정보 입력 -->
-            <section>
+            <section class="upload-section">
                 <h2>앨범의 이름을 정해주세요.</h2>
                 <input type="text" id="group-name" name="albumDTO.albumName" placeholder="그룹 이름">
 <!--                <h2>앨범 이미지를 업로드해주세요.</h2>-->
-                <input type="text" id="group-image" name="albumDTO.albumArtPath" readonly>
+                <input type="text" id="group-image" name="albumDTO.albumArtPath" readonly hidden>
                 <h2>앨범 설명을 작성해주세요.</h2>
                 <textarea id="group-description" name="albumDTO.description" placeholder="앨범 설명"></textarea>
             </section>
     
             <!-- 곡 정보 입력 -->
-            <section>
+            <section class="upload-section">
                 <h2>곡 제목을 입력해주세요.</h2>
                 <input type="text" id="song-title" name="musicDTO.title" placeholder="곡 제목">
 <!--                <h2>업로드할 곡 파일을 선택해주세요.</h2>-->
-                <input type="text" id="file-upload" name="musicDTO.filePath" readonly>
+                <input type="text" id="file-upload" name="musicDTO.filePath" readonly hidden>
                 <h2>곡 설명을 작성해주세요.</h2>
                 <textarea id="song-description" name="musicDTO.description" placeholder="곡 설명"></textarea>
             </section>
     
             <!-- 태그 선택 -->
-            <section>
+            <section class="upload-section">
                 <h2>곡에 적절한 태그를 선택해주세요.</h2>
                 <button type="button" class="open-modal">태그 찾기</button>
     
@@ -586,7 +617,7 @@ export async function renderSoundUpload(){
             </div>
     
             <!-- 최종 확인 및 제출 -->
-            <section>
+            <section class="upload-section">
                 <h2>최종적으로 작성한 정보를 확인해주세요.</h2>
                 <div id="song-info-list"></div>
                 <button type="submit" class="upload">업로드</button>
@@ -634,7 +665,7 @@ export async function renderSoundUpload(){
         tagModal.classList.remove("hidden");
 
         try {
-            const response = await axios.get('/api/admin/tags');
+            const response = await axios.get('/api/sounds/tags');
             const { dtoList } = response.data;
 
             allTags = [
@@ -718,22 +749,21 @@ export async function renderSoundUpload(){
         // 유효성 검증 통과 후 서버 요청
         const formData = new FormData(imageForm); // FormData 객체로 전송
 
-        imageForm.querySelectorAll('input, button').forEach(element => {
-            element.disabled = true;
-        });
-
         const handle = {
-            onForbidden: (data) => {
+            onSuccess: (data) => {
+                alert('이미지가 성공적으로 업로드되었습니다!');
                 const imageForm = document.getElementById("myImage");
-                alert("업로드에 실패했습니다. 다시 시도해주세요.");
                 imageForm.querySelectorAll('input, button').forEach(element => {
-                    element.disabled = false;
+                    element.disabled = true;
                 });
-                return;
+            },
+            onBadRequest: ()=> {
+                alert("업로드가 실패했습니다.");
+                return null;
             },
         };
 
-        await axiosPost({endpoint: "/api/files/albums", body: formData,handle});
+        uploadImage = await axiosPost({endpoint: "/api/files/albums", body: formData, handle});
     });
 
     trackForm.addEventListener("submit", async function (e) {
@@ -777,21 +807,22 @@ export async function renderSoundUpload(){
 
         // 유효성 검증 통과 후 서버 요청
         const formData = new FormData(trackForm); // FormData 객체로 전송
-        trackForm.querySelectorAll('input, button').forEach(element => {
-            element.disabled = true;
-        });
 
         const handle = {
-            onForbidden: (data) => {
+            onSuccess: (data) => {
+                alert('음원이 성공적으로 업로드되었습니다!');
                 const trackForm = document.getElementById("myTrack");
-                alert("업로드에 실패했습니다. 다시 시도해주세요.");
                 trackForm.querySelectorAll('input, button').forEach(element => {
-                    element.disabled = false;
+                    element.disabled = true;
                 });
-                return;
+            },
+            onBadRequest: ()=> {
+                alert("업로드가 실패했습니다.");
+                return null;
             },
         };
-        const response = await axiosPost({ endpoint: "/api/files/tracks", body: formData });
+
+        uploadTrack = await axiosPost({endpoint: "/api/files/tracks", body: formData, handle});
     });
 
     form.addEventListener("submit", async function (event) {
@@ -823,13 +854,21 @@ export async function renderSoundUpload(){
         const jsonData = serializeFormToJSON(form);
 
         const { errors, processedData } = inputHandler(jsonData, form);
-        console.log("1 : "+form);
+
         const handle = {
             onSuccess: (data) => {
                 alert('음원이 성공적으로 업로드되었습니다!');
                 router.navigate("/me/sounds");
             },
+            onBadRequest: ()=> {
+                alert("업로드가 실패했습니다.");
+                return null;
+            },
         };
-        const response = await axiosPost({ endpoint: '/api/me/sounds', body: processedData, handle });
+
+        if(!errors) {
+            const response = await axiosPost({endpoint: '/api/me/sounds', body: processedData, handle: handle});
+        }
     });
 }
+
