@@ -76,13 +76,25 @@ public class FileController {
     }
 
     @GetMapping("/profile/{userId}")
-    public Resource getProfile(@PathVariable String userId){
+    public Resource getProfile(@PathVariable int userId){
+
+        return null;
+    }
+
+    @PatchMapping("/profile/{userId}")
+    public Resource modifyProfile(@PathVariable int userId){
+
         return null;
     }
 
     //수정시에는 이전의 프로필 사진 삭제
     @DeleteMapping("/profile/{userId}")
-    public ResponseEntity<String> deleteProfile(@PathVariable String userId){
+    public ResponseEntity<String> deleteProfile(@PathVariable int userId){
+
         return null;
     }
+
+
+
+
 }
