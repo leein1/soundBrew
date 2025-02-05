@@ -137,19 +137,20 @@ console.log(data);
     }
 }
 
-export function renderAlbumOne(data){
+export function renderAlbumOne(data) {
     const container = document.getElementById("render-album-info-container");
-    // const container = document.getElementById("content-body");
-    container.innerHTML= '';
+    container.innerHTML = '';
 
     const html = `
         <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
         <div class="content-header-info">
             <img class="sound-image" src="https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${data.dtoList[0].albumDTO.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
             <div class="sound-info">    
-                <span>Artist</span><div class="sound-title font-size-large"><a href="javascript:void(0);" id="artist-link" class="artist-link" style="text-decoration: none; transition: color 0.3s; color: #0056b3;" >${data.dtoList[0].albumDTO.nickname}</a></div>
-                <div class="artist-name font-size-medium">
+                <span>Artist</span>
+                <div class="sound-title font-size-large">
+                    <a href="javascript:void(0);" id="artist-link" class="artist-link" style="text-decoration: none; transition: color 0.3s; color: #0056b3;">${data.dtoList[0].albumDTO.nickname}</a>
                 </div>
+                <div class="artist-name font-size-medium"></div>
                 <div class="sound-info-reaction">
                     <button class="btn sound-btn">get..</button>
                     <button class="btn sound-btn share-album-btn" data-title="${data.dtoList[0].albumDTO.albumName}" data-nickname="${data.dtoList[0].albumDTO.nickname}">share album</button>
@@ -160,14 +161,13 @@ export function renderAlbumOne(data){
             <p class="album-description">
                 ${data.dtoList[0].albumDTO.description}
             </p>
-            <button class="album-btn show-more-btn">더보기</button>
+            <button class="album-btn show-more-btn" style="display: none;">더보기</button>
         </div>
     `;
 
     container.innerHTML = html;
 
     const showMoreBtn = document.querySelector('.show-more-btn');
-    const albumInfoText = document.querySelector('.album-info-text');
     const albumDescription = document.querySelector('.album-description');
     const artistLink = document.getElementById("artist-link");
 
@@ -176,29 +176,21 @@ export function renderAlbumOne(data){
         router.navigate(newUrl);
     });
 
-    // 텍스트 높이 측정하여 더보기 버튼 표시 여부 결정
     function checkTextOverflow() {
-        const fullHeight = albumDescription.scrollHeight;
-        const clampHeight = albumInfoText.clientHeight;
-        if (fullHeight > clampHeight) {
-            showMoreBtn.style.display = 'block'; // 글이 잘리면 더보기 버튼 보이기
+        // 더보기 버튼 표시 여부 판단
+        if (albumDescription.scrollHeight > albumDescription.clientHeight) {
+            showMoreBtn.style.display = 'block';
         } else {
-            showMoreBtn.style.display = 'none'; // 글이 짧으면 더보기 버튼 숨기기
+            showMoreBtn.style.display = 'none';
         }
     }
 
-    // 페이지 로드 후 더보기 버튼 체크
     window.addEventListener('load', checkTextOverflow);
-    window.addEventListener('resize', checkTextOverflow); // 창 크기 조정 시에도 체크
+    window.addEventListener('resize', checkTextOverflow);
 
     showMoreBtn.addEventListener('click', function() {
-        albumInfoText.classList.toggle('expanded');
-
-        if (albumInfoText.classList.contains('expanded')) {
-            showMoreBtn.textContent = '접기';
-        } else {
-            showMoreBtn.textContent = '더보기';
-        }
+        albumDescription.classList.toggle('expanded');
+        showMoreBtn.textContent = albumDescription.classList.contains('expanded') ? '접기' : '더보기';
     });
 
     // 공유 버튼 클릭 이벤트

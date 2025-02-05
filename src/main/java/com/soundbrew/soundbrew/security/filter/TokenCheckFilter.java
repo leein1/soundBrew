@@ -87,6 +87,11 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        if(path.startsWith("/api/admin")){
+            log.info("request 요청이 /api가 아님 ");
+            filterChain.doFilter(request, response);
+            return;
+        }
         if(path.startsWith("/test-s3")){
             log.info("request 요청이 /api가 아님 ");
             filterChain.doFilter(request, response);

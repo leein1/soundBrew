@@ -55,4 +55,23 @@ public class ViewController {
         return "redirect:/search" + link;
 
     }
+
+    //====== 경동훈 SPA view ======
+
+    @RequestMapping(value = { "/sounds/**" })
+    public String soundSPA() {
+        // 모든 SPA 요청을 sound/music-list.html로 리다이렉트
+        return "/sound/music-list";
+    }
+
+    @RequestMapping(value = {"/me/sounds/**"})
+    public String soundManageSPA(){
+        return "/sound/music-manage";
+    }
+
+    //실제로는 /admin/sounds/...
+    @RequestMapping(value= {"/admin/**"})
+    public String soundAdmin(){
+        return "/admin/sounds";
+    }
 }

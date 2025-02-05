@@ -146,17 +146,20 @@ public class MeController {
 
     @PostMapping("/tracks/{musicId}/tags")
     ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDTO tagsDto){
+//        Authentication authentication
+//        int userId = authenticationService.getUserId(authentication);
+
         ResponseDTO responseDto = tagsService.updateLinkTags(musicId,tagsDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
-    // ResponseDTO<TagsDTO> tagsList(RequestDTO requestDto){
-
     // sounds for me
     @PostMapping("/sounds")
     ResponseEntity<ResponseDTO> createSound(@RequestBody SoundCreateDTO soundCreateDto){
-        //내 회원 id 들고오기
+//        Authentication authentication
+//        int userId = authenticationService.getUserId(authentication);
+
         AlbumDTO albumDto = soundCreateDto.getAlbumDTO();
         MusicDTO musicDto = soundCreateDto.getMusicDTO();
         TagsDTO tagsDto = soundCreateDto.getTagsDTO();
@@ -168,6 +171,9 @@ public class MeController {
 
     @PatchMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO> updateAlbum(@PathVariable int albumId, @RequestBody AlbumDTO albumDto){
+        //        Authentication authentication
+//        int userId = authenticationService.getUserId(authentication);
+
         ResponseDTO responseDto = soundsService.updateAlbum(albumId,albumDto);
 
         return ResponseEntity.ok().body(responseDto);
@@ -175,14 +181,19 @@ public class MeController {
 
     @PatchMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO> updateMusic(@PathVariable int musicId, @RequestBody MusicDTO musicDto ){
-        ResponseDTO responseDto = soundsService.updateMusic(2,musicDto);
+        //        Authentication authentication
+//        int userId = authenticationService.getUserId(authentication);
+
+        ResponseDTO responseDto = soundsService.updateMusic(musicId,musicDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable("musicId") int id){
-        // 쿠키 -> 내이름
+        //        Authentication authentication
+//        int userId = authenticationService.getUserId(authentication);
+
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundOne(2,id);
 
         return ResponseEntity.ok().body(responseDto);
@@ -190,7 +201,9 @@ public class MeController {
 
     @GetMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") int id, RequestDTO requestDto){
-        //쿠키 -> 내이름
+        //        Authentication authentication
+//        int userId = authenticationService.getUserId(authentication);
+
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(2,id,requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
@@ -198,6 +211,9 @@ public class MeController {
 
     @GetMapping("/tracks")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe(RequestDTO requestDto){
+        //        Authentication authentication
+//        String nickname = authenticationService.getNickname(authentication);
+
         requestDto.setKeyword("u_1");
         requestDto.setType("n");
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
@@ -205,18 +221,24 @@ public class MeController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/tags")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(RequestDTO requestDto){
-        requestDto.setKeyword("u_1");
-        requestDto.setType("n");
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
+//    @GetMapping("/tags")
+//    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(RequestDTO requestDto){
+//        //Authentication authentication
+//        //String nickname = authenticationService.getNickname(authentication);
+//
+//        requestDto.setKeyword("u_1");
+//        requestDto.setType("n");
+//        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
+//
+//        return ResponseEntity.ok().body(responseDto);
+//    }
 
     @GetMapping("/albums")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumMe(RequestDTO requestDto){
+//        Authentication authentication
+//        String nickname = authenticationService.getNickname(authentication);
         requestDto.setKeyword("u_1");
+
         requestDto.setType("n");
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumMe(requestDto);
 

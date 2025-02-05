@@ -5,31 +5,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>music</title>
-
-    <!-- module css -->
-    <link th:href="@{/css/sound/music.css}" rel="stylesheet">
-    <link th:href="@{/css/sound/album.css}" rel="stylesheet">
-    <link th:href="@{/css/sound/sound.css}" rel="stylesheet">
-    <link th:href="@{/css/sound/album-list.css}" rel="stylesheet">
-
+    <title>Admin Tag Management</title>
     <link href="/css/sound/player.css" rel="stylesheet">
 </head>
 
 <body>
     <div layout:fragment="content">
-
         <div class="content-header">
             <div id="render-album-info-container" class="render-album-info-container"></div>
-
-            <div id="render-view-type-container" class="render-view-type-container"></div>
-            <!-- tag body -->
             <div id="render-tags-sort-container" class="render-tags-sort-container"></div>
-            <!-- sort body -->
-            <div id="render-result-sort-container" class="render-result-sort-container"></div>
         </div>
-        <!-- music body -->
-        <div id="content-body"></div>
+
+        <div class="content-body" id="content-body"></div>
 
         <div class="audio-player-bar">
             <!-- Player container -->
@@ -44,7 +31,7 @@
                 <!-- Bottom Layer -->
                 <div class="player-bottom-layer">
                     <div class="player-item-left">
-                        <img alt="앨범 이미지" class="player-album-img" src="" onerror="this.src='/images/album-default-image-01.jpeg'">
+                        <img alt="앨범 이미지" class="player-album-img" src="" onerror="this.outerHTML='<span class=\'player-album-text\'>앨범 이미지</span>'">
                         <div class="player-play-btn" >
                             <img id="play-pause-btn" src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                         </div>
@@ -69,14 +56,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div><!-- end article -->
 </body>
-
 <th:block layout:fragment="script">
     <script src="https://unpkg.com/wavesurfer.js"></script>
-
     <script type="module">
-        import { router } from '/js/router.js';
+        import{router} from '/js/adminSoundRouter.js'
         import {initializeMusicPlayer} from '/js/sound/soundPlaying.js';
     </script>
 </th:block>

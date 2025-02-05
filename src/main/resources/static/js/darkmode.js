@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const html = document.documentElement;
+
     const darkModeToggle = document.getElementById('darkModeToggle');
     const sidebar = document.querySelector('.sidebar');
     const navigation = document.querySelector('.navigation');
@@ -15,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const audioBar = document.querySelector('.audio-player-bar');
 
+
     // 다크 모드 상태를 토글하는 함수
     function toggleDarkMode() {
         document.body.classList.toggle('dark-mode');
@@ -29,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadMyTrack?.classList.toggle('dark-mode');
         uploadMyForm?.classList.toggle('dark-mode');
         uploadMyImage?.classList.toggle('dark-mode');
+        html?.classList.toggle('dark-mode');
 
 
         // 로컬 스토리지에 현재 다크 모드 상태를 저장
@@ -51,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadMyImage?.classList.add('dark-mode');
         uploadMyTrack?.classList.add('dark-mode');
         uploadMyForm?.classList.add('dark-mode');
+        html?.classList.add('dark-mode');
 
         darkModeToggle.checked = true; // 토글 버튼 상태도 동기화
     }

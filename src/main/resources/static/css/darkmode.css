@@ -50,8 +50,16 @@
     filter: invert(100%);
 }
 
+.upload-section.dark-mode{
+    background-color: var(--background-color-dark);
+}
+
 .sitename.dark-mode img{
     filter: invert(100%);
+}
+
+html.dark-mode{
+    background-color: var(--background-color-dark);
 }
 
 .audio-player-bar.dark-mode{

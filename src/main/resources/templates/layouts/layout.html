@@ -20,27 +20,77 @@
             </div>
 
             <hr class="divider">
-            
-            <div class="profile">
-                <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
-                <button class="primary-button none-display">로그인</button>
+
+            <div class="guest-view">
+                <div class="profile">
+                    <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
+                    <button class="primary-button none-display">로그인</button>
+                </div>
+            </div>
+
+            <div class="user-view" style="display: none;">
+                <div class="profile" >
+                    <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
+<!--                    <button class="primary-button none-display" onclick="openModal('profile-modal')" >프로필 사진 변경</button>-->
+                    <button id="profileModalBtn" class="primary-button none-display" data-modal="profile-modal" style="display:none">프로필 사진 변경</button>
+                </div>
+
+                <div class="info1">
+                    <span class="nickname" >닉네임</span>
+                    <span class="plans" >BASIC</span>
+                </div>
+
+                <div class="info2" >
+                    <span class="credit" >100C</span>
+                    <span class="subscription" >구독제</span>
+                </div>
             </div>
 
             <hr class="divider">
 
             <div class="sidebar-item">
-                <img class="sidebar-icon" th:src="@{/images/home_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
-                <span class="sidebar-text">홈</span>
-            </div>
-            <div class="sidebar-item">
                 <img class="sidebar-icon" th:src="@{/images/music_note_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
-                <span class="sidebar-text">곡</span>
+                <span class="sidebar-text" id="soundTracksRoute">곡</span>
             </div>
+
             <div class="sidebar-item">
                 <img class="sidebar-icon" th:src="@{/images/graphic_eq_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 <span class="sidebar-text">효과음</span>
             </div>
 
+            <hr class="divider">
+
+            <div class="user-view" style="display: none;">
+                <div class="sidebar-my-info">
+                    <!-- 타이틀 영역 (클릭하면 펼쳐짐) -->
+                    <div class="sidebar-my-info-title">
+                        <div class="sidebar-item">
+                            <img class="sidebar-icon" th:src="@{/images/info_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
+                            <span class="sidebar-text" id="myMore">더 보기</span>
+                        </div>
+                    </div>
+
+                    <!-- 펼쳐질 내부 내용 -->
+                    <div class="user-view-content">
+                        <div class="sidebar-item">
+                            <img class="sidebar-icon" th:src="@{/images/psychology_alt_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
+                            <span class="sidebar-text" id="myInfoRoute">내 정보 조회</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <img class="sidebar-icon" th:src="@{/images/subscriptions_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
+                            <span class="sidebar-text" id="mySubscriptionRoute">내 구독 정보 조회</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <img class="sidebar-icon" th:src="@{/images/album_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}">
+                            <span class="sidebar-text" id="myAlbumsRoute">내 앨범 조회</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <img class="sidebar-icon" th:src="@{/images/music_note_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
+                            <span class="sidebar-text" id="myTracksRoute">내 음원 조회</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <hr class="divider">
             
             <div class="sidebar-item">
@@ -63,7 +113,14 @@
                     <img class="navigation-menu-icon" th:src="@{/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 </div>
                 <div class="sitename font-size-small" id="sitename"><img src="/images/SoundBrew.svg"></div>
-                <div class="user">회원가입</div>
+
+                <div class="guest-view">
+                    <div class="user">회원가입</div>
+                </div>
+                <div class="user-view">
+                    <div class="user">로그아웃</div>
+                </div>
+
             </div><!-- end navigation -->
             <div id="searchContainer" class="searchContainer"></div>
             <div class="content" layout:fragment="content">
@@ -74,7 +131,6 @@
                 푸터 영역
             </div><!-- end footer -->
         </div><!-- end article -->
-       
     </div><!-- end main -->
     
     <!-- 다크모드 js -->
@@ -87,12 +143,113 @@
     <script src="/js/search.js"></script>
 
     <script type="module">
-        import {router} from '/js/router.js';
+        import { router } from '/js/router.js';
 
-        document.getElementById("sitename").addEventListener("click",()=>{
-           router.navigate("/sounds/tracks");
+        // function openModal(modalId) {
+        //     const modal = document.getElementById(modalId);
+        //     if (modal) {
+        //         modal.style.display = 'flex';
+        //     }
+        // }
+        //
+        // function closeModal(modalId) {
+        //     const modal = document.getElementById(modalId);
+        //     if (modal) {
+        //         modal.style.display = 'none';
+        //     }
+        // }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 로그인 상태에 따른 화면 전환
+            const isLoggedIn = localStorage.getItem("accessToken");
+
+            if (isLoggedIn) {
+                const guestViews = document.querySelectorAll('.guest-view');
+                const userViews = document.querySelectorAll('.user-view');
+
+                guestViews.forEach(view => {
+                    view.style.display = "none";
+                });
+
+                userViews.forEach(view => {
+                    view.style.display = "block";
+                });
+            }
+
+            document.querySelector('#soundTracksRoute').addEventListener('click', ()=>{
+                window.location.href='/sounds/tracks';
+            });
+
+            document.querySelector('#myTracksRoute').addEventListener('click', ()=>{
+                window.location.href='/me/sounds/tracks';
+            });
+
+            document.querySelector('#myAlbumsRoute').addEventListener('click', ()=>{
+                window.location.href='/me/sounds/albums';
+            });
+
+            document.querySelector('#myInfoRoute').addEventListener('click', ()=>{
+                window.location.href='/me/info';
+            });
+
+            document.querySelector('#mySubscriptionRoute').addEventListener('click', ()=>{
+                window.location.href='/me/info';
+            });
+
+            // // ESC 키로 모달 닫기
+            // window.addEventListener('keydown', function(event) {
+            //     if (event.key === 'Escape') {
+            //         const modals = document.querySelectorAll('.modal');
+            //         modals.forEach(modal => modal.style.display = 'none');
+            //     }
+            // });
+            //
+            // // 배경 클릭으로 모달 닫기
+            // window.addEventListener('click', function(event) {
+            //     const modals = document.querySelectorAll('.modal');
+            //     modals.forEach(modal => {
+            //         if (event.target === modal) {
+            //             modal.style.display = 'none';
+            //         }
+            //     });
+            // });
+            //
+            // sitename 클릭 이벤트
+            document.getElementById("sitename").addEventListener("click", () => {
+                window.location.href = "/sounds/tracks";
+            });
+            //
+            // // 모달 열기 버튼 이벤트 처리 (예: 프로필 사진 변경 버튼)
+            // const profileModalBtn = document.getElementById("profileModalBtn");
+            // if (profileModalBtn) {
+            //     profileModalBtn.addEventListener("click", () => {
+            //         const modalId = profileModalBtn.getAttribute("data-modal");
+            //         openModal(modalId);
+            //     });
+            // }
+            //
+            // // 모달 열기 버튼 이벤트 처리 (예: 프로필 사진 변경 버튼)
+            // const passwordChangeModalBtn = document.getElementById("passwordChangeBtn");
+            // if (passwordChangeModalBtn) {
+            //     passwordChangeModalBtn.addEventListener("click", () => {
+            //         const modalId = passwordChangeModalBtn.getAttribute("data-modal");
+            //         openModal(modalId);
+            //     });
+            // }
+            //
+            // // 모든 모달 닫기 버튼 처리 (class가 close-button인 요소)
+            // const closeButtons = document.querySelectorAll('.close-button');
+            // closeButtons.forEach(button => {
+            //     button.addEventListener("click", () => {
+            //         // 버튼에 설정된 data-modal 값에 해당하는 모달을 닫기
+            //         const modalId = button.getAttribute("data-modal");
+            //         closeModal(modalId);
+            //     });
+            // });
         });
     </script>
+
+
     <th:block layout:fragment="script">
 </th:block>
 </body>

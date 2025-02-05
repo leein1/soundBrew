@@ -9,12 +9,31 @@ form {
 section {
     padding: 20px;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #9d9d9d;
+}
+
+section input, select {
+    padding: 6px;
+    margin-bottom: 10px;
+    font-size: 1rem;
 }
 
 h1{
     overflow: hidden;
     white-space: nowrap;
+}
+
+section h3 {
+    margin-bottom: 10px;
+}
+
+.tag-add-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 section h2 {
@@ -39,7 +58,7 @@ section h2 {
 }
 
 /* 입력창 스타일 */
-input[type="text"],
+/*input[type="text"],*/
 input[type="file"],
 textarea {
     width: 100%;
@@ -48,6 +67,12 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 10px;
+}
+
+form#myForm input{
+    padding: 6px;
+    margin-bottom: 10px;
+    font-size: 1rem;
 }
 
 textarea {

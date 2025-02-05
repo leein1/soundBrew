@@ -265,7 +265,7 @@
 }
 .tag-section {
     display: flex;
-    flex-wrap: nowrap;
+    white-space: nowrap;
     overflow-x: scroll;
     opacity: 0; /* 초기 상태 */
     animation: fadeIn 0.3s forwards; /* 애니메이션 적용 */

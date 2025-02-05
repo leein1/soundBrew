@@ -219,6 +219,24 @@ html, body {
     transform: translateX(30px); /* 토글이 오른쪽으로 이동 */
 }
 
+
+
+.info1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 0;
+    /* justify-content: center; */
+}
+
+.info2{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 0;
+    /* justify-content: center; */
+}
+
 /* sidebar expanded ----------------------------------------------------- */
 
 .sidebar.expanded {
@@ -314,6 +332,14 @@ html, body {
     /* border: 1px solid black; */
     margin-left: auto; /* 우측 정렬 */
     cursor: pointer;
+}
+.sidebar.expanded .user-view .sidebar-item {
+    justify-content: flex-start;
+    padding-left: 10px;
+}
+
+.user-view{
+    width: 100%;
 }
 
 .searchbar {
@@ -663,5 +689,81 @@ html, body {
 
 
 
+/*.modal {*/
+/*    display: none; !* 기본적으로 숨김 *!*/
+/*    position: fixed;*/
+/*    z-index: 1000;*/
+/*    left: 0;*/
+/*    top: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    overflow: auto;*/
+/*    background-color: rgba(0, 0, 0, 0.5); !* 반투명 배경 *!*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
 
+/*!* 모달 내용 *!*/
+/*.modal-content {*/
+/*    background-color: #fff;*/
+/*    margin: auto;*/
+/*    padding: 20px;*/
+/*    border-radius: 8px;*/
+/*    width: 90%;*/
+/*    max-width: 400px;*/
+/*    text-align: center;*/
+/*    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
+/*}*/
 
+/*!* 닫기 버튼 *!*/
+/*.close-button {*/
+/*    color: #aaa;*/
+/*    float: right;*/
+/*    font-size: 28px;*/
+/*    font-weight: bold;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.close-button:hover,*/
+/*.close-button:focus {*/
+/*    color: black;*/
+/*    text-decoration: none;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*!* 입력 필드 스타일 *!*/
+/*.modal-content input[type="password"] {*/
+/*    width: 100%;*/
+/*    padding: 10px;*/
+/*    margin: 10px 0;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 4px;*/
+/*    box-sizing: border-box;*/
+/*}*/
+
+/*!* 확인 버튼 *!*/
+/*.modal-content .submit-button {*/
+/*    background-color: #5b9bd5;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 10px 20px;*/
+/*    cursor: pointer;*/
+/*    border-radius: 4px;*/
+/*    font-size: 16px;*/
+/*}*/
+
+/*.modal-content .submit-button:hover {*/
+/*    background-color: #4a86c5;*/
+/*}*/
+
+/* 기본 상태: 내용 숨김 */
+.user-view-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+/* open 클래스가 있으면 내용 펼침 */
+.sidebar-my-info.open .user-view-content {
+    max-height: 500px; /* 내용 높이에 따라 적절한 값 지정 */
+}

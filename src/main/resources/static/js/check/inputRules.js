@@ -67,15 +67,31 @@ export const validationRules = {
         required:true,
         pattern: /^[a-z0-9.,()-_\s]+$/, // 소문자 숫자 허용
     },
+    'instrument':{
+        required:true,
+        pattern: /^[a-z0-9.,()-_\s]+$/, // 소문자 숫자
+    },
+    'mood':{
+        required:true,
+        pattern: /^[a-z0-9.,()-_\s]+$/, // 소문자 숫자
+    },
+    'genre':{
+        required:true,
+        pattern: /^[a-z0-9.,()-_\s]+$/, // 소문자 숫자
+    },
+    'tagName':{
+        required:true,
+        pattern: /^[a-z0-9.,()-_\s]+$/, // 소문자 숫자
+    }
 };
 
 export const processingRules = {
     nickname: ['trim', 'toLowerCase'], // 앞뒤 공백 제거, 소문자 변환
     email: ['trim'],                  // 공백 제거
 
-    'title':['trim'],
-    'description':['trim'],
-    'albumName':['trim'],
+    title:['trim'],
+    description:['trim'],
+    albumName:['trim'],
     'albumDto.albumName': ['trim', 'toUpperCase'],
     'albumDto.description': ['trim', 'toUpperCase'],
     'musicDto.title': ['trim', 'toUpperCase'],
@@ -85,5 +101,9 @@ export const processingRules = {
     'tagsDto.genre': ['trim', 'toLowerCase'],
     'musicDTO.soundType':['trim','toLowerCase'],
     'albumDTO.verify':['trim'],
+    instrument:['trim','toLowerCase'],
+    mood:['trim','toLowerCase'],
+    genre:['trim','toLowerCase'],
+    tagName:['trim','toLowerCase'],
 };
 

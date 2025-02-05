@@ -45,9 +45,7 @@ const addAuthHeader = async (options, handle = {}) => {
     };
 
     try {
-        console.log("4 : " + options.headers["Content-Type"]);
         const response = await axiosInstance(options);
-        console.log(handle);
         // response.response가 아니라 response를 참조해야 합니다.
         return handleResponse(response.status, response.data, handle);
     } catch (error) {
@@ -56,7 +54,6 @@ const addAuthHeader = async (options, handle = {}) => {
             try {
                 const newToken = await callRefresh();
                 options.headers = { Authorization: `Bearer ${newToken}` };
-                console.log("5 : " + options.headers["Content-Type"]);
                 const retryResponse = await axiosInstance(options); // 재요청
                 return handleResponse(retryResponse.status, retryResponse.data, handle);
             } catch (refreshError) {
@@ -94,12 +91,10 @@ const fetchData = async ({
     }
 
     if (useToken) {
-        console.log("2 : " + options.headers["Content-Type"]);
         return await addAuthHeader(options, handle);
     }
 
     try {
-        console.log("3 : " + options.headers["Content-Type"]);
         const response = await axiosInstance(options);
         // response.response가 아니라 response를 참조해야 합니다.
         return handleResponse(response.status, response.data, handle);

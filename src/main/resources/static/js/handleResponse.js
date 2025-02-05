@@ -5,14 +5,12 @@ export const handleResponse = (status, data, customHandlers = {}) => {
     // 상태 코드에 따른 기본 동작
     switch (status) {
         case 200:
-            // if (customHandlers?.onSuccess){
-            //     customHandlers.onSuccess(data);
-            // }
-            if(data.message){
+            if (customHandlers?.onSuccess){
+                customHandlers.onSuccess(data);
+            }else if(data.message){
                 alert(data.message);
                 return;
             }
-            // 성공한 데이터 반환
             return data;
         case 400:
             if (customHandlers?.onBadRequest) return customHandlers.onBadRequest(data);

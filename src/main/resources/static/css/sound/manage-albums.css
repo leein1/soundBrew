@@ -18,6 +18,8 @@
     .table-container {
         width: 100%;
         border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
     }
 
     .table-container th, .table-container td {
@@ -27,7 +29,7 @@
     }
 
     .table-container th {
-        background-color: #f2f2f2;
+        background-color: #9d9d9d;
         font-weight: bold;
     }
 
@@ -43,6 +45,10 @@
         font-size: 0.9rem;
         border-radius: 4px;
         cursor: pointer;
+    }
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;  /* 가로 스크롤 활성화 */
     }
 
     .table-container td button.edit-button {

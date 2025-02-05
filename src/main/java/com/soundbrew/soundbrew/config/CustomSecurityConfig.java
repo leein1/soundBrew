@@ -124,6 +124,8 @@ public class CustomSecurityConfig {
                 "/sounds/**",
                 "/api/sounds/**",
                 "/stream/**",
+                "/api/admin/**",
+                "/admin/**",
 //                        "/api/**",  // 모든 API 요청을 인증 없이 허용
                 "/myInfo",
                 "/api/sample/**"
