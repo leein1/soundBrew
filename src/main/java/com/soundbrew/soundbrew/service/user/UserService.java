@@ -53,10 +53,10 @@ public interface UserService {
 
     //  프로필 이미지 관련
 
-    //  프로필 이미지 업로드
-    void saveProfileImage(int userId, MultipartFile file);
-    //  프로필 이미지 삭제
-    void deleteProfileImage(int userId);
+//    //  프로필 이미지 업로드
+//    void saveProfileImage(int userId, MultipartFile file);
+//    //  프로필 이미지 삭제
+//    void deleteProfileImage(int userId);
 
 
 
