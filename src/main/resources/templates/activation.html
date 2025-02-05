@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link href="../css/login.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        메일 인증하기
+    </div>
+
+    <div class="content-body">
+        <form class="login-form" action="/login" method="post">
+
+            <div class="input-group">
+                <label for="activationCode">인증 문자를 입력해주세요(띄워쓰기 없어야 함)</label>
+                <input type="text" id="activationCode" name="activationCode" placeholder="인증 문자 입력" required>
+            </div>
+
+            <button type="submit">인증하기</button>
+
+        </form>
+    </div>
+
+    <div class="content-footer">
+        <a href="#" class="footer-link">메일 재요청(모달이든 뭐든 아이디 비밀번호 새로 입력하고 재 전송 하는 기능 필요)</a>
+
+    </div>
+</div>
+</body>
+<script type="module" layout:fragment="script" th:inline="javascript">
+    import { axiosPost } from '/js/fetch/standardAxios.js';
+
+    console.log("loaded script..");
+
+    document.querySelector("button[type='submit']").addEventListener("click", async (event) => {
+        event.preventDefault(); // 폼의 기본 동작 막기
+
+        // 사용자 입력 값 가져오기
+        const activationCode = document.querySelector("#activationCode").value;
+        console.log(activationCode.toString());
+        // 요청 데이터 구성
+        // const data = { username, password };
+
+        try {
+            // alert(data);
+            // 토큰 요청
+            const response = await axios.post("http://localhost:8080/api/verification/activation", activationCode);
+
+            // const response = await axiosPost({endpoint: `/api/verification/activation`, body: activationCode,useToken:true});
+
+            if(response && response.status === 200){
+
+                alert('인증되었습니다. 로그인 해주세요');
+                window.location.href = "/login";
+
+            } else if(!response && response.status !== 200){
+
+                alert('서비스 오류 입니다.');
+                window.location.href = "/activation";
+
+            }
+
+        } catch (err) {
+            console.error("Error:", err);
+        }
+
+
+    }, false);
+
+</script>
+
+
+</html>

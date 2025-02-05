@@ -52,6 +52,7 @@ async function redirectUrlFromToken(data){
         document.body.appendChild(container);       // 새 콘텐츠 추가
 
         // 브라우저 URL도 변경
-        window.history.pushState({}, "", data.redirectUrl);
+        // window.history.pushState({}, "", data.redirectUrl);
+        window.location.href = "";
     }
 }

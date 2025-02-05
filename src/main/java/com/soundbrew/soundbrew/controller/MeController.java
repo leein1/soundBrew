@@ -35,7 +35,7 @@ public class MeController {
     private final AuthenticationService authenticationService;
 
 
-//    내 정보 보기 - GET /me/{userId}
+    //    내 정보 보기 - GET /me/{userId}
 //    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
     @GetMapping(value = "")
     public ResponseEntity<ResponseDTO<UserDTO>> getMe(Authentication authentication) {
@@ -50,7 +50,7 @@ public class MeController {
     }
 
 
-//    내 정보 수정 - PATCH /me/{userId}
+    //    내 정보 수정 - PATCH /me/{userId}
 //    수정 하는 방식으로 현재는 UserDTO 를 대입하지만 Map(k,v)로 바꾸는게 좋아보임
 //    controller - Map으로 클라이언트측에서 수정한 값 가져오기,
 //    service - 수정한 값 null 검증 후 수정
@@ -66,7 +66,7 @@ public class MeController {
     }
 
 
-//    탈퇴 - DELETE /me/{userId}
+    //    탈퇴 - DELETE /me/{userId}
 //    비밀번호 확인 후 탈퇴 가능
 //    @ApiOperation(value = "me DELETE", notes = "DELETE 탈퇴")
     @DeleteMapping("")
@@ -80,7 +80,7 @@ public class MeController {
     }
 
 
-//    회원 구독제 보기 GET /me/subscription
+    //    회원 구독제 보기 GET /me/subscription
 //    반환형으로 SubscriptionDTO ? UserSubscriptionDTO
 //    @ApiOperation(value = "subscription GET", notes = "GET 내 구독제 정보 가져오기")
     @GetMapping("/subscription")
@@ -113,7 +113,7 @@ public class MeController {
     }
 
 
-//    회원 구독제 등록 POST /me/subscription/{subscriptionId}
+    //    회원 구독제 등록 POST /me/subscription/{subscriptionId}
 //    @ApiOperation(value = "subscription POST", notes = "POST 유저의 구독제 구독")
     @PostMapping("/subscription/{subscriptionId}")
     public ResponseEntity<ResponseDTO<String>> addSubscription(@PathVariable int subscriptionId, Authentication authentication){ //추후 토큰으로 변경
@@ -126,7 +126,7 @@ public class MeController {
     }
 
 
-//    구독제 정보 수정 PATCH /me/subscription
+    //    구독제 정보 수정 PATCH /me/subscription
 //    @ApiOperation(value = "subscription PATCH", notes = "PATCH 유저의 구독제 변경")
     @PatchMapping("/subscrion/{subscriptionId}")
     public ResponseEntity<ResponseDTO<String>> updateSubscription(@PathVariable int subscriptionId, Authentication authentication){
@@ -139,7 +139,7 @@ public class MeController {
     }
 
 
-//    구독제 정보 삭제 DELETE /me/subscription
+    //    구독제 정보 삭제 DELETE /me/subscription
 //    @ApiOperation(value = "subscription DELETE", notes = "DELETE 유저의 구독 취소")
     @DeleteMapping("/subscription")
     public ResponseEntity<ResponseDTO<String>> cancleSubscription(Authentication authentication){
@@ -160,6 +160,8 @@ public class MeController {
 //        int userId = authenticationService.getUserId(authentication);
 
         ResponseDTO responseDto = tagsService.updateLinkTags(musicId,tagsDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
 
@@ -253,58 +255,6 @@ public class MeController {
 
         return  ResponseEntity.ok().body(responseDto);
     }
-
-    @GetMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") int id, RequestDTO requestDto){
-        //쿠키 -> 내이름
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(2,id,requestDto);
-
-        return  ResponseEntity.ok().body(responseDto);
-    }
-
-    @PatchMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO> updateAlbum(@PathVariable int albumId, @RequestBody AlbumDTO albumDto){
-
-        ResponseDTO responseDto = soundsService.updateAlbum(albumId,albumDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
-    @GetMapping("/tracks")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe(RequestDTO requestDto){
-        requestDto.setKeyword("u_1");
-        requestDto.setType("n");
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
-    @GetMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable("musicId") int id, Authentication authentication){
-
-        int userId = authenticationService.getUserId(authentication);
-        // 쿠키 -> 내이름
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundOne(userId,id);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
-    @PostMapping("/tracks/{musicId}/tags")
-    ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDTO tagsDto){
-
-        ResponseDTO responseDto = tagsService.updateLinkTags(musicId,tagsDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
-    @PatchMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO> updateMusic(@PathVariable int musicId, @RequestBody MusicDTO musicDto ){
-
-        ResponseDTO responseDto = soundsService.updateMusic(2,musicDto);
-
-        return ResponseEntity.ok().body(responseDto);
-    }
-
 
     @GetMapping("/tags")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(RequestDTO requestDto){
