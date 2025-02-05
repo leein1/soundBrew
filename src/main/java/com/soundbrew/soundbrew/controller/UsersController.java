@@ -20,12 +20,6 @@ public class UsersController {
 
     private final UserService userService;
 
-    @GetMapping("")
-    public ResponseEntity<ResponseDTO<List<UserDTO>>> getUsers() {
-
-        return null;
-    }
-
 
 //    @ApiOperation(value = "users POST", notes = "POST 방식으로 회원 등록")
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
