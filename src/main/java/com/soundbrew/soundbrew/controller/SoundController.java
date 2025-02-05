@@ -33,13 +33,6 @@ public class SoundController {
         return  ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/tags") // 메인 페이지의 전체 태그 버튼들
-    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@ModelAttribute RequestDTO requestDTO){
-        ResponseDTO<TagsDTO> responseDTO = tagsService.getAllTags(requestDTO);
-
-        return ResponseEntity.ok().body(responseDTO);
-    }
-
     @PostMapping("/tags") // 특정 앨범, 특정 곡의 전체 태그 버튼들
     ResponseEntity<ResponseDTO<TagsDTO>> tagsSearchAfter(@RequestBody Map<String, List<SearchTotalResultDTO>> requestBody) {
 
@@ -55,6 +48,7 @@ public class SoundController {
     @GetMapping("/tags/mapped") // 메인 페이지의 전체 태그 버튼들
     ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@ModelAttribute RequestDTO requestDTO){
         ResponseDTO<TagsDTO> responseDTO = tagsService.getAllTags(requestDTO);
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/tracks/{nickname}/title/{title}")
