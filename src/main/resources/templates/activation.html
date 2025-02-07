@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
-    <link href="../css/login.css" rel="stylesheet">
+    <link href="../css/activation.css" rel="stylesheet">
 </head>
 <body>
 <div layout:fragment="content">
@@ -18,7 +18,7 @@
         <form id="activation-form" class="activation-form">
 
             <div class="input-group">
-                <label for="activationCode">인증 문자를 입력해주세요(띄워쓰기 없어야 함)</label>
+                <label for="activationCode">인증 문자를 입력해주세요 ( 띄워쓰기 없이 입력해주세요 )</label>
                 <input type="text" id="activationCode" name="activationCode" placeholder="인증 문자 입력" required>
             </div>
 
@@ -52,19 +52,18 @@
                 //폼 데이터 직렬화
                 const jsonData = serializeFormToJSON(form);
 
-                const response = await axiosPost({endpoint: `/api/verification/activation`, body: jsonData, useToken: true});
-
-                if (response && response.status === 200) {
-
-                    alert('인증되었습니다. 로그인 해주세요');
-                    window.location.href = "/login";
-
-                } else if (!response && response.status !== 200) {
-
-                    alert('서비스 오류 입니다.');
-                    window.location.href = "/activation";
-
+                const handle = {
+                    onSuccess:()=>{
+                        alert('인증되었습니다. 로그인 해주세요')
+                        window.location.href = "/login";
+                    },
+                    onServerError:()=>{
+                        alert("서비스 오류 입니다. 잠시 후 다시 시도 해주세요. 지속적인 문제 발생시 문의 해주세요.")
+                        window.location.href="/activation";
+                    }
                 }
+
+                const response = await axiosPost({endpoint: `/api/verification/activation`, body: jsonData, handle:handle});
 
             } catch (err) {
                 console.error("Error:", err);
