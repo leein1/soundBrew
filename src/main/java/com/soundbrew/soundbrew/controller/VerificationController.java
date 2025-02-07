@@ -8,6 +8,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/verification")
 @RequiredArgsConstructor
@@ -48,11 +50,13 @@ public class VerificationController {
 
     //  유저 활성화
     @PostMapping("/activation")
-    public ResponseEntity<ResponseDTO<String>> sendEmail(@RequestBody String activationCode){
+    public ResponseEntity<ResponseDTO<String>> sendEmail(@RequestBody Map activationCode){
 
-        log.info("Activation code is {}", activationCode);
+        log.info("Activation code is {}", activationCode.get("activationCode"));
 
-        ResponseDTO<String> responseDTO = activationCodeService.activateUser(activationCode);
+        String value = activationCode.get("activationCode").toString();
+
+        ResponseDTO<String> responseDTO = activationCodeService.activateUser(value);
 
         return ResponseEntity.ok().body(responseDTO);
     }
