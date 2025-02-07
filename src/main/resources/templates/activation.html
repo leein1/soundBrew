@@ -14,7 +14,8 @@
     </div>
 
     <div class="content-body">
-        <form class="login-form" action="/login" method="post">
+
+        <form id="activation-form" class="activation-form">
 
             <div class="input-group">
                 <label for="activationCode">인증 문자를 입력해주세요(띄워쓰기 없어야 함)</label>
@@ -32,47 +33,48 @@
     </div>
 </div>
 </body>
-<script type="module" layout:fragment="script" th:inline="javascript">
-    import { axiosPost } from '/js/fetch/standardAxios.js';
+<th:block layout:fragment="script">
+    <script type="module">
+        import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+        import {axiosPost} from '/js/fetch/standardAxios.js';
 
-    console.log("loaded script..");
+        console.log("loaded script..");
 
-    document.querySelector("button[type='submit']").addEventListener("click", async (event) => {
-        event.preventDefault(); // 폼의 기본 동작 막기
+        document.getElementById("activation-form").addEventListener("submit", async (event) => {
 
-        // 사용자 입력 값 가져오기
-        const activationCode = document.querySelector("#activationCode").value;
-        console.log(activationCode.toString());
-        // 요청 데이터 구성
-        // const data = { username, password };
+            event.preventDefault(); // 폼의 기본 동작 막기
 
-        try {
-            // alert(data);
-            // 토큰 요청
-            const response = await axios.post("http://localhost:8080/api/verification/activation", activationCode);
+            try {
 
-            // const response = await axiosPost({endpoint: `/api/verification/activation`, body: activationCode,useToken:true});
+                //폼 가져오기
+                const form = document.getElementById("activation-form");
 
-            if(response && response.status === 200){
+                //폼 데이터 직렬화
+                const jsonData = serializeFormToJSON(form);
 
-                alert('인증되었습니다. 로그인 해주세요');
-                window.location.href = "/login";
+                const response = await axiosPost({endpoint: `/api/verification/activation`, body: jsonData, useToken: true});
 
-            } else if(!response && response.status !== 200){
+                if (response && response.status === 200) {
 
-                alert('서비스 오류 입니다.');
-                window.location.href = "/activation";
+                    alert('인증되었습니다. 로그인 해주세요');
+                    window.location.href = "/login";
 
+                } else if (!response && response.status !== 200) {
+
+                    alert('서비스 오류 입니다.');
+                    window.location.href = "/activation";
+
+                }
+
+            } catch (err) {
+                console.error("Error:", err);
             }
 
-        } catch (err) {
-            console.error("Error:", err);
-        }
 
+        }, false);
 
-    }, false);
-
-</script>
+    </script>
+</th:block>
 
 
 </html>
