@@ -145,6 +145,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Boolean isEmailExist(String email) {
+
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
     public ResponseDTO<UserDTO> getUserByEmail(String email) {
 
         User user = userRepository.findByEmail(email).orElseThrow();
@@ -154,6 +160,8 @@ public class UserServiceImpl implements UserService{
                 .dto(userDTO)
                 .build();
     }
+
+
 
     @Override
     public ResponseDTO<UserDTO> getUserByNickname(String nickname) {
@@ -166,6 +174,12 @@ public class UserServiceImpl implements UserService{
                 .dto(userDTO)
                 .build();
 
+    }
+
+    @Override
+    public Boolean isNicknameExist(String nickname) {
+
+        return userRepository.findByNickname(nickname).isPresent();
     }
 
     //    회원 가입

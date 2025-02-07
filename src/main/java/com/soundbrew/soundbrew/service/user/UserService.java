@@ -32,11 +32,14 @@ public interface UserService {
     //  한명 조회(userId) - 유저 정보만
     ResponseDTO<UserDTO> getUser(int userId);
 
+    Boolean isEmailExist(String email);
+
     ResponseDTO<UserDTO> getUserByEmail(String email);
 
     //  한명 조회(nickname) - 유저 정보만
     ResponseDTO<UserDTO> getUserByNickname(String nickname);
 
+    Boolean isNicknameExist(String nickname);
 
     //  등록 및 수정
 
