@@ -1,12 +1,16 @@
 package com.soundbrew.soundbrew.controller;
 
+import com.soundbrew.soundbrew.dto.ActivationCodeDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.service.user.UserService;
 import com.soundbrew.soundbrew.service.verification.ActivationCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/verification")
@@ -48,7 +52,9 @@ public class VerificationController {
 
     //  유저 활성화
     @PostMapping("/activation")
-    public ResponseEntity<ResponseDTO<String>> sendEmail(@RequestBody String activationCode){
+    public ResponseEntity<ResponseDTO<String>> activationUser(@RequestBody ActivationCodeDTO activationCodeDTO){
+
+        String activationCode = activationCodeDTO.getActivationCode();
 
         log.info("Activation code is {}", activationCode);
 
@@ -57,14 +63,36 @@ public class VerificationController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PatchMapping("/email")
-    public ResponseEntity<ResponseDTO> activeUser(@RequestBody String email, @RequestBody String providedActivationCode){
+    @PostMapping("/email")
+    public ResponseEntity<Map<String,Boolean>> checkEmail(@RequestBody UserDTO user){
 
-//        ResponseDTO<String> responseDTO = activationCodeService.activateUser(email, providedActivationCode);
+        String email = user.getEmail();
 
-//        return ResponseEntity.ok().body(responseDTO);
+        //  조회 후 결과 있으면 false반환
+        if(userService.isEmailExist(email)){
 
-        return null;
+            return ResponseEntity.ok().body(Map.of("available", false));
+
+        }else {
+
+            return ResponseEntity.ok().body(Map.of("available", true));
+        }
+    }
+
+    @PostMapping("/nickname")
+    public ResponseEntity<Map<String,Boolean>> checkNickname(@RequestBody UserDTO user){
+
+        String nickname = user.getNickname();
+
+        //  조회 후 결과 있으면 false반환
+        if(userService.isNicknameExist(nickname)){
+
+            return ResponseEntity.ok().body(Map.of("available", false));
+
+        }else {
+
+            return ResponseEntity.ok().body(Map.of("available", true));
+        }
     }
 
 

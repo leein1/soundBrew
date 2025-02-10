@@ -99,8 +99,8 @@ public class ActivationCodeServiceImpl implements ActivationCodeService{
 
             String email = user.getEmail();
 
-            String activationUrl = "http://localhost:8080/api/verification/activation?activationCode=" + activationCode.getActivationCode();
-            String text = "아래 링크를 클릭하여 인증을 완료해주세요. 발송 이후 10분간 유효합니다. \n" + activationUrl;
+
+            String text = "메일 인증 문자 입니다.\n발송 이후 10분간 유효합니다. \n" + activationCode.getActivationCode();
             mailService.send(email, "SoundBrew 계정 인증", text);
 
             ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()

@@ -61,6 +61,7 @@ const addAuthHeader = async (options, handle = {}) => {
                 window.location.href = "/login"; // 로그인 페이지로 리다이렉트
                 throw refreshError;
             }
+
         } else {
             // error.response를 올바르게 참조해야 합니다.
             throw handleResponse(error.response?.status, error.response?.data, handle);

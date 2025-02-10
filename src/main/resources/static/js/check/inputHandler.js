@@ -46,6 +46,11 @@ export function inputValidator(key, value, rules) {
         errors.push(`${key} is required.`);
     }
 
+    // 최소 길이 확인
+    if (rules.minLength && value?.length < rules.minLength) {
+        errors.push(`${key} must not exceed ${rules.minLength} characters.`);
+    }
+
     // 최대 길이 확인
     if (rules.maxLength && value?.length > rules.maxLength) {
         errors.push(`${key} must not exceed ${rules.maxLength} characters.`);

@@ -37,6 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         //  매개변수로 들어가는 username은 login.html 폼에서 제출한 username이다 -> email
         UserDetailsDTO userDetailsDTO = userRepository.findUserDetailsByEmail(username).orElseThrow();
 
+        log.info(userDetailsDTO);
 
         String roleType = roleRepository.findById(userDetailsDTO.getUserRoleDTO().getRoleId()).orElseThrow().getRoleType();
 

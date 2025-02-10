@@ -27,7 +27,7 @@ export const handleResponse = (status, data, customHandlers = {}) => {
         case 404:
             if (customHandlers?.onNotFound) return customHandlers.onNotFound(data);
             alert(data.message);
-            break;
+            break;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
         case 500:
             if (customHandlers?.onServerError) return customHandlers.onServerError(data);
             alert(data.message);

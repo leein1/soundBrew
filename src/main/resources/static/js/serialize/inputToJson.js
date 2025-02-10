@@ -1,4 +1,4 @@
-export function inputToSerializeToJSON(inputElement) {
+export function serializeInputToJSON(inputElement) {
   if (!(inputElement instanceof HTMLInputElement)) {
     throw new Error("제공된 엘리먼트는 input 요소가 아닙니다.");
   }
