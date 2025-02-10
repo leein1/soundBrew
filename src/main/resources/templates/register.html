@@ -19,7 +19,8 @@
                 <label for="email">이메일:</label>
                 <div class="input-with-button">
                     <input type="email" id="email" name="email" required>
-                    <button type="button" class="check-button">중복확인</button>
+<!--                    <button type="button" id="checkDuplicateEmail" class="check-button">중복확인</button>-->
+                    <input type="checkbox" id="emailChecked" disabled>
                 </div>
             </div>
 
@@ -34,7 +35,9 @@
                 <label for="nickname">닉네임:</label>
                 <div class="input-with-button">
                     <input type="text" id="nickname" name="nickname" required>
-                    <button type="button" class="check-button">중복확인</button>
+<!--                    <button type="button" id="checkDuplicateNickname" class="check-button">중복확인</button>-->
+                    <input type="checkbox" id="nicknameChecked" disabled>
+
                 </div>
             </div>
 
@@ -77,6 +80,7 @@
 <th:block layout:fragment="script">
     <script type="module">
         import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+        import { serializeInputToJSON } from '/js/serialize/inputToJson.js';
         import { axiosPost } from '/js/fetch/standardAxios.js';
         import { inputHandler } from '/js/check/inputHandler.js';
 
@@ -107,7 +111,157 @@
             passwordInput.addEventListener("input", validatePasswordMatch);
             passwordCheckInput.addEventListener("input", validatePasswordMatch);
 
-        })
+            const emailInput = document.getElementById("email");
+            const emailChecked = document.getElementById("emailChecked");
+            let emailTimer;
+
+            const nicknameInput = document.getElementById("nickname");
+            const nicknameChecked = document.getElementById("nicknameChecked");
+            let nicknameTimer;
+
+            function updateInputBorder(inputElement, isAvailable) {
+                if (inputElement.value.trim() === "") {
+                    inputElement.style.borderColor = "gray"; // 기본값
+                } else if (isAvailable) {
+                    inputElement.style.borderColor = "green"; // 사용 가능
+                } else {
+                    inputElement.style.borderColor = "red"; // 중복됨
+                }
+            }
+
+            async function checkDuplicate(inputElement, endpoint, checkedElement) {
+                if (inputElement.value.trim() === "") return;
+
+                inputElement.style.borderColor = "orange"; // 검사 중 표시 - 오렌지를 식별할경우는 거의 없을 것 같음
+                console.log(`${endpoint} 중복 체크 요청:`, inputElement.value); // 요청 로그 출력
+
+                const inputToJson = serializeInputToJSON(inputElement);
+
+                try {
+
+                    const response = await axiosPost({ endpoint: endpoint, body: inputToJson });
+                    console.log(`${endpoint} 중복 체크 결과:`, response); // 응답 결과 로그 출력
+
+                    checkedElement.checked = response.available;
+                    updateInputBorder(inputElement, response.available);
+
+                } catch (err) {
+                    console.error(`${endpoint} 중복 체크 오류:`, err);
+                    inputElement.style.borderColor = "red"; // 오류 시 빨간색 처리
+                }
+            }
+
+            emailInput.addEventListener("input", () => {
+                clearTimeout(emailTimer);
+                emailChecked.checked = false;
+                emailInput.style.borderColor = "gray"; // 입력 중 기본 회색
+
+                emailTimer = setTimeout(() => checkDuplicate(emailInput, "/api/verification/email", emailChecked), 500);
+            });
+
+            nicknameInput.addEventListener("input", () => {
+                clearTimeout(nicknameTimer);
+                nicknameChecked.checked = false;
+                nicknameInput.style.borderColor = "gray"; // 입력 중 기본 회색
+
+                nicknameTimer = setTimeout(() => checkDuplicate(nicknameInput, "/api/verification/nickname", nicknameChecked), 500);
+            });
+
+
+            // emailInput.addEventListener("input", () => {
+            //     clearTimeout(emailTimer); // 기존 타이머 취소
+            //     emailChecked.checked = false; // 이메일 변경 시 체크 해제
+            //
+            //     emailTimer = setTimeout(async () => {
+            //         if (emailInput.value.trim() === "") return; // 입력값이 없으면 요청하지 않음
+            //
+            //         console.log("자동 이메일 중복 체크 실행:", emailInput.value);
+            //         const emailToJson = serializeInputToJSON(emailInput);
+            //
+            //         try {
+            //             const response = await axiosPost({ endpoint: "/api/verification/email", body: emailToJson });
+            //             emailChecked.checked = response.available; // 사용 가능하면 체크
+            //         } catch (err) {
+            //             console.error("이메일 중복 체크 오류:", err);
+            //         }
+            //     }, 500); // 0.5초 동안 추가 입력 없으면 실행
+            // });
+            //
+            // nicknameInput.addEventListener("input", () => {
+            //     clearTimeout(nicknameTimer); // 기존 타이머 취소
+            //     nicknameChecked.checked = false; // 닉네임 변경 시 체크 해제
+            //
+            //     nicknameTimer = setTimeout(async () => {
+            //         if (nicknameInput.value.trim() === "") return; // 입력값이 없으면 요청하지 않음
+            //
+            //         console.log("자동 닉네임 중복 체크 실행:", nicknameInput.value);
+            //         const nicknameToJson = serializeInputToJSON(nicknameInput);
+            //
+            //         try {
+            //             const response = await axiosPost({ endpoint: "/api/verification/nickname", body: nicknameToJson });
+            //             nicknameChecked.checked = response.available; // 사용 가능하면 체크
+            //         } catch (err) {
+            //             console.error("닉네임 중복 체크 오류:", err);
+            //         }
+            //     }, 500); // 0.5초 동안 추가 입력 없으면 실행
+            // });
+
+
+        });
+
+        //  이메일 중복 체크
+        // document.getElementById("checkDuplicateEmail").addEventListener("click", async (e) =>{
+        //
+        //     console.log("이메일 중복 누름");
+        //
+        //     const emailInput = document.getElementById('email');
+        //     const emailToJson = serializeInputToJSON(emailInput);
+        //     console.log(emailToJson); // { email: "test@example.com" }
+        //
+        //     // const email 의 값이 현재 "입력값" 으로 들어감 "email" : "입력값" 형태로 보내야 컨트롤러에서 바인딩 가능
+        //     try{
+        //
+        //        const response = await axiosPost({endpoint:"/api/verification/email", body:emailToJson});
+        //        const emailChecked = response.available;
+        //
+        //         if (emailChecked) {
+        //             document.getElementById("emailChecked").checked = true; // 체크박스 체크
+        //         } else {
+        //             document.getElementById("emailChecked").checked = false; // 체크박스 해제
+        //         }
+        //
+        //     } catch (err){
+        //         console.log(err);
+        //     }
+        //
+        // });
+
+        //  닉네임 중복 체크
+        // document.getElementById("checkDuplicateNickname").addEventListener("click", async (e) =>{
+        //
+        //     console.log("닉네임 중복 누름");
+        //
+        //     const nicknameInput = document.getElementById('nickname');
+        //     const nicknameToJson = serializeInputToJSON(nicknameInput);
+        //     console.log(nicknameToJson); // { email: "test@example.com" }
+        //
+        //     // const email 의 값이 현재 "입력값" 으로 들어감 "email" : "입력값" 형태로 보내야 컨트롤러에서 바인딩 가능
+        //     try{
+        //
+        //         const response = await axiosPost({endpoint:"/api/verification/nickname", body:nicknameToJson});
+        //         const nicknameChecked = response.available;
+        //
+        //         if (nicknameChecked) {
+        //             document.getElementById("nicknameChecked").checked = true; // 체크박스 체크
+        //         } else {
+        //             document.getElementById("nicknameChecked").checked = false; // 체크박스 해제
+        //         }
+        //
+        //     } catch (err){
+        //         console.log(err);
+        //     }
+        //
+        // });
 
         // 폼 데이터 가져오기
         document.getElementById("register-form").addEventListener("submit", async (e) =>{
@@ -122,6 +276,24 @@
                 const passwordCheck = document.getElementById('password-check').value;
                 const passwordCheckInput = document.getElementById("password-check");
 
+                const emailChecked = document.getElementById("emailChecked").checked;
+                const nicknameChecked = document.getElementById("nicknameChecked").checked;
+
+                const emailInput = document.getElementById("email");
+                const nicknameInput = document.getElementById("nickname");
+
+                if (!emailChecked) {
+                    alert("이메일 중복입니다 다른 이메일을 입력해주세요.");
+                    emailInput.focus();
+                    return;
+                }
+
+                if (!nicknameChecked) {
+                    alert("닉네임 중복입니다 다른 닉네임을 입력해주세요.");
+                    nicknameInput.focus();
+                    return;
+                }
+
                 if(password !== passwordCheck){
                     alert('비밀번호를 다시 확인해주세요');
                     passwordCheckInput.focus();
@@ -132,6 +304,7 @@
                     alert('전화번호를 올바르게 입력해주세요.');
                     return;
                 }
+
 
                 const fullPhoneNumber = `${phone1}${phone2}${phone3}`;
                 document.getElementById('phoneNumber').value = fullPhoneNumber;
