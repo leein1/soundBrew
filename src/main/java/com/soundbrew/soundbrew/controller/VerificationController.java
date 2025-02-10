@@ -68,6 +68,7 @@ public class VerificationController {
 
         String email = user.getEmail();
 
+        //  조회 후 결과 있으면 false반환
         if(userService.isEmailExist(email)){
 
             return ResponseEntity.ok().body(Map.of("available", false));
@@ -83,6 +84,7 @@ public class VerificationController {
 
         String nickname = user.getNickname();
 
+        //  조회 후 결과 있으면 false반환
         if(userService.isNicknameExist(nickname)){
 
             return ResponseEntity.ok().body(Map.of("available", false));
