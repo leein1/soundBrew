@@ -2,10 +2,25 @@
 
 export const validationRules = {
     name:{
+        required: true,
+        minLength: 2,
+        maxLength : 37,
+        pattern: /^(?!\s*$)[a-zA-Z가-힣]+$/
     },
     nickname: {
+        required: true,
+        minLength: 2,
+        maxLength: 50,
+        pattern: /^(?!\s*$)[a-zA-Z0-9가-힣]+$/
     },
     email: {
+        required: true,
+        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    },
+    password: {
+        required: true,
+        minLength: 8,
+        pattern: /^(?!\s*$)(?=.*[A-Z])(?=.*\W)[a-zA-Z0-9\W]+$/
     },
     'title':{ // 중범주 없는 타이틀
         required: true,
@@ -86,9 +101,10 @@ export const validationRules = {
 };
 
 export const processingRules = {
-    nickname: ['trim', 'toLowerCase'], // 앞뒤 공백 제거, 소문자 변환
+    name: ['trim', 'trimMiddle'],
+    nickname: ['trim','trimMiddle'], // 앞뒤 공백 제거, 중간 공백 제거
     email: ['trim'],                  // 공백 제거
-
+    password: ['trim', 'trimMiddle'],
     title:['trim'],
     description:['trim'],
     albumName:['trim'],
