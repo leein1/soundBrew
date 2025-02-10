@@ -6,6 +6,7 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.repository.sound.*;
+import com.soundbrew.soundbrew.service.authentication.SoundOwnershipCheckService;
 import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class TagsServiceImpl implements TagsService {
     private final MusicGenreTagRepository musicGenreTagRepository;
     private final MusicRepository musicRepository;
     private final SoundProcessor soundProcessor;
+    private final SoundOwnershipCheckService soundOwnershipCheckService;
 
 
     @Override
@@ -91,16 +93,28 @@ public class TagsServiceImpl implements TagsService {
         return ResponseDTO.<TagsDTO>withSingleData().dto(tagsDTO).build();
     }
 
-    @Override
-    @Transactional
-    public ResponseDTO updateLinkTags(int musicId, TagsDTO tagsDTO) {
-        Music music = this.findByMusicId(musicId);
-
+    private ResponseDTO updateLinkTags(Music music, TagsDTO tagsDTO) {
         musicInstrumentTagRepository.deleteByIdMusicId(music.getMusicId());
         musicMoodTagRepository.deleteByIdMusicId(music.getMusicId());
         musicGenreTagRepository.deleteByIdMusicId(music.getMusicId());
 
         return this.linkTags(music, tagsDTO);
+    }
+
+    @Transactional
+    public ResponseDTO updateLinkTagsForArtist(int musicId, TagsDTO tagsDTO,int userId) {
+        Music music = this.findByMusicId(musicId);
+
+        soundOwnershipCheckService.checkMusicAccessById(music.getUserId(),userId);
+
+        return updateLinkTags(music, tagsDTO);
+    }
+
+    @Transactional
+    public ResponseDTO updateLinkTagsForAdmin(int musicId, TagsDTO tagsDTO) {
+        Music music = this.findByMusicId(musicId);
+
+        return updateLinkTags(music, tagsDTO);
     }
 
     @Override

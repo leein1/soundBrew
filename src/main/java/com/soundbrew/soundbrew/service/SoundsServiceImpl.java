@@ -2,29 +2,21 @@ package com.soundbrew.soundbrew.service;
 
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.domain.user.User;
-import com.soundbrew.soundbrew.dto.DTOFilteringFactory;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
-import com.soundbrew.soundbrew.service.util.SoundProcessor;
+import com.soundbrew.soundbrew.service.authentication.SoundOwnershipCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpRange;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static com.soundbrew.soundbrew.dto.BuilderFactory.*;
 import static com.soundbrew.soundbrew.dto.BuilderFactory.albumMusicToEntity;
 import static com.soundbrew.soundbrew.dto.DTOFilteringFactory.hideSearchTotalResultDTO;
 
@@ -37,6 +29,8 @@ public class SoundsServiceImpl implements SoundsService{
     private final AlbumMusicRepository albumMusicRepository;
     private final MusicRepository musicRepository;
     private final TagsService tagsService;
+    private final SoundOwnershipCheckService soundOwnershipCheckService;
+    private final ModelMapper modelMapper;
 
     @Override
     public ResponseDTO<SearchTotalResultDTO> totalSoundSearch(RequestDTO requestDTO) {
@@ -81,32 +75,20 @@ public class SoundsServiceImpl implements SoundsService{
         musicDTO.setNickname(checkedUser.getNickname());
         musicDTO.setSoundType("sound"); // db 디폴트 설정
         musicDTO.setPrice(3); // db 디폴트 설정
-        Album album = albumRepository.save(albumDTO.toEntity());
+//        Album album = albumRepository.save(albumDTO.toEntity());
         Music music = musicRepository.save(musicDTO.toEntity());
-        albumMusicRepository.save(albumMusicToEntity(album,music,checkedUser));
+//        albumMusicRepository.save(albumMusicToEntity(album,music,checkedUser));
         tagsService.linkTags(music, tagsDTO);
 
         return ResponseDTO.withMessage().message("정상적으로 등록했습니다.").build();
     }
 
     @Override
-    @Transactional
-    public ResponseDTO updateAlbum(int albumId, AlbumDTO albumDTO) {
-        Album modify = this.findByAlbumId(albumId);
+    public ResponseDTO<SearchTotalResultDTO> getSoundMe(RequestDTO requestDTO) {
+        Optional<Page<SearchTotalResultDTO>> before = albumMusicRepository.search(requestDTO);
+        if(before.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
 
-        modify.update(albumDTO.getAlbumName(), albumDTO.getDescription());
-
-        return ResponseDTO.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
-    }
-
-    @Override
-    @Transactional
-    public ResponseDTO updateMusic(int musicId, MusicDTO musicDTO) {
-        Music modify = this.findByMusicId(musicId);
-
-        modify.update(musicDTO.getTitle(), musicDTO.getDescription(), modify.getSoundType());
-
-        return ResponseDTO.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
+        return ResponseDTO.<SearchTotalResultDTO>withAll(requestDTO,before.get().getContent(), (int) before.get().getTotalElements());
     }
 
     @Override
@@ -119,18 +101,10 @@ public class SoundsServiceImpl implements SoundsService{
 
     @Override
     public ResponseDTO<SearchTotalResultDTO> getAlbumOne(int userId, int id, RequestDTO requestDTO) {
-        Optional<Page<SearchTotalResultDTO>> albumOne = albumMusicRepository.albumOne(userId,id, requestDTO);
-        if(albumOne.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>withMessage().message("찾으시는 앨범이 없습니다.").build();
+        Optional<Page<SearchTotalResultDTO>> albumOne= albumMusicRepository.albumOne(userId,id,requestDTO);
+        if(albumOne.isEmpty()) return  ResponseDTO.<SearchTotalResultDTO>withMessage().message("찾으시는 앨범이 없습니다.").build();
 
         return ResponseDTO.<SearchTotalResultDTO>withAll(requestDTO,albumOne.get().getContent(), (int) albumOne.get().getTotalElements());
-    }
-
-    @Override
-    public ResponseDTO<SearchTotalResultDTO> getSoundMe(RequestDTO requestDTO) {
-        Optional<Page<SearchTotalResultDTO>> before = albumMusicRepository.search(requestDTO);
-        if(before.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
-
-        return ResponseDTO.<SearchTotalResultDTO>withAll(requestDTO,before.get().getContent(), (int) before.get().getTotalElements());
     }
 
     @Override
@@ -159,6 +133,7 @@ public class SoundsServiceImpl implements SoundsService{
         Album album = this.findByAlbumId(albumId);
 
         album.verify(1);
+
         return ResponseDTO.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
     }
 
@@ -185,7 +160,65 @@ public class SoundsServiceImpl implements SoundsService{
 
     @Override
     public ResponseDTO<SearchTotalResultDTO> getAlbumOneForAdmin(int userId, int id,RequestDTO requestDTO) {
-        return this.getSoundOne(userId, id);
+        return this.getAlbumOne(userId,id,requestDTO);
+    }
+
+    // 아티스트용: 소유권 검증을 수행한 후 업데이트
+    @Override
+    @Transactional
+    public ResponseDTO updateAlbumForArtist(int albumId, AlbumDTO albumDTO, int userId) {
+        Album album = this.findByAlbumId(albumId);
+        soundOwnershipCheckService.checkAlbumAccessById(album.getUserId(), userId); // 검증 실패 시 예외 발생 등
+
+        return updateAlbumInternal(album, albumDTO);
+    }
+
+    // 어드민용: 소유권 검증 없이 바로 업데이트
+    @Override
+    @Transactional
+    public ResponseDTO updateAlbumForAdmin(int albumId, AlbumDTO albumDTO) {
+        Album album = this.findByAlbumId(albumId);
+
+        return updateAlbumInternal(album, albumDTO);
+    }
+
+    // 어드민용: 소유권 검증 없이 바로 업데이트
+    @Override
+    @Transactional
+    public ResponseDTO updateMusicForAdmin(int musicId, MusicDTO musicDTO) {
+        Music music = this.findByMusicId(musicId);
+        return updateMusicInternal(music ,musicDTO);
+    }
+
+    // 아티스트용: 소유권 검증을 수행한 후 업데이트
+    @Override
+    @Transactional
+    public ResponseDTO updateMusicForArtist(int musicId, MusicDTO musicDTO, int userId) {
+        Music music = this.findByMusicId(musicId);
+        soundOwnershipCheckService.checkMusicAccessById(music.getUserId(),userId);
+        return updateMusicInternal(music,musicDTO);
+    }
+
+    // 실제 앨범 정보를 업데이트하는 공통 메서드
+    private ResponseDTO updateAlbumInternal(Album album, AlbumDTO albumDTO) {
+        AlbumDTO select = modelMapper.map(album,AlbumDTO.class);
+        select.setDescription(albumDTO.getDescription());
+        select.setAlbumName(albumDTO.getAlbumName());
+        albumRepository.save(select.toEntity(album.getAlbumMusic()));
+
+        return ResponseDTO.withMessage()
+                .message("변경이 정상적으로 처리되었습니다.")
+                .build();
+    }
+
+    // 실제 음원 정보를 업데이트하는 공통 메서드
+    private ResponseDTO updateMusicInternal(Music music, MusicDTO musicDTO) {
+        MusicDTO select = modelMapper.map(music , MusicDTO.class);
+        select.setDescription(musicDTO.getDescription());
+        select.setTitle(musicDTO.getTitle());
+        musicRepository.save(select.toEntity());
+
+        return ResponseDTO.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
     }
 
     private Music findByMusicId(int musicId){
@@ -199,4 +232,5 @@ public class SoundsServiceImpl implements SoundsService{
     private User findByUserId(int userId){
         return userRepository.findById(userId).orElseThrow();
     }
+
 }

@@ -17,5 +17,4 @@ public class SoundBrewApplication {
 
         SpringApplication.run(SoundBrewApplication.class, args);
     }
-
 }

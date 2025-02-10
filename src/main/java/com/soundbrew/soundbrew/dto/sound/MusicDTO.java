@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,11 +20,20 @@ public class MusicDTO extends BaseEntityDTO {
     private int musicId;
     private int userId;
     private String nickname;
-    private String title;
-    private String filePath;
     private int price;
-    private String description;
     private String soundType;
+
+    @NotBlank
+    @Size(min = 2, max = 50)
+    private String title;
+
+    @NotBlank
+    @Size(min = 2, max = 255)
+    private String filePath;
+
+    @NotBlank
+    @Size(max = 500)
+    private String description;
 
 
     public MusicDTO(int musicId, int userId, String title, String filePath, int price, String description, String soundType, String nickname, LocalDateTime createDate, LocalDateTime modifyDate) {

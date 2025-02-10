@@ -1,17 +1,26 @@
 package com.soundbrew.soundbrew.handler;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.handler.custom.ResourceOwnershipException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.dao.DataAccessException;
+
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -107,6 +116,88 @@ public class GlobalExceptionHandler {
 //
 //        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(responseDTO);
 //    }
+    @ExceptionHandler(ResourceOwnershipException.class)
+    public ResponseEntity<ResponseDTO<String>> accessDeniedExceptions(ResourceOwnershipException ex) {
+
+        String defaultMessage = "해당 리소스에 접근 권한이 없습니다.";
+        ResponseDTO responseDTO = buildResponseDTOwithMessage(ex,defaultMessage);
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseDTO);
+    }
+
+    // @RequestBody와 함께 @Valid(또는 @Validated)가 적용된 객체의 바인딩 예외
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseDTO<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        // BindingResult에서 필드 오류 가져오기
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            // fieldName과 error message를 매핑하여 반환
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        // errors를 하나의 문자열로 결합 (여러 오류 메시지를 이어 붙임)
+        StringBuilder combinedMessage = new StringBuilder();
+        errors.forEach((field, message) -> {
+            combinedMessage.append(field).append(": ").append(message).append("\n");
+        });
+
+        // ResponseDTO 형태로 오류 반환
+        ResponseDTO<Map<String, String>> responseDTO = ResponseDTO.<Map<String, String>>builder()
+                .message(combinedMessage.toString().trim())  // 결합된 메시지 문자열
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
+    }
+
+    // BindException 처리 (ModelAttribute에서 발생하는 예외)
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ResponseDTO<Map<String, String>>> handleBindExceptions(BindException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        // BindingResult에서 필드 오류 가져오기
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            // fieldName과 error message를 매핑하여 반환
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        // errors를 하나의 문자열로 결합 (여러 오류 메시지를 이어 붙임)
+        StringBuilder combinedMessage = new StringBuilder();
+        errors.forEach((field, message) -> {
+            combinedMessage.append(field).append(": ").append(message).append("\n");
+        });
+
+        // ResponseDTO 형태로 오류 반환
+        ResponseDTO<Map<String, String>> responseDTO = ResponseDTO.<Map<String, String>>builder()
+                .message(combinedMessage.toString().trim())  // 결합된 메시지 문자열
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
+    }
+
+    // ConstraintViolationException (@Validated)을 사용하는 경우,개별 파라미터(@PathVariable, @RequestParam 등) 예외
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ResponseDTO<Map<String, String>>> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getConstraintViolations().forEach(violation -> {
+            String fieldName = violation.getPropertyPath().toString(); // 유효성 검사 실패한 필드명
+            String message = violation.getMessage(); // 오류 메시지
+            errors.put(fieldName, message);
+        });
+
+        // 오류 메시지를 하나의 문자열로 결합
+        StringBuilder combinedMessage = new StringBuilder();
+        errors.forEach((field, message) -> {
+            combinedMessage.append(field).append(": ").append(message).append("\n");
+        });
+
+        ResponseDTO<Map<String, String>> responseDTO = ResponseDTO.<Map<String, String>>builder()
+                .message(combinedMessage.toString().trim()) // 결합된 메시지
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
+    }
 
 }
 

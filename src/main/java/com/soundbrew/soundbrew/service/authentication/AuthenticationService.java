@@ -1,8 +1,7 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.authentication;
 
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +16,28 @@ public class AuthenticationService {
                 .anyMatch(role -> role.equals("ROLE_USER"));
 
         return isUser;
+    }
+
+    public boolean isAdmin(Authentication authentication) {
+
+        boolean isAdmin = false;
+
+        isAdmin = authentication.getAuthorities().stream()
+                .map(role -> role.getAuthority())
+                .anyMatch(role -> role.equals("ROLE_ADMIN"));
+
+        return isAdmin;
+    }
+
+    public boolean isModerator(Authentication authentication) {
+
+        boolean isModerator = false;
+
+        isModerator = authentication.getAuthorities().stream()
+                .map(role -> role.getAuthority())
+                .anyMatch(role -> role.equals("ROLE_MODERATOR"));
+
+        return isModerator;
     }
 
     public String getEmail(Authentication authentication){

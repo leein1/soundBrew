@@ -15,12 +15,17 @@ public interface SoundsService {
 
     // sounds for me
     ResponseDTO createSound(int checkedUserId, AlbumDTO albumDTO, MusicDTO musicDTO, TagsDTO tagsDTO);
-    ResponseDTO updateAlbum(int albumId, AlbumDTO albumDTO);
-    ResponseDTO updateMusic(int musicId, MusicDTO musicDTO );
+
+
+    ResponseDTO updateAlbumForArtist(int albumId, AlbumDTO albumDTO, int userId);
+    ResponseDTO updateAlbumForAdmin(int albumId, AlbumDTO albumDTO);
+    //이거
+    ResponseDTO updateMusicForArtist(int musicId, MusicDTO musicDTO, int userId );
+    ResponseDTO updateMusicForAdmin(int musicId, MusicDTO musicDTO );
 
     // get one for me or admin
-    ResponseDTO<SearchTotalResultDTO> getSoundOne(int userId, int id);
     ResponseDTO<SearchTotalResultDTO> getAlbumOne(int userId, int id, RequestDTO requestDTO);
+    ResponseDTO<SearchTotalResultDTO> getSoundOne(int userId, int id);
     ResponseDTO<SearchTotalResultDTO> getSoundMe(RequestDTO requestDTO);
     ResponseDTO<SearchTotalResultDTO> getAlbumMe(RequestDTO requestDTO);
 

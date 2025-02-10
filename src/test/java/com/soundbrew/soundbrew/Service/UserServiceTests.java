@@ -19,11 +19,11 @@ public class UserServiceTests {
     @Test
     public void testRegister(){
         UserDTO userDTO = UserDTO.builder()
-                .name("leeinwon")
-                .nickname("leeinwon")
+                .name("donghun")
+                .nickname("donghun")
                 .password("testTEST123!@#")
                 .phoneNumber("01012341234")
-                .email("inwon.private@icloud.com")
+                .email("dong@naver.com")
                 .build();
 
 

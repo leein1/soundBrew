@@ -1,0 +1,43 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: soundbrew.dev@gmail.com
+    password: kcdfifoafllakbdp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    debug: true
+
+  datasource:
+    url: jdbc:mysql://awseb-e-r2p2bfwpm9-stack-awsebrdsdatabase-g9uubo1wjksq.ct6s00mcadjs.ap-northeast-2.rds.amazonaws.com/soundbrew_test
+    username: soundbrew
+    password: soundbrew
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+com:
+  soundbrew:
+    jwt:
+      secret: happy2025
+
+maintenance:
+  mode: false
+
+public:
+  paths:
+    - /api/sounds/**
+    - /sounds/**
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    - /fonts/**
+    - /generateToken
+    - /register
+    - /api/users/**
+    - /
+    - /files/**
+    - /myInfo
+    - /api/sample/**

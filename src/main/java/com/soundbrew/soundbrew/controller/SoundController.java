@@ -8,26 +8,30 @@ import com.soundbrew.soundbrew.service.SoundsService;
 import com.soundbrew.soundbrew.service.TagsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/sounds")
+@Validated
 public class SoundController {
     private final SoundsService soundsService;
     private final TagsService tagsService;
 
     @GetMapping("/tracks")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalSoundSearch(@ModelAttribute RequestDTO requestDto) {
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalSoundSearch(@ModelAttribute  RequestDTO requestDto) {
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.totalSoundSearch(requestDto);
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalAlbumSearch(@ModelAttribute RequestDTO requestDto) {
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalAlbumSearch(@ModelAttribute  RequestDTO requestDto) {
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.totalAlbumSearch(requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
@@ -46,20 +50,20 @@ public class SoundController {
 
     // ** 음원들과 매핑 되어있는 전체 태그를 표시 **
     @GetMapping("/tags/mapped") // 메인 페이지의 전체 태그 버튼들
-    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@ModelAttribute RequestDTO requestDTO){
+    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@ModelAttribute  RequestDTO requestDTO){
         ResponseDTO<TagsDTO> responseDTO = tagsService.getAllTags(requestDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/tracks/{nickname}/title/{title}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundsOne(@PathVariable String nickname, @PathVariable String title){
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundsOne(@PathVariable @Size(min = 2, max = 37) String nickname, @PathVariable @Size(min = 2, max = 50) String title){
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundOne(nickname,title);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums/{nickname}/title/{albumName}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumsOne(@PathVariable String nickname, @PathVariable String albumName, @ModelAttribute RequestDTO requestDto){
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumsOne(@PathVariable @Size(min = 2, max = 37) String nickname,  @PathVariable @Size(min = 2, max = 255) String albumName, @ModelAttribute RequestDTO requestDto){
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(nickname,albumName,requestDto);
 
         return ResponseEntity.ok().body(responseDto);

@@ -5,8 +5,7 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
-import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
-import com.soundbrew.soundbrew.service.AuthenticationService;
+import com.soundbrew.soundbrew.service.authentication.AuthenticationService;
 import com.soundbrew.soundbrew.service.SoundsService;
 import com.soundbrew.soundbrew.service.TagsService;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
@@ -14,11 +13,12 @@ import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.constraints.Positive;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -26,6 +26,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 //@AllArgsConstructor
 @Log4j2
+@Validated
 public class MeController {
 
     private final UserService userService;
@@ -33,6 +34,10 @@ public class MeController {
     private final SoundsService soundsService;
     private final TagsService tagsService;
     private final AuthenticationService authenticationService;
+
+    public void check(int albumUserId, int givenUserId,String reason) {
+        if(albumUserId != givenUserId) throw new AccessDeniedException("접근할 권한이 없습니다.");
+    }
 
 
 //    내 정보 보기 - GET /me/{userId}
@@ -152,104 +157,80 @@ public class MeController {
 
     }
 
-
-
     @PostMapping("/tracks/{musicId}/tags")
-    ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable int musicId, @RequestBody TagsDTO tagsDto){
-//        Authentication authentication
-//        int userId = authenticationService.getUserId(authentication);
+    ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable @Positive int musicId, @RequestBody  TagsDTO tagsDto, Authentication authentication){
+        int userId = authenticationService.getUserId(authentication);
 
-        ResponseDTO responseDto = tagsService.updateLinkTags(musicId,tagsDto);
+        ResponseDTO responseDto = tagsService.updateLinkTagsForArtist(musicId,tagsDto,userId);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
-
-    // sounds for me
     @PostMapping("/sounds")
-    ResponseEntity<ResponseDTO> createSound(@RequestBody SoundCreateDTO soundCreateDto){
-//        Authentication authentication
-//        int userId = authenticationService.getUserId(authentication);
+    ResponseEntity<ResponseDTO> createSound(@RequestBody SoundCreateDTO soundCreateDto, Authentication authentication){
+        int userId = authenticationService.getUserId(authentication);
 
         AlbumDTO albumDto = soundCreateDto.getAlbumDTO();
         MusicDTO musicDto = soundCreateDto.getMusicDTO();
         TagsDTO tagsDto = soundCreateDto.getTagsDTO();
 
-        ResponseDTO responseDto = soundsService.createSound(2,albumDto,musicDto,tagsDto);
+        ResponseDTO responseDto = soundsService.createSound(userId,albumDto,musicDto,tagsDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO> updateAlbum(@PathVariable int albumId, @RequestBody AlbumDTO albumDto){
-        //        Authentication authentication
-//        int userId = authenticationService.getUserId(authentication);
+    ResponseEntity<ResponseDTO> updateAlbum(@PathVariable @Positive int albumId, @RequestBody AlbumDTO albumDto, Authentication authentication){
+        int userId = authenticationService.getUserId(authentication);
 
-        ResponseDTO responseDto = soundsService.updateAlbum(albumId,albumDto);
+        ResponseDTO responseDto = soundsService.updateAlbumForArtist(albumId,albumDto,userId);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO> updateMusic(@PathVariable int musicId, @RequestBody MusicDTO musicDto ){
-        //        Authentication authentication
-//        int userId = authenticationService.getUserId(authentication);
+    ResponseEntity<ResponseDTO> updateMusic(@PathVariable @Positive int musicId, @RequestBody MusicDTO musicDto, Authentication authentication ){
+        int userId = authenticationService.getUserId(authentication);
 
-        ResponseDTO responseDto = soundsService.updateMusic(musicId,musicDto);
+        ResponseDTO responseDto = soundsService.updateMusicForArtist(musicId,musicDto,userId);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable("musicId") int id){
-        //        Authentication authentication
-//        int userId = authenticationService.getUserId(authentication);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable("musicId") @Positive int id, Authentication authentication){
+        int userId = authenticationService.getUserId(authentication);
 
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundOne(2,id);
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundOne(userId,id);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") int id, RequestDTO requestDto){
-        //        Authentication authentication
-//        int userId = authenticationService.getUserId(authentication);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") @Positive int id,  RequestDTO requestDto, Authentication authentication){
+        int userId = authenticationService.getUserId(authentication);
 
-        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(2,id,requestDto);
+        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(userId,id,requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/tracks")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe(RequestDTO requestDto){
-        //        Authentication authentication
-//        String nickname = authenticationService.getNickname(authentication);
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe( RequestDTO requestDto, Authentication authentication){
+        String nickname = authenticationService.getNickname(authentication);
 
-        requestDto.setKeyword("u_1");
+        requestDto.setKeyword(nickname);
         requestDto.setType("n");
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
-//    @GetMapping("/tags")
-//    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(RequestDTO requestDto){
-//        //Authentication authentication
-//        //String nickname = authenticationService.getNickname(authentication);
-//
-//        requestDto.setKeyword("u_1");
-//        requestDto.setType("n");
-//        ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
-//
-//        return ResponseEntity.ok().body(responseDto);
-//    }
-
     @GetMapping("/albums")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumMe(RequestDTO requestDto){
-//        Authentication authentication
-//        String nickname = authenticationService.getNickname(authentication);
-        requestDto.setKeyword("u_1");
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumMe(  RequestDTO requestDto, Authentication authentication){
+        String nickname = authenticationService.getNickname(authentication);
 
+        requestDto.setKeyword(nickname);
         requestDto.setType("n");
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumMe(requestDto);
 
@@ -257,15 +238,13 @@ public class MeController {
     }
 
     @GetMapping("/tags")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(RequestDTO requestDto){
-        requestDto.setKeyword("u_1");
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(  RequestDTO requestDto, Authentication authentication){
+        String nickname = authenticationService.getNickname(authentication);
+
+        requestDto.setKeyword(nickname);
         requestDto.setType("n");
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
-
-
-
-
 }

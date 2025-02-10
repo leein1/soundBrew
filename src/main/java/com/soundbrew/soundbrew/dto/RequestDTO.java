@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.dto;
 
+import com.soundbrew.soundbrew.util.valid.ValidMoreMap;
 import lombok.*;
 
 
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.validation.constraints.Positive;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -20,13 +22,16 @@ import java.util.Map;
 public class RequestDTO {
 
     @Builder.Default
+    @Positive
     int page = 1;
 
     @Builder.Default
+    @Positive
     int size = 5;
 
     String keyword;
 
+    @ValidMoreMap
     Map<String,String> more;
 
     //  복수형 검색어 변수 추가 필요

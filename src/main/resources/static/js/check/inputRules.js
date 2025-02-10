@@ -85,7 +85,7 @@ export const validationRules = {
     }
 };
 
-export const processingRules = {
+    export const processingRules = {
     nickname: ['trim', 'toLowerCase'], // 앞뒤 공백 제거, 소문자 변환
     email: ['trim'],                  // 공백 제거
 
