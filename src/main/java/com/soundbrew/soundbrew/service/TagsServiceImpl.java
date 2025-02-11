@@ -161,28 +161,28 @@ public class TagsServiceImpl implements TagsService {
 
     @Override
     @Transactional
-    public ResponseDTO updateInstrumentTagSpelling(String beforeName, String afterName) {
+    public ResponseDTO updateInstrumentTagSpelling(String beforeName, TagsDTO afterName) {
         InstrumentTag instrumentTag = this.findByInstrumentTagName(beforeName);
 
-        instrumentTag.update(afterName);
+        instrumentTag.update(afterName.getInstrument().get(0));
         return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
     }
 
     @Override
     @Transactional
-    public ResponseDTO updateMoodTagSpelling(String beforeName, String afterName) {
+    public ResponseDTO updateMoodTagSpelling(String beforeName, TagsDTO afterName) {
         MoodTag moodTag = this.findByMoodTagName(beforeName);
 
-        moodTag.update(afterName);
+        moodTag.update(afterName.getMood().get(0));
         return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
     }
 
     @Override
     @Transactional
-    public ResponseDTO updateGenreTagSpelling(String beforeName, String afterName) {
+    public ResponseDTO updateGenreTagSpelling(String beforeName, TagsDTO afterName) {
         GenreTag genreTag= this.findByGenreTagName(beforeName);
 
-        genreTag.update(afterName);
+        genreTag.update(afterName.getGenre().get(0));
         return ResponseDTO.withMessage().message("오탈자 수정이 정상적으로 작동하였습니다.").build();
     }
 

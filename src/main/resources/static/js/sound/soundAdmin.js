@@ -231,25 +231,19 @@ window.applyTagSpellingChanges = async function (button, originalTag, category) 
     // 해당 tr 안에 있는 input 필드를 찾아서 값을 가져옵니다.
     const inputField = row.querySelector('.editable-field');
 
-    // input 필드에서 변경된 태그명
     const newTag = inputField.value;
-
-    // 변경된 태그명 사용 (원본 태그명은 originalTag, 카테고리는 category)
-    console.log('원본 태그명:', originalTag);
-    console.log('수정된 태그명:', newTag);
-    console.log('카테고리:', category);
     const afterNewTag = newTag.replace(/"/g, '');
 
     const pattern = new RegExp("^[a-z0-9.,()-_\\s]+$");
     if (pattern.test(afterNewTag)) {
         if (category === 'instrument') {
-            await axiosPatch({endpoint: `/api/admin/tags/instruments/${originalTag}`,body:afterNewTag})
+            await axiosPatch({endpoint: `/api/admin/tags/instruments/${originalTag}`,body:{'instrument':[afterNewTag]}})
         }
         if (category === 'mood') {
-            await axiosPatch({endpoint: `/api/admin/tags/moods/${originalTag}`,body:afterNewTag})
+            await axiosPatch({endpoint: `/api/admin/tags/moods/${originalTag}`,body:{'mood':[afterNewTag]}})
         }
         if (category === 'genre') {
-            await axiosPatch({endpoint: `/api/admin/tags/genres/${originalTag}`,body:afterNewTag})
+            await axiosPatch({endpoint: `/api/admin/tags/genres/${originalTag}`,body:{'genre':[afterNewTag]}})
         }
     } else {
         alert('태그 형식이 잘못 되었습니다');

@@ -25,13 +25,13 @@ public class SoundController {
     private final TagsService tagsService;
 
     @GetMapping("/tracks")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalSoundSearch(@ModelAttribute  RequestDTO requestDto) {
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalSoundSearch(@ModelAttribute  @Valid RequestDTO requestDto) {
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.totalSoundSearch(requestDto);
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/albums")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalAlbumSearch(@ModelAttribute  RequestDTO requestDto) {
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> totalAlbumSearch(@ModelAttribute  @Valid RequestDTO requestDto) {
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.totalAlbumSearch(requestDto);
 
         return  ResponseEntity.ok().body(responseDto);
@@ -50,7 +50,7 @@ public class SoundController {
 
     // ** 음원들과 매핑 되어있는 전체 태그를 표시 **
     @GetMapping("/tags/mapped") // 메인 페이지의 전체 태그 버튼들
-    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@ModelAttribute  RequestDTO requestDTO){
+    ResponseEntity<ResponseDTO<TagsDTO>> totalTagsSearch(@ModelAttribute  @Valid RequestDTO requestDTO){
         ResponseDTO<TagsDTO> responseDTO = tagsService.getAllTags(requestDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -63,7 +63,7 @@ public class SoundController {
     }
 
     @GetMapping("/albums/{nickname}/title/{albumName}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumsOne(@PathVariable @Size(min = 2, max = 37) String nickname,  @PathVariable @Size(min = 2, max = 255) String albumName, @ModelAttribute RequestDTO requestDto){
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumsOne(@PathVariable @Size(min = 2, max = 37) String nickname,  @PathVariable @Size(min = 2, max = 255) String albumName, @ModelAttribute @Valid RequestDTO requestDto){
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(nickname,albumName,requestDto);
 
         return ResponseEntity.ok().body(responseDto);

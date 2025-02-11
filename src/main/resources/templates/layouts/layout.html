@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="info1">
-                    <span class="nickname" >닉네임</span>
+                    <span class="myNickName" id="myNickName" >닉네임</span>
                     <span class="plans" >BASIC</span>
                 </div>
 
@@ -160,6 +160,30 @@
         // }
 
         document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("accessToken");
+
+            if (token) {
+                // JWT의 두 번째 부분(payload) 추출 후 디코딩
+                const payloadBase64 = token.split('.')[1]; // JWT는 "HEADER.PAYLOAD.SIGNATURE" 형식
+                // atob 란? Base64로 인코딩된 문자열을 디코딩하는 JavaScript 내장 함수.
+                const payloadDecoded = JSON.parse(atob(payloadBase64)); // Base64 디코딩 후 JSON 변환
+
+                console.log("Decoded Token Payload:", payloadDecoded);
+
+                // 값 개별적으로 접근 가능
+                console.log("닉네임:", payloadDecoded.nickname);
+                const myNickName = document.getElementById('myNickName');
+                myNickName.innerText = payloadDecoded.nickname;
+                console.log("만료 시간 (exp):", new Date(payloadDecoded.exp * 1000).toLocaleString("ko-KR"));
+                console.log("발급 시간 (iat):", new Date(payloadDecoded.iat * 1000).toLocaleString("ko-KR"));
+                console.log("사용자 ID:", payloadDecoded.userId);
+                console.log("이메일:", payloadDecoded.username);
+                console.log("역할:", payloadDecoded.roles);
+            } else {
+                console.log("토큰이 없습니다.");
+            }
+
+
             // 로그인 상태에 따른 화면 전환
             const isLoggedIn = localStorage.getItem("accessToken");
 

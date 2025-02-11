@@ -19,9 +19,9 @@ public interface TagsService {
 
     // Tags for admin
     ResponseDTO createTag(TagsDTO tagsDTO);
-    ResponseDTO updateInstrumentTagSpelling(String beforeName, String afterName);
-    ResponseDTO updateMoodTagSpelling(String beforeName, String afterName);
-    ResponseDTO updateGenreTagSpelling(String beforeName, String afterName);
+    ResponseDTO updateInstrumentTagSpelling(String beforeName, TagsDTO afterName);
+    ResponseDTO updateMoodTagSpelling(String beforeName, TagsDTO afterName);
+    ResponseDTO updateGenreTagSpelling(String beforeName, TagsDTO afterName);
     ResponseDTO<TagsDTO> getTags();
     ResponseDTO<TagsDTO> getAllTags(RequestDTO requestDTO);
 }

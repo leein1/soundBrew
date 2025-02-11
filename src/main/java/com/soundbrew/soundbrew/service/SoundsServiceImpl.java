@@ -201,10 +201,11 @@ public class SoundsServiceImpl implements SoundsService{
 
     // 실제 앨범 정보를 업데이트하는 공통 메서드
     private ResponseDTO updateAlbumInternal(Album album, AlbumDTO albumDTO) {
-        AlbumDTO select = modelMapper.map(album,AlbumDTO.class);
-        select.setDescription(albumDTO.getDescription());
-        select.setAlbumName(albumDTO.getAlbumName());
-        albumRepository.save(select.toEntity(album.getAlbumMusic()));
+//        AlbumDTO select = modelMapper.map(album,AlbumDTO.class);
+//        select.setDescription(albumDTO.getDescription());
+//        select.setAlbumName(albumDTO.getAlbumName());
+//        albumRepository.save(select.toEntity(album.getAlbumMusic()));
+        album.update(albumDTO.getAlbumName(),albumDTO.getDescription());
 
         return ResponseDTO.withMessage()
                 .message("변경이 정상적으로 처리되었습니다.")
@@ -213,10 +214,11 @@ public class SoundsServiceImpl implements SoundsService{
 
     // 실제 음원 정보를 업데이트하는 공통 메서드
     private ResponseDTO updateMusicInternal(Music music, MusicDTO musicDTO) {
-        MusicDTO select = modelMapper.map(music , MusicDTO.class);
-        select.setDescription(musicDTO.getDescription());
-        select.setTitle(musicDTO.getTitle());
-        musicRepository.save(select.toEntity());
+//        MusicDTO select = modelMapper.map(music , MusicDTO.class);
+//        music.setDescription(musicDTO.getDescription());
+//        music.setTitle(musicDTO.getTitle());
+//        musicRepository.save(select.toEntity());
+        music.update(musicDTO.getTitle(),musicDTO.getDescription(),music.getSoundType());
 
         return ResponseDTO.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
     }

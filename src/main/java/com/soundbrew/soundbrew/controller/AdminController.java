@@ -93,9 +93,8 @@ public class AdminController {  //  관리자용 컨트롤러
             String beforeName,
 
             @RequestBody
-            @Size(min = 2, max = 50)
-            @Pattern(regexp = "^[a-z0-9\\s]*$")
-            String afterName,
+            @Valid
+            TagsDTO afterName,
 
             Authentication authentication
     ){
@@ -114,9 +113,8 @@ public class AdminController {  //  관리자용 컨트롤러
             String beforeName,
 
             @RequestBody
-            @Size(min = 2, max = 50)
-            @Pattern(regexp = "^[a-z0-9\\s]*$")
-            String afterName,
+            @Valid
+            TagsDTO afterName,
 
             Authentication authentication
     ){
@@ -135,9 +133,8 @@ public class AdminController {  //  관리자용 컨트롤러
             String beforeName,
 
             @RequestBody
-            @Size(min = 2, max = 50)
-            @Pattern(regexp = "^[a-z0-9\\s]*$")
-            String afterName,
+            @Valid
+            TagsDTO afterName,
 
             Authentication authentication
     ){

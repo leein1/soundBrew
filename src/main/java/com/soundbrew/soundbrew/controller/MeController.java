@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.NoSuchElementException;
 
@@ -207,7 +208,7 @@ public class MeController {
     }
 
     @GetMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") @Positive int id,  RequestDTO requestDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") @Positive int id,  @Valid RequestDTO requestDto, Authentication authentication){
         int userId = authenticationService.getUserId(authentication);
 
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getAlbumOne(userId,id,requestDto);
@@ -216,7 +217,7 @@ public class MeController {
     }
 
     @GetMapping("/tracks")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe( RequestDTO requestDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe(@Valid RequestDTO requestDto, Authentication authentication){
         String nickname = authenticationService.getNickname(authentication);
 
         requestDto.setKeyword(nickname);
@@ -227,7 +228,7 @@ public class MeController {
     }
 
     @GetMapping("/albums")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumMe(  RequestDTO requestDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumMe( @Valid RequestDTO requestDto, Authentication authentication){
         String nickname = authenticationService.getNickname(authentication);
 
         requestDto.setKeyword(nickname);
@@ -238,7 +239,7 @@ public class MeController {
     }
 
     @GetMapping("/tags")
-    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(  RequestDTO requestDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(  @Valid RequestDTO requestDto, Authentication authentication){
         String nickname = authenticationService.getNickname(authentication);
 
         requestDto.setKeyword(nickname);
