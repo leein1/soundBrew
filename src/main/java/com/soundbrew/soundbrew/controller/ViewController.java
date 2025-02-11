@@ -43,7 +43,9 @@ public class ViewController {
 
     @GetMapping("")
     public String getMain(){
+
         return "/hello";
+
     }
 
     @GetMapping("/admin")
