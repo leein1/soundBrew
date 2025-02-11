@@ -29,9 +29,9 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         log.info("----------------------------Login Success Handler ------------------------------");
-        
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         log.info(authentication);
         log.info(authentication.getName());
@@ -59,21 +59,13 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         //  Refresh Token 기간 30일
         String refreshToken = jwtUtil.generateToken(claim,5);
 
-        // Referer 헤더에서 이전 요청 URL 추적
-        String referer = request.getHeader(HttpHeaders.REFERER);
-        String redirectUrl = "/";
-
-        if (referer != null && !referer.endsWith("/login")) {
-            redirectUrl = referer;
-        }
-
         //  확인을 위해 userId, nickname 정보도 같이 응답으로 보냄
         Map<String,String> keyMap = Map.of(
-                "accessToken",accessToken,
-                "refreshToken",refreshToken,
-                "userId",String.valueOf(userId),
-                "nickname",nickname,
-                "redirectUrl", redirectUrl
+                "accessToken", accessToken,
+                "refreshToken", refreshToken,
+                "userId", String.valueOf(userId),
+                "nickname", nickname,
+                "redirectUrl", "/sounds/tracks"
 
         );
 
