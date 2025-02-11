@@ -12,8 +12,8 @@ export function getLoginFormProcess() {
         try {
             const response = await generateTokenFromLogin(data);
             alert(response.response.status.toString());
-            if(response.response && response.response ===200){
-                alert("ASdfasdfas")
+            if(response.response && response.response.status ===200){
+                window.location.href="/sounds/tracks";
             }
         } catch (error) {
             console.error("Error during login or resource access:", error);
@@ -24,8 +24,8 @@ export function getLoginFormProcess() {
 
 export async function generateTokenFromLogin(userInput) {
     try {
-        // const response = await axios.post("http://localhost:8080/generateToken", userInput);
-        const response = await axiosPost({endpoint:'/generateToken',body:userInput});
+         const response = await axios.post("http://soundvbrew-env.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com/generateToken", userInput);
+//        const response = await axiosPost({endpoint:'/generateToken',body:userInput});
 
         const accessToken = response.data.accessToken;
         const refreshToken = response.data.refreshToken;

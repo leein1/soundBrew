@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,6 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -36,6 +40,28 @@ public class CustomSecurityConfig {
     private final JWTUtil jwtUtil;
     private final PublicPathsProperties publicPathsProperties;
     private final MaintenanceConfig maintenanceConfig;
+
+    // 모든 출처에서 CORS를 허용하는 설정
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 모든 출처 허용
+        configuration.setAllowedOrigins(List.of("*"));  // "*"은 모든 출처를 허용
+
+        // 모든 HTTP 메서드 허용
+        configuration.setAllowedMethods(List.of("*"));  // "*"은 모든 HTTP 메서드를 허용
+
+        // 모든 헤더 허용
+        configuration.setAllowedHeaders(List.of("*"));  // "*"은 모든 헤더를 허용
+
+        // 자격 증명 허용 여부
+        configuration.setAllowCredentials(false);  // 자격 증명(Cookie 등)을 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);  // 모든 경로에 대해 CORS 설정
+        return source;
+    }
 
     //  AccessDeniedHandler 빈 등록
     @Bean
@@ -97,6 +123,7 @@ public class CustomSecurityConfig {
 
         // HttpSecurity 설정
         http.authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 //                .antMatchers(publicPaths().toArray(new String[0])).permitAll()  // 인증 불필요 경로
                 .antMatchers(publicPathsProperties.getPaths().toArray(new String[0])).permitAll()
@@ -118,6 +145,7 @@ public class CustomSecurityConfig {
 //        );
 
         //  csrf 비활성 / 세션 비활성
+        http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

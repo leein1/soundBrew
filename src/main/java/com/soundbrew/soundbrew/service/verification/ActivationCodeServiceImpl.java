@@ -100,7 +100,7 @@ public class ActivationCodeServiceImpl implements ActivationCodeService{
             String email = user.getEmail();
 
 
-            String text = "메일 인증 문자 입니다.\n발송 이후 10분간 유효합니다. \n" + activationCode.getActivationCode();
+            String text = "메일 인증 문자 입니다.\n발송 이후 10분간 유효합니다. \n http://ec2-3-39-121-136.ap-northeast-2.compute.amazonaws.com/activation \n" + activationCode.getActivationCode();
             mailService.send(email, "SoundBrew 계정 인증", text);
 
             ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
