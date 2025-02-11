@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.config;
 
 import com.soundbrew.soundbrew.security.filter.RefreshTokenFilter;
+import com.soundbrew.soundbrew.security.handler.APILoginFailureHandler;
 import com.soundbrew.soundbrew.security.handler.APILoginSuccessHandler;
 import com.soundbrew.soundbrew.handler.Custom403Handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
@@ -78,8 +79,14 @@ public class CustomSecurityConfig {
         // API 로그인 필터
         APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
         apiLoginFilter.setAuthenticationManager(authenticationManager);
+
+        // 인증 성공 핸들러
         APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
+
+        // 인증 실패 핸들러
+        APILoginFailureHandler failureHandler = new APILoginFailureHandler();
+        apiLoginFilter.setAuthenticationFailureHandler(failureHandler);
 
         // 필터 순서
 //        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 가장 먼저 실행
