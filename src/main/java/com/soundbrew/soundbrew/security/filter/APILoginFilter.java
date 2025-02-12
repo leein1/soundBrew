@@ -65,16 +65,4 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
 
         return getAuthenticationManager().authenticate(authenticationToken);
     }
-    // 🔹 인증 실패 시 401 응답 처리
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
-            throws IOException, ServletException {
-        log.warn("⚠️ 인증 실패: {}", failed.getMessage());
-
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드
-        response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"Authentication Failed\", \"message\": \"" + failed.getMessage() + "\"}");
-        response.getWriter().flush();
-    }
-
 }

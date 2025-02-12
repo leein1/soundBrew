@@ -1,6 +1,5 @@
 package com.soundbrew.soundbrew.dto;
 
-import com.soundbrew.soundbrew.util.valid.ValidMoreMap;
 import lombok.*;
 
 
@@ -31,7 +30,7 @@ public class RequestDTO {
 
     String keyword;
 
-    @ValidMoreMap
+//    @ValidMoreMap
     Map<String,String> more;
 
     //  복수형 검색어 변수 추가 필요

@@ -6,7 +6,7 @@ spring:
     name: soundBrew
 
   profiles:
-    active: prod
+    active: dev
 
 #  mail:
 #    host: smtp.gmail.com

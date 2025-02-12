@@ -266,6 +266,9 @@
         // 폼 데이터 가져오기
         document.getElementById("register-form").addEventListener("submit", async (e) =>{
             e.preventDefault();
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
 
             try{
                 const phone1 = document.getElementById('phone1').value;

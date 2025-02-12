@@ -160,117 +160,81 @@
         // }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const token = localStorage.getItem("accessToken");
+    function base64UrlToBase64(base64Url) {
+        // Base64 URL-safe 형식을 표준 Base64 형식으로 변환
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        // 필요한 패딩 추가 (문자열 길이가 4의 배수가 되도록)
+        while (base64.length % 4) {
+            base64 += '=';
+        }
+        return base64;
+    }
 
-            if (token) {
-                // JWT의 두 번째 부분(payload) 추출 후 디코딩
-                const payloadBase64 = token.split('.')[1]; // JWT는 "HEADER.PAYLOAD.SIGNATURE" 형식
-                // atob 란? Base64로 인코딩된 문자열을 디코딩하는 JavaScript 내장 함수.
-                const payloadDecoded = JSON.parse(atob(payloadBase64)); // Base64 디코딩 후 JSON 변환
+    const token = localStorage.getItem("accessToken");
 
-                console.log("Decoded Token Payload:", payloadDecoded);
+        if (token) {
+            // JWT는 "HEADER.PAYLOAD.SIGNATURE" 형식입니다.
+            const payloadBase64Url = token.split('.')[1];  // URL-safe 형식의 payload 추출
+            const payloadBase64 = base64UrlToBase64(payloadBase64Url); // 표준 Base64로 변환
+            const payloadDecoded = JSON.parse(atob(payloadBase64)); // Base64 디코딩 후 JSON 변환
 
-                // 값 개별적으로 접근 가능
-                console.log("닉네임:", payloadDecoded.nickname);
-                const myNickName = document.getElementById('myNickName');
-                myNickName.innerText = payloadDecoded.nickname;
-                console.log("만료 시간 (exp):", new Date(payloadDecoded.exp * 1000).toLocaleString("ko-KR"));
-                console.log("발급 시간 (iat):", new Date(payloadDecoded.iat * 1000).toLocaleString("ko-KR"));
-                console.log("사용자 ID:", payloadDecoded.userId);
-                console.log("이메일:", payloadDecoded.username);
-                console.log("역할:", payloadDecoded.roles);
-            } else {
-                console.log("토큰이 없습니다.");
-            }
+            console.log("Decoded Token Payload:", payloadDecoded);
 
+            // 값 개별적으로 접근
+            console.log("닉네임:", payloadDecoded.nickname);
+            const myNickName = document.getElementById('myNickName');
+            myNickName.innerText = payloadDecoded.nickname;
+            console.log("만료 시간 (exp):", new Date(payloadDecoded.exp * 1000).toLocaleString("ko-KR"));
+            console.log("발급 시간 (iat):", new Date(payloadDecoded.iat * 1000).toLocaleString("ko-KR"));
+            console.log("사용자 ID:", payloadDecoded.userId);
+            console.log("이메일:", payloadDecoded.username);
+            console.log("역할:", payloadDecoded.roles);
+        } else {
+            console.log("토큰이 없습니다.");
+        }
 
-            // 로그인 상태에 따른 화면 전환
-            const isLoggedIn = localStorage.getItem("accessToken");
+        // 로그인 상태에 따른 화면 전환
+        const isLoggedIn = localStorage.getItem("accessToken");
 
-            if (isLoggedIn) {
-                const guestViews = document.querySelectorAll('.guest-view');
-                const userViews = document.querySelectorAll('.user-view');
+        if (isLoggedIn) {
+            const guestViews = document.querySelectorAll('.guest-view');
+            const userViews = document.querySelectorAll('.user-view');
 
-                guestViews.forEach(view => {
-                    view.style.display = "none";
-                });
-
-                userViews.forEach(view => {
-                    view.style.display = "block";
-                });
-            }
-
-            document.querySelector('#soundTracksRoute').addEventListener('click', ()=>{
-                window.location.href='/sounds/tracks';
+            guestViews.forEach(view => {
+                view.style.display = "none";
             });
 
-            document.querySelector('#myTracksRoute').addEventListener('click', ()=>{
-                window.location.href='/me/sounds/tracks';
+            userViews.forEach(view => {
+                view.style.display = "block";
             });
+        }
 
-            document.querySelector('#myAlbumsRoute').addEventListener('click', ()=>{
-                window.location.href='/me/sounds/albums';
-            });
-
-            document.querySelector('#myInfoRoute').addEventListener('click', ()=>{
-                window.location.href='/me/info';
-            });
-
-            document.querySelector('#mySubscriptionRoute').addEventListener('click', ()=>{
-                window.location.href='/me/info';
-            });
-
-            // // ESC 키로 모달 닫기
-            // window.addEventListener('keydown', function(event) {
-            //     if (event.key === 'Escape') {
-            //         const modals = document.querySelectorAll('.modal');
-            //         modals.forEach(modal => modal.style.display = 'none');
-            //     }
-            // });
-            //
-            // // 배경 클릭으로 모달 닫기
-            // window.addEventListener('click', function(event) {
-            //     const modals = document.querySelectorAll('.modal');
-            //     modals.forEach(modal => {
-            //         if (event.target === modal) {
-            //             modal.style.display = 'none';
-            //         }
-            //     });
-            // });
-            //
-            // sitename 클릭 이벤트
-            document.getElementById("sitename").addEventListener("click", () => {
-                window.location.href = "/sounds/tracks";
-            });
-            //
-            // // 모달 열기 버튼 이벤트 처리 (예: 프로필 사진 변경 버튼)
-            // const profileModalBtn = document.getElementById("profileModalBtn");
-            // if (profileModalBtn) {
-            //     profileModalBtn.addEventListener("click", () => {
-            //         const modalId = profileModalBtn.getAttribute("data-modal");
-            //         openModal(modalId);
-            //     });
-            // }
-            //
-            // // 모달 열기 버튼 이벤트 처리 (예: 프로필 사진 변경 버튼)
-            // const passwordChangeModalBtn = document.getElementById("passwordChangeBtn");
-            // if (passwordChangeModalBtn) {
-            //     passwordChangeModalBtn.addEventListener("click", () => {
-            //         const modalId = passwordChangeModalBtn.getAttribute("data-modal");
-            //         openModal(modalId);
-            //     });
-            // }
-            //
-            // // 모든 모달 닫기 버튼 처리 (class가 close-button인 요소)
-            // const closeButtons = document.querySelectorAll('.close-button');
-            // closeButtons.forEach(button => {
-            //     button.addEventListener("click", () => {
-            //         // 버튼에 설정된 data-modal 값에 해당하는 모달을 닫기
-            //         const modalId = button.getAttribute("data-modal");
-            //         closeModal(modalId);
-            //     });
-            // });
+        document.querySelector('#soundTracksRoute').addEventListener('click', () => {
+            window.location.href = '/sounds/tracks';
         });
+
+        document.querySelector('#myTracksRoute').addEventListener('click', () => {
+            window.location.href = '/me/sounds/tracks';
+        });
+
+        document.querySelector('#myAlbumsRoute').addEventListener('click', () => {
+            window.location.href = '/me/sounds/albums';
+        });
+
+        document.querySelector('#myInfoRoute').addEventListener('click', () => {
+            window.location.href = '/me/info';
+        });
+
+        document.querySelector('#mySubscriptionRoute').addEventListener('click', () => {
+            window.location.href = '/me/info';
+        });
+
+        // sitename 클릭 이벤트
+        document.getElementById("sitename").addEventListener("click", () => {
+            window.location.href = "/sounds/tracks";
+        });
+    });
+
     </script>
 
 

@@ -17,7 +17,7 @@ import java.lang.annotation.*;
 // public "class" (...) 위치에 @interface가 들어가면, 일종의 인터페이스.
 // 하지만 정확하게는, 어노테이션을 정의하는 인터페이스. == "@interface 키워드를 사용하여 새로운 애너테이션을 정의"
 public @interface ValidTagList {
-    String message() default "각 태그는 2~50자여야 하며, 특수문자를 포함할 수 없습니다.";
+    String message() default "각 태그는 2~50자여야 하며, 특수문자를 포함할 수 없습니다?";
 
     //검증 그룹(Validation Groups)을 사용할때 씀.
     //검증 그룹을 사용하면 특정 상황에서만 유효성 검사를 수행할 수 있습니다.

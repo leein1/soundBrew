@@ -44,7 +44,7 @@ public class ViewController {
     @GetMapping("")
     public String getMain(){
 
-        return "/hello";
+        return "hello";
 
     }
 
@@ -66,17 +66,17 @@ public class ViewController {
     @RequestMapping(value = { "/sounds/**" })
     public String soundSPA() {
         // 모든 SPA 요청을 sound/music-list.html로 리다이렉트
-        return "/sound/music-list";
+        return "sound/music-list";
     }
 
     @RequestMapping(value = {"/me/sounds/**"})
     public String soundManageSPA(){
-        return "/sound/music-manage";
+        return "sound/music-manage";
     }
 
     //실제로는 /admin/sounds/...
     @RequestMapping(value= {"/admin/**"})
     public String soundAdmin(){
-        return "/admin/sounds";
+        return "admin/sounds";
     }
 }
