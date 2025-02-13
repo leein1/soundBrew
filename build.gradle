@@ -52,6 +52,10 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
+    // 테스트시 junit, localstack을 사용하기 위한 라이브러리 설정
+//    testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
+//    testImplementation 'org.testcontainers:localstack:1.17.6'
+
     //thymeleaf 레이아웃을 위한 라이브러리
     implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.1.0'
 
@@ -64,6 +68,10 @@ dependencies {
     //  메일 전송
 
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // 아마존 aws s3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.167'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
     //  swaggerUI
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
