@@ -92,12 +92,19 @@
     /* border-top: 1px solid #ddd; */
 }
 
-.footer-link {
-    color: #5b9bd5;
-    text-decoration: none;
-    font-size: 14px;
+.content-footer .separator {
+    display: inline-block; /* 인라인 블록으로 변경 */
+    margin: 0 30px;        /* 좌우 10px 마진 적용 */
 }
 
-.footer-link:hover {
-    text-decoration: underline;
+a {
+    color: #5b9bd5;
+    text-decoration: none;
+    font-size: 16px;
 }
+
+a:hover {
+    text-decoration: none;
+    color: darkgray;
+}
+
