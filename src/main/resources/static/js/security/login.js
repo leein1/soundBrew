@@ -5,9 +5,16 @@ export function getLoginFormProcess() {
     document.getElementById("login-form").addEventListener("submit", async (event) => {
         event.preventDefault(); // 폼의 기본 동작 막기
 
+        const loginForm = document.getElementById("login-form");
+        // submit 버튼만 선택하여 비활성화
+        const submitButton = loginForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
         const username = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const userInput = { username, password };
+
+
 
         try {
 
