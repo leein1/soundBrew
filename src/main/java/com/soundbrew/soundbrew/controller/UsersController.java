@@ -9,9 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -41,6 +38,19 @@ public class UsersController {
             throw new RuntimeException("회원가입 중 예상치 못한 문제가 발생하였습니다. 잠시후 다시 시도 해주세요");
         }
 
+    }
+
+    //회원의 DB의 프로필 컬럼에 값 업데이트
+    @PatchMapping("/profiles/{userId}/{fileName}")
+    public ResponseEntity<ResponseDTO<String>> updateProfile(@PathVariable int userId, @PathVariable String fileName){
+        log.info("프로필 업데이트 요청 -----------------------------");
+
+        try{
+            ResponseDTO<String> responseDTO =userService.updateProfile(userId,fileName);
+            return ResponseEntity.ok().body(responseDTO);
+        }catch (Exception e){
+            throw new RuntimeException("프로필 업데이트 중 예상치 못한 문제가 발생했습니다.");
+        }
     }
 
 

@@ -34,17 +34,58 @@ document.querySelector('.navigation-menu').addEventListener('click', function() 
     }
 });
 
-// .sidebar-my-info 클릭 시 내부 내용 토글 (사이드바가 열린 상태에서만)
-document.querySelector('.sidebar-my-info').addEventListener('click', function(e) {
-    // 만약 사이드바가 닫혀 있다면 아무 작업도 하지 않음
+// 사이드바 요소가 아닌 다른 외부를 클릭했을때 닫히게 하는 코드
+document.addEventListener('click', function(e) {
     var sidebar = document.querySelector('.sidebar');
-    if (!sidebar.classList.contains('expanded')) {
-        return;
+    var menuButton = document.querySelector('.menu');
+    var navMenuButton = document.querySelector('.navigation-menu');
+    var menuIcon = document.querySelector('.menu-icon');
+
+    // 사이드바가 열려있는 경우에만 동작
+    if (sidebar.classList.contains('expanded')) {
+        // 클릭한 요소가 사이드바, 메뉴 버튼, 또는 모바일 메뉴 버튼 내부에 없다면
+        if (
+            !sidebar.contains(e.target) &&
+            !menuButton.contains(e.target) &&
+            !navMenuButton.contains(e.target)
+        ) {
+            // 사이드바 닫기
+            sidebar.classList.remove('expanded');
+            menuIcon.src = '/images/menu_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';
+
+            // 열린 내부 메뉴(예: .sidebar-my-info, .sidebar-admin-info)도 닫기
+            var openSections = sidebar.querySelectorAll('.open');
+            openSections.forEach(function(section) {
+                section.classList.remove('open');
+            });
+        }
     }
-
-    // 제목 영역(클릭 시 펼치기) 외의 다른 클릭 이벤트가 있다면(e.target) 예외 처리 가능
-    // 예: 내부의 링크 클릭 시 확장 토글이 발생하지 않도록 할 수 있음
-
-    // 토글: open 클래스가 있으면 제거, 없으면 추가
-    this.classList.toggle('open');
 });
+
+// .sidebar-my-info 클릭 시 내부 내용 토글 (사이드바가 열린 상태에서만)
+var sidebarMyInfo = document.querySelector('.sidebar-my-info');
+if (sidebarMyInfo) {
+    sidebarMyInfo.addEventListener('click', function(e) {
+        // 만약 사이드바가 닫혀 있다면 아무 작업도 하지 않음
+        var sidebar = document.querySelector('.sidebar');
+        if (!sidebar.classList.contains('expanded')) {
+            return;
+        }
+
+        // 토글: open 클래스가 있으면 제거, 없으면 추가
+        this.classList.toggle('open');
+    });
+}
+
+// 어드민용
+var sidebarAdminInfo = document.querySelector('.sidebar-admin-info');
+if (sidebarAdminInfo) {
+    sidebarAdminInfo.addEventListener('click', function(e) {
+        var sidebar = document.querySelector('.sidebar');
+        if (!sidebar.classList.contains('expanded')) {
+            return;
+        }
+        // 토글: open 클래스가 있으면 제거, 없으면 추가
+        this.classList.toggle('open');
+    });
+}

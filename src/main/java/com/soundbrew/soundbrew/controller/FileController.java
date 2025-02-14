@@ -39,7 +39,6 @@ public class FileController {
                 case "ALBUM": uniqueFilename = fileService.uploadAlbumImage(file, identifier);break;
                 default: throw new IllegalArgumentException("지원하지 않는 업로드 타입입니다.");
             }
-//            System.err.println("uniqueFilename : "+uniqueFilename);
             return ResponseEntity.ok().body(uniqueFilename);
 
         } catch (IllegalArgumentException e) { return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,8 +65,8 @@ public class FileController {
 
         try {
             Resource resource = fileService.downloadSoundFile(filename);
-            Path filePath = Path.of(fileService.getFile(filename));
-//            Path filePath = fileService.getFile(filename);
+//            Path filePath = Path.of(fileService.getFile(filename));
+            Path filePath = fileService.getFile(filename);
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")

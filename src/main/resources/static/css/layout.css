@@ -153,11 +153,24 @@ html, body {
     white-space: nowrap;
 }
 
-.divider {
+.divider{
     width: calc(100% - 20px);
     border: 0;
     border-top: 1px solid #ddd;
     margin-top: 20px;
+}
+.divider.user-view .divider.admin-view {
+    width: calc(100% - 20px);
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+.user-view{
+    width: 100%;
+}
+.admin-view{
+    width: 100%;
 }
 
 .toggle-container{
@@ -308,6 +321,16 @@ html, body {
     margin-right: auto;
 
 }
+/*.auth-container {
+    width: 75px; *//* 예시 고정//auth-container 폭 *//*
+    text-align: center;
+    display: flex;
+    justify-content: flex-end;
+}*/
+.auth-container {
+    display: flex;
+    margin-left: auto;
+}
 
 .navigation-menu-icon {
     width: 40px;
@@ -333,13 +356,9 @@ html, body {
     margin-left: auto; /* 우측 정렬 */
     cursor: pointer;
 }
-.sidebar.expanded .user-view .sidebar-item {
+.sidebar.expanded .user-view .admin-view .sidebar-item {
     justify-content: flex-start;
     padding-left: 10px;
-}
-
-.user-view{
-    width: 100%;
 }
 
 .searchbar {
@@ -762,8 +781,16 @@ html, body {
     overflow: hidden;
     transition: max-height 0.3s ease-out;
 }
+.admin-view-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
 
 /* open 클래스가 있으면 내용 펼침 */
 .sidebar-my-info.open .user-view-content {
     max-height: 500px; /* 내용 높이에 따라 적절한 값 지정 */
+}
+.sidebar-admin-info.open .admin-view-content {
+    max-height: 500px; /* 필요에 따라 조정 */
 }

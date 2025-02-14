@@ -1,5 +1,4 @@
 import {router} from "/js/router.js"
-import {router as meRouter} from "/js/meSoundRouter.js"
 
 export const handleResponse = (status, data, customHandlers = {}) => {
     // 상태 코드에 따른 기본 동작

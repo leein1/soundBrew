@@ -389,6 +389,19 @@ public class UserServiceImpl implements UserService{
         return responseDTO;
     }
 
+    @Override
+    public ResponseDTO<String> updateProfile(int userId, String fileName) {
+        User user = userRepository.findByUserId(userId).orElseThrow();
+
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        userDTO.setProfileImagePath(fileName);
+
+        userRepository.save(userDTO.toEntity());
+
+        return ResponseDTO.<String>withMessage()
+                .message("회원 정보에 프로필을 업데이트했습니다.")
+                .build();
+    }
 
 
 //    //    프로필 이미지 업로드

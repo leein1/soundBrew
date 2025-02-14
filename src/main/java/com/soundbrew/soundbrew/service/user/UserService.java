@@ -55,7 +55,7 @@ public interface UserService {
     public ResponseDTO<String> verifyPassword(int userId, String inputPassword);
 
     //  프로필 이미지 관련
-
+    ResponseDTO<String> updateProfile(int userId, String fileName);
 //    //  프로필 이미지 업로드
 //    void saveProfileImage(int userId, MultipartFile file);
 //    //  프로필 이미지 삭제

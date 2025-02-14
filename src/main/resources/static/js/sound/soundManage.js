@@ -1,4 +1,4 @@
-import {router} from '/js/meSoundRouter.js';
+import {router} from '/js/router.js';
 import {serializeFormToJSON} from '/js/serialize/formToJson.js';
 import {inputHandler} from '/js/check/inputHandler.js';
 import {axiosPatch, axiosPost} from '/js/fetch/standardAxios.js';

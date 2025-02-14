@@ -161,7 +161,7 @@ public class MeController {
 
     @PostMapping("/tracks/{musicId}/tags")
     ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable @Positive int musicId, @RequestBody  TagsDTO tagsDto, Authentication authentication){
-        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         int userId = authenticationService.getUserId(authentication);
 
@@ -172,7 +172,7 @@ public class MeController {
 
     @PostMapping("/sounds")
     ResponseEntity<ResponseDTO> createSound(@RequestBody SoundCreateDTO soundCreateDto, Authentication authentication){
-//        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         int userId = authenticationService.getUserId(authentication);
 
@@ -187,7 +187,7 @@ public class MeController {
 
     @PatchMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO> updateAlbum(@PathVariable @Positive int albumId, @RequestBody AlbumDTO albumDto, Authentication authentication){
-        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         int userId = authenticationService.getUserId(authentication);
 
@@ -198,7 +198,7 @@ public class MeController {
 
     @PatchMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO> updateMusic(@PathVariable @Positive int musicId, @RequestBody MusicDTO musicDto, Authentication authentication ){
-        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         int userId = authenticationService.getUserId(authentication);
 
@@ -209,7 +209,7 @@ public class MeController {
 
     @GetMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable("musicId") @Positive int id, Authentication authentication){
-        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         int userId = authenticationService.getUserId(authentication);
 
@@ -220,7 +220,7 @@ public class MeController {
 
     @GetMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") @Positive int id,  @Valid RequestDTO requestDto, Authentication authentication){
-        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         int userId = authenticationService.getUserId(authentication);
 
@@ -231,7 +231,7 @@ public class MeController {
 
     @GetMapping("/tracks")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe(@Valid RequestDTO requestDto, Authentication authentication){
-        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         String nickname = authenticationService.getNickname(authentication);
 
@@ -244,7 +244,7 @@ public class MeController {
 
     @GetMapping("/albums")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumMe( @Valid RequestDTO requestDto, Authentication authentication){
-        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         String nickname = authenticationService.getNickname(authentication);
 
@@ -257,7 +257,7 @@ public class MeController {
 
     @GetMapping("/tags")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(  @Valid RequestDTO requestDto, Authentication authentication){
-        if(authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
+        if(!authenticationService.isUser(authentication))throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다.");
 
         String nickname = authenticationService.getNickname(authentication);
 

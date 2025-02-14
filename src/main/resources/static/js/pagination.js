@@ -1,6 +1,4 @@
-import { router as defaultRouter } from '/js/router.js';
-import { router as meSoundRouter } from '/js/meSoundRouter.js';
-import { router as adminSoundRouter} from '/js/adminSoundRouter.js'
+import { router } from '/js/router.js';
 import { globalStateManager } from "/js/globalState.js";
 
 export async function renderPagination(responseDTO) {
@@ -51,26 +49,6 @@ export async function renderPagination(responseDTO) {
 }
 
 async function handlePaginationClick(event) {
-    //상태관리에서 때옴
-    const myState = globalStateManager.getState().currentView;
-    // alert("현재 내 VIEW_STATE : " + myState);
-    const stateActions = {
-        '/sounds/tracks': defaultRouter,
-        '/sounds/albums': defaultRouter,
-        '/sounds/tracks/one': defaultRouter,
-        '/sounds/albums/one': defaultRouter,
-        '/me/sounds' : meSoundRouter,
-        '/me/sounds/albums' : meSoundRouter,
-        '/me/sounds/tracks' : meSoundRouter,
-        '/me/sounds/tags' : meSoundRouter,
-        '/admin/tracks' :adminSoundRouter,
-        '/admin/albums':adminSoundRouter,
-        '/admin/albums/verify':adminSoundRouter,
-        '/admin/albums/one/verify':adminSoundRouter,
-        '/admin/tags/new' :adminSoundRouter,
-        '/admin/tags/spelling' :adminSoundRouter,
-    };
-
     const target = event.target;
 
     if (target.classList.contains("page-link") && !target.classList.contains("active")) {
@@ -83,7 +61,6 @@ async function handlePaginationClick(event) {
 
         const newUrl = `${window.location.pathname}?${newQueryString}`;
 
-        const selectedRouter = stateActions[myState];
-        selectedRouter.navigate(newUrl);
+        router.navigate(newUrl);
     }
 }

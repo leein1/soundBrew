@@ -6,6 +6,16 @@ import {renderSort} from "/js/sound/sort.js";
 import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
 import {renderViewType} from "/js/sound/viewType.js";
 import {globalStateManager} from "/js/globalState.js";
+import {renderMyAlbums,renderMyTracks,renderMyTags,renderMyMain,renderSoundUpload} from "/js/sound/soundManage.js";
+import {renderArtistsTracks,renderArtistsAlbums,renderTagsSpelling,renderTagsNew,renderArtistsVerify, renderArtistsVerifyOne,renderTotalSoundsVerify,renderSoundsAdminMain} from "/js/sound/soundAdmin.js";
+import { loadSoundTypeCSS, loadSoundManageTypeCSS, updateDynamicCSS , SoundTypeCSSFiles, SoundManageTypeCSSFiles, removeAllDynamicCSS} from '/js/CSSLoader.js';
+//import {axiosGet,axiosPost} from '/js/fetch/standardAxios.js';
+//import {globalStateManager} from "/js/globalState.js";
+//import {renderPagination} from "/js/pagination.js";
+//import {renderPagination} from "/js/pagination.js";
+//import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
+//import {globalStateManager} from "/js/globalState.js";
+//import {compareTagsWithUrlParams,extractTagsFromURL} from "/js/tagStateUtil.js";
 
 export class Router {
     constructor() {
@@ -73,102 +83,253 @@ export class Router {
 
 export const router = new Router();
 
-router.addRoute('/sounds/tracks', async () => {
-    const queryParams = window.location.search; // 현재 URL 쿼리 파라미터 가져오기
+document.addEventListener('DOMContentLoaded', () => {
+    router.addRoute('/sounds/tracks', async () => {
+        updateDynamicCSS(SoundTypeCSSFiles);
+        await loadSoundTypeCSS();
 
-    // 초기 로딩이거나, 태그가 변경된 경우 API 호출
-    if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
-        renderSearch();
-        renderSort();
-        renderViewType();
+        const queryParams = window.location.search; // 현재 URL 쿼리 파라미터 가져오기
 
-        // const handle = {
-        //     onSuccess: (data) => {
-        //         console.log("태그 데이터를 성공적으로 불러왔음:", data);
-        //     },
-        //     onBadRequest: (data) => {
-        //         console.error("태그 데이터 요청 실패:", data);
-        //     },
-        // };
+        // 초기 로딩이거나, 태그가 변경된 경우 API 호출
+        if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
+            renderSearch();
+            renderSort();
+            renderViewType();
 
-        // 태그 API 호출
-        const renderTags = await axiosGet({ endpoint: `/api/sounds/tags/mapped${queryParams}` });
+            // const handle = {
+            //     onSuccess: (data) => {
+            //         console.log("태그 데이터를 성공적으로 불러왔음:", data);
+            //     },
+            //     onBadRequest: (data) => {
+            //         console.error("태그 데이터 요청 실패:", data);
+            //     },
+            // };
 
-        renderTagsFromSearch(renderTags); // 태그 UI 렌더링
-        extractTagsFromURL(); // 태그 상태 업데이트
+            // 태그 API 호출
+            const renderTags = await axiosGet({ endpoint: `/api/sounds/tags/mapped${queryParams}` });
 
-        // 최초 호출 이후에는 상태를 false로 변경
-        globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
-    }
-    // 트랙 데이터를 항상 가져옴 (검색 결과는 항상 갱신해야 하므로)
-    const response = await axiosGet({ endpoint: `/api/sounds/tracks${queryParams}` });
+            renderTagsFromSearch(renderTags); // 태그 UI 렌더링
+            extractTagsFromURL(); // 태그 상태 업데이트
 
-    console.log(response);
-    renderTotalSounds(response.dtoList); // 트랙 리스트 렌더링
-    renderPagination(response); // 페이지네이션 렌더링
-});
+            // 최초 호출 이후에는 상태를 false로 변경
+            globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
+        }
+        // 트랙 데이터를 항상 가져옴 (검색 결과는 항상 갱신해야 하므로)
+        const response = await axiosGet({ endpoint: `/api/sounds/tracks${queryParams}` });
 
-router.addRoute('/sounds/albums', async () => {
-    const queryParams = window.location.search; // 쿼리 파라미터 들고오기
+        console.log(response);
+        renderTotalSounds(response.dtoList); // 트랙 리스트 렌더링
+        renderPagination(response); // 페이지네이션 렌더링
+    });
 
-    if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
-        renderSearch();
-        renderSort();
-        renderViewType();
+    router.addRoute('/sounds/albums', async () => {
+        updateDynamicCSS(SoundTypeCSSFiles);
+        await loadSoundTypeCSS();
 
-        const renderTags = await axiosGet({endpoint: `/api/sounds/tags/mapped${queryParams}`});
-        renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
-        extractTagsFromURL();
-        // 최초 호출 이후에는 플래그를 false로 변경
-        globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
-    }
+        const queryParams = window.location.search; // 쿼리 파라미터 들고오기
 
-    const response = await axiosGet({endpoint: `/api/sounds/albums${queryParams}`});
-    renderTotalAlbums(response.dtoList);
-    renderPagination(response);
-});
+        if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
+            renderSearch();
+            renderSort();
+            renderViewType();
 
-router.addRoute('/sounds/tracks/one',async (context) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const nickname = urlParams.get('nickname');
-    const title = urlParams.get('title');
+            const renderTags = await axiosGet({endpoint: `/api/sounds/tags/mapped${queryParams}`});
+            renderTagsFromSearch(renderTags); // 태그 영역 컴포넌트
+            extractTagsFromURL();
+            // 최초 호출 이후에는 플래그를 false로 변경
+            globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
+        }
 
-    const response = await axiosGet({endpoint: '/api/sounds/tracks/' + nickname + '/title/' + title});
-    const tagsBody = {dto: [response.dto]};
-    const renderTags = await axiosPost({endpoint: '/api/sounds/tags', body: tagsBody});
+        const response = await axiosGet({endpoint: `/api/sounds/albums${queryParams}`});
+        renderTotalAlbums(response.dtoList);
+        renderPagination(response);
+    });
 
-    renderSoundOne(response.dto, renderTags);
-    //얘는 페이징이 없음 ( 지우거나 해야함)
-    const container = document.querySelector('.pagination-container');
-    container.innerHTML='';
-});
+    router.addRoute('/sounds/tracks/one',async (context) => {
+        updateDynamicCSS(SoundTypeCSSFiles);
+        await loadSoundTypeCSS();
 
-router.addRoute('/sounds/albums/one',async (context) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const newQueryString = urlParams.toString();
-    const nickname = urlParams.get('nickname');
-    const albumName = urlParams.get('albumName');
+        const urlParams = new URLSearchParams(window.location.search);
+        const nickname = urlParams.get('nickname');
+        const title = urlParams.get('title');
 
-    const response = await axiosGet({endpoint: `/api/sounds/albums/` + nickname + `/title/` + albumName+`?${newQueryString}`});
-    renderAlbumOne(response);
-
-    renderTotalSounds(response.dtoList);
-    renderPagination(response);
-
-    // 초기 로딩이거나, 태그가 변경된 경우 API 호출
-    if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
-        renderSort();
-
-        const tagsBody = {dto: response.dtoList};
+        const response = await axiosGet({endpoint: '/api/sounds/tracks/' + nickname + '/title/' + title});
+        const tagsBody = {dto: [response.dto]};
         const renderTags = await axiosPost({endpoint: '/api/sounds/tags', body: tagsBody});
 
-        renderTagsFromSearch(renderTags);
+        renderSoundOne(response.dto, renderTags);
+        //얘는 페이징이 없음 ( 지우거나 해야함)
+        const container = document.querySelector('.pagination-container');
+        container.innerHTML='';
+    });
 
-        globalStateManager.dispatch({type: 'SET_TAG_LOAD_STATUS', payload: false});
-    }
-});
+    router.addRoute('/sounds/albums/one',async (context) => {
+        updateDynamicCSS(SoundTypeCSSFiles);
+        await loadSoundTypeCSS();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const newQueryString = urlParams.toString();
+        const nickname = urlParams.get('nickname');
+        const albumName = urlParams.get('albumName');
+
+        const response = await axiosGet({endpoint: `/api/sounds/albums/` + nickname + `/title/` + albumName+`?${newQueryString}`});
+        renderAlbumOne(response);
+
+        renderTotalSounds(response.dtoList);
+        renderPagination(response);
+
+        // 초기 로딩이거나, 태그가 변경된 경우 API 호출
+        if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
+            renderSort();
+
+            const tagsBody = {dto: response.dtoList};
+            const renderTags = await axiosPost({endpoint: '/api/sounds/tags', body: tagsBody});
+
+            renderTagsFromSearch(renderTags);
+
+            globalStateManager.dispatch({type: 'SET_TAG_LOAD_STATUS', payload: false});
+        }
+    });
+
+    router.addRoute('/me/sounds/upload',async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        renderSoundUpload();
+    });
+
+    router.addRoute('/me/sounds', async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        renderMyMain();
+
+        const response = await axiosGet({endpoint: `/api/sounds/tracks`});
+    });
+
+    router.addRoute('/me/sounds/albums', async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        const queryParams = window.location.search;
+
+        const response = await axiosGet({endpoint: `/api/me/albums${queryParams}`});
+        await renderMyAlbums(response);
+        renderPagination(response);
+    });
+
+    router.addRoute('/me/sounds/tracks', async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        const queryParams = window.location.search;
+
+        const response = await axiosGet({endpoint: `/api/me/tracks${queryParams}`});
+        await renderMyTracks(response);
+        renderPagination(response);
+    });
+
+    router.addRoute('/me/sounds/tags', async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        const queryParams = window.location.search;
+
+        const response = await axiosGet({endpoint: `/api/me/tracks${queryParams}`});
+        await renderMyTags(response);
+        renderPagination(response);
+    });
+
+    router.addRoute('/admin/tracks',async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        const queryParams = window.location.search;
+
+        const response = await axiosGet({endpoint : `/api/admin/tracks${queryParams}`});
+        await renderArtistsTracks(response);
+        await renderPagination(response);
+        renderSearch();
+    });
+
+    router.addRoute('/admin/albums',async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        const queryParams = window.location.search;
+
+        const response = await axiosGet({endpoint : `/api/admin/albums${queryParams}`});
+        renderArtistsAlbums(response);
+        renderPagination(response);
+        renderSearch();
+    });
+
+    router.addRoute('/admin/albums/verify',async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        const queryParams = window.location.search;
+
+        const response = await axiosGet({endpoint : `/api/admin/albums/verify${queryParams}`});
+        await renderArtistsVerify(response);
+        renderPagination(response);
+        // renderSearch();
+    });
+
+    router.addRoute('/admin/tags/spelling',async () => {
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        const queryParams = window.location.search;
+
+        const renderTags = await axiosGet({endpoint: `/api/sounds/tags${queryParams}`});
+        renderTagsSpelling(renderTags);
+        renderPagination();
+    });
+
+    router.addRoute('/admin/tags/new',async()=>{
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        renderTagsNew();
+    });
+
+    router.addRoute(`/admin/albums/one/verify`, async()=>{
+        updateDynamicCSS(SoundTypeCSSFiles);
+        await loadSoundTypeCSS();
+
+        const queryParams = new URLSearchParams(window.location.search);
+        const albumId = queryParams.get('id');
+        const userId = queryParams.get('uid');
+
+        const response = await axiosGet({endpoint: `/api/admin/albums/${userId}/title/${albumId}/verify`});
+        await renderArtistsVerifyOne(response);
+        await renderTotalSoundsVerify(response);
+        await renderPagination(response);
+
+        if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
+            const tagsBody = {dto: response.dtoList};
+            const renderTags = await axiosPost({endpoint: '/api/sounds/tags', body: tagsBody});
+
+            await renderTagsFromSearch(renderTags);
+            extractTagsFromURL(); // 태그 상태 업데이트
+
+            // 최초 호출 이후에는 상태를 false로 변경
+            globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
+        }
+    });
+
+    router.addRoute(`/admin/sounds`, async ()=>{
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        await renderSoundsAdminMain();
+    });
 
 router.start();
+
+});
+
 
 
 

@@ -1,4 +1,4 @@
-import {router} from "/js/adminSoundRouter.js";
+import {router} from "/js/router.js";
 import {serializeFormToJSON} from '/js/serialize/formToJson.js';
 import {inputHandler} from '/js/check/inputHandler.js';
 import {axiosPatch, axiosPost, axiosDelete} from '/js/fetch/standardAxios.js';

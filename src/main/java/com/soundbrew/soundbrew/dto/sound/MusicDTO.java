@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.dto.sound;
 
 import com.soundbrew.soundbrew.domain.sound.Music;
+import com.soundbrew.soundbrew.dto.BaseDTO;
 import com.soundbrew.soundbrew.dto.BaseEntityDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MusicDTO extends BaseEntityDTO {
+public class MusicDTO extends BaseDTO {
     private int musicId;
     private int userId;
     private String nickname;

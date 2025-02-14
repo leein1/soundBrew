@@ -70,8 +70,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // 아마존 aws s3
-    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.167'
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+//    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.167'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
     //  swaggerUI
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
