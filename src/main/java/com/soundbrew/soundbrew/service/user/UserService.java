@@ -41,6 +41,9 @@ public interface UserService {
 
     Boolean isNicknameExist(String nickname);
 
+    // 이메일과 이름으로 조회
+    ResponseDTO<UserDTO> getUserByEmailAndName(String email, String name);
+
     //  등록 및 수정
 
     //  회원 가입

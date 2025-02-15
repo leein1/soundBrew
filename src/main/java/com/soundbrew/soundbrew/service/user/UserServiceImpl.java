@@ -182,6 +182,18 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByNickname(nickname).isPresent();
     }
 
+    @Override
+    public ResponseDTO<UserDTO> getUserByEmailAndName(String email, String name) {
+
+        User result = userRepository.findByEmailAndName(email,name).orElseThrow();
+
+        UserDTO userDTO = modelMapper.map(result,UserDTO.class);
+
+        return ResponseDTO.<UserDTO>withSingleData()
+                .dto(userDTO)
+                .build();
+    }
+
     //    회원 가입
     @Transactional
     @Override
