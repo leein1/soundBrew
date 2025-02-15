@@ -57,6 +57,10 @@ public class User extends BaseEntity {
     @Column(nullable = true)
     private LocalDate birth;
 
+    //  default = false;
+    @Column(nullable = true)
+    private boolean credentialsNonExpired;
+
 //    BaseEntity 클래스를 상속
 //    LocalDateTime modify_date;
 //    LocalDateTime create_date;

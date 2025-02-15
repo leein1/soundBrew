@@ -49,6 +49,8 @@ public class UserDTO extends BaseDTO{
 
     public LocalDate birth;
 
+    public boolean credentialsNonExpired;
+
 
     public User toEntity() {
         return User.builder()
@@ -63,6 +65,7 @@ public class UserDTO extends BaseDTO{
                 .creditBalance(this.creditBalance)
                 .profileImagePath(this.profileImagePath)
                 .birth(this.birth)
+                .credentialsNonExpired(this.credentialsNonExpired)
                 .build();
     }
 
