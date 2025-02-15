@@ -2,14 +2,11 @@ package com.soundbrew.soundbrew.security.handler;
 
 import com.google.gson.Gson;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
-import com.soundbrew.soundbrew.util.JWTUtil;
+import com.soundbrew.soundbrew.security.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.authenticator.SavedRequest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;

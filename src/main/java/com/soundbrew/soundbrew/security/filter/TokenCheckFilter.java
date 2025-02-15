@@ -4,7 +4,7 @@ import com.soundbrew.soundbrew.config.PublicPathsProperties;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.exception.AccessTokenException;
-import com.soundbrew.soundbrew.util.JWTUtil;
+import com.soundbrew.soundbrew.security.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;

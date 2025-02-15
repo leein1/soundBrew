@@ -2,7 +2,7 @@ package com.soundbrew.soundbrew.security.filter;
 
 import com.google.gson.Gson;
 import com.soundbrew.soundbrew.security.exception.RefreshTokenException;
-import com.soundbrew.soundbrew.util.JWTUtil;
+import com.soundbrew.soundbrew.security.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;

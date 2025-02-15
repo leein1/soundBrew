@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.util;
+package com.soundbrew.soundbrew.security;
 
 
 import io.jsonwebtoken.JwtException;

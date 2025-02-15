@@ -7,7 +7,7 @@ import com.soundbrew.soundbrew.handler.Custom403Handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.filter.APILoginFilter;
 import com.soundbrew.soundbrew.security.filter.TokenCheckFilter;
-import com.soundbrew.soundbrew.util.JWTUtil;
+import com.soundbrew.soundbrew.security.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
