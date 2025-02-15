@@ -36,7 +36,9 @@ export function getLoginFormProcess() {
             localStorage.removeItem("refreshToken");
 
             alert(error.response.data.message);
-            window.location.href = error.response.data.redirectUrl;
+            submitButton.disabled = false;
+
+            // window.location.href = error.response.data.redirectUrl;
         }
     });
 }
