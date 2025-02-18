@@ -108,6 +108,7 @@ function displaySearchBar(state) {
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'none',
         '/admin/sounds':'none',
+        '/admin/users':'block',
     };
 
     const searchItem = document.querySelector('.search-sort');
@@ -241,6 +242,7 @@ function displayPaginationBar(state){
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'block',
         '/admin/sounds':'none',
+        '/admin/users' : 'block',
     };
 
     const pageItem = document.querySelector('.pagination-container');

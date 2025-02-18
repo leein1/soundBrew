@@ -794,3 +794,70 @@ html, body {
 .sidebar-admin-info.open .admin-view-content {
     max-height: 500px; /* 필요에 따라 조정 */
 }
+
+/* 프로필 모달 기본 스타일 */
+.profile-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+/* 모달 숨김 */
+.hidden {
+    display: none;
+}
+
+/* 모달 컨텐츠 */
+.profile-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+}
+
+/* 미리보기 컨테이너 */
+.preview-container {
+    margin: 15px 0;
+    text-align: center;
+}
+
+/* 미리보기 이미지 */
+#profilePreview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+    border: 2px solid #ddd;
+}
+
+/* 파일 입력 스타일 */
+#profileInput {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s ease-in-out;
+    margin: 10px 0;
+}
+
+#profileInput:hover {
+    border-color: #888;
+}
+
+#profileInput:focus {
+    border-color: #555;
+    outline: none;
+}

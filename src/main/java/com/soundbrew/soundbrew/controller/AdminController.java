@@ -1,8 +1,11 @@
 package com.soundbrew.soundbrew.controller;
 
 
+import com.soundbrew.soundbrew.domain.user.Subscription;
+import com.soundbrew.soundbrew.domain.user.UserSubscription;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
 import com.soundbrew.soundbrew.dto.sound.MusicDTO;
@@ -11,6 +14,7 @@ import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.handler.custom.ResourceOwnershipException;
 import com.soundbrew.soundbrew.service.*;
 import com.soundbrew.soundbrew.service.authentication.AuthenticationService;
+import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -39,13 +43,14 @@ public class AdminController {  //  관리자용 컨트롤러
     private final AdminService adminService;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
+    private final SubscriptionService subscriptionService;
     private final SoundsService soundsService;
     private final TagsService tagsService;
     private final AuthenticationService authenticationService;
 
     //  모든 유저 조회
     @GetMapping("/users")
-    public ResponseEntity<ResponseDTO<UserDetailsDTO>> getAllUsers(@RequestParam RequestDTO requestDTO) {
+    public ResponseEntity<ResponseDTO<UserDetailsDTO>> getAllUsers(@ModelAttribute  RequestDTO requestDTO) {
 
         ResponseDTO responseDTO = userService.getAllUserWithDetails(requestDTO);
 
@@ -74,6 +79,41 @@ public class AdminController {  //  관리자용 컨트롤러
 
         return null;
 
+    }
+
+    @PatchMapping("/users/{userId}/credit")
+    public ResponseEntity<ResponseDTO<String>> updateCreditBalance(@PathVariable int userId, @RequestBody int creditBalance){
+        ResponseDTO<String> responseDTO = userService.updateCreditBalance(userId, creditBalance);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PatchMapping("/users/{userId}/subscription")
+    public ResponseEntity<ResponseDTO<String>> updateSubscriptionId(@PathVariable int userId, @RequestBody int subscriptionId){
+        ResponseDTO<String> responseDTO = subscriptionService.updateSubscriptionId(userId, subscriptionId);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PatchMapping("/users/{userId}/payment")
+    public ResponseEntity<ResponseDTO<String>> updatePaymentStatus(@PathVariable int userId, @RequestBody String paymentStatus){
+        ResponseDTO<String> responseDTO = subscriptionService.updatePaymentStatus(userId, paymentStatus);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PatchMapping("/subscription/{subscriptionId}")
+    public ResponseEntity<ResponseDTO<String>> updateSubscription(@PathVariable int subscriptionId, @RequestBody SubscriptionDTO subscriptionDTO){
+        ResponseDTO<String> responseDTO = subscriptionService.updateSubscription(subscriptionId,subscriptionDTO);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/subscription")
+    public ResponseEntity<ResponseDTO<SubscriptionDTO>> getSubscription(){
+        ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.getAllSubscription();
+
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @PostMapping("/tags")

@@ -80,6 +80,10 @@ export const SoundManageTypeCSSFiles = [
     "/css/sound/music-upload.css"
 ];
 
+export const UserAdminTypeCSSFiles=[
+    "/css/user/user-admin.css"
+]
+
 //export function removeSoundTypeCSS() {
 //    SoundTypeCSSFiles.forEach(removeExternalCSS);
 //}
@@ -96,6 +100,10 @@ export async function loadSoundTypeCSS() {
 export async function loadSoundManageTypeCSS() {
     // 모든 CSS가 로드될 때까지 기다립니다.
     await Promise.all(SoundManageTypeCSSFiles.map(url => loadExternalCSS(url)));
+}
+
+export async function loadUserAdminTypeCSS(){
+    await Promise.all(UserAdminTypeCSSFiles.map(url => loadExternalCSS(url)));
 }
 
 // 페이지 전환 시 동적 로딩된 모든 CSS를 한 번에 제거하는 함수

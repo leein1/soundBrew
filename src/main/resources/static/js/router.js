@@ -8,7 +8,10 @@ import {renderViewType} from "/js/sound/viewType.js";
 import {globalStateManager} from "/js/globalState.js";
 import {renderMyAlbums,renderMyTracks,renderMyTags,renderMyMain,renderSoundUpload} from "/js/sound/soundManage.js";
 import {renderArtistsTracks,renderArtistsAlbums,renderTagsSpelling,renderTagsNew,renderArtistsVerify, renderArtistsVerifyOne,renderTotalSoundsVerify,renderSoundsAdminMain} from "/js/sound/soundAdmin.js";
-import { loadSoundTypeCSS, loadSoundManageTypeCSS, updateDynamicCSS , SoundTypeCSSFiles, SoundManageTypeCSSFiles, removeAllDynamicCSS} from '/js/CSSLoader.js';
+import { loadSoundTypeCSS, loadSoundManageTypeCSS, updateDynamicCSS , SoundTypeCSSFiles, SoundManageTypeCSSFiles, UserAdminTypeCSSFiles, loadUserAdminTypeCSS, removeAllDynamicCSS} from '/js/CSSLoader.js';
+import {renderUserInfoWithRole} from '/js/user/userAdmin.js';
+import {renderSubscriptionInfo } from '/js/user/subscriptionAdmin.js';
+
 //import {axiosGet,axiosPost} from '/js/fetch/standardAxios.js';
 //import {globalStateManager} from "/js/globalState.js";
 //import {renderPagination} from "/js/pagination.js";
@@ -324,6 +327,79 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadSoundManageTypeCSS();
 
         await renderSoundsAdminMain();
+    });
+
+    router.addRoute('/admin/users', async () =>{
+        //css 로딩/삭제
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        // 0. 쿼리 파라미터 확인
+        const queryParams = window.location.search;
+        // 1. 엑시오스를 통한 특정 데이터 들고오기
+        const response = await axiosGet({ endpoint:`/api/admin/users${queryParams}` });
+
+        // 2. 이후 데이터(response)로 렌더링
+        renderUserInfoWithRole(response);
+
+        // 3. 부가적인 렌더링 검색바, 페이징
+        renderPagination(response);
+        renderSearch();
+
+    });
+
+    router.addRoute('/admin/subscription', async () =>{
+        //css 로딩/삭제
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        // 1. 엑시오스를 통한 특정 데이터 들고오기
+        const response = await axiosGet({ endpoint:`/api/admin/subscription` });
+
+        // 2. 이후 데이터(response)로 렌더링
+        renderSubscriptionInfo(response);
+    });
+
+
+    document.querySelector('#soundTracksRoute').addEventListener('click', () => {
+        router.navigate('/sounds/tracks');
+    });
+
+    document.querySelector('#mySoundRoute').addEventListener('click', () => {
+        router.navigate('/me/sounds');
+    });
+
+    document.querySelector('#myInfoRoute').addEventListener('click', () => {
+        router.navigate('/me/info');
+    });
+
+    document.getElementById("adminInfoRoute").addEventListener("click",()=>{
+        router.navigate("/회원정보");
+    });
+
+    document.getElementById("adminSoundRoute").addEventListener("click",()=>{
+        router.navigate("/admin/sounds");
+    });
+
+    // 네비게이션들 버튼, 얘네들은 location.href을 사용해서 페이지를 마치 초기화 하듯 유도.
+    document.getElementById("sitename").addEventListener("click", () => {
+        window.location.href = "/sounds/tracks";
+    });
+
+    document.getElementById("registerPage").addEventListener("click", ()=>{
+        window.location.href = "/register";
+    });
+
+    document.querySelectorAll('.logoutPage').forEach(element =>{
+        element.addEventListener('click', function(){
+            window.location.href = "/logout";
+        });
+    });
+
+    document.querySelectorAll('.loginPage').forEach(element =>{
+        element.addEventListener('click', function(){
+            window.location.href = "/login";
+        });
     });
 
 router.start();

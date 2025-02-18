@@ -40,18 +40,20 @@ public class UsersController {
 
     }
 
-    //회원의 DB의 프로필 컬럼에 값 업데이트
-    @PatchMapping("/profiles/{userId}/{fileName}")
-    public ResponseEntity<ResponseDTO<String>> updateProfile(@PathVariable int userId, @PathVariable String fileName){
-        log.info("프로필 업데이트 요청 -----------------------------");
 
-        try{
-            ResponseDTO<String> responseDTO =userService.updateProfile(userId,fileName);
-            return ResponseEntity.ok().body(responseDTO);
-        }catch (Exception e){
-            throw new RuntimeException("프로필 업데이트 중 예상치 못한 문제가 발생했습니다.");
-        }
-    }
+
+//    //회원의 DB의 프로필 컬럼에 값 업데이트
+//    @PatchMapping("/profiles/{userId}/{fileName}")
+//    public ResponseEntity<ResponseDTO<String>> updateProfile(@PathVariable int userId, @PathVariable String fileName){
+//        log.info("프로필 업데이트 요청 -----------------------------");
+//
+//        try{
+//            ResponseDTO<String> responseDTO =userService.updateProfile(userId,fileName);
+//            return ResponseEntity.ok().body(responseDTO);
+//        }catch (Exception e){
+//            throw new RuntimeException("프로필 업데이트 중 예상치 못한 문제가 발생했습니다.");
+//        }
+//    }
 
 
 

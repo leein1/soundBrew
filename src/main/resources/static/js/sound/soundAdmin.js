@@ -248,8 +248,6 @@ window.applyTagSpellingChanges = async function (button, originalTag, category) 
     } else {
         alert('태그 형식이 잘못 되었습니다');
     }
-
-
 }
 
 export async function renderArtistsTracks(data){
@@ -483,7 +481,7 @@ export async function renderTagsSpelling(data) {
 export async function renderTagsNew(data) {
     const container = document.getElementById("content-body");
     container.innerHTML = `
-        
+
         <form id="tag-form">
             <section class="tag-add-section">
                 <h3>태그 추가</h3>
@@ -553,7 +551,7 @@ export async function renderArtistsVerifyOne(data) {
         <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
         <div class="content-header-info">
             <img class="sound-image" src="https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${data.dtoList[0].albumDTO.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
-            <div class="sound-info">    
+            <div class="sound-info">
                 <span>Artist</span>
                 <div class="sound-title font-size-large">${data.dtoList[0].albumDTO.nickname}</div>
                 <div class="artist-name font-size-medium"></div>
@@ -615,13 +613,13 @@ export async function renderTotalSoundsVerify(data) {
 
         musicItem.innerHTML = `
         <div class="music-item-left">
-            <img alt="앨범 이미지" class="music-album-img" 
-                src="https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${sound.albumDTO.albumArtPath}" 
+            <img alt="앨범 이미지" class="music-album-img"
+                src="https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${sound.albumDTO.albumArtPath}"
                 onerror="this.src='/images/album-default-image-01.jpeg'">
-            <div class="music-play-btn" 
-                data-sound-id="${sound.musicDTO.filePath}" 
-                data-sound-album="${sound.albumDTO.albumName}" 
-                data-sound-title="${sound.musicDTO.title}" 
+            <div class="music-play-btn"
+                data-sound-id="${sound.musicDTO.filePath}"
+                data-sound-album="${sound.albumDTO.albumName}"
+                data-sound-title="${sound.musicDTO.title}"
                 data-sound-art="${sound.albumDTO.albumArtPath}">
                 <img src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
             </div>

@@ -69,6 +69,11 @@ public class ViewController {
         return "sound/music-list";
     }
 
+    @RequestMapping("/a")
+    public String a(){
+        return "template";
+    }
+
 //    @RequestMapping(value = {"/me/sounds/**"})
 //    public String soundManageSPA(){
 //        return "sound/music-manage";

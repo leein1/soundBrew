@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -83,13 +84,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseDTO<UserDetailsDTO> getAllUserWithDetails(RequestDTO requestDTO) {
-
-        String[] types = requestDTO.getTypes();
-        String keyword = requestDTO.getKeyword();
-        Pageable pageable = requestDTO.getPageable("userId");
-
-        log.info("UserService requestDTO : {}", requestDTO);
-        log.info("UserService list() : " + pageable);
+//
+//        String[] types = requestDTO.getTypes();
+//        String keyword = requestDTO.getKeyword();
+//        Pageable pageable = requestDTO.getPageable("userId");
+//
+//        log.info("UserService requestDTO : {}", requestDTO);
+//        log.info("UserService list() : " + pageable); mn
 
         //  Page<UserDetails> result = 유저레파지토리.서치인터페이스(types,keyword,pageable)
         Page<UserDetailsDTO> result = userRepository.findAllUserDetails(requestDTO).orElseThrow();
@@ -101,7 +102,7 @@ public class UserServiceImpl implements UserService{
             return ResponseDTO.<UserDetailsDTO>withAll(requestDTO, userDetailsDTOList,0);
         }
 
-        return ResponseDTO.withAll(requestDTO,result.getContent(),result.getSize());
+        return ResponseDTO.withAll(requestDTO,result.getContent(),(int)result.getTotalElements());
     }
 
     @Override
@@ -401,6 +402,13 @@ public class UserServiceImpl implements UserService{
         return ResponseDTO.<String>withMessage()
                 .message("회원 정보에 프로필을 업데이트했습니다.")
                 .build();
+    }
+
+    @Override
+    public ResponseDTO<String> updateCreditBalance(int userId, int creditBalance) {
+        UserDTO user = this.getUser(userId).getDto();
+        user.setCreditBalance(creditBalance);
+        return this.updateUser(user);
     }
 
 

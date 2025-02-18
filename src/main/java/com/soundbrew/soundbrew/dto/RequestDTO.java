@@ -26,7 +26,7 @@ public class RequestDTO {
 
     @Builder.Default
     @Positive
-    int size = 5;
+    int size = 10;
 
     String keyword;
 

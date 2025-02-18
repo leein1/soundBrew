@@ -1,9 +1,8 @@
 package com.soundbrew.soundbrew.service.file;
 
-import com.soundbrew.soundbrew.config.FileProperties;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.SoundStreamDTO;
-import com.soundbrew.soundbrew.repository.MusicFileRepository;
+import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.ByteArrayResource;
@@ -157,9 +156,7 @@ import org.springframework.core.io.Resource;
 @Log4j2
 @RequiredArgsConstructor
 public class FileService {
-
-    private final FileProperties fileProperties;
-    private final MusicFileRepository repository;
+    private final UserService userService;
 
     private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads");
     private final Path profileImageDir = uploadDir.resolve("profile-images");
@@ -230,8 +227,9 @@ public class FileService {
     }
 
     // 프로필 이미지 업로드
-    public String uploadProfileImage(MultipartFile file, String userId) throws IOException {
-        return uploadFile(file, profileImageDir, List.of(".jpg", ".jpeg", ".png"), userId);
+    public ResponseDTO<String> uploadProfileImage(MultipartFile file, String userId) throws IOException {
+        String fileUploadName = uploadFile(file, profileImageDir, List.of(".jpg", ".jpeg", ".png"), userId);
+        return userService.updateProfile(Integer.parseInt(userId),fileUploadName);
     }
 
 

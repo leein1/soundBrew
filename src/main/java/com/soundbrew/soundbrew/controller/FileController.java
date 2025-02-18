@@ -35,7 +35,7 @@ public class FileController {
 
             switch (uploadType) {
                 case "SOUND": uniqueFilename = fileService.uploadSoundFile(file, identifier);break;
-                case "PROFILE": uniqueFilename = fileService.uploadProfileImage(file, identifier);break;
+                case "PROFILE": uniqueFilename = fileService.uploadProfileImage(file, identifier).getMessage();break;
                 case "ALBUM": uniqueFilename = fileService.uploadAlbumImage(file, identifier);break;
                 default: throw new IllegalArgumentException("지원하지 않는 업로드 타입입니다.");
             }

@@ -77,6 +77,7 @@ const fetchData = async ({
                              params = {},
                              method = "GET",
                              handle = null,
+                             uniqueToken = {},
                          }) => {
     const options = {
         headers: { "Content-Type": "application/json" },
@@ -89,6 +90,14 @@ const fetchData = async ({
     // FormData인 경우 Content-Type을 설정하지 않도록 함
     if (body instanceof FormData) {
         delete options.headers["Content-Type"]; // FormData는 자동으로 처리되므로 Content-Type을 삭제
+    }
+
+    if (uniqueToken) {
+        let token = localStorage.getItem("resetToken");
+        options.headers = {
+            ...options.headers,
+            Authorization: `Bearer ${token}`
+        };
     }
 
     if (useToken) {
@@ -114,8 +123,8 @@ const fetchData = async ({
 export const axiosGet = async ({ endpoint, useToken = true, params = {} , handle = null}) =>
     fetchData({ endpoint, useToken, params, method: 'GET', handle});
 
-export const axiosPost = async ({ endpoint, body = {}, useToken = true, params = {} , handle = null}) =>
-    fetchData({ endpoint, body, useToken, params, method: 'POST', handle});
+export const axiosPost = async ({ endpoint, body = {}, useToken = true, params = {} , handle = null, uniqueToken = false }) =>
+    fetchData({ endpoint, body, useToken, params, method: 'POST', handle, uniqueToken:false});
 
 export const axiosDelete = async ({ endpoint, body = {}, useToken = true, params = {}, handle = null }) =>
     fetchData({ endpoint, body, useToken, params, method: 'DELETE', handle});

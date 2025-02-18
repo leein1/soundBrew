@@ -61,6 +61,7 @@ public interface UserService {
 //    //  프로필 이미지 삭제
 //    void deleteProfileImage(int userId);
 
+    ResponseDTO<String> updateCreditBalance(int userId, int creditBalance);
 
 
     //  삭제
