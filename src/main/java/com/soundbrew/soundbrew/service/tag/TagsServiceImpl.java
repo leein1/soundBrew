@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.tag;
 
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.RequestDTO;
@@ -9,6 +9,7 @@ import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.service.authentication.SoundOwnershipCheckService;
 import com.soundbrew.soundbrew.service.util.SoundProcessor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,6 @@ public class TagsServiceImpl implements TagsService {
     private final MusicRepository musicRepository;
     private final SoundProcessor soundProcessor;
     private final SoundOwnershipCheckService soundOwnershipCheckService;
-
 
     @Override
     public ResponseDTO<TagsDTO> tagsSearchAfter(List<SearchTotalResultDTO> sounds) {

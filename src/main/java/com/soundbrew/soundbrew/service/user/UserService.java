@@ -7,6 +7,8 @@ import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 public interface UserService {
 
 //    전체 조회

@@ -7,14 +7,14 @@ import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.handler.custom.ResourceOwnershipException;
 import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.service.authentication.AuthenticationService;
-import com.soundbrew.soundbrew.service.SoundsService;
-import com.soundbrew.soundbrew.service.TagsService;
+import com.soundbrew.soundbrew.service.sound.SoundsService;
+import com.soundbrew.soundbrew.service.tag.TagsService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.AccessDeniedException;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -586,4 +586,28 @@ public class ServiceIntegrationTest {
         assertEquals("test-title", updatedMusic.get().getTitle(),"타이틀이 업데이트 되었는가?");
         assertEquals("test-description", updatedMusic.get().getDescription(),"음원 설명이 업데이트 되었는가?");
     }
+
+//    @Test
+//    @DisplayName("대시보드 상위 5개 태그 사용 횟수 조회 테스트")
+//    public void testGetTagsWithTopUsage() {
+//        // 1. 서비스 메서드 실행
+//        TagsDTO tagsDTO = tagsService.getTagsWithTopUsage();
+//
+//        // 2. 로그 출력 - 각 태그의 사용 횟수 확인
+//        System.out.println("=== 상위 5개 악기 태그 사용 횟수 ===");
+//        tagsDTO.getInstrumentUsageCount().forEach((tagName, count) -> {
+//            System.out.println("악기: " + tagName + " 사용 횟수: " + count);
+//        });
+//
+//        System.out.println("=== 상위 5개 무드 태그 사용 횟수 ===");
+//        tagsDTO.getMoodUsageCount().forEach((tagName, count) -> {
+//            System.out.println("무드: " + tagName + " 사용 횟수: " + count);
+//        });
+//
+//        System.out.println("=== 상위 5개 장르 태그 사용 횟수 ===");
+//        tagsDTO.getGenreUsageCount().forEach((tagName, count) -> {
+//            System.out.println("장르: " + tagName + " 사용 횟수: " + count);
+//        });
+//    }
+
 }

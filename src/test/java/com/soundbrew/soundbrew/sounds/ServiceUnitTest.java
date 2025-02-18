@@ -18,8 +18,8 @@ import com.soundbrew.soundbrew.handler.custom.ResourceOwnershipException;
 import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.service.authentication.SoundOwnershipCheckService;
-import com.soundbrew.soundbrew.service.SoundsServiceImpl;
-import com.soundbrew.soundbrew.service.TagsService;
+import com.soundbrew.soundbrew.service.sound.SoundsServiceImpl;
+import com.soundbrew.soundbrew.service.tag.TagsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,10 +27,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.access.AccessDeniedException;
 
 @ExtendWith(MockitoExtension.class)
 public class ServiceUnitTest {
@@ -556,4 +554,5 @@ public class ServiceUnitTest {
             soundsService.updateMusicForArtist(musicId,musicDTO, 2);
         }, "잘못된 사용자가 음원을 수정하려 하면 예외가 발생해야 합니다.");
     }
+
 }

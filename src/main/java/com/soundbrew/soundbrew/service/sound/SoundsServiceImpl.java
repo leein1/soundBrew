@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.domain.user.User;
@@ -7,6 +7,7 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
 import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
+import com.soundbrew.soundbrew.service.tag.TagsService;
 import com.soundbrew.soundbrew.service.authentication.SoundOwnershipCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static com.soundbrew.soundbrew.dto.BuilderFactory.albumMusicToEntity;
 import static com.soundbrew.soundbrew.dto.DTOFilteringFactory.hideSearchTotalResultDTO;
 
 @Service

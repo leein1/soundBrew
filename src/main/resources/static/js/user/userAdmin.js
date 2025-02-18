@@ -372,7 +372,7 @@ export function renderUserInfoWithRole(response) {
 			if (selectedSize) {
 				document.getElementById('rows-per-page').value = selectedSize;
 			}
-			
+
 			// 정렬 아이콘 등록 및 버튼 이벤트 리스너 붙이기
 			addSortIcons();
 			attachRowButtonListeners();

@@ -1,8 +1,6 @@
 package com.soundbrew.soundbrew.controller;
 
 
-import com.soundbrew.soundbrew.domain.user.Subscription;
-import com.soundbrew.soundbrew.domain.user.UserSubscription;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
@@ -14,7 +12,9 @@ import com.soundbrew.soundbrew.dto.sound.TagsDTO;
 import com.soundbrew.soundbrew.handler.custom.ResourceOwnershipException;
 import com.soundbrew.soundbrew.service.*;
 import com.soundbrew.soundbrew.service.authentication.AuthenticationService;
+import com.soundbrew.soundbrew.service.sound.SoundsService;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
+import com.soundbrew.soundbrew.service.tag.TagsService;
 import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

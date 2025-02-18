@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.service;
+package com.soundbrew.soundbrew.service.tag;
 
 import com.soundbrew.soundbrew.domain.sound.Music;
 import com.soundbrew.soundbrew.dto.RequestDTO;
