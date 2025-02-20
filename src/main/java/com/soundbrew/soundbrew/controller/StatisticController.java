@@ -48,7 +48,7 @@ public class StatisticController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/sounds/tags")
+    @GetMapping("/tags/stats")
     public ResponseEntity<ResponseDTO<TagsTotalStatisticDTO>> getBestTags(){
         ResponseDTO<TagsTotalStatisticDTO> response = tagsStatisticService.getTagsWithTopUsage();
         return ResponseEntity.ok().body(response);

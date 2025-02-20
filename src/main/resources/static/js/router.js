@@ -243,12 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPagination(response);
     });
 
-    router.addRoute('/admin' , async () =>{
-        updateDynamicCSS(SoundManageTypeCSSFiles);
-        await loadSoundManageTypeCSS();
-
-        await render
-    });
+//    router.addRoute('/admin' , async () =>{
+//        updateDynamicCSS(SoundManageTypeCSSFiles);
+//        await loadSoundManageTypeCSS();
+//
+//        await render
+//    });
 
     router.addRoute('/admin/tracks',async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);

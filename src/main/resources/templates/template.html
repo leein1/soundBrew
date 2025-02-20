@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     <style>
-        /* 기존 CSS + 대시보드용 약간의 수정 */
+        /* 기본 레이아웃 */
         .content {
-          /* 전체 페이지 컨테이너 */
           margin: 0 auto;
           max-width: 1200px;
         }
@@ -29,7 +28,6 @@
           align-items: stretch;
           width: 100%;
         }
-        /* 좌우 영역 컨테이너 */
         .linkDiv {
           display: flex;
           width: 100%;
@@ -39,11 +37,8 @@
         /* 좌측(통계)와 우측(메뉴) 영역 */
         .statistics-section,
         .frequently-list {
-          flex: 1;
-          padding: 10px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          background-color: #f9f9f9;
+          flex: 1 1 0;
+          min-width: 0;
         }
         /* 자주 사용하는 메뉴 항목 */
         .frequently-list > li {
@@ -69,64 +64,124 @@
           font-size: 14px;
           color: #5F6368;
         }
-        /* 차트 컨테이너 */
-        .chart-container {
-          margin-bottom: 30px;
+        /* 차트 선택 영역 */
+        .chart-selector {
+            margin-top:35px;
+          margin-bottom: 20px;
         }
-        table {
+        .chart-selector button {
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          font-size: 0.9rem;
+          border-radius: 4px;
+          cursor: pointer;
+          margin: 5px 5px 5px 0;
+          transition: background-color 0.3s ease;
+        }
+        .chart-selector button.active {
+          background-color: #2E7D32;
+        }
+        /* 카테고리별 영역 (기본적으로 숨김) */
+        .category-section {
+          display: none;
+        }
+        /* 기본 표시: 음원관련 영역 */
+        #music-section {
+          display: block;
+        }
+        /* 수정페이지 영역 숨김 */
+        .frequently-list {
+          display: none;
+        }
+        /* 차트 그룹 컨테이너: grid로 2열 배치 */
+        .chart-group-container {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 20px;
           width: 100%;
-          border-collapse: collapse;
-          margin-top: 20px;
-        }
-        th, td {
-          border: 1px solid #ddd;
-          padding: 8px;
-          text-align: center;
-        }
-        th {
-          background-color: #f2f2f2;
         }
         @media (max-width: 768px) {
-          .linkDiv {
-            flex-direction: column;
-          }
-          .frequently-list {
-            width: 100%;
-          }
+            .chart-group-container {
+              display: grid;
+              grid-template-columns: repeat(1, minmax(0, 1fr));
+              gap: 20px;
+              width: 100%;
+            }
+        }
+        .chart-container {
+            min-height: 300px;
         }
     </style>
-    <!-- Chart.js CDN -->
+    <!-- Chart.js, axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <div class="content">
-    <div class="content-header">
-        Admin Dashboard
-    </div>
+    <div class="content-header">Admin Dashboard</div>
     <div class="content-body">
         <div id="question-list" class="question-list">
             <div class="linkDiv">
-                <!-- 좌측: 통계 및 차트 영역 -->
+                <!-- 좌측: 통계 영역 -->
                 <div class="statistics-section">
-                    <h2>사이트 통계 자료</h2>
-                    <!-- 차트 영역 -->
-                    <div class="chart-container">
-                        <canvas id="soundDoughnutChart"></canvas>
+                    <!-- 차트 선택 UI: 카테고리 버튼 -->
+                    <div class="chart-selector">
+                        <button data-category="music">음원관련 통계</button>
+                        <button data-category="tag">태그관련 통계</button>
+                        <button data-category="user">유저관련 통계</button>
+                        <!-- 수정페이지 버튼은 별도 -->
+                        <button data-chart="editPage">수정페이지</button>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="tagsBarChart"></canvas>
+                    <!-- 카테고리별 차트 영역 -->
+                    <div id="music-section" class="category-section">
+                        <div class="chart-group-container">
+                            <!-- 음원관련 차트들 -->
+                            <div class="chart-container">
+                                <canvas id="soundDoughnutChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topSellingArtistsChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topSellingMusicChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topUploadArtistsChart"></canvas>
+                            </div>
+                        </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="userPieChart"></canvas>
+                    <div id="tag-section" class="category-section">
+                        <div class="chart-group-container">
+                            <!-- 태그관련 차트들 -->
+                            <div class="chart-container">
+                                <canvas id="instrumentBarChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="moodBarChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="genreBarChart"></canvas>
+                            </div>
+                        </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="subscriptionChart"></canvas>
+                    <div id="user-section" class="category-section">
+                        <div class="chart-group-container">
+                            <!-- 유저관련 차트들 -->
+                            <div class="chart-container">
+                                <canvas id="userPieChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="subscriptionChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="recentChangeSubscriptionTable"></canvas>
+                            </div>
+                        </div>
                     </div>
-                    <!-- Top Selling Music 테이블 -->
-                    <h3>Top Selling Music</h3>
-                    <table id="topSellingMusicTable"></table>
                 </div>
-                <!-- 우측: 자주 사용하는 기능 메뉴 -->
+                <!-- 우측: 수정페이지 영역 (자주 사용하는 기능 메뉴) -->
                 <div class="frequently-list">
                     <li id="upload-sound">
                         <span class="main-text">음원 업로드</span><br>
@@ -154,260 +209,375 @@
     </div>
 </div>
 
-<!-- JavaScript: API 응답 데이터를 매핑하여 차트 및 테이블 생성 -->
-<script>
-    window.addEventListener('resize', function() {
-        myChart.resize();
-    });
+<!-- JavaScript: 차트 생성 및 카테고리 전환 -->
+<script type="module">
+    import { axiosGet } from '/js/fetch/standardAxios.js';
 
-    document.addEventListener("DOMContentLoaded", function() {
-      /* 실제 API 응답을 변수로 모사 (실제 환경에서는 fetch나 AJAX로 받아옵니다.) */
-      const soundStatsResponse = {
-        "dto": {
-          "totalAlbums": 20,
-          "totalMusics": 31,
-          "topSellingMusic": [
-            { "userId": 0, "musicId": 11, "title": "hersmile", "nickname": "ddjsjs12", "count": 0, "download": 0 },
-            { "userId": 0, "musicId": 12, "title": "ine", "nickname": "ddjsjs12", "count": 0, "download": 0 },
-            { "userId": 0, "musicId": 14, "title": "hello, bye", "nickname": "ddjsjs12", "count": 0, "download": 0 },
-            { "userId": 0, "musicId": 15, "title": "fury", "nickname": "ddjsjs12", "count": 0, "download": 0 },
-            { "userId": 0, "musicId": 317, "title": "Gentle Breeze", "nickname": "ddjsjs12", "count": 0, "download": 0 }
-          ],
-          "topArtistsBySales": [
-            { "userId": 2, "musicId": 0, "title": null, "nickname": "ddjsjs12", "count": 0, "download": 0 }
-          ],
-          "topArtistsByUploads": [
-            { "userId": 2, "musicId": 0, "title": null, "nickname": "ddjsjs12", "count": 31, "download": 0 }
-          ]
-        }
-      };
+    const ChartModule = (() => {
+      const charts = {}; // 각 차트 인스턴스 저장
 
-      const tagsStatsResponse = {
-        "dto": {
-          "instrumentUsageCount": [
-            { "tagName": "guitar2", "count": 9 },
-            { "tagName": "guitar", "count": 8 },
-            { "tagName": "horn", "count": 6 },
-            { "tagName": "guitar5", "count": 4 },
-            { "tagName": "gong", "count": 3 }
-          ],
-          "moodUsageCount": [
-            { "tagName": "sad", "count": 16 },
-            { "tagName": "mood5", "count": 8 },
-            { "tagName": "happy4", "count": 3 },
-            { "tagName": "newMood", "count": 2 },
-            { "tagName": "relaxed4", "count": 2 }
-          ],
-          "genreUsageCount": [
-            { "tagName": "pop4", "count": 5 },
-            { "tagName": "ballad", "count": 4 },
-            { "tagName": "house", "count": 4 },
-            { "tagName": "punk", "count": 3 },
-            { "tagName": "postmanGenre", "count": 3 }
-          ]
-        }
-      };
-
-      const userStatsResponse = {
-        "dto": {
-          "totalUsers": 6,
-          "newUsersToday": 0,
-          "newUsersWeek": 0,
-          "newUsersMonth": 4,
-          "subscribedUsers": 4,
-          "verifiedUsers": 1
-        }
-      };
-
-      const subscriptionStatsResponse = {
-        "dto": {
-          "recentSubscriptionChangeDTO": [
-            {
-              "subscriptionName": null,
-              "count": 0,
-              "monthlyRevenue": 0,
-              "userId": 2,
-              "name": "경동훈",
-              "nickname": "ddjsjs12",
-              "subscriptionId": 2,
-              "modifyDate": [2025,2,17,2,53,35]
-            }
-          ],
-          "subscriptionStatisticDTO": [
-            {
-              "subscriptionName": "premium",
-              "count": 1,
-              "monthlyRevenue": 20000,
-              "userId": null,
-              "name": null,
-              "nickname": null,
-              "subscriptionId": null,
-              "modifyDate": null
-            }
-          ]
-        }
-      };
-
-      /* ============================================
-         1. Sound Stats: 도넛 차트 (전체 앨범 & 음원 수)
-      ============================================ */
-      const ctxSound = document.getElementById('soundDoughnutChart').getContext('2d');
-      new Chart(ctxSound, {
-        type: 'doughnut',
-        data: {
-          labels: ['Total Albums', 'Total Musics'],
-          datasets: [{
-            data: [
-              soundStatsResponse.dto.totalAlbums,
-              soundStatsResponse.dto.totalMusics
-            ],
-            backgroundColor: [
-              'rgba(255, 159, 64, 0.6)',
-              'rgba(54, 162, 235, 0.6)'
-            ],
-            borderColor: [
-              'rgba(255, 159, 64, 1)',
-              'rgba(54, 162, 235, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          animation: {
-            duration: 1500,
-            easing: 'easeOutBounce'
-          }
-        }
-      });
-
-      /* ====================================================
-         2. Tags Stats: 막대 차트 (Instrument Usage)
-         실제 데이터 배열에서 tagName과 count 추출
-      ==================================================== */
-      const instrumentData = tagsStatsResponse.dto.instrumentUsageCount;
-      const instrumentLabels = instrumentData.map(item => item.tagName);
-      const instrumentCounts = instrumentData.map(item => item.count);
-      const ctxTags = document.getElementById('tagsBarChart').getContext('2d');
-      new Chart(ctxTags, {
-        type: 'bar',
-        data: {
-          labels: instrumentLabels,
-          datasets: [{
-            label: 'Instrument Usage Count',
-            data: instrumentCounts,
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          animation: {
-            duration: 1500,
-            easing: 'easeInOutBounce'
-          },
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-
-      /* =====================================================
-         3. User Stats: 원형 차트 (유저 관련 통계)
-      ===================================================== */
-      const userData = userStatsResponse.dto;
-      const ctxUser = document.getElementById('userPieChart').getContext('2d');
-      new Chart(ctxUser, {
-        type: 'pie',
-        data: {
-          labels: ['Total Users', 'New Users (Month)', 'Subscribed Users', 'Verified Users'],
-          datasets: [{
-            data: [
-              userData.totalUsers,
-              userData.newUsersMonth,
-              userData.subscribedUsers,
-              userData.verifiedUsers
-            ],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.6)',
-              'rgba(255, 206, 86, 0.6)',
-              'rgba(75, 192, 192, 0.6)',
-              'rgba(153, 102, 255, 0.6)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          animation: {
-            duration: 1500,
-            easing: 'easeInOutQuad'
-          }
-        }
-      });
-
-      /* ====================================================================
-         4. Subscription Stats: 바 차트 (구독 관련 통계 – 월별 수익)
-         subscriptionStatisticDTO 배열의 데이터를 사용
-      ==================================================================== */
-      const subscriptionData = subscriptionStatsResponse.dto.subscriptionStatisticDTO;
-      const ctxSubscription = document.getElementById('subscriptionChart').getContext('2d');
-      new Chart(ctxSubscription, {
-        type: 'bar',
-        data: {
-          labels: subscriptionData.map(item => item.subscriptionName),
-          datasets: [{
-            label: 'Monthly Revenue',
-            data: subscriptionData.map(item => item.monthlyRevenue),
-            backgroundColor: 'rgba(255, 205, 86, 0.6)',
-            borderColor: 'rgba(255, 205, 86, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          animation: {
-            duration: 1500,
-            easing: 'easeOutBounce'
-          },
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-
-      /* ========================================================
-         5. Top Selling Music: 테이블에 데이터 매핑
-      ======================================================== */
-      const topSellingMusicData = soundStatsResponse.dto.topSellingMusic;
-      const musicTable = document.getElementById('topSellingMusicTable');
-      if (musicTable) {
-        let tableHtml = `<tr>
-          <th>Title</th>
-          <th>Artist Nickname</th>
-          <th>Downloads</th>
-        </tr>`;
-        topSellingMusicData.forEach(music => {
-          tableHtml += `<tr>
-            <td>${music.title}</td>
-            <td>${music.nickname}</td>
-            <td>${music.download}</td>
-          </tr>`;
+      // 카테고리 영역 숨김
+      function hideAllCategorySections() {
+        document.querySelectorAll('.category-section').forEach(section => {
+          section.style.display = 'none';
         });
-        musicTable.innerHTML = tableHtml;
       }
+
+      // 지정된 카테고리 영역 보이기
+      function showCategorySection(category) {
+        hideAllCategorySections();
+        const section = document.getElementById(category + '-section');
+        if (section) section.style.display = 'block';
+      }
+
+      // 각 차트 생성 시, 이미 생성된 차트가 있다면 destroy() 호출
+      async function createSoundDoughnutChart() {
+        try {
+          const canvas = document.getElementById('soundDoughnutChart');
+          if (charts["soundDoughnutChart"]) {
+            charts["soundDoughnutChart"].destroy();
+            delete charts["soundDoughnutChart"];
+          }
+          const soundsStats = await axiosGet({ endpoint: '/api/statistic/sounds/stats' });
+          const ctx = canvas.getContext('2d');
+          charts["soundDoughnutChart"] = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: ['Total Albums', 'Total Musics'],
+              datasets: [{
+                data: [soundsStats.dto.totalAlbums, soundsStats.dto.totalMusics],
+                backgroundColor: ['rgba(255, 159, 64, 0.6)', 'rgba(54, 162, 235, 0.6)'],
+                borderColor: ['rgba(255, 159, 64, 1)', 'rgba(54, 162, 235, 1)'],
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, animation: false }
+          });
+        } catch (error) {
+          console.error("Sound Doughnut Chart 생성 오류:", error);
+        }
+      }
+
+      async function createTopSellingMusicChart() {
+        try {
+          const canvas = document.getElementById('topSellingMusicChart');
+          if (charts["topSellingMusicChart"]) {
+            charts["topSellingMusicChart"].destroy();
+            delete charts["topSellingMusicChart"];
+          }
+          const soundsStats = await axiosGet({ endpoint: '/api/statistic/sounds/stats' });
+          const data = soundsStats.dto.topSellingMusic;
+          const ctx = canvas.getContext('2d');
+          charts["topSellingMusicChart"] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.map(item => item.title),
+              datasets: [{
+                label: '음원 판매',
+                data: data.map(item => item.count),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+          });
+        } catch (error) {
+          console.error("Top Selling Music Chart 생성 오류:", error);
+        }
+      }
+
+      async function createTopSellingArtistsChart() {
+        try {
+          const canvas = document.getElementById('topSellingArtistsChart');
+          if (charts["topSellingArtistsChart"]) {
+            charts["topSellingArtistsChart"].destroy();
+            delete charts["topSellingArtistsChart"];
+          }
+          const soundsStats = await axiosGet({ endpoint: '/api/statistic/sounds/stats' });
+          const data = soundsStats.dto.topArtistsBySales;
+          const ctx = canvas.getContext('2d');
+          charts["topSellingArtistsChart"] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.map(item => item.nickname),
+              datasets: [{
+                label: '음원 판매 아티스트',
+                data: data.map(item => item.count),
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+          });
+        } catch (error) {
+          console.error("Top Selling Artists Chart 생성 오류:", error);
+        }
+      }
+
+      async function createTopUploadArtistsChart() {
+        try {
+          const canvas = document.getElementById('topUploadArtistsChart');
+          if (charts["topUploadArtistsChart"]) {
+            charts["topUploadArtistsChart"].destroy();
+            delete charts["topUploadArtistsChart"];
+          }
+          const soundsStats = await axiosGet({ endpoint: '/api/statistic/sounds/stats' });
+          const data = soundsStats.dto.topArtistsByUploads;
+          const ctx = canvas.getContext('2d');
+          charts["topUploadArtistsChart"] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.map(item => item.nickname),
+              datasets: [{
+                label: '음원 업로드 아티스트',
+                data: data.map(item => item.count),
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+          });
+        } catch (error) {
+          console.error("Top Upload Artists Chart 생성 오류:", error);
+        }
+      }
+
+      async function createInstrumentBarChart() {
+        try {
+          const canvas = document.getElementById('instrumentBarChart');
+          if (charts["instrumentBarChart"]) {
+            charts["instrumentBarChart"].destroy();
+            delete charts["instrumentBarChart"];
+          }
+          const tagsStats = await axiosGet({ endpoint: '/api/statistic/tags/stats' });
+          const data = tagsStats.dto.instrumentUsageCount;
+          const ctx = canvas.getContext('2d');
+          charts["instrumentBarChart"] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.map(item => item.tagName),
+              datasets: [{
+                label: '악기 태그 사용 통계',
+                data: data.map(item => item.count),
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+          });
+        } catch (error) {
+          console.error("Instrument Bar Chart 생성 오류:", error);
+        }
+      }
+
+      async function createMoodBarChart() {
+        try {
+          const canvas = document.getElementById('moodBarChart');
+          if (charts["moodBarChart"]) {
+            charts["moodBarChart"].destroy();
+            delete charts["moodBarChart"];
+          }
+          const tagsStats = await axiosGet({ endpoint: '/api/statistic/tags/stats' });
+          const data = tagsStats.dto.moodUsageCount;
+          const ctx = canvas.getContext('2d');
+          charts["moodBarChart"] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.map(item => item.tagName),
+              datasets: [{
+                label: '무드 태그 사용 통계',
+                data: data.map(item => item.count),
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+          });
+        } catch (error) {
+          console.error("Mood Bar Chart 생성 오류:", error);
+        }
+      }
+
+      async function createGenreBarChart() {
+        try {
+          const canvas = document.getElementById('genreBarChart');
+          if (charts["genreBarChart"]) {
+            charts["genreBarChart"].destroy();
+            delete charts["genreBarChart"];
+          }
+          const tagsStats = await axiosGet({ endpoint: '/api/statistic/tags/stats' });
+          const data = tagsStats.dto.genreUsageCount;
+          const ctx = canvas.getContext('2d');
+          charts["genreBarChart"] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.map(item => item.tagName),
+              datasets: [{
+                label: '장르 태그 사용 통계',
+                data: data.map(item => item.count),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+          });
+        } catch (error) {
+          console.error("Genre Bar Chart 생성 오류:", error);
+        }
+      }
+
+      async function createUserPieChart() {
+        try {
+          const canvas = document.getElementById('userPieChart');
+          if (charts["userPieChart"]) {
+            charts["userPieChart"].destroy();
+            delete charts["userPieChart"];
+          }
+          const usersStat = await axiosGet({ endpoint: '/api/statistic/users/stats' });
+          const ctx = canvas.getContext('2d');
+          charts["userPieChart"] = new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: ['전체 회원','신규 회원(today)','신규 회원(week)','신규 회원(Month)','구독제 가입 유저','이메일 인증 유저'],
+              datasets: [{
+                data: [
+                  usersStat.dto.totalUsers,
+                  usersStat.dto.newUsersToday,
+                  usersStat.dto.nwUsersWeek,
+                  usersStat.dto.newUsersMonth,
+                  usersStat.dto.subscribedUsers,
+                  usersStat.dto.verifiedUsers
+                ],
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.6)',
+                  'rgba(54, 162, 235, 0.6)',
+                  'rgba(255, 206, 86, 0.6)',
+                  'rgba(75, 192, 192, 0.6)',
+                  'rgba(153, 102, 255, 0.6)',
+                  'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, animation: false }
+          });
+        } catch (error) {
+          console.error("User Pie Chart 생성 오류:", error);
+        }
+      }
+
+      async function createSubscriptionChart() {
+        try {
+          const canvas = document.getElementById('subscriptionChart');
+          if (charts["subscriptionChart"]) {
+            charts["subscriptionChart"].destroy();
+            delete charts["subscriptionChart"];
+          }
+          const userSubscriptionStats = await axiosGet({ endpoint: '/api/statistic/subscription/stats' });
+          const data = userSubscriptionStats.dto.subscriptionStatisticDTO;
+          const ctx = canvas.getContext('2d');
+          charts["subscriptionChart"] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.map(item => item.subscriptionName),
+              datasets: [{
+                label: '예상 월간 수익',
+                data: data.map(item => item.monthlyRevenue),
+                backgroundColor: 'rgba(255, 205, 86, 0.6)',
+                borderColor: 'rgba(255, 205, 86, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+          });
+        } catch (error) {
+          console.error("Subscription Chart 생성 오류:", error);
+        }
+      }
+
+      function resizeCharts() {
+        Object.values(charts).forEach(chart => chart.resize());
+      }
+
+      return {
+        charts,
+        showCategorySection,
+        resizeCharts,
+        createSoundDoughnutChart,
+        createTopSellingMusicChart,
+        createTopSellingArtistsChart,
+        createTopUploadArtistsChart,
+        createInstrumentBarChart,
+        createMoodBarChart,
+        createGenreBarChart,
+        createUserPieChart,
+        createSubscriptionChart
+      };
+    })();
+
+    // 이벤트 처리: 카테고리 버튼과 수정페이지 버튼
+    document.querySelectorAll('.chart-selector button').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        // 모든 버튼 active 제거
+        document.querySelectorAll('.chart-selector button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // 수정페이지 버튼이면 통계 영역 숨기고 수정 메뉴 표시
+        if (btn.getAttribute('data-chart') === 'editPage') {
+          document.querySelectorAll('.category-section').forEach(sec => sec.style.display = 'none');
+          document.querySelector('.frequently-list').style.display = 'block';
+          return;
+        } else {
+          document.querySelector('.frequently-list').style.display = 'none';
+        }
+
+        // 카테고리 버튼인 경우
+        const category = btn.getAttribute('data-category');
+        if (category) {
+          ChartModule.showCategorySection(category);
+          if (category === 'music') {
+            await ChartModule.createSoundDoughnutChart();
+            await ChartModule.createTopSellingArtistsChart();
+            await ChartModule.createTopSellingMusicChart();
+            await ChartModule.createTopUploadArtistsChart();
+          } else if (category === 'tag') {
+            await ChartModule.createInstrumentBarChart();
+            await ChartModule.createMoodBarChart();
+            await ChartModule.createGenreBarChart();
+          } else if (category === 'user') {
+            await ChartModule.createUserPieChart();
+            await ChartModule.createSubscriptionChart();
+          }
+        }
+      });
     });
+
+    // 기본: 페이지 로딩 시 "음원관련 통계" 그룹 활성화
+    (async () => {
+      const defaultBtn = document.querySelector('button[data-category="music"]');
+      if (defaultBtn) defaultBtn.classList.add('active');
+      ChartModule.showCategorySection('music');
+      await ChartModule.createSoundDoughnutChart();
+      await ChartModule.createTopSellingArtistsChart();
+      await ChartModule.createTopSellingMusicChart();
+      await ChartModule.createTopUploadArtistsChart();
+    })();
+
+    window.addEventListener('resize', ChartModule.resizeCharts);
 </script>
 </body>
 </html>

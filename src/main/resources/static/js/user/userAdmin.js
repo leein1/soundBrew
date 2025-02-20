@@ -496,11 +496,16 @@ window.addEventListener('click', (event) => {
 /**
  * 셀 내부에서 편집필드 클릭 시 이벤트 버블링 중지
  */
-document.getElementById('content-body').addEventListener('click', (event) => {
-	if (event.target.matches('.editable-field')) {
-		event.stopPropagation();
-	}
-});
+const contentBody = document.getElementById('content-body');
+
+if (contentBody) {
+    contentBody.addEventListener('click', (event) => {
+        if (event.target.matches('.editable-field')) {
+            event.stopPropagation();
+        }
+    });
+}
+
 
 /**
  * 정렬 파라미터 업데이트 함수 (모듈로 export)
