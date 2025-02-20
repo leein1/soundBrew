@@ -29,15 +29,12 @@ public interface UserRepository extends JpaRepository<User,Integer>, UserSearchR
     long count();
 
     // 2. 신규 가입자 수 (최근 1일, 7일, 30일)
-    @Query("SELECT COUNT(u) FROM User u WHERE u.createDate >= :createDate")
-    long countNewUsers(@Param("createDate") LocalDateTime createDate);
+    long countByCreateDateGreaterThanEqual(LocalDateTime createDate);
 
     // 3. 구독제 가입자 수 (subscriptionId가 NULL이 아닌 경우)
-    @Query("SELECT COUNT(u) FROM User u WHERE u.subscriptionId IS NOT NULL")
-    long countSubscribedUsers();
+    long countBySubscriptionIdIsNotNull();
 
     // 4. 이메일 인증된 활성 사용자 수
-    @Query("SELECT COUNT(u) FROM User u WHERE u.emailVerified = true")
-    long countVerifiedUsers();
+    long countByEmailVerifiedTrue();
 
 }

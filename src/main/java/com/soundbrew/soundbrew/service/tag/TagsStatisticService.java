@@ -1,9 +1,8 @@
 package com.soundbrew.soundbrew.service.tag;
 
-import com.soundbrew.soundbrew.dto.sound.TagsDTO;
-
-import java.util.Map;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.statistics.tag.TagsTotalStatisticDTO;
 
 public interface TagsStatisticService {
-    TagsDTO getTagsWithTopUsage();
+    ResponseDTO<TagsTotalStatisticDTO> getTagsWithTopUsage();
 }

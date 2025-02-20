@@ -28,18 +28,6 @@ public class TagsDTO {
     @ValidTagList
     private List<String> genre;
 
-    // 대시보드 관련 기능 추가
-    private Map<String, Long> instrumentUsageCount; // instrument 태그별 사용 횟수
-    private Map<String, Long> moodUsageCount; // mood 태그별 사용 횟수
-    private Map<String, Long> genreUsageCount; // genre 태그별 사용 횟수
-
-    public void setTagUsageCounts(Map<String, Long> instrumentCounts, Map<String, Long> moodCounts, Map<String, Long> genreCounts) {
-        this.instrumentUsageCount = instrumentCounts;
-        this.moodUsageCount = moodCounts;
-        this.genreUsageCount = genreCounts;
-    }
-    // =====
-
     public List<InstrumentTag> InstToEntity(){
         return instrument.stream()
                 .map(tagName -> InstrumentTag.builder()

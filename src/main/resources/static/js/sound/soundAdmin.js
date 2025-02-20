@@ -646,7 +646,7 @@ export async function renderTotalSoundsVerify(data) {
     });
 }
 
-export async function renderSoundsAdminMain(){
+export async function renderAdminMain(){
     const container = document.getElementById("content-body");
     container.innerHTML='';
 
@@ -684,6 +684,11 @@ export async function renderSoundsAdminMain(){
                         <span class="sub-text">태그 등록</span>
                         <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
                     </li>
+                    <li id="HERE-UNIQUE-ID">
+                        <span class="main-text">메인 모시깽</span><br>
+                        <span class="sub-text">서브 모시깽</span>
+                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+                    </li>
                 </div>
             </div>
         </div>
@@ -717,3 +722,4 @@ export async function renderSoundsAdminMain(){
     });
 }
 
+}

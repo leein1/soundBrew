@@ -41,6 +41,9 @@ public class Music extends BaseEntity {
     @Column(nullable = false)
     private String soundType;
 
+    @Column
+    private int download;
+
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false, insertable = false, updatable = false) // userId와 User의 관계 설정
     private User user;

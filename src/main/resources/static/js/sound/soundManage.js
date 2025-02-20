@@ -477,6 +477,7 @@ export function renderMyMain(){
     container.innerHTML='';
 
     const html = `
+    <div
         <div id="question-list" class="question-list">
             <div class="linkDiv">
                 <div class="statistics-section">
@@ -485,10 +486,6 @@ export function renderMyMain(){
                     </div>
                 </div>
                 <div class="frequently-list">
-<!--                <span class="question-title">Sounds Manage</span>-->
-<!--                <div>-->
-<!--                    <span class="sub-text">아티스트를 위한 음원 등록, 등록했던 앨범과 음원 정보 수정하기</span>-->
-<!--                </div>x-->
                     <li id="upload-sound">
                         <span class="main-text">음원 업로드</span><br>
                         <span class="sub-text">Album, Music, Instrument Tag, Mood Tag, Genre Tag</span>

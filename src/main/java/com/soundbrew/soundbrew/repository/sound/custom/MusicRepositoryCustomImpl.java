@@ -109,7 +109,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                 .groupBy(
                         album.albumArtPath,
                         music.musicId, music.title, music.filePath, music.price, music.description,
-                        music.nickname, music.createDate, music.modifyDate
+                        music.nickname, music.createDate, music.modifyDate, music.download
                 )
                 .fetchOne(); // 단일 결과 반환
 
@@ -149,7 +149,7 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
                 .groupBy(
                         album.albumArtPath,
                         music.musicId, music.title, music.filePath, music.price, music.description,
-                        music.nickname, music.createDate, music.modifyDate
+                        music.nickname, music.createDate, music.modifyDate, music.download
                 )
                 .fetchOne(); // 단일 결과 반환
 

@@ -1,7 +1,8 @@
 package com.soundbrew.soundbrew.service.user;
 
-import java.util.Map;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.statistics.user.UserStatisticDTO;
 
 public interface UserStatisticService {
-    Map<String, Object> getUsersStatsForAdmin();
+    ResponseDTO<UserStatisticDTO> getUsersStatsForAdmin();
 }

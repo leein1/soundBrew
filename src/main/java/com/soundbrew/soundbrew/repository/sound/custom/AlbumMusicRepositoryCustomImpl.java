@@ -98,8 +98,8 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
                 .where(builder) // 조건 추가
                 .groupBy(
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
+                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname, album.download,
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate, music.download
                 )
                 .having(havingBuilder)
                 .orderBy(orderSpecifier) // 동적 정렬 추가
@@ -207,7 +207,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
                 .where(builder) // 조건 추가
                 .groupBy(
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,album.createDate, album.modifyDate
+                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,album.createDate, album.modifyDate, album.download
                 )
                 .having(havingBuilder)
                 .orderBy(orderSpecifier) // 동적 정렬 추가
@@ -309,7 +309,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .where(builder) // 조건 추가
                 .groupBy(
                         album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate, music.download
                 )
                 .having(havingBuilder)
                 .orderBy(orderSpecifier) // 동적 정렬 추가
@@ -410,7 +410,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .where(builder) // 조건 추가
                 .groupBy(
                         album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate,music.download
                 )
                 .having(havingBuilder)
                 .orderBy(orderSpecifier) // 동적 정렬 추가

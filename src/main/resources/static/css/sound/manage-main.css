@@ -1,46 +1,12 @@
-.content{
-    /* border: 1px solid black; */
-}
-
-.content-header{
-    /* border: 1px solid black;  */
-    margin-top: 20px;
-    height: 50px;
-    font-size: 2rem;
+.linkDiv {
     display: flex;
-    align-items: center;
+    gap: 20px; /* 영역 사이 간격 (선택 사항) */
 }
-
-.content-body{
-    /* border: 1px solid black;  */
-
-}
-
-.question-list{
-    /* border: 1px solid black;  */
-    display: flex;
-    flex: 1;
-}
-
-.main-text {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.sub-text {
-    font-size: 14px;
-    font-weight: normal;
-    color: #5F6368;
-}
-
-.frequently-list , .additional-list{
-    /* border: 1px solid black;  */
+.statistics-section,
+.frequently-list {
+    flex: 1; /* 두 영역의 너비를 동일하게 함 */
     padding: 10px;
-}
-.linkDiv{
-    display: flex;
-    gap: 20px;
-    padding:10px;
+    border: 1px solid #ccc; /* 경계선 추가 (선택 사항) */
 }
 
 .frequently-list > li , .additional-list > li{

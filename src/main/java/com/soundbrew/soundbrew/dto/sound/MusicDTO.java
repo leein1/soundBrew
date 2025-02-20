@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
@@ -36,6 +37,8 @@ public class MusicDTO extends BaseDTO {
     @Size(max = 500)
     private String description;
 
+    @Column
+    private int download;
 
     public MusicDTO(int musicId, int userId, String title, String filePath, int price, String description, String soundType, String nickname, LocalDateTime createDate, LocalDateTime modifyDate) {
         this.musicId = musicId;

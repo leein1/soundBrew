@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -33,6 +34,9 @@ public class AlbumDTO extends BaseEntityDTO {
     @NotBlank
     @Size(max = 500)
     private String description;
+
+    @Column
+    private int download;
 
     public AlbumDTO(int albumId, int userId, String albumName, String albumArtPath, String description, String nickname, LocalDateTime createDate, LocalDateTime modifyDate) {
         this.albumId = albumId;

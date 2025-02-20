@@ -33,6 +33,9 @@ public class Album extends BaseEntity {
     @Column(length = 500)
     private String description;
 
+    @Column
+    private int download;
+
     @Column(length = 1)
     private int verify;
 //    @ManyToOne

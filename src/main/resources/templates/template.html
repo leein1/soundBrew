@@ -1,29 +1,413 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout.html}">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>구독 정책 관리자 페이지</title>
+    <title>Admin Dashboard</title>
+    <style>
+        /* 기존 CSS + 대시보드용 약간의 수정 */
+        .content {
+          /* 전체 페이지 컨테이너 */
+          margin: 0 auto;
+          max-width: 1200px;
+        }
+        .content-header {
+          margin-top: 20px;
+          height: 50px;
+          font-size: 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .content-body {
+          display: flex;
+          gap: 20px;
+          padding: 20px;
+        }
+        .question-list {
+          display: flex;
+          justify-content: center;
+          align-items: stretch;
+          width: 100%;
+        }
+        /* 좌우 영역 컨테이너 */
+        .linkDiv {
+          display: flex;
+          width: 100%;
+          gap: 20px;
+          padding: 10px;
+        }
+        /* 좌측(통계)와 우측(메뉴) 영역 */
+        .statistics-section,
+        .frequently-list {
+          flex: 1;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          background-color: #f9f9f9;
+        }
+        /* 자주 사용하는 메뉴 항목 */
+        .frequently-list > li {
+          border-radius: 100px;
+          padding: 20px;
+          margin-top: 40px;
+          list-style: none;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background-color: #fff;
+          box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+          transition: background-color 0.3s ease;
+        }
+        .frequently-list > li:hover {
+          background-color: rgb(227, 227, 227);
+        }
+        .main-text {
+          font-size: 18px;
+          font-weight: bold;
+        }
+        .sub-text {
+          font-size: 14px;
+          color: #5F6368;
+        }
+        /* 차트 컨테이너 */
+        .chart-container {
+          margin-bottom: 30px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+        }
+        th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: center;
+        }
+        th {
+          background-color: #f2f2f2;
+        }
+        @media (max-width: 768px) {
+          .linkDiv {
+            flex-direction: column;
+          }
+          .frequently-list {
+            width: 100%;
+          }
+        }
+    </style>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<!-- 본문 컨텐츠 -->
-<div layout:fragment="content">
+<div class="content">
     <div class="content-header">
-        <h1>구독 정책 관리자 페이지</h1>
+        Admin Dashboard
     </div>
-
-    <div class="content-body" id="content-body">
-        <!-- 여기에 renderSubscriptionInfo()로 테이블이 삽입됩니다. -->
+    <div class="content-body">
+        <div id="question-list" class="question-list">
+            <div class="linkDiv">
+                <!-- 좌측: 통계 및 차트 영역 -->
+                <div class="statistics-section">
+                    <h2>사이트 통계 자료</h2>
+                    <!-- 차트 영역 -->
+                    <div class="chart-container">
+                        <canvas id="soundDoughnutChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="tagsBarChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="userPieChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="subscriptionChart"></canvas>
+                    </div>
+                    <!-- Top Selling Music 테이블 -->
+                    <h3>Top Selling Music</h3>
+                    <table id="topSellingMusicTable"></table>
+                </div>
+                <!-- 우측: 자주 사용하는 기능 메뉴 -->
+                <div class="frequently-list">
+                    <li id="upload-sound">
+                        <span class="main-text">음원 업로드</span><br>
+                        <span class="sub-text">Album, Music, Instrument Tag, Mood Tag, Genre Tag</span>
+                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
+                    </li>
+                    <li id="edit-album">
+                        <span class="main-text">앨범 정보 수정</span><br>
+                        <span class="sub-text">Title, Description</span>
+                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
+                    </li>
+                    <li id="edit-music">
+                        <span class="main-text">음원 정보 수정</span><br>
+                        <span class="sub-text">Title, Description, soundType</span>
+                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
+                    </li>
+                    <li id="edit-tags">
+                        <span class="main-text">태그 정보 수정</span><br>
+                        <span class="sub-text">Instrument Tag, Mood Tag, Genre Tag</span>
+                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
+                    </li>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- 스크립트 영역 -->
-<th:block layout:fragment="script">
-    <script type="module">
+<!-- JavaScript: API 응답 데이터를 매핑하여 차트 및 테이블 생성 -->
+<script>
+    window.addEventListener('resize', function() {
+        myChart.resize();
+    });
 
-    </script>
-</th:block>
+    document.addEventListener("DOMContentLoaded", function() {
+      /* 실제 API 응답을 변수로 모사 (실제 환경에서는 fetch나 AJAX로 받아옵니다.) */
+      const soundStatsResponse = {
+        "dto": {
+          "totalAlbums": 20,
+          "totalMusics": 31,
+          "topSellingMusic": [
+            { "userId": 0, "musicId": 11, "title": "hersmile", "nickname": "ddjsjs12", "count": 0, "download": 0 },
+            { "userId": 0, "musicId": 12, "title": "ine", "nickname": "ddjsjs12", "count": 0, "download": 0 },
+            { "userId": 0, "musicId": 14, "title": "hello, bye", "nickname": "ddjsjs12", "count": 0, "download": 0 },
+            { "userId": 0, "musicId": 15, "title": "fury", "nickname": "ddjsjs12", "count": 0, "download": 0 },
+            { "userId": 0, "musicId": 317, "title": "Gentle Breeze", "nickname": "ddjsjs12", "count": 0, "download": 0 }
+          ],
+          "topArtistsBySales": [
+            { "userId": 2, "musicId": 0, "title": null, "nickname": "ddjsjs12", "count": 0, "download": 0 }
+          ],
+          "topArtistsByUploads": [
+            { "userId": 2, "musicId": 0, "title": null, "nickname": "ddjsjs12", "count": 31, "download": 0 }
+          ]
+        }
+      };
+
+      const tagsStatsResponse = {
+        "dto": {
+          "instrumentUsageCount": [
+            { "tagName": "guitar2", "count": 9 },
+            { "tagName": "guitar", "count": 8 },
+            { "tagName": "horn", "count": 6 },
+            { "tagName": "guitar5", "count": 4 },
+            { "tagName": "gong", "count": 3 }
+          ],
+          "moodUsageCount": [
+            { "tagName": "sad", "count": 16 },
+            { "tagName": "mood5", "count": 8 },
+            { "tagName": "happy4", "count": 3 },
+            { "tagName": "newMood", "count": 2 },
+            { "tagName": "relaxed4", "count": 2 }
+          ],
+          "genreUsageCount": [
+            { "tagName": "pop4", "count": 5 },
+            { "tagName": "ballad", "count": 4 },
+            { "tagName": "house", "count": 4 },
+            { "tagName": "punk", "count": 3 },
+            { "tagName": "postmanGenre", "count": 3 }
+          ]
+        }
+      };
+
+      const userStatsResponse = {
+        "dto": {
+          "totalUsers": 6,
+          "newUsersToday": 0,
+          "newUsersWeek": 0,
+          "newUsersMonth": 4,
+          "subscribedUsers": 4,
+          "verifiedUsers": 1
+        }
+      };
+
+      const subscriptionStatsResponse = {
+        "dto": {
+          "recentSubscriptionChangeDTO": [
+            {
+              "subscriptionName": null,
+              "count": 0,
+              "monthlyRevenue": 0,
+              "userId": 2,
+              "name": "경동훈",
+              "nickname": "ddjsjs12",
+              "subscriptionId": 2,
+              "modifyDate": [2025,2,17,2,53,35]
+            }
+          ],
+          "subscriptionStatisticDTO": [
+            {
+              "subscriptionName": "premium",
+              "count": 1,
+              "monthlyRevenue": 20000,
+              "userId": null,
+              "name": null,
+              "nickname": null,
+              "subscriptionId": null,
+              "modifyDate": null
+            }
+          ]
+        }
+      };
+
+      /* ============================================
+         1. Sound Stats: 도넛 차트 (전체 앨범 & 음원 수)
+      ============================================ */
+      const ctxSound = document.getElementById('soundDoughnutChart').getContext('2d');
+      new Chart(ctxSound, {
+        type: 'doughnut',
+        data: {
+          labels: ['Total Albums', 'Total Musics'],
+          datasets: [{
+            data: [
+              soundStatsResponse.dto.totalAlbums,
+              soundStatsResponse.dto.totalMusics
+            ],
+            backgroundColor: [
+              'rgba(255, 159, 64, 0.6)',
+              'rgba(54, 162, 235, 0.6)'
+            ],
+            borderColor: [
+              'rgba(255, 159, 64, 1)',
+              'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          animation: {
+            duration: 1500,
+            easing: 'easeOutBounce'
+          }
+        }
+      });
+
+      /* ====================================================
+         2. Tags Stats: 막대 차트 (Instrument Usage)
+         실제 데이터 배열에서 tagName과 count 추출
+      ==================================================== */
+      const instrumentData = tagsStatsResponse.dto.instrumentUsageCount;
+      const instrumentLabels = instrumentData.map(item => item.tagName);
+      const instrumentCounts = instrumentData.map(item => item.count);
+      const ctxTags = document.getElementById('tagsBarChart').getContext('2d');
+      new Chart(ctxTags, {
+        type: 'bar',
+        data: {
+          labels: instrumentLabels,
+          datasets: [{
+            label: 'Instrument Usage Count',
+            data: instrumentCounts,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          animation: {
+            duration: 1500,
+            easing: 'easeInOutBounce'
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      /* =====================================================
+         3. User Stats: 원형 차트 (유저 관련 통계)
+      ===================================================== */
+      const userData = userStatsResponse.dto;
+      const ctxUser = document.getElementById('userPieChart').getContext('2d');
+      new Chart(ctxUser, {
+        type: 'pie',
+        data: {
+          labels: ['Total Users', 'New Users (Month)', 'Subscribed Users', 'Verified Users'],
+          datasets: [{
+            data: [
+              userData.totalUsers,
+              userData.newUsersMonth,
+              userData.subscribedUsers,
+              userData.verifiedUsers
+            ],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.6)',
+              'rgba(255, 206, 86, 0.6)',
+              'rgba(75, 192, 192, 0.6)',
+              'rgba(153, 102, 255, 0.6)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          animation: {
+            duration: 1500,
+            easing: 'easeInOutQuad'
+          }
+        }
+      });
+
+      /* ====================================================================
+         4. Subscription Stats: 바 차트 (구독 관련 통계 – 월별 수익)
+         subscriptionStatisticDTO 배열의 데이터를 사용
+      ==================================================================== */
+      const subscriptionData = subscriptionStatsResponse.dto.subscriptionStatisticDTO;
+      const ctxSubscription = document.getElementById('subscriptionChart').getContext('2d');
+      new Chart(ctxSubscription, {
+        type: 'bar',
+        data: {
+          labels: subscriptionData.map(item => item.subscriptionName),
+          datasets: [{
+            label: 'Monthly Revenue',
+            data: subscriptionData.map(item => item.monthlyRevenue),
+            backgroundColor: 'rgba(255, 205, 86, 0.6)',
+            borderColor: 'rgba(255, 205, 86, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          animation: {
+            duration: 1500,
+            easing: 'easeOutBounce'
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      /* ========================================================
+         5. Top Selling Music: 테이블에 데이터 매핑
+      ======================================================== */
+      const topSellingMusicData = soundStatsResponse.dto.topSellingMusic;
+      const musicTable = document.getElementById('topSellingMusicTable');
+      if (musicTable) {
+        let tableHtml = `<tr>
+          <th>Title</th>
+          <th>Artist Nickname</th>
+          <th>Downloads</th>
+        </tr>`;
+        topSellingMusicData.forEach(music => {
+          tableHtml += `<tr>
+            <td>${music.title}</td>
+            <td>${music.nickname}</td>
+            <td>${music.download}</td>
+          </tr>`;
+        });
+        musicTable.innerHTML = tableHtml;
+      }
+    });
+</script>
 </body>
 </html>

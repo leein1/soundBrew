@@ -7,7 +7,7 @@ import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
 import {renderViewType} from "/js/sound/viewType.js";
 import {globalStateManager} from "/js/globalState.js";
 import {renderMyAlbums,renderMyTracks,renderMyTags,renderMyMain,renderSoundUpload} from "/js/sound/soundManage.js";
-import {renderArtistsTracks,renderArtistsAlbums,renderTagsSpelling,renderTagsNew,renderArtistsVerify, renderArtistsVerifyOne,renderTotalSoundsVerify,renderSoundsAdminMain} from "/js/sound/soundAdmin.js";
+import {renderArtistsTracks,renderArtistsAlbums,renderTagsSpelling,renderTagsNew,renderArtistsVerify, renderArtistsVerifyOne,renderTotalSoundsVerify,renderAdminMain} from "/js/sound/soundAdmin.js";
 import { loadSoundTypeCSS, loadSoundManageTypeCSS, updateDynamicCSS , SoundTypeCSSFiles, SoundManageTypeCSSFiles, UserAdminTypeCSSFiles, loadUserAdminTypeCSS, removeAllDynamicCSS} from '/js/CSSLoader.js';
 import {renderUserInfoWithRole} from '/js/user/userAdmin.js';
 import {renderSubscriptionInfo } from '/js/user/subscriptionAdmin.js';
@@ -243,6 +243,13 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPagination(response);
     });
 
+    router.addRoute('/admin' , async () =>{
+        updateDynamicCSS(SoundManageTypeCSSFiles);
+        await loadSoundManageTypeCSS();
+
+        await render
+    });
+
     router.addRoute('/admin/tracks',async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
         await loadSoundManageTypeCSS();
@@ -326,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
         await loadSoundManageTypeCSS();
 
-        await renderSoundsAdminMain();
+        await renderAdminMain();
     });
 
     router.addRoute('/admin/users', async () =>{
