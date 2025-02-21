@@ -49,13 +49,11 @@
             <div class="admin-view" style="display: none;">
                 <div class="profile" >
                     <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
-                    <!--                    <button class="primary-button none-display" onclick="openModal('profile-modal')" >프로필 사진 변경</button>-->
-<!--                    <button id="profileModalBtn" class="primary-button none-display" data-modal="profile-modal" style="display:none">프로필 사진 변경</button>-->
                 </div>
 
                 <div class="info1">
-                    <span class="myNickname" id="adminNickname" >닉네임</span>
-                    <span class="plans" id="adminRoles">역할</span>
+                    <span class="myNickname" id="adminNickname" >관리자</span>
+                    <span class="plans" id="adminRoles">ADMIN</span>
                 </div>
 
             </div>
@@ -113,11 +111,15 @@
                     <div class="admin-view-content">
                         <div class="sidebar-item">
                             <img class="sidebar-icon" th:src="@{/images/psychology_alt_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
+                            <span class="sidebar-text" id="adminStatisticRoute">사이트 통계 조회</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <img class="sidebar-icon" th:src="@{/images/psychology_alt_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                             <span class="sidebar-text" id="adminInfoRoute">회원 정보 조회</span>
                         </div>
                         <div class="sidebar-item">
                             <img class="sidebar-icon" th:src="@{/images/album_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}">
-                            <span class="sidebar-text" id="adminSoundRoute">음원 정보 조회</span>
+                            <span class="sidebar-text" id="adminSoundRoute">앨범 정보 조회</span>
                         </div>
                     </div>
                 </div>

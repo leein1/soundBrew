@@ -366,8 +366,16 @@ document.addEventListener('DOMContentLoaded', () => {
         router.navigate('/me/info');
     });
 
+    document.getElementById("adminStatisticRoute").addEventListener("click",()=>{
+        router.navigate("/admin");
+    });
+
     document.getElementById("adminInfoRoute").addEventListener("click",()=>{
-        router.navigate("/회원정보");
+        router.navigate("/admin/users");
+    });
+
+    document.getElementById("adminSoundRoute").addEventListener("click",()=>{
+        router.navigate("/admin/albums");
     });
 
     // 네비게이션들 버튼, 얘네들은 location.href을 사용해서 페이지를 마치 초기화 하듯 유도.
