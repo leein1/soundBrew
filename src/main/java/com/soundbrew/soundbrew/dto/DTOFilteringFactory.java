@@ -4,11 +4,20 @@ import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
 import com.soundbrew.soundbrew.dto.sound.MusicDTO;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class DTOFilteringFactory {
     public static AlbumDTO hideAlbumDTO(AlbumDTO albumDTO){
-        albumDTO.setAlbumId(0);
         albumDTO.setUserId(0);
         return albumDTO;
+    }
+
+    // List<SearchTotalResultDTO>에 대한 메서드 (유틸리티 클래스에 추가)
+    public static List<SearchTotalResultDTO> hideAlbumDTO(List<SearchTotalResultDTO> dtoList) {
+        return dtoList.stream()
+                .peek(dto -> dto.setAlbumDTO(hideAlbumDTO(dto.getAlbumDTO())))
+                .collect(Collectors.toList());
     }
 
     public static MusicDTO hideMusicDTO(MusicDTO musicDTO){

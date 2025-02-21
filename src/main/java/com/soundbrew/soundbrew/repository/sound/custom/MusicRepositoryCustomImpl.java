@@ -155,4 +155,44 @@ public class MusicRepositoryCustomImpl implements MusicRepositoryCustom {
 
         return Optional.ofNullable(result);
     }
+
+    @Override
+    public Optional<List<SearchTotalResultDTO>> soundsByAlbumId(int userId, int albumId){
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(music.userId.eq(userId));
+        builder.and(album.albumId.eq(albumId));
+
+        List<SearchTotalResultDTO> result = queryFactory
+                .select(Projections.bean(SearchTotalResultDTO.class,
+                        Projections.bean(AlbumDTO.class,
+                                album.albumId ,album.albumArtPath
+                        ).as("albumDTO"),
+                        Projections.bean(MusicDTO.class,
+                                music.musicId, music.title, music.filePath, music.price, music.description, music.nickname, music.createDate, music.modifyDate
+                        ).as("musicDTO"),
+                        Projections.bean(TagsStreamDTO.class,
+                                Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).as("moodTagName"),
+                                Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).as("genreTagName")
+                        ).as("tagsStreamDTO")
+                ))
+                .from(albumMusic)
+                .leftJoin(album).on(albumMusic.album.eq(album))
+                .leftJoin(music).on(albumMusic.music.eq(music))
+                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
+                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
+                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
+                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
+                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
+                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
+                .where(builder) // 조건 추가
+                .groupBy(
+                        album.albumArtPath,
+                        music.musicId, music.title, music.filePath, music.price, music.description,
+                        music.nickname, music.createDate, music.modifyDate, music.download
+                )
+                .fetch(); // 단일 결과 반환
+
+        return Optional.ofNullable(result);
+    }
 }

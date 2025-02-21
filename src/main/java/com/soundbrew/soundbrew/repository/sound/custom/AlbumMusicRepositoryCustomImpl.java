@@ -50,7 +50,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         }
 
         // 동적 정렬 조건 생성
-        OrderSpecifier<?> orderSpecifier = createOrderSpecifier(requestDTO);
+        OrderSpecifier<?> orderSpecifier = createOrderSpecifierForMusic(requestDTO);
 
         BooleanBuilder havingBuilder = new BooleanBuilder();
         for(String instrument : instruments) {
@@ -188,7 +188,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
         List<SearchTotalResultDTO> results = queryFactory
                 .select(Projections.bean(SearchTotalResultDTO.class,
                         Projections.bean(AlbumDTO.class,
-                                album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname, album.createDate, album.modifyDate
+                                album.albumId,album.userId, album.albumName, album.albumArtPath, album.description, album.nickname, album.createDate, album.modifyDate
                         ).as("albumDTO"),
                         Projections.bean(TagsStreamDTO.class,
                                 Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).as("instrumentTagName"),
@@ -207,7 +207,7 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
                 .where(builder) // 조건 추가
                 .groupBy(
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,album.createDate, album.modifyDate, album.download
+                        album.albumId,album.userId, album.albumName, album.albumArtPath, album.description, album.nickname,album.createDate, album.modifyDate, album.download
                 )
                 .having(havingBuilder)
                 .orderBy(orderSpecifier) // 동적 정렬 추가
@@ -586,22 +586,98 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
 
     private OrderSpecifier<?> createOrderSpecifier(RequestDTO requestDTO) {
         if (requestDTO.getMore() != null) {
-            String sortKey = requestDTO.getMore().get("sort");
+            Map<String, String> more = requestDTO.getMore();
+
+            // 기본 정렬 값 설정
+            String sortKey = more.get("sort");
+            String orderKey = null;
+            String orderDir = null;
+
+            // albumId, userId, createDate 정렬을 위한 추가 조건
+            for (String key : new String[]{"albumId", "userId", "createDate"}) {
+                if (more.containsKey(key)) {
+                    orderKey = key;
+                    orderDir = more.get(key);
+                    break; // 첫 번째로 발견된 정렬 조건을 적용
+                }
+            }
+
+            if (orderKey != null && orderDir != null) {
+                boolean isAsc = orderDir.equalsIgnoreCase("asc");
+
+                switch (orderKey.toLowerCase()) {
+                    case "albumid":
+                        return isAsc ? album.albumId.asc() : album.albumId.desc();
+                    case "userid":
+                        return isAsc ? album.userId.asc() : album.userId.desc();
+                    case "createdate":
+                        return isAsc ? album.createDate.asc() : album.createDate.desc();
+                }
+            }
+
+            // 기존 sortKey 처리 (newest, oldest 등)
             if (sortKey != null) {
                 switch (sortKey.toLowerCase()) {
                     case "newest":
-                        return album.createDate.asc(); // 최신순
+                        return album.createDate.desc(); // 최신순
                     case "oldest":
-                        return album.createDate.desc(); // 오래된 순
+                        return album.createDate.asc(); // 오래된 순
                     case "download":
-                        return album.createDate.asc();
-//                                album.downloadCount.desc()
-//                                ; // 다운로드 순
+                        return album.download.desc(); // 다운로드 순
                     default:
-                        return album.createDate.asc(); // 기본 정렬: 최신순
+                        return album.createDate.desc(); // 기본 정렬: 최신순
                 }
             }
         }
+
         return album.createDate.desc(); // 기본 정렬: 최신순
     }
+
+    private OrderSpecifier<?> createOrderSpecifierForMusic(RequestDTO requestDTO) {
+        if (requestDTO.getMore() != null) {
+            Map<String, String> more = requestDTO.getMore();
+
+            // 기본 정렬 값 설정
+            String sortKey = more.get("sort");
+            String orderKey = null;
+            String orderDir = null;
+
+            // albumId, userId, createDate 정렬을 위한 추가 조건
+            for (String key : new String[]{"musicId", "createDate"}) {
+                if (more.containsKey(key)) {
+                    orderKey = key;
+                    orderDir = more.get(key);
+                    break; // 첫 번째로 발견된 정렬 조건을 적용
+                }
+            }
+
+            if (orderKey != null && orderDir != null) {
+                boolean isAsc = orderDir.equalsIgnoreCase("asc");
+
+                switch (orderKey.toLowerCase()) {
+                    case "musicid":
+                        return isAsc ? music.musicId.asc() : music.musicId.desc();
+                    case "createdate":
+                        return isAsc ? music.createDate.asc() : music.createDate.desc();
+                }
+            }
+
+            // 기존 sortKey 처리 (newest, oldest 등)
+            if (sortKey != null) {
+                switch (sortKey.toLowerCase()) {
+                    case "newest":
+                        return album.createDate.desc(); // 최신순
+                    case "oldest":
+                        return album.createDate.asc(); // 오래된 순
+                    case "download":
+                        return album.download.desc(); // 다운로드 순
+                    default:
+                        return album.createDate.desc(); // 기본 정렬: 최신순
+                }
+            }
+        }
+
+        return album.createDate.desc(); // 기본 정렬: 최신순
+    }
+
 }

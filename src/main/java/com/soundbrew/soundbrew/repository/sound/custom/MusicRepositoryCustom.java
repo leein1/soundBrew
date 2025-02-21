@@ -10,4 +10,5 @@ public interface MusicRepositoryCustom {
     Optional<SearchTotalResultDTO> soundOne(String nickname, String title);
     Optional<SearchTotalResultDTO> soundOne(int userId, int id);
     Optional<List<SearchTotalResultDTO>> getAllTags(RequestDTO requestDTO);
+    Optional<List<SearchTotalResultDTO>> soundsByAlbumId(int userId, int albumId);
 }

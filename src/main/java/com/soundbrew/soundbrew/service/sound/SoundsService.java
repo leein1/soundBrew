@@ -28,6 +28,8 @@ public interface SoundsService {
     ResponseDTO<SearchTotalResultDTO> getSoundOne(int userId, int id);
     ResponseDTO<SearchTotalResultDTO> getSoundMe(RequestDTO requestDTO);
     ResponseDTO<SearchTotalResultDTO> getAlbumMe(RequestDTO requestDTO);
+    ResponseDTO<SearchTotalResultDTO> getSoundsByAlbumId(int userId, int AlbumId);
+
 
     ResponseDTO deleteAlbum(int albumId);
     ResponseDTO deleteMusic(int musicId);

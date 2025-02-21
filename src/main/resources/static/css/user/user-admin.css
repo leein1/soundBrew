@@ -1,6 +1,7 @@
 .content-header {
+    /*margin-top:10px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 1px solid #ddd;*/
 }
 
 .content-header h1 {
@@ -62,17 +63,15 @@ td .button-wrapper {
 }
 
 td {
-    max-width: 200px; /* 최대 너비 지정 */
-    overflow: hidden;
-    white-space: nowrap; /* 줄바꿈 방지 */
-    text-overflow: ellipsis; /* 초과된 부분 ... 표시 */
+    max-width: 200px;
+    overflow-x: auto; /* 내용이 넘칠 경우 가로 스크롤바 표시 */
+    white-space: nowrap; /* 한 줄 유지 */
 }
 
 tbody td {
-    max-width: 200px; /* 최대 너비 지정 */
-    overflow: hidden;
-    white-space: nowrap; /* 줄바꿈 방지 */
-    text-overflow: ellipsis; /* 초과된 부분 ... 표시 */
+    max-width: 200px;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 

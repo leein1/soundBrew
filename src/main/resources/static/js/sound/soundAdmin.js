@@ -1,11 +1,11 @@
 import {router} from "/js/router.js";
 import {serializeFormToJSON} from '/js/serialize/formToJson.js';
 import {inputHandler} from '/js/check/inputHandler.js';
-import {axiosPatch, axiosPost, axiosDelete} from '/js/fetch/standardAxios.js';
+import {axiosGet, axiosPatch, axiosPost, axiosDelete} from '/js/fetch/standardAxios.js';
 import {formatDate} from "/js/formatDate.js";
 
-// 전역 함수로 enableEditing
-window.enableEditing = function(button) {
+// 전역 함수로 enableAdminEditing
+window.enableAdminEditing = function(button) {
     const row = button.closest('tr');
 
     // 기존 값 감추기
@@ -31,8 +31,8 @@ window.enableEditing = function(button) {
     row.querySelector('.cancel-button').style.display = 'inline-block';
 }
 
-// 전역 함수로 updateUI
-window.updateUI = function(row, updatedData, button) {
+// 전역 함수로 updateAdminUI
+window.updateAdminUI = function(row, updatedData, button) {
     // 수정된 데이터 UI 반영
     row.querySelectorAll('.current-value').forEach(span => {
         const field = span.dataset.field;
@@ -51,8 +51,8 @@ window.updateUI = function(row, updatedData, button) {
     row.querySelector('.cancel-button').style.display = 'none';
 }
 
-// 전역 함수로 createFormData
-window.createFormData = function(row) {
+// 전역 함수로 createAdminFormData
+window.createAdminFormData = function(row) {
     const form = document.createElement('form');
     form.id = 'myForm';
 
@@ -78,7 +78,7 @@ window.applyAdminAlbumsChanges = async function(button, albumId) {
     const container = document.getElementById("render-update");
     container.innerHTML = '';  // 기존 폼 비우기
 
-    const formData = createFormData(row);  // 폼 데이터 생성
+    const formData = createAdminFormData(row);  // 폼 데이터 생성
 
     // 폼을 body에 추가
     container.appendChild(formData);
@@ -87,7 +87,7 @@ window.applyAdminAlbumsChanges = async function(button, albumId) {
     await sendAdminAlbumsUpdateRequest(albumId, formData);
 }
 
-window.applyAlbumsDelete = async function(button, albumId){
+window.applyAdminAlbumsDelete = async function(button, albumId){
     const handle ={
         onSuccess:() =>{
             alert("요청한 앨범을 삭제하였습니다.");
@@ -102,7 +102,7 @@ window.applyAlbumsDelete = async function(button, albumId){
     await axiosDelete({endpoint: '/api/admin/albums/' + albumId, handle});
 }
 
-window.applyTrackDelete = async function(button, musicId){
+window.applyAdminTrackDelete = async function(button, musicId){
     alert(musicId);
 
     const handle ={
@@ -124,7 +124,7 @@ window.applyAdminTracksChanges = async function(button, albumId) {
     const container = document.getElementById("render-update");
     container.innerHTML = '';  // 기존 폼 비우기
 
-    const formData = createFormData(row);  // 폼 데이터 생성
+    const formData = createAdminFormData(row);  // 폼 데이터 생성
 
     // 폼을 body에 추가
     container.appendChild(formData);
@@ -133,14 +133,202 @@ window.applyAdminTracksChanges = async function(button, albumId) {
     await sendAdminTracksUpdateRequest(albumId, formData);
 }
 
-window.applyAlbumsVerify = async function(button, albumId){
-    const handle ={
-        onSuccess:()=>{
-          alert("대기중인 앨범을 성공적으로 확인했습니다.");
-        },
+
+// 헬퍼 함수: 정렬 방향에 따른 아이콘 반환
+function getSortIcon(sortOrder) {
+  if (sortOrder === 'asc') {
+    return '\u25B2'; // ▲
+  } else if (sortOrder === 'desc') {
+    return '\u25BC'; // ▼
+  }
+  return '';
+}
+
+// 전역 함수: 테이블 헤더 클릭 시 정렬 파라미터 추가, 아이콘 업데이트 및 라우터 네비게이션 처리
+function registerTableHeaderSort() {
+  const headerCells = document.querySelectorAll(".table-container thead th");
+  const url = new URL(window.location.href);
+
+  headerCells.forEach(th => {
+    let sortKey = "";
+    const headerText = th.textContent.trim();
+
+    // 클릭 가능한 열 (정렬 대상) 지정: "ID", "아티스트", "업로드일"
+    if (headerText === "ID") {
+      sortKey = "albumId";
+    } else if (headerText === "아티스트") {
+      sortKey = "userId";
+    } else if (headerText === "업로드일") {
+      sortKey = "createDate";
+    } else {
+      return; // 정렬이 필요 없는 열은 건너뜁니다.
     }
 
-    await axiosPatch({ endpoint:`/api/admin/albums/${albumId}/verify`, handle});
+    // 원래의 헤더 텍스트를 저장 (이미 저장되어 있지 않다면)
+    if (!th.dataset.originalText) {
+      th.dataset.originalText = headerText;
+    }
+
+    // 클릭 가능하다는 시각적 힌트
+    th.style.cursor = "pointer";
+
+    // URL에서 해당 정렬 파라미터가 있는지 확인하여 초기 정렬 상태 설정
+    const sortOrder = url.searchParams.get(`more[${sortKey}]`);
+    if (sortOrder) {
+      th.setAttribute("data-direction", sortOrder);
+      th.innerHTML = `${th.dataset.originalText} ${getSortIcon(sortOrder)}`;
+    }
+
+    // 클릭 이벤트 리스너 등록
+    th.addEventListener("click", function() {
+      // 현재 정렬 방향 가져오기, 없으면 기본 asc
+      let currentDirection = th.getAttribute("data-direction") || "asc";
+      // 토글: asc이면 desc, 아니면 asc
+      currentDirection = currentDirection === "asc" ? "desc" : "asc";
+      th.setAttribute("data-direction", currentDirection);
+      // 헤더 텍스트에 아이콘 업데이트
+      th.innerHTML = `${th.dataset.originalText} ${getSortIcon(currentDirection)}`;
+
+      // 현재 URL 기반으로 새 URL 생성 및 파라미터 업데이트
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set(`more[${sortKey}]`, currentDirection);
+      // router.navigate(newUrl)로 페이지 이동 (router 객체는 전역에 정의되어 있어야 합니다)
+      router.navigate(newUrl.toString());
+    });
+  });
+}
+
+// 음원 헬퍼 함수: 정렬 방향에 따른 아이콘 반환
+function getSortIconForTrack(sortOrder) {
+  if (sortOrder === 'asc') {
+    return '\u25B2'; // ▲
+  } else if (sortOrder === 'desc') {
+    return '\u25BC'; // ▼
+  }
+  return '';
+}
+
+// 음원 전역 함수: 테이블 헤더 클릭 시 정렬 파라미터 추가, 아이콘 업데이트 및 라우터 네비게이션 처리
+function registerTableHeaderSortForTrack() {
+  const headerCells = document.querySelectorAll(".table-container thead th");
+  const url = new URL(window.location.href);
+
+  headerCells.forEach(th => {
+    let sortKey = "";
+    const headerText = th.textContent.trim();
+
+    // 클릭 가능한 열 (정렬 대상) 지정: "ID", "아티스트", "업로드일"
+    if (headerText === "ID") {
+      sortKey = "musicId";
+    } else if (headerText === "업로드일") {
+      sortKey = "createDate";
+    } else {
+      return; // 정렬이 필요 없는 열은 건너뜁니다.
+    }
+
+    // 원래의 헤더 텍스트를 저장 (이미 저장되어 있지 않다면)
+    if (!th.dataset.originalText) {
+      th.dataset.originalText = headerText;
+    }
+
+    // 클릭 가능하다는 시각적 힌트
+    th.style.cursor = "pointer";
+
+    // URL에서 해당 정렬 파라미터가 있는지 확인하여 초기 정렬 상태 설정
+    const sortOrder = url.searchParams.get(`more[${sortKey}]`);
+    if (sortOrder) {
+      th.setAttribute("data-direction", sortOrder);
+      th.innerHTML = `${th.dataset.originalText} ${getSortIcon(sortOrder)}`;
+    }
+
+    // 클릭 이벤트 리스너 등록
+    th.addEventListener("click", function() {
+      // 현재 정렬 방향 가져오기, 없으면 기본 asc
+      let currentDirection = th.getAttribute("data-direction") || "asc";
+      // 토글: asc이면 desc, 아니면 asc
+      currentDirection = currentDirection === "asc" ? "desc" : "asc";
+      th.setAttribute("data-direction", currentDirection);
+      // 헤더 텍스트에 아이콘 업데이트
+      th.innerHTML = `${th.dataset.originalText} ${getSortIcon(currentDirection)}`;
+
+      // 현재 URL 기반으로 새 URL 생성 및 파라미터 업데이트
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set(`more[${sortKey}]`, currentDirection);
+      // router.navigate(newUrl)로 페이지 이동 (router 객체는 전역에 정의되어 있어야 합니다)
+      router.navigate(newUrl.toString());
+    });
+  });
+}
+
+// 드롭다운 메뉴 렌더링 함수
+export function renderAdminSoundsSort() {
+  const container = document.getElementById('chart-selector-container');
+  if (!container) return;
+
+  const item = document.createElement('div');
+  item.classList.add('music-sort'); // 기존 스타일 재사용
+
+  item.innerHTML = `
+    <div class="sort-01">
+      <span class="music-sort-left" id="sortKeyword">
+        <img src="/images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정보 전환" id="sortIcon">정보 전환
+      </span>
+      <!-- 드롭다운 메뉴 -->
+      <div class="music-sort-menu" id="musicSortMenu">
+        <ul>
+          <li data-category="album">앨범 정보</li>
+          <li data-category="music">음원 정보</li>
+          <li data-category="tag">태그 정보</li>
+          <li data-category="verify">미등록 앨범 정보</li>
+        </ul>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(item);
+  setupAdminSoundsDropdownEvents();
+}
+
+// 드롭다운 메뉴 이벤트 설정 함수
+function setupAdminSoundsDropdownEvents() {
+  const sortKeyword = document.getElementById('sortKeyword');
+  const menu = document.getElementById('musicSortMenu');
+
+  // 정렬 아이콘 클릭 시 드롭다운 토글 (CSS에서 .visible에 대한 스타일 정의 필요)
+  sortKeyword.addEventListener('click', () => {
+    menu.classList.toggle('visible');
+  });
+
+  // 메뉴 아이템 클릭 시 이벤트 처리
+  menu.querySelectorAll('li').forEach(li => {
+    li.addEventListener('click', async () => {
+      // 드롭다운 닫기
+      menu.classList.remove('visible');
+
+      // active 스타일 적용 (필요에 따라 CSS 수정)
+      menu.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+      li.classList.add('active');
+
+      // data-category 값에 따라 해당 URL로 이동
+      const category = li.getAttribute('data-category');
+      switch (category) {
+        case 'album':
+          router.navigate('/admin/albums');
+          break;
+        case 'music':
+          router.navigate('/admin/tracks');
+          break;
+        case 'tag':
+          router.navigate('/admin/tags/spelling');
+          break;
+        case 'verify':
+          router.navigate('/admin/albums/verify');
+          break;
+        default:
+          break;
+      }
+    });
+  });
 }
 
 // 전역 함수로 cancelChanges
@@ -181,11 +369,11 @@ window.sendAdminAlbumsUpdateRequest = async function(albumId, formData) {
     const handle= {
         onBadRequest: ()=>{
             alert("입력한 정보에서 오류가 발생했습니다.");
-            router.navigate("/me/sounds/albums");
+            router.navigate("/admin/albums");
         },
         onSuccess:()=>{
             alert("입력한 정보로 수정했습니다.")
-            router.navigate("/me/sounds/albums");
+            router.navigate("/admin/albums");
         },
     }
 
@@ -204,11 +392,11 @@ window.sendAdminTracksUpdateRequest = async function(musicId, formData) {
     const handle= {
         onBadRequest: ()=>{
             alert("입력한 정보에서 오류가 발생했습니다.");
-            router.navigate("/me/sounds/tracks");
+            router.navigate("/admin/tracks");
         },
         onSuccess:()=>{
             alert("입력한 정보로 수정했습니다.")
-            router.navigate("/me/sounds/tracks");
+            router.navigate("/admin/tracks");
         },
     }
 
@@ -217,274 +405,227 @@ window.sendAdminTracksUpdateRequest = async function(musicId, formData) {
     }
 }
 
-window.viewVerify = function(button,id, uid){
-    console.log("id : "+ id);
-    console.log("name : "+uid);
-
-    router.navigate(`/admin/albums/one/verify?id=${id}&uid=${uid}`);
-}
-
-window.applyTagSpellingChanges = async function (button, originalTag, category) {
-    // 버튼의 부모 tr 요소를 찾습니다.
-    const row = button.closest('tr');
-
-    // 해당 tr 안에 있는 input 필드를 찾아서 값을 가져옵니다.
-    const inputField = row.querySelector('.editable-field');
-
-    const newTag = inputField.value;
-    const afterNewTag = newTag.replace(/"/g, '');
-
-    const pattern = new RegExp("^[a-z0-9.,()-_\\s]+$");
-    if (pattern.test(afterNewTag)) {
-        if (category === 'instrument') {
-            await axiosPatch({endpoint: `/api/admin/tags/instruments/${originalTag}`,body:{'instrument':[afterNewTag]}})
-        }
-        if (category === 'mood') {
-            await axiosPatch({endpoint: `/api/admin/tags/moods/${originalTag}`,body:{'mood':[afterNewTag]}})
-        }
-        if (category === 'genre') {
-            await axiosPatch({endpoint: `/api/admin/tags/genres/${originalTag}`,body:{'genre':[afterNewTag]}})
-        }
-    } else {
-        alert('태그 형식이 잘못 되었습니다');
-    }
-}
-
-export async function renderArtistsTracks(data){
-    try{
-        const container = document.getElementById("content-body");
-        container.innerHTML = '';
-        console.log(data);
-        console.log(data.dtoList);
-
-        // 앨범 정보가 있으면 테이블 렌더링
-        if (data.dtoList && data.dtoList.length > 0) {
-            // 데이터 렌더링
-            const manageHTML = `
-                <h3>음원 정보 수정</h3>
-                <div id="render-update" class="render-update"></div>
-                <div class="table-wrapper">
-                    <table class="table-container">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>아티스트</th>
-                                <th>음원 제목</th>
-                                <th>음원 설명</th>
-                                <th>업로드일</th>
-                                <th>수정일</th>
-                                <th>작업</th>
-                            </tr>
-                        </thead>
-                            ${data.dtoList.map(manage => `
-                                <tr>
-                                    <td>${manage.musicDTO.musicId}</td>
-                                    <td>${manage.albumDTO.nickname}</td>
-                                    <td>
-                                        <span class="current-value" data-field="title">${manage.musicDTO.title}</span>
-                                        <input type="text" class="editable-field" data-field="title" value="${manage.musicDTO.title}" style="display: none;">
-                                    </td>
-                                    <td>
-                                        <span class="current-value" data-field="description">${manage.musicDTO.description}</span>
-                                        <input type="text" class="editable-field" data-field="description" value="${manage.musicDTO.description}" style="display: none;">
-                                    </td>
-                                    <td>${formatDate(manage.musicDTO.createDate)}</td>
-                                    <td>${formatDate(manage.musicDTO.modifyDate)}</td>
-                                    <td>
-                                        <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                                        <button class="apply-button" style="display: none;" onclick="applyAdminTracksChanges(this, ${manage.musicDTO.musicId})">적용</button>
-                                        <button class="delete-button" style="display: none;" onclick="applyTrackDelete(this, ${manage.musicDTO.musicId})">삭제</button>
-                                        <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            container.innerHTML=manageHTML;
-
-        }else {
-            container.innerHTML = '<p>트랙이 없습니다.</p>';
-        }
-    }catch (error) {
-        console.error('Error occurred while rendering:', error);
-    }
-}
-
+// 1. 화면에서 앨범보고 (전환 가능 메인)
 export async function renderArtistsAlbums(data) {
-        // API 호출 및 렌더링 처리
-        const container = document.getElementById("content-body");
-        container.innerHTML = '';
+    const container = document.getElementById("content-body");
+    container.innerHTML = '';
 
-        // 앨범 정보가 있으면 테이블 렌더링
-        if (data.dtoList && data.dtoList.length > 0) {
-            const manageHTML = `
-                <h3>앨범 정보 수정</h3>
-                <div id="render-update" class="render-update"></div>
+    if (data.dtoList && data.dtoList.length > 0) {
+        const manageHTML = `
+            <h3>앨범 정보 수정</h3>
+            <div id="render-update" class="render-update"></div>
+
+            <!-- 드롭다운 메뉴 영역 -->
+            <div id="chart-selector-container"></div>
+
+            <table class="table-container">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>회원 ID</th>
+                        <th>아티스트</th>
+                        <th>앨범 제목</th>
+                        <th>앨범 설명</th>
+                        <th>업로드일</th>
+                        <th>수정일</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.dtoList.map(item => `
+                        <tr data-album-id="${item.albumDTO.albumId}" data-user-id="${item.albumDTO.userId}">
+                            <td>${item.albumDTO.albumId}</td>
+                            <td>${item.albumDTO.userId}</td>
+                            <td>${item.albumDTO.nickname}</td>
+                            <td>
+                                <span class="current-value" data-field="albumName">${item.albumDTO.albumName}</span>
+                                <input type="text" class="editable-field" data-field="albumName" value="${item.albumDTO.albumName}" style="display: none;">
+                            </td>
+                            <td>
+                                <span class="current-value" data-field="description">${item.albumDTO.description}</span>
+                                <input type="text" class="editable-field" data-field="description" value="${item.albumDTO.description}" style="display: none;">
+                            </td>
+                            <td>${formatDate(item.albumDTO.createDate)}</td>
+                            <td>${formatDate(item.albumDTO.modifyDate)}</td>
+                            <td>
+                                <button class="edit-button" onclick="enableAdminEditing(this)">수정하기</button>
+                                <button class="apply-button" style="display: none;" onclick="applyAdminAlbumsChanges(this, ${item.albumDTO.albumId})">적용</button>
+                                <button class="delete-button" style="display: none;" onclick="applyAdminAlbumsDelete(this, ${item.albumDTO.albumId})">삭제</button>
+                                <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+
+        container.innerHTML = manageHTML;
+
+        // 드롭다운 메뉴 렌더링 호출
+        renderAdminSoundsSort();
+
+        // 테이블 바디 클릭 시 앨범 모달 열기 (버튼/인풋 제외)
+        const tbody = container.querySelector("tbody");
+        tbody.addEventListener("click", function(event) {
+            const targetTag = event.target.tagName.toLowerCase();
+            if (targetTag === "button" || targetTag === "input") return;
+            const tr = event.target.closest("tr");
+            if (tr && tr.dataset.albumId && tr.dataset.userId) {
+                openAlbumModal(tr.dataset.userId,tr.dataset.albumId);
+            }
+        });
+
+        // 테이블 헤더 클릭 이벤트 등록
+        registerTableHeaderSort();
+    } else {
+        container.innerHTML = '<p>앨범이 없습니다.</p>';
+    }
+}
+
+// 1-1. 레코드 클릭해서 모달 창 열어 보고
+async function openAlbumModal(userId,albumId) {
+    const response = await axiosGet({ endpoint:`/api/admin/tracks/${userId}/albums/${albumId}` });
+
+    // 모달 제목 설정 (앨범의 음원 정보 수정)
+    const modalTitle = document.querySelector('#soundDetailModal h2');
+    modalTitle.innerText = `앨범 ${albumId}의 음원 정보 수정`;
+
+    // 모달 본문에 트랙 관리 테이블 렌더링
+    const modalBody = document.getElementById('sound-detail-modal-body');
+    if (response.dtoList && response.dtoList.length > 0) {
+        modalBody.innerHTML = `
+            <h3>음원 정보 수정</h3>
+            <div id="render-update" class="render-update"></div>
+            <div class="table-wrapper">
                 <table class="table-container">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>아티스트</th>
-                            <th>앨범 제목</th>
-                            <th>앨범 설명</th>
+                            <th>음원 제목</th>
+                            <th>음원 설명</th>
                             <th>업로드일</th>
                             <th>수정일</th>
                             <th>작업</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${data.dtoList.map(item => `
+                        ${response.dtoList.map(manage => `
                             <tr>
-                                <td>${item.albumDTO.albumId}</td>
-                                <td>${item.albumDTO.nickname}</td>
+                                <td>${manage.musicDTO.musicId}</td>
+                                <td>${manage.albumDTO.nickname}</td>
                                 <td>
-                                    <span class="current-value" data-field="albumName">${item.albumDTO.albumName}</span>
-                                    <input type="text" class="editable-field" data-field="albumName" value="${item.albumDTO.albumName}" style="display: none;">
+                                    <span class="current-value" data-field="title">${manage.musicDTO.title}</span>
+                                    <input type="text" class="editable-field" data-field="title" value="${manage.musicDTO.title}" style="display: none;">
                                 </td>
                                 <td>
-                                    <span class="current-value" data-field="description">${item.albumDTO.description}</span>
-                                    <input type="text" class="editable-field" data-field="description" value="${item.albumDTO.description}" style="display: none;">
+                                    <span class="current-value" data-field="description">${manage.musicDTO.description}</span>
+                                    <input type="text" class="editable-field" data-field="description" value="${manage.musicDTO.description}" style="display: none;">
                                 </td>
-                                <td>${formatDate(item.albumDTO.createDate)}</td>
-                                <td>${formatDate(item.albumDTO.modifyDate)}</td>
+                                <td>${formatDate(manage.musicDTO.createDate)}</td>
+                                <td>${formatDate(manage.musicDTO.modifyDate)}</td>
                                 <td>
-                                    <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                                    <button class="apply-button" style="display: none;" onclick="applyAdminAlbumsChanges(this, ${item.albumDTO.albumId})">적용</button>
-                                    <button class="delete-button" style="display: none;" onclick="applyAlbumsDelete(this, ${item.albumDTO.albumId})">삭제</button>
+                                    <button class="edit-button" onclick="enableAdminEditing(this)">수정하기</button>
+                                    <button class="apply-button" style="display: none;" onclick="applyAdminTracksChanges(this, ${manage.musicDTO.musicId})">적용</button>
+                                    <button class="delete-button" style="display: none;" onclick="applyAdminTrackDelete(this, ${manage.musicDTO.musicId})">삭제</button>
                                     <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
                                 </td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
-            `;
-
-            container.innerHTML = manageHTML;
-        } else {
-            // 데이터가 없으면 메시지 표시
-            container.innerHTML = '<p>앨범이 없습니다.</p>';
-        }
-}
-
-export async function renderArtistsVerify(data){
-    // API 호출 및 렌더링 처리
-    const container = document.getElementById("content-body");
-    container.innerHTML = '';
-
-    // 앨범 정보가 있으면 테이블 렌더링
-    if (data.dtoList && data.dtoList.length > 0) {
-        const manageHTML = `
-                <h3>앨범 정보 수정</h3>
-                <div id="render-update" class="render-update"></div>
-                <div class="table-wrapper">
-                    <table class="table-container">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>아티스트</th>
-                                <th>앨범 제목</th>
-                                <th>앨범 설명</th>
-                                <th>업로드일</th>
-                                <th>작업</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${data.dtoList.map(item => `
-                                <tr>
-                                    <td>${item.albumDTO.albumId}</td>
-                                    <td>${item.albumDTO.nickname}</td>
-                                    <td>
-                                        <span class="current-value" data-field="albumName">${item.albumDTO.albumName}</span>
-                                        <input type="text" class="editable-field" data-field="albumName" value="${item.albumDTO.albumName}" style="display: none;">
-                                    </td>
-                                    <td>
-                                        <span class="current-value" data-field="description">${item.albumDTO.description}</span>
-                                        <input type="text" class="editable-field" data-field="description" value="${item.albumDTO.description}" style="display: none;">
-                                    </td>
-                                    <td>${formatDate(item.albumDTO.createDate)}</td>
-                                    <td>
-                                        <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                                        <button class="apply-button" style="display: none;" onclick="applyAlbumsVerify(this, ${item.albumDTO.albumId})">앨범통과</button>
-                                        <button class="watch-button" style="display: none" onclick="viewVerify(this, ${item.albumDTO.albumId}, '${item.albumDTO.userId}')">자세히 보기</button>
-                                        <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-        container.innerHTML = manageHTML;
-    } else {
-        // 데이터가 없으면 메시지 표시
-        container.innerHTML = '<p>앨범이 없습니다.</p>';
-    }
-}
-
-export async function renderTagsSpelling(data) {
-    const container = document.getElementById("content-body");
-    container.innerHTML = '';
-
-    const dto = data.dtoList[0]; // 배열의 첫번째 객체를 선택
-    const categories = [
-        { category: 'instrument', tags: dto.instrument },
-        { category: 'mood', tags: dto.mood },
-        { category: 'genre', tags: dto.genre }
-    ];
-
-    if (categories && categories.length > 0) {
-        const tagsHTML = `
-            <h3>태그 관리</h3>
-            <div class="table-wrapper">
-                <table class="table-container">
-                    <thead>
-                        <tr>
-                            <th>원본 태그명</th>
-                            <th>분류</th>
-                            <th>수정 후 태그명</th>
-                            <th>작업</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${categories.map((category) => `
-                            ${category.tags.map((tag) => `
-                                <tr>
-                                    <td>${tag}</td> <!-- 원본 태그명 -->
-                                    <td>${category.category}</td>
-                                    <td>
-                                        <span class="current-value" data-field="tagName">${tag}</span>
-                                        <input type="text" class="editable-field" data-field="tagName" value="${tag}" style="display: none;">
-                                    </td>
-                                    <td>
-                                        <!-- 수정하기 버튼 클릭 시, 카테고리 정보도 함께 전달 -->
-                                        <button class="edit-button" onclick="enableEditing(this)">수정하기</button>
-                                        <button class="apply-button" style="display: none;" onclick="applyTagSpellingChanges(this, '${tag}', '${category.category}')">적용</button>
-                                        <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        `).join('')}
-                    </tbody>
-                </table>
             </div>
         `;
-
-        container.innerHTML = tagsHTML;
     } else {
-        container.innerHTML = '<p>태그가 없습니다.</p>';
+        modalBody.innerHTML = '<p>음원이 없습니다.</p>';
     }
+
+    // 모달 창 보이기
+    document.getElementById('soundDetailModal').style.display = 'block';
 }
 
-export async function renderTagsNew(data) {
-    const container = document.getElementById("content-body");
-    container.innerHTML = `
+// 2. 태그 화면으로 전환하고 (전환 가능 메인)
+export async function renderTagsSpelling(data) {
+  const container = document.getElementById("content-body");
+  container.innerHTML = '';
 
+  // 신규 태그 등록 버튼 영역 추가
+  const newTagRegistrationButton = `
+    <div class="new-tag-registration" style="margin: 1em 0;">
+      <button id="new-tag-btn" class="new-tag-btn">신규 태그 등록</button>
+    </div>
+  `;
+
+  const dto = data.dtoList[0]; // 배열의 첫 번째 객체 선택
+  const categories = [
+    { category: 'instrument', tags: dto.instrument },
+    { category: 'mood', tags: dto.mood },
+    { category: 'genre', tags: dto.genre }
+  ];
+
+  if (categories && categories.length > 0) {
+    const tagsHTML = `
+      ${newTagRegistrationButton}
+      <h3>태그 정보 수정</h3>
+      <div id="chart-selector-container"></div>
+      <div class="table-wrapper">
+        <table class="table-container">
+          <thead>
+            <tr>
+              <th>원본 태그명</th>
+              <th>분류</th>
+              <th>수정 후 태그명</th>
+              <th>작업</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${categories.map(category => `
+              ${category.tags.map(tag => `
+                <tr>
+                  <td>${tag}</td>
+                  <td>${category.category}</td>
+                  <td>
+                    <span class="current-value" data-field="tagName">${tag}</span>
+                    <input type="text" class="editable-field" data-field="tagName" value="${tag}" style="display: none;">
+                  </td>
+                  <td>
+                    <button class="edit-button" onclick="enableAdminEditing(this)">수정하기</button>
+                    <button class="apply-button" style="display: none;" onclick="applyAdminTagSpellingChanges(this, '${tag}', '${category.category}')">적용</button>
+                    <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+                  </td>
+                </tr>
+              `).join('')}
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    container.innerHTML = tagsHTML;
+
+    // 신규 태그 등록 버튼 이벤트 등록: 클릭 시 신규 태그 등록 모달 호출
+    document.getElementById('new-tag-btn').addEventListener('click', function() {
+      renderTagsNew(); // 모달에 신규 태그 등록 화면 렌더링
+    });
+
+  } else {
+    container.innerHTML = '<p>태그가 없습니다.</p>';
+  }
+
+  // 드롭다운 메뉴 렌더링 호출
+  renderAdminSoundsSort();
+}
+
+// 2-1. 태그 추가하고프면 추가하고
+export async function renderTagsNew(data) {
+    // 기존의 모달 창(예: soundDetailModal)의 제목 및 본문 영역 재활용
+    const modalTitle = document.querySelector('#soundDetailModal h2');
+    modalTitle.innerText = '태그 추가';
+
+    const modalBody = document.getElementById('sound-detail-modal-body');
+    modalBody.innerHTML = `
         <form id="tag-form">
             <section class="tag-add-section">
-                <h3>태그 추가</h3>
                 <div id="tag-create-container">
                     <input type="text" id="new-tag-name" name="tagName" placeholder="새 태그명 입력">
                     <select id="new-tag-type" name="tagType">
@@ -498,6 +639,10 @@ export async function renderTagsNew(data) {
         </form>
     `;
 
+    // 모달 창 보이기
+    document.getElementById('soundDetailModal').style.display = 'block';
+
+    // 태그 추가 폼의 제출 이벤트 처리
     document.getElementById("tag-form").addEventListener("submit", async function(event) {
         event.preventDefault(); // 기본 제출 동작 방지
 
@@ -516,32 +661,92 @@ export async function renderTagsNew(data) {
             genre: []
         };
 
-        const handle ={
-            onSuccess:()=>{
+        const handle = {
+            onSuccess: () => {
                 alert("태그를 정상적으로 생성했습니다.");
                 router.navigate('/admin/tags/new');
             },
-            onBadRequest:()=>{
+            onBadRequest: () => {
                 alert("태그를 정상적으로 생성하지 못했습니다.");
                 router.navigate('/admin/tags/new');
             },
-        }
+        };
 
         const jsonData = serializeFormToJSON(event.target);
-        const { errors, processedData } = inputHandler(jsonData, event.target,handle);
+        const { errors, processedData } = inputHandler(jsonData, event.target, handle);
 
-        if(!errors){
+        if (!errors) {
             if (tagsDto.hasOwnProperty(tagType)) {
                 tagsDto[tagType].push(processedData.tagName);
             } else {
                 alert(`잘못된 태그 타입: ${tagType}`);
             }
-
-            await axiosPost({endpoint:`/api/admin/tags`, body:tagsDto});
+            await axiosPost({ endpoint: `/api/admin/tags`, body: tagsDto });
         }
     });
+
 }
 
+// 3. 미등록(대기)앨범 보고프면 보고
+export async function renderArtistsVerify(data){
+    // API 호출 및 렌더링 처리
+    const container = document.getElementById("content-body");
+    container.innerHTML = '';
+
+    // 앨범 정보가 있으면 테이블 렌더링
+    if (data.dtoList && data.dtoList.length > 0) {
+        const manageHTML = `
+            <h3>미등록 앨범 정보 수정</h3>
+            <div id="render-update" class="render-update"></div>
+            <div id="chart-selector-container"></div>
+            <div class="table-wrapper">
+                <table class="table-container">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>아티스트</th>
+                            <th>앨범 제목</th>
+                            <th>앨범 설명</th>
+                            <th>업로드일</th>
+                            <th>작업</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.dtoList.map(item => `
+                            <tr>
+                                <td>${item.albumDTO.albumId}</td>
+                                <td>${item.albumDTO.nickname}</td>
+                                <td>
+                                    <span data-field="albumName">${item.albumDTO.albumName}</span>
+                                </td>
+                                <td>
+                                    <span data-field="description">${item.albumDTO.description}</span>
+                                </td>
+                                <td>${formatDate(item.albumDTO.createDate)}</td>
+                                <td>
+                                    <button class="edit-button" onclick="enableAdminEditing(this)">수정하기</button>
+                                    <button class="apply-button" style="display: none;" onclick="applyAdminAlbumsVerify(this, ${item.albumDTO.albumId})">앨범통과</button>
+                                    <button class="watch-button" style="display: none" onclick="viewAdminVerify(this, ${item.albumDTO.albumId}, '${item.albumDTO.userId}')">자세히 보기</button>
+                                    <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        container.innerHTML = manageHTML;
+    } else {
+        // 데이터가 없으면 메시지 표시
+        container.innerHTML = '<p>앨범이 없습니다.</p>';
+    }
+
+    // 드롭다운 메뉴 렌더링 호출
+    renderAdminSoundsSort();
+}
+
+// 3-1. 미등록 앨범의 자세한 내용 보고프면 보고
 export async function renderArtistsVerifyOne(data) {
     // alert("앨범 정보 렌더링 호출 ");
     const container = document.getElementById("render-album-info-container");
@@ -597,6 +802,7 @@ export async function renderArtistsVerifyOne(data) {
     });
 }
 
+// 3-1'. 미등록 앨범의 자세한 내용 중 하나인 트랙도 같이보고
 export async function renderTotalSoundsVerify(data) {
     // data가 존재하고, dtoList가 배열인지 확인
     if (!data || !Array.isArray(data.dtoList)) {
@@ -646,79 +852,142 @@ export async function renderTotalSoundsVerify(data) {
     });
 }
 
-export async function renderAdminMain(){
-    const container = document.getElementById("content-body");
-    container.innerHTML='';
+// 4. 앨범 말고 track만 모아보고 싶다면?
+export async function renderArtistsTracks(data){
+    try{
+        const container = document.getElementById("content-body");
+        container.innerHTML = '';
 
-    const html = `
-        <div id="question-list" class="question-list">
-            <div class="linkDiv">
-                <div class="statistics-section">
-                    <div class="Statistics">
-                        사이트 통계 자료 - 방문자 수, 트래픽양, 전체 곡 수 등 자료
-                    </div>
+        // 앨범 정보가 있으면 테이블 렌더링
+        if (data.dtoList && data.dtoList.length > 0) {
+            // 데이터 렌더링
+            const manageHTML = `
+                <h3>음원 정보 수정</h3>
+                <div id="render-update" class="render-update"></div>
+                <div id="chart-selector-container"></div>
+                <div class="table-wrapper">
+                    <table class="table-container">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>아티스트</th>
+                                <th>음원 제목</th>
+                                <th>음원 설명</th>
+                                <th>업로드일</th>
+                                <th>수정일</th>
+                                <th>작업</th>
+                            </tr>
+                        </thead>
+                            ${data.dtoList.map(manage => `
+                                <tr>
+                                    <td>${manage.musicDTO.musicId}</td>
+                                    <td>${manage.albumDTO.nickname}</td>
+                                    <td>
+                                        <span class="current-value" data-field="title">${manage.musicDTO.title}</span>
+                                        <input type="text" class="editable-field" data-field="title" value="${manage.musicDTO.title}" style="display: none;">
+                                    </td>
+                                    <td>
+                                        <span class="current-value" data-field="description">${manage.musicDTO.description}</span>
+                                        <input type="text" class="editable-field" data-field="description" value="${manage.musicDTO.description}" style="display: none;">
+                                    </td>
+                                    <td>${formatDate(manage.musicDTO.createDate)}</td>
+                                    <td>${formatDate(manage.musicDTO.modifyDate)}</td>
+                                    <td>
+                                        <button class="edit-button" onclick="enableAdminEditing(this)">수정하기</button>
+                                        <button class="apply-button" style="display: none;" onclick="applyAdminTracksChanges(this, ${manage.musicDTO.musicId})">적용</button>
+                                        <button class="delete-button" style="display: none;" onclick="applyAdminTrackDelete(this, ${manage.musicDTO.musicId})">삭제</button>
+                                        <button class="cancel-button" style="display: none;" onclick="cancelChanges(this)">취소</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="frequently-list">
-                    <li id="edit-track">
-                        <span class="main-text">음원 관리자 기능</span><br>
-                        <span class="sub-text">음원 삭제, 수정</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                    <li id="edit-album">
-                        <span class="main-text">앨범 관리자 기능</span><br>
-                        <span class="sub-text">앨범 삭제, 수정</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                    <li id="verify-album">
-                        <span class="main-text">미등록 앨범 관리</span><br>
-                        <span class="sub-text">음원 확인</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                    <li id="edit-tag">
-                        <span class="main-text">태그 철자 수정</span><br>
-                        <span class="sub-text">오탈자 수정</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                    <li id="create-tag">
-                        <span class="main-text">신규 태그 등록</span><br>
-                        <span class="sub-text">태그 등록</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                    <li id="HERE-UNIQUE-ID">
-                        <span class="main-text">메인 모시깽</span><br>
-                        <span class="sub-text">서브 모시깽</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                </div>
-            </div>
-        </div>
-    `;
+            `;
+            container.innerHTML=manageHTML;
 
-    container.innerHTML = html;
+        }else {
+            container.innerHTML = '<p>트랙이 없습니다.</p>';
+        }
 
-    document.getElementById("edit-track").addEventListener("click", function () {
-        alert("음원 관리자 페이지로 이동합니다.");
-        router.navigate(`/admin/tracks`);
-    });
+        // 헤더의 각 전환 버튼에 이벤트 리스너 등록
+        registerTableHeaderSortForTrack();
 
-    document.getElementById("edit-album").addEventListener("click", function () {
-        alert("앨범 관리자 페이지로 이동합니다.");
-        router.navigate('/admin/albums');
-    });
-
-    document.getElementById("verify-album").addEventListener("click", function () {
-        alert("미등록 앨범 관리 페이지로 이동합니다.");
-        router.navigate(`/admin/albums/verify`);
-    });
-
-    document.getElementById("edit-tag").addEventListener("click", function () {
-        alert("태그 철자 수정 페이지로 이동합니다.");
-        router.navigate('/admin/tags/spelling');
-    });
-
-    document.getElementById("create-tag").addEventListener("click", function(){
-        alert("태그 생성 페이지로 이동합니다.");
-        router.navigate('/admin/tags/new');
-    });
+        // 드롭다운 메뉴 렌더링 호출
+        renderAdminSoundsSort();
+    }catch (error) {
+        console.error('Error occurred while rendering:', error);
+    }
 }
 
+window.viewAdminVerify = function(button,id, uid){
+    console.log("id : "+ id);
+    console.log("name : "+uid);
+
+    router.navigate(`/admin/albums/one/verify?id=${id}&uid=${uid}`);
+}
+
+window.applyAdminTagSpellingChanges = async function (button, originalTag, category) {
+    // 버튼의 부모 tr 요소를 찾습니다.
+    const row = button.closest('tr');
+
+    // 해당 tr 안에 있는 input 필드를 찾아서 값을 가져옵니다.
+    const inputField = row.querySelector('.editable-field');
+
+    const newTag = inputField.value;
+    const afterNewTag = newTag.replace(/"/g, '');
+    const handle ={
+        onSuccess:() =>{
+            alert("요청한 태그 철자 변경을 수행했습니다.");
+            router.navigate("/admin/tags/spelling");
+        },
+        onBadRequest:()=>{
+            alert("요청한 태그 변경을 수행하지 못했습니다.");
+            router.navigate("/admin/tags/spelling");
+        }
+    }
+
+    const pattern = new RegExp("^[a-z0-9.,()-_\\s]+$");
+    if (pattern.test(afterNewTag)) {
+        if (category === 'instrument') {
+            await axiosPatch({endpoint: `/api/admin/tags/instruments/${originalTag}`,body:{'instrument':[afterNewTag]} ,handle})
+        }
+        if (category === 'mood') {
+            await axiosPatch({endpoint: `/api/admin/tags/moods/${originalTag}`,body:{'mood':[afterNewTag]} ,handle})
+        }
+        if (category === 'genre') {
+            await axiosPatch({endpoint: `/api/admin/tags/genres/${originalTag}`,body:{'genre':[afterNewTag]},handle})
+        }
+    }else {
+        alert('태그 형식이 잘못 되었습니다');
+    }
+}
+
+window.applyAdminAlbumsVerify = async function(button, albumId){
+    const handle ={
+        onSuccess:()=>{
+          alert("대기중인 앨범을 성공적으로 확인했습니다.");
+          router.navigate('/admin/albums/verify')
+        },
+    }
+
+    await axiosPatch({ endpoint:`/api/admin/albums/${albumId}/verify`, handle});
+}
+
+/**
+ * 모달 외부 클릭 시 닫힘 처리
+ */
+window.addEventListener('click', (event) => {
+	const modal = document.getElementById('soundDetailModal');
+	if (event.target === modal) {
+		modal.style.display = 'none';
+	}
+});
+
+
+window.addEventListener('click', (event) => {
+    const modal = document.getElementById('soundDetailModal');
+    if (event.target === modal || event.target.classList.contains('close')) {
+        modal.style.display = 'none';
+    }
+});

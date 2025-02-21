@@ -3,6 +3,8 @@ package com.soundbrew.soundbrew.dto.sound;
 import com.soundbrew.soundbrew.domain.sound.Music;
 import com.soundbrew.soundbrew.dto.BaseDTO;
 import com.soundbrew.soundbrew.dto.BaseEntityDTO;
+import com.soundbrew.soundbrew.util.valid.CreateGroup;
+import com.soundbrew.soundbrew.util.valid.UpdateGroup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,16 +27,16 @@ public class MusicDTO extends BaseDTO {
     private int price;
     private String soundType;
 
-    @NotBlank
-    @Size(min = 2, max = 50)
+    @NotBlank(groups = {CreateGroup.class})
+    @Size(min = 2, max = 50,groups = {CreateGroup.class})
     private String title;
 
-    @NotBlank
-    @Size(min = 2, max = 255)
+    @NotBlank(groups = {CreateGroup.class})
+    @Size(min = 2, max = 255,groups = {CreateGroup.class})
     private String filePath;
 
-    @NotBlank
-    @Size(max = 500)
+    @NotBlank(groups = {CreateGroup.class, UpdateGroup.class})
+    @Size(max = 500,groups = {CreateGroup.class, UpdateGroup.class})
     private String description;
 
     @Column

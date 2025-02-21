@@ -74,14 +74,20 @@ export const SoundTypeCSSFiles = [
 ];
 
 export const SoundManageTypeCSSFiles = [
-    "/css/sound/manage-main.css",
-    "/css/sound/manage-albums.css",
-    "/css/sound/manage-tags.css",
-    "/css/sound/music-upload.css"
+//    "/css/sound/manage-main.css",
+//    "/css/sound/manage-albums.css",
+//    "/css/sound/manage-tags.css",
+//    "/css/sound/music-upload.css",
+    "/css/user/user-admin.css",
+    "/css/sound/admin-main.css"
 ];
 
 export const UserAdminTypeCSSFiles=[
     "/css/user/user-admin.css"
+]
+
+export const AdminStatisticTypeCSSFiles=[
+    "/css/sound/admin-main.css"
 ]
 
 //export function removeSoundTypeCSS() {
@@ -106,6 +112,9 @@ export async function loadUserAdminTypeCSS(){
     await Promise.all(UserAdminTypeCSSFiles.map(url => loadExternalCSS(url)));
 }
 
+export async function loadAdminStatisticTypeCSS(){
+    await Promise.all(AdminStatisticTypeCSSFiles.map(url => loadExternalCSS(url)));
+}
 // 페이지 전환 시 동적 로딩된 모든 CSS를 한 번에 제거하는 함수
 export function removeAllDynamicCSS() {
     const links = document.querySelectorAll('link[data-dynamic="true"]');

@@ -7,18 +7,11 @@ import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
 import {renderViewType} from "/js/sound/viewType.js";
 import {globalStateManager} from "/js/globalState.js";
 import {renderMyAlbums,renderMyTracks,renderMyTags,renderMyMain,renderSoundUpload} from "/js/sound/soundManage.js";
-import {renderArtistsTracks,renderArtistsAlbums,renderTagsSpelling,renderTagsNew,renderArtistsVerify, renderArtistsVerifyOne,renderTotalSoundsVerify,renderAdminMain} from "/js/sound/soundAdmin.js";
-import { loadSoundTypeCSS, loadSoundManageTypeCSS, updateDynamicCSS , SoundTypeCSSFiles, SoundManageTypeCSSFiles, UserAdminTypeCSSFiles, loadUserAdminTypeCSS, removeAllDynamicCSS} from '/js/CSSLoader.js';
+import {renderArtistsTracks,renderArtistsAlbums,renderTagsSpelling,renderTagsNew,renderArtistsVerify, renderArtistsVerifyOne,renderTotalSoundsVerify} from "/js/sound/soundAdmin.js";
+import { loadSoundTypeCSS, loadSoundManageTypeCSS, updateDynamicCSS , SoundTypeCSSFiles, SoundManageTypeCSSFiles, UserAdminTypeCSSFiles, loadUserAdminTypeCSS, removeAllDynamicCSS,AdminStatisticTypeCSSFiles,loadAdminStatisticTypeCSS} from '/js/CSSLoader.js';
 import {renderUserInfoWithRole} from '/js/user/userAdmin.js';
 import {renderSubscriptionInfo } from '/js/user/subscriptionAdmin.js';
-
-//import {axiosGet,axiosPost} from '/js/fetch/standardAxios.js';
-//import {globalStateManager} from "/js/globalState.js";
-//import {renderPagination} from "/js/pagination.js";
-//import {renderPagination} from "/js/pagination.js";
-//import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
-//import {globalStateManager} from "/js/globalState.js";
-//import {compareTagsWithUrlParams,extractTagsFromURL} from "/js/tagStateUtil.js";
+import {initDashboard} from '/js/user/dashboard.js';
 
 export class Router {
     constructor() {
@@ -243,12 +236,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPagination(response);
     });
 
-//    router.addRoute('/admin' , async () =>{
-//        updateDynamicCSS(SoundManageTypeCSSFiles);
-//        await loadSoundManageTypeCSS();
-//
-//        await render
-//    });
+    router.addRoute('/admin' , async () =>{
+        updateDynamicCSS(AdminStatisticTypeCSSFiles);
+        await loadAdminStatisticTypeCSS();
+
+        await initDashboard();
+    });
 
     router.addRoute('/admin/tracks',async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -329,13 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    router.addRoute(`/admin/sounds`, async ()=>{
-        updateDynamicCSS(SoundManageTypeCSSFiles);
-        await loadSoundManageTypeCSS();
-
-        await renderAdminMain();
-    });
-
     router.addRoute('/admin/users', async () =>{
         //css 로딩/삭제
         updateDynamicCSS(UserAdminTypeCSSFiles);
@@ -382,10 +368,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById("adminInfoRoute").addEventListener("click",()=>{
         router.navigate("/회원정보");
-    });
-
-    document.getElementById("adminSoundRoute").addEventListener("click",()=>{
-        router.navigate("/admin/sounds");
     });
 
     // 네비게이션들 버튼, 얘네들은 location.href을 사용해서 페이지를 마치 초기화 하듯 유도.

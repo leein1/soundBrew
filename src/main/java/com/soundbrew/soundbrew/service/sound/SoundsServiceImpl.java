@@ -2,9 +2,11 @@ package com.soundbrew.soundbrew.service.sound;
 
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.domain.user.User;
+import com.soundbrew.soundbrew.dto.DTOFilteringFactory;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
+import com.soundbrew.soundbrew.dto.statistics.sound.SoundTotalStatisticDTO;
 import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.service.tag.TagsService;
@@ -45,7 +47,9 @@ public class SoundsServiceImpl implements SoundsService{
         Optional<Page<SearchTotalResultDTO>> before = albumMusicRepository.searchAlbum(requestDTO);
         if(before.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
 
-        return  ResponseDTO.<SearchTotalResultDTO>withAll(requestDTO,before.get().getContent(), (int) before.get().getTotalElements());
+        List<SearchTotalResultDTO> filteredList = DTOFilteringFactory.hideAlbumDTO(before.get().getContent());
+
+        return  ResponseDTO.<SearchTotalResultDTO>withAll(requestDTO,filteredList, (int) before.get().getTotalElements());
     }
 
     @Override
@@ -221,6 +225,15 @@ public class SoundsServiceImpl implements SoundsService{
         music.update(musicDTO.getTitle(),musicDTO.getDescription(),music.getSoundType());
 
         return ResponseDTO.withMessage().message("변경이 정상적으로 처리되었습니다.").build();
+    }
+
+    @Override
+    public ResponseDTO<SearchTotalResultDTO> getSoundsByAlbumId(int userId, int albumId){
+        RequestDTO requestDTO = new RequestDTO();
+        Optional<List<SearchTotalResultDTO>> searchTotalResultDTO = musicRepository.soundsByAlbumId(userId,albumId);
+        if(searchTotalResultDTO.get().isEmpty()) return ResponseDTO.<SearchTotalResultDTO>builder().dtoList(Collections.emptyList()).build();
+
+        return ResponseDTO.withAll(requestDTO,searchTotalResultDTO.get(),0);
     }
 
     private Music findByMusicId(int musicId){

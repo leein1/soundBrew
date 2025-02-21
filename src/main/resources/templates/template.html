@@ -17,7 +17,7 @@
           align-items: center;
           justify-content: center;
         }
-        .content-body {
+        .in-body {
           display: flex;
           gap: 20px;
           padding: 20px;
@@ -122,87 +122,79 @@
 <div class="content">
     <div class="content-header">Admin Dashboard</div>
     <div class="content-body">
-        <div id="question-list" class="question-list">
-            <div class="linkDiv">
-                <!-- 좌측: 통계 영역 -->
-                <div class="statistics-section">
-                    <!-- 차트 선택 UI: 카테고리 버튼 -->
-                    <div class="chart-selector">
-                        <button data-category="music">음원관련 통계</button>
-                        <button data-category="tag">태그관련 통계</button>
-                        <button data-category="user">유저관련 통계</button>
-                        <!-- 수정페이지 버튼은 별도 -->
-                        <button data-chart="editPage">수정페이지</button>
-                    </div>
-                    <!-- 카테고리별 차트 영역 -->
-                    <div id="music-section" class="category-section">
-                        <div class="chart-group-container">
-                            <!-- 음원관련 차트들 -->
-                            <div class="chart-container">
-                                <canvas id="soundDoughnutChart"></canvas>
+        <div class="in-body">
+            <div id="question-list" class="question-list">
+                <div class="linkDiv">
+                    <!-- 좌측: 통계 영역 -->
+                    <div class="statistics-section">
+                        <!-- 차트 선택 UI: 카테고리 버튼 -->
+                        <div class="chart-selector">
+                            <button data-category="music">음원관련 통계</button>
+                            <button data-category="tag">태그관련 통계</button>
+                            <button data-category="user">유저관련 통계</button>
+                            <!-- 수정페이지 버튼은 별도 -->
+                            <button data-chart="editPage">수정페이지</button>
+                        </div>
+                        <!-- 카테고리별 차트 영역 -->
+                        <div id="music-section" class="category-section">
+                            <div class="chart-group-container">
+                                <!-- 음원관련 차트들 -->
+                                <div class="chart-container">
+                                    <canvas id="soundDoughnutChart"></canvas>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="topSellingArtistsChart"></canvas>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="topSellingMusicChart"></canvas>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="topUploadArtistsChart"></canvas>
+                                </div>
                             </div>
-                            <div class="chart-container">
-                                <canvas id="topSellingArtistsChart"></canvas>
+                        </div>
+                        <div id="tag-section" class="category-section">
+                            <div class="chart-group-container">
+                                <!-- 태그관련 차트들 -->
+                                <div class="chart-container">
+                                    <canvas id="instrumentBarChart"></canvas>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="moodBarChart"></canvas>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="genreBarChart"></canvas>
+                                </div>
                             </div>
-                            <div class="chart-container">
-                                <canvas id="topSellingMusicChart"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="topUploadArtistsChart"></canvas>
+                        </div>
+                        <div id="user-section" class="category-section">
+                            <div class="chart-group-container">
+                                <!-- 유저관련 차트들 -->
+                                <div class="chart-container">
+                                    <canvas id="userPieChart"></canvas>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="subscriptionChart"></canvas>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="recentChangeSubscriptionTable"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div id="tag-section" class="category-section">
-                        <div class="chart-group-container">
-                            <!-- 태그관련 차트들 -->
-                            <div class="chart-container">
-                                <canvas id="instrumentBarChart"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="moodBarChart"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="genreBarChart"></canvas>
-                            </div>
-                        </div>
+                    <!-- 우측: 수정페이지 영역 (자주 사용하는 기능 메뉴) -->
+                    <div class="frequently-list">
+                        <li id="admin-sound">
+                            <span class="main-text">음원 정보 확인</span><br>
+                            <span class="sub-text">Albums, Tracks, Tags, Verify</span>
+                            <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
+                        </li>
+                        <li id="admin-users">
+                            <span class="main-text">유저 정보 확인</span><br>
+                            <span class="sub-text">Users, Subscription, User-Subscription</span>
+                            <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
+                        </li>
                     </div>
-                    <div id="user-section" class="category-section">
-                        <div class="chart-group-container">
-                            <!-- 유저관련 차트들 -->
-                            <div class="chart-container">
-                                <canvas id="userPieChart"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="subscriptionChart"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="recentChangeSubscriptionTable"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 우측: 수정페이지 영역 (자주 사용하는 기능 메뉴) -->
-                <div class="frequently-list">
-                    <li id="upload-sound">
-                        <span class="main-text">음원 업로드</span><br>
-                        <span class="sub-text">Album, Music, Instrument Tag, Mood Tag, Genre Tag</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
-                    </li>
-                    <li id="edit-album">
-                        <span class="main-text">앨범 정보 수정</span><br>
-                        <span class="sub-text">Title, Description</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
-                    </li>
-                    <li id="edit-music">
-                        <span class="main-text">음원 정보 수정</span><br>
-                        <span class="sub-text">Title, Description, soundType</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
-                    </li>
-                    <li id="edit-tags">
-                        <span class="main-text">태그 정보 수정</span><br>
-                        <span class="sub-text">Instrument Tag, Mood Tag, Genre Tag</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
-                    </li>
                 </div>
             </div>
         </div>
