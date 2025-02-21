@@ -60,6 +60,7 @@ public class AlbumDTO extends BaseEntityDTO {
                 .albumArtPath(this.albumArtPath)
                 .description(this.description)
                 .albumMusic(albumMusic)
+                .download(this.download)
                 .build();
     }
 }

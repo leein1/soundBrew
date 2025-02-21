@@ -61,7 +61,7 @@ export function renderDashboard() {
         <!-- 우측: 수정페이지 영역 (자주 사용하는 기능 메뉴) -->
         <div class="frequently-list">
           <li id="admin-sound">
-            <span class="main-text">음원 정보 확인</span><br>
+            <span class="main-text">앨범 정보 확인</span><br>
             <span class="sub-text">Albums, Tracks, Tags, Verify</span>
             <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg" alt="chevron">
           </li>
@@ -118,11 +118,11 @@ export function renderInfoSort() {
       // li의 id에 따라 분기 처리
       switch (clickedLi.id) {
         case 'admin-sound':
-          router.navigate('/admin/sounds');
+          router.navigate('/admin/albums');
           break;
 
         case 'admin-users':
-          console.log('/admin/users');
+          router.navigate('/admin/users');
           break;
 
         default:
@@ -134,7 +134,6 @@ export function renderInfoSort() {
 
 // 드롭다운 메뉴 이벤트 설정 함수
 function setupInfoDropdownEvents() {
-alert("!!");
   const sortKeyword = document.getElementById('sortKeyword');
   const menu = document.getElementById('musicSortMenu');
 
@@ -309,7 +308,7 @@ const ChartModule = (() => {
             borderWidth: 1
           }]
         },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
       });
     } catch (error) {
       console.error("Top Upload Artists Chart 생성 오류:", error);
@@ -338,7 +337,7 @@ const ChartModule = (() => {
             borderWidth: 1
           }]
         },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
       });
     } catch (error) {
       console.error("Instrument Bar Chart 생성 오류:", error);
@@ -367,7 +366,7 @@ const ChartModule = (() => {
             borderWidth: 1
           }]
         },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
       });
     } catch (error) {
       console.error("Mood Bar Chart 생성 오류:", error);
@@ -396,7 +395,7 @@ const ChartModule = (() => {
             borderWidth: 1
           }]
         },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
       });
     } catch (error) {
       console.error("Genre Bar Chart 생성 오류:", error);
@@ -444,7 +443,7 @@ const ChartModule = (() => {
             borderWidth: 1
           }]
         },
-        options: { responsive: true, maintainAspectRatio: false, animation: false }
+        options: { responsive: true, maintainAspectRatio: false }
       });
     } catch (error) {
       console.error("User Pie Chart 생성 오류:", error);

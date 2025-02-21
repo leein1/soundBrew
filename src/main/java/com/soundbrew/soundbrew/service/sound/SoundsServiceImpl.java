@@ -182,7 +182,6 @@ public class SoundsServiceImpl implements SoundsService{
     @Transactional
     public ResponseDTO updateAlbumForAdmin(int albumId, AlbumDTO albumDTO) {
         Album album = this.findByAlbumId(albumId);
-
         return updateAlbumInternal(album, albumDTO);
     }
 

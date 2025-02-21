@@ -513,7 +513,7 @@ async function openAlbumModal(userId,albumId) {
                         ${response.dtoList.map(manage => `
                             <tr>
                                 <td>${manage.musicDTO.musicId}</td>
-                                <td>${manage.albumDTO.nickname}</td>
+                                <td>${manage.musicDTO.nickname}</td>
                                 <td>
                                     <span class="current-value" data-field="title">${manage.musicDTO.title}</span>
                                     <input type="text" class="editable-field" data-field="title" value="${manage.musicDTO.title}" style="display: none;">
@@ -664,11 +664,9 @@ export async function renderTagsNew(data) {
         const handle = {
             onSuccess: () => {
                 alert("태그를 정상적으로 생성했습니다.");
-                router.navigate('/admin/tags/new');
             },
             onBadRequest: () => {
                 alert("태그를 정상적으로 생성하지 못했습니다.");
-                router.navigate('/admin/tags/new');
             },
         };
 
