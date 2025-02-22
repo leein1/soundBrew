@@ -353,7 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSubscriptionInfo(response);
     });
 
-
     document.querySelector('#soundTracksRoute').addEventListener('click', () => {
         router.navigate('/sounds/tracks');
     });
@@ -389,6 +388,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.logoutPage').forEach(element =>{
         element.addEventListener('click', function(){
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
             window.location.href = "/logout";
         });
     });

@@ -31,7 +31,9 @@
 
             <div class="user-view" style="display: none;">
                 <div class="profile" >
-                    <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
+<!--                        -->
+
+                    <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" id="user-profile-image" class="profile-image">
 <!--                    <button class="primary-button none-display">프로필 사진 변경</button>-->
                     <button id="profileModalBtn" class="primary-button none-display">프로필 사진 변경</button>
                 </div>
@@ -48,7 +50,7 @@
             </div>
             <div class="admin-view" style="display: none;">
                 <div class="profile" >
-                    <img th:src="@{/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}" alt="User Profile" class="profile-image">
+                    <img onerror="this.onerror=null; this.src='/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';" alt="User Profile" class="profile-image">
                 </div>
 
                 <div class="info1">
@@ -206,6 +208,15 @@
 
             const userInfo = TokenUtil.getUserInfo(token);
             document.getElementById("myNickname").innerText = userInfo.nickname;
+
+            // 유저 프로필 이미지 경로 (예제 값)
+            const profileImagePath = userInfo.profileImagePath;
+
+            // 이미지 태그 가져오기
+            const profileImageElement = document.getElementById('user-profile-image');
+            const baseUrl = 'https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/';
+            // S3 DB 주고 까지 붙여서
+            profileImageElement.src = `${baseUrl}${profileImagePath}`;
 
             document.querySelectorAll('.user-view, .admin-view').forEach(view => {
                 view.style.display = "none";
