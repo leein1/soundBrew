@@ -20,7 +20,7 @@ export const validationRules = {
     password: {
         required: true,
         minLength: 8,
-        pattern: /^(?!\s*$)(?=.*[A-Z])(?=.*\W)[a-zA-Z0-9\W]+$/
+        pattern: /^(?=.*[!@#$%^&*])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/
     },
     'title':{ // 중범주 없는 타이틀
         required: true,

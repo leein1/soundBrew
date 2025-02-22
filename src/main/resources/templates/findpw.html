@@ -74,12 +74,12 @@
                     },
                     onNotFound:(data)=>{
                         alert(data.message);
-                        window.location.href="/help/findpw";
+                        window.location.href="/help/find-password";
                     }
                 }
 
                 if (!errors) {
-                    await axiosPost({endpoint: "/api/help/password", body: processedData, handle: handle});
+                    await axiosPost({endpoint: "/api/help/find-password", body: processedData, handle: handle});
 
                 }
             }catch (err){

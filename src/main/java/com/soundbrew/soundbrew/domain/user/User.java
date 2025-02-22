@@ -19,7 +19,7 @@ public class User extends BaseEntity {
     private int userId;
 
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer subscriptionId;
 
     @Column(length = 15, nullable = false)

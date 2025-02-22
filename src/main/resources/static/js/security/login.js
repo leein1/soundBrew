@@ -35,10 +35,19 @@ export function getLoginFormProcess() {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
 
-            alert(error.response.data.message);
-            submitButton.disabled = false;
+            alert(
+                error.response.data.message
+                + "\n" +  error.response.data.redirectUrl
+                + "\n" + error.response.data.resetToken
+            );
 
-            // window.location.href = error.response.data.redirectUrl;
+            // submitButton.disabled = false;
+
+            const resetToken = error.response.data.resetToken
+
+            localStorage.setItem("resetToken",resetToken);
+
+            window.location.href = error.response.data.redirectUrl;
         }
     });
 }

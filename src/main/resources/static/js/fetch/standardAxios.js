@@ -1,6 +1,6 @@
 import {handleResponse} from "/js/handleResponse.js";
 
-const BASE_URL = "http://soundvbrew-env.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com";
+const BASE_URL = "http://localhost:8080";
 
 // Axios 기본 설정
 const axiosInstance = axios.create({
@@ -77,6 +77,7 @@ const fetchData = async ({
                              params = {},
                              method = "GET",
                              handle = null,
+                             uniqueToken = false,
                          }) => {
     const options = {
         headers: { "Content-Type": "application/json" },
@@ -89,6 +90,16 @@ const fetchData = async ({
     // FormData인 경우 Content-Type을 설정하지 않도록 함
     if (body instanceof FormData) {
         delete options.headers["Content-Type"]; // FormData는 자동으로 처리되므로 Content-Type을 삭제
+    }
+
+    if (uniqueToken) {
+        alert("!!?");
+        let token = localStorage.getItem("resetToken");
+
+        options.headers = {
+            ...options.headers,
+            Authorization: `Bearer ${token}`
+        };
     }
 
     if (useToken) {
@@ -114,8 +125,8 @@ const fetchData = async ({
 export const axiosGet = async ({ endpoint, useToken = true, params = {} , handle = null}) =>
     fetchData({ endpoint, useToken, params, method: 'GET', handle});
 
-export const axiosPost = async ({ endpoint, body = {}, useToken = true, params = {} , handle = null}) =>
-    fetchData({ endpoint, body, useToken, params, method: 'POST', handle});
+export const axiosPost = async ({ endpoint, body = {}, useToken = true, params = {} , handle = null, uniqueToken = false }) =>
+    fetchData({ endpoint, body, useToken, params, method: 'POST', handle, uniqueToken });
 
 export const axiosDelete = async ({ endpoint, body = {}, useToken = true, params = {}, handle = null }) =>
     fetchData({ endpoint, body, useToken, params, method: 'DELETE', handle});
