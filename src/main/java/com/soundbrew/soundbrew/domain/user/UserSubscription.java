@@ -27,7 +27,7 @@ public class UserSubscription extends BaseEntity {
     private LocalDateTime nextBillingDate;
 
     @Column(nullable = true)
-    private String paymentStatus;
+    private boolean paymentStatus;
 
 //    BaseEntity 상속으로 생략
 //    private LocalDateTime create_date;
