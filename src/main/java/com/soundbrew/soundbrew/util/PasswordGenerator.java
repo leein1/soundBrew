@@ -11,7 +11,7 @@ public class PasswordGenerator {
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
     private static final String DIGITS = "0123456789";
-    private static final String SPECIAL = "!@#$%^&*()-_=+[]{}|;:',.<>/?";
+    private static final String SPECIAL = "!@#$&?";
 
     /**
      * 최소 8자리, 대문자 1개 이상, 특수문자 1개 이상, 숫자 1개
