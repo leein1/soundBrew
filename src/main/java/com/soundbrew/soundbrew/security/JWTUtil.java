@@ -45,7 +45,7 @@ public class JWTUtil {
                 .setHeader(headers)
                 .setClaims(payload)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
-                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(time).toInstant()))
+                .setExpiration(Date.from(ZonedDateTime.now().plusDays(time).toInstant()))
                 .signWith(SignatureAlgorithm.HS256, key.getBytes())
                 .compact();
 
