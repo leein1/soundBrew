@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.security.filter;
 
 import com.soundbrew.soundbrew.config.PublicPathsProperties;
+import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.exception.AccessTokenException;
@@ -22,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,6 +49,19 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 //            "/api/sounds/tracks",
 //            "/api/sounds/tags"
 //    );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+
+        String path = request.getRequestURI();
+
+        return path.startsWith("/css/")
+                || path.startsWith("/js/")
+                || path.startsWith("/images/")
+                || path.startsWith("/fonts/")
+                || path.startsWith("/favicon.ico");
+
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -97,26 +112,63 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             //  전달받은 토큰 검증
             Map<String,Object> values = validateAccessToken(request);
 
-
-
             log.info("Token Check Filter username - 인증 정보 생성 시작");
 
-            // username roles 추출
-            String username = (String) values.get("username");
-            int userId = (int)values.get("userId");
-            String nickname = (String) values.get("nickname");
-            List<String> roles = (List<String>) values.get("roles");
+            /*
+              npe 방지를 위해 문자열.equals(가져온 값)의 형태로 작성
+              가져온값.equals(찾으려는 문자열)의 형태일시 type이라는 키는 있지만 값이 null일때 null.equals(찾으려는 문자열)이 되어 npe 발생 할거 같음
+             */
 
-            List<GrantedAuthority> authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+            UsernamePasswordAuthenticationToken authenticationToken;
 
-            //  인증 정보 생성
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    new UserDetailsDTO(username,userId,nickname,authorities),
-                    null,
-                    authorities
-            );
+            if(values.containsKey("type") && "password_reset".equals(values.get("type"))){
+
+
+                String username = (String) values.get("username");
+
+                List<GrantedAuthority> authorities= new ArrayList<>();;
+                authorities.add(new SimpleGrantedAuthority("PASSWORD_RESET"));
+
+                //  인증 정보 생성
+                authenticationToken = new UsernamePasswordAuthenticationToken(
+                        UserDetailsDTO.builder().
+                                userDTO(UserDTO.builder()
+                                        .email(username)
+                                        .build())
+                                .build(),
+                        null,
+                        authorities
+                );
+
+            } else {
+
+                // username roles 추출
+                String username = (String) values.get("username");
+                int userId = (int) values.get("userId");
+                String nickname = (String) values.get("nickname");
+                String profileImagePath = (String) values.get("profileImagePath");
+                int subscriptionId = (int) values.get("subscriptionId");
+                List<String> roles = (List<String>) values.get("roles");
+
+                List<GrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+                //  인증 정보 생성
+                authenticationToken = new UsernamePasswordAuthenticationToken(
+                        UserDetailsDTO.builder().
+                                userDTO(UserDTO.builder()
+                                        .userId(userId)
+                                        .email(username)
+                                        .nickname(nickname)
+                                        .profileImagePath(profileImagePath)
+                                        .subscriptionId(subscriptionId)
+                                        .build())
+                                .build(),
+                        null,
+                        authorities
+                );
+            }
 
             //  SecurityContextHolder 설정
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -131,6 +183,9 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
             //  메시지를 보내는 것이 아닌 컨텍스트 초기화 후 401 에러 반환
             log.error("Token 검증 실패: {}", accessTokenException.getMessage());
+            log.error(accessTokenException);
+            log.error(accessTokenException.getMessage());
+
             SecurityContextHolder.clearContext(); // 인증 실패 시 컨텍스트 초기화
 //            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"); // 401 응답 반환
             accessTokenException.sendResponseError(response);
@@ -158,8 +213,16 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         log.info("-------------------------------------Token Check Filter.validateAccessToken-----------------------");
 
         String headerStr = request.getHeader("Authorization");
+        log.info("-------------headerStr {}", headerStr);
 
-        if(headerStr == null || headerStr.length() < 8){
+        if(headerStr == null){
+
+            log.error("-------------headerStr NULL");
+            throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.UNACCEPT);
+
+        } else if(headerStr.length() < 8){
+
+            log.error("-------------headerStr length less than 8");
             throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.UNACCEPT);
         }
 
