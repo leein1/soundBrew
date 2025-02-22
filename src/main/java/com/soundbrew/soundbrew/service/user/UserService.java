@@ -5,6 +5,7 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
+import org.apache.coyote.Response;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -49,11 +50,14 @@ public interface UserService {
     //  회원 가입
     ResponseDTO<String> registerUser(UserDTO userDTO);
 
+
     //  회원 정보 수정
     ResponseDTO<String> updateUser(UserDTO userDTO);
 
+    ResponseDTO<String> generateTemporaryPassword(UserDTO userDTO);
+
     //  비밀번호 수정
-    ResponseDTO<String> updatePassword(int userId, String newPassword);
+    ResponseDTO<String> updatePassword(UserDTO userDTO);
 
     public ResponseDTO<String> verifyPassword(int userId, String inputPassword);
 

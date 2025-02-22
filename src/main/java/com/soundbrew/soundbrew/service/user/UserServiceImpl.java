@@ -13,24 +13,27 @@ import com.soundbrew.soundbrew.repository.subscription.SubscriptionRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.repository.user.UserRoleRepository;
 import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
+import com.soundbrew.soundbrew.service.mail.MailService;
 import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.util.UserValidator;
 import com.soundbrew.soundbrew.service.verification.ActivationCodeService;
+import com.soundbrew.soundbrew.util.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +55,7 @@ public class UserServiceImpl implements UserService{
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
     private final ActivationCodeService activationCodeService;
+    private final MailService mailService;
 //    private final MailService mailService;
 //    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -269,7 +273,6 @@ public class UserServiceImpl implements UserService{
 
 
 
-
     //    회원 정보 수정
     //    비밀번호 변경은 따로 처리할것
     //    프로필 이미지 변경 따로 처리할 것
@@ -277,72 +280,112 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseDTO<String> updateUser(UserDTO userDTO) {
 
-//        업데이트 방법 필요
-//        이 메서드는 userDTO에 기존 정보도 전부 받아 온다고 가정 후 작성
-//        int userId = userDTO.getUserId();
-//
-//        User result = userRepository.findById(userId).orElseThrow();
+        User existingUser = userRepository.findByUserId(userDTO.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 사용자를 찾을 수 없습니다."));
 
-//        UserDTO existingUserDTO = this.getUser(userDTO.getUserId()).getDto();
+        UserDTO existingUserDTO = modelMapper.map(existingUser, UserDTO.class);
 
-//         기존 사용자 정보 수정
-//        UserDTO existingUserDTO = modelMapper.map(result, UserDTO.class);
+        Map<String,Object> changes = new HashMap<>();
 
-//        existingUserDTO.setName(userDTO.getName());
-//        existingUserDTO.setNickname(userDTO.getNickname());
-//        existingUserDTO.setPhoneNumber(userDTO.getPhoneNumber());
-//        existingUserDTO.setEmail(userDTO.getEmail());
-//        existingUserDTO.setBirth(userDTO.getBirth());
+        if( userDTO.getName() != null && !userDTO.getName().equals(existingUser.getName())){
+            changes.put("name", userDTO.getName());
+        }
+        if (userDTO.getNickname() != null && !userDTO.getNickname().equals(existingUser.getNickname())) {
+            changes.put("nickname", userDTO.getNickname());
+        }
+        if (userDTO.getPhoneNumber() != null && !userDTO.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
+            changes.put("phoneNumber", userDTO.getPhoneNumber());
+        }
 
+        // 변경된 값이 없는 경우
+        if (changes.isEmpty()){
 
-            userRepository.save(userDTO.toEntity());
+            log.info("변경하려는 필드가 1개도 없음");
 
-            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                    .message("수정 되었습니다.")
+            return ResponseDTO.<String>withMessage()
+                    .message("변경 사항이 없습니다.")
                     .build();
+        }
 
-            return responseDTO;
+        // 여러개를 한번에 수정하려고 한 경우
+        if(changes.size() != 1){
+
+            throw new IllegalArgumentException("한번에 하나만 수정 가능 합니다.");
+        }
+
+        changes.forEach((field,value) ->{
+            log.info("userId : '{}' userEmail '{}' 수정 요청 : '{}' : '{}'", existingUserDTO.getUserId(), existingUserDTO.getEmail(),field, value);
+
+            switch (field) {
+                case "name":
+                    existingUserDTO.setName((String) value);
+                    break;
+                case "nickname":
+                    existingUserDTO.setNickname((String) value);
+                    break;
+                case "phoneNumber":
+                    existingUserDTO.setPhoneNumber((String) value);
+                    break;
+                default:
+                    throw new IllegalArgumentException("잘못된 필드입니다: " + field + "-" + value);
+            }
+
+        });
+
+        userRepository.save(existingUserDTO.toEntity());
+
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("수정 되었습니다.")
+                .build();
+
+        return responseDTO;
 
     }
 
-//  ---------------------------------------VerifyService 로 이동
-//    비밀번호 재 확인 - 본인 인증용
-//    userId -> nickname으로 변경
-//    반환형 responseDTO로 변경
-//    @Override
-//    public ResponseDTO<String> verifyPassword(String nickname, String inputPassword) {
-//
-////        유저가 존재 하는지 검증
-////        User user = userRepository.findById(userId).orElseThrow(() ->
-////                new NoSuchElementException(userId + " 번 회원을 찾을 수 없습니다."));
-//
-////        Optional<User> result = userRepository.findById(userId);
-//
-//        User user = userRepository.findByNickname(nickname).orElseThrow();
-//
-//        String existingUserPassword = user.getPassword();
-//
-////            비밀 번호가 일치 하는 경우
-//        if (!existingUserPassword.equals(inputPassword)) {
-//
-//            return ResponseDTO.<String>withMessage()
-//                    .message("비밀번호가 일치하지 않습니다.")
-//                    .build();
-//        }
-//
-//        return ResponseDTO.<String>withMessage()
-//                .message("확인되었습니다.")
-//                .build();
-//
-//    }
+    @Override
+    public ResponseDTO<String> generateTemporaryPassword(UserDTO userDTO) {
+
+        //  이메일과 이름이 일치하는 계정이 있는지 조회
+        String email = userDTO.getEmail();
+        String name = userDTO.getName();
+
+        User user = userRepository.findByEmail(email).orElseThrow();
+        UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
+
+        //  있다면 임의의 비밀번호 생성
+        String tempPassword = PasswordGenerator.generatePassword(8);
+
+        //  암호화
+        String encodedPassword = passwordEncoder.encode(tempPassword);
+
+        //  임의의 비밀번호를 유저 데이터베이스 정보에 update + credentials_non_expired를 false로 변경
+        existingUserDTO.setPassword(encodedPassword);
+        existingUserDTO.setCredentialsNonExpired(false);
+
+        userRepository.save(existingUserDTO.toEntity());
+
+        //  이메일로 임의의 비밀번호 전송
+        String text = "임시 비밀번호 입니다.\n" + tempPassword;
+        mailService.send(email, "SoundBrew 임시 비밀번호 발급", text);
+
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>builder()
+                .message("입력하신 메일로 임시 비밀번호를 발송했습니다.")
+                .build();
+
+        return responseDTO;
+    }
 
     //    비밀번호만 수정
     //    매개변수로 비밀번호만 받을지 DTO형태로 받을지 논의 필요
     @Override
-    public ResponseDTO<String> updatePassword(int userId, String newPassword) {
+    public ResponseDTO<String> updatePassword(UserDTO userDTO) {
 
         //        비밀번호가 비밀번호 양식에 맞는지 검증
         UserValidator userValidator = new UserValidator();
+
+        String newPassword = userDTO.getPassword();
+        int userId = userDTO.getUserId();
+        String email = userDTO.getEmail();
 
         if(!userValidator.isPasswordFormatValid(newPassword)) {
 
@@ -353,30 +396,28 @@ public class UserServiceImpl implements UserService{
             return responseDTO;
         }
 
-//        유저가 존재 하는지 검증
-//        User user = userRepository.findById(userId).orElseThrow(() ->
-//                new NoSuchElementException(userId + " 번 회원을 찾을 수 없습니다."));
+        User user = null;
 
-        /*
-        Optional<UserDTO> optionalUserDTO = this.getUser(userId);
+        //  유저 존재하는지 검증 DTO 변환
+        if(userId != 0){
 
-//        Opiton.empty()라면
-        if(optionalUserDTO.isEmpty()){
+            user = userRepository.findByUserId(userId).orElseThrow();
+        }else if(email != null){
 
-            return "해당 유저가 존재하지 않습니다.";
+            user = userRepository.findByEmail(email).orElseThrow();
+        }
 
-        }else {
-        */
+        UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
 
-        //  유저 존재하는지 검증 및 DTO 변환
-        UserDTO existingUserDTO = this.getUser(userId).getDto();
+        //  비밀번호 인코딩
+        String encodedPassword = passwordEncoder.encode(newPassword);
 
         //  비밀번호 set
-        existingUserDTO.setPassword(newPassword);
+        existingUserDTO.setPassword(encodedPassword);
+        existingUserDTO.setCredentialsNonExpired(true);
 
         //  entity로 변환 후 save()
-        //  userRepository.save(existingUserDTO.toEntity());
-        this.updateUser(existingUserDTO);
+        userRepository.save(existingUserDTO.toEntity());
 
         ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
                 .message("수정 되었습니다.")
@@ -462,6 +503,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseDTO<UserSubscriptionDTO> getUserSubscription(int userId){
 
+
        UserSubscription userSubscription = userSubscriptionRepository.findById(userId).orElseThrow();
        UserSubscriptionDTO userSubscriptionDTO = modelMapper.map(userSubscription,UserSubscriptionDTO.class);
 
@@ -491,33 +533,30 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseDTO<String> addUserSubscription(int userId, int subscriptionId) {
 
-        /*
-            유저가 존재 하는지 검증
-        User user = userRepository.findById(userId).orElseThrow();
-
-            set을 위해 DTO로 변환
-        UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
-*/
-
-        //  검증
+        // 유저 존재하는지
         UserDTO existingUserDTO = this.getUser(userId).getDto();
         SubscriptionDTO subscriptionDTO = subscriptionService.getSubscription(subscriptionId).getDto();
 
-        //  구독한 적이 없어야 함
-        if(existingUserDTO.subscriptionId != null){
+        /*
+            구독한 적이 없어야 함
+            subscriptionId
+            1 - free
+            2 - basic
+            3 - premium
+            4 - vip
+         */
+        if(existingUserDTO.subscriptionId != 1){
 
-            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                    .message("이미 구독중인 구독제가 있습니다.")
-                    .build();
-
-            return responseDTO;
+            throw new RuntimeException("구독중인 구독제가 있습니다.");
         }
 
         //    구독제 id set()
         existingUserDTO.setSubscriptionId(subscriptionId);
+        // credit set
+        existingUserDTO.setCreditBalance(subscriptionDTO.getCreditPerMonth());
 
         //    user 테이블에 subscriptionId - update
-        this.updateUser(existingUserDTO);
+       userRepository.save(existingUserDTO.toEntity());
 
         //    UserSubscriptionDTO 준비
         UserSubscriptionDTO userSubscriptionDTO = UserSubscriptionDTO.builder()
@@ -527,6 +566,7 @@ public class UserServiceImpl implements UserService{
 
         //    Entity로 변경 후  user_subscription 테이블에 save()
         this.modifyUserSubscription(userSubscriptionDTO);
+//        userSubscriptionRepository.save(userSubscriptionDTO.toEntity());
 
         String subscriptionName = subscriptionDTO.getSubscriptionName();
 
@@ -546,31 +586,33 @@ public class UserServiceImpl implements UserService{
         UserDTO existingUserDTO = this.getUser(userId).getDto();
         SubscriptionDTO subscriptionDTO = subscriptionService.getSubscription(subscriptionId).getDto();
 
+        /*
+            구독한 적이 없어야 함
+            subscriptionId
+            1 - free
+            2 - basic
+            3 - premium
+            4 - vip
+         */
+        if(existingUserDTO.subscriptionId == 1){
 
-        ///  구독한 적이 있어야 함
-        if(existingUserDTO.subscriptionId == null){
-
-            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                    .message("구독중인 구독제가 없습니다.")
-                    .build();
-
-            return responseDTO;
-
+            throw new RuntimeException("구독중인 구독제가 없습니다.");
         }
+
+        /*
+        구독제가 이전과 비교하여 더 비싼 금액인지, 저렴한 가격인지 처리 필요
+         */
 
         //    구독제 id set()
         existingUserDTO.setSubscriptionId(subscriptionId);
-
-        //    user 테이블에 save()
-        this.updateUser(existingUserDTO);
-
-
-        //    userSubscription 테이블에 인서트 하기 위한 준비
-        //    UserSubscriptionDTO 준비
         /*
         !!!!!!!!!!!!!!!!!!!!!!!!!!! 잔여 크레딧 계산식 필요
          */
+        // credit set
+        existingUserDTO.setCreditBalance(subscriptionDTO.getCreditPerMonth());
 
+        //    user 테이블에 save()
+        userRepository.save(existingUserDTO.toEntity());
 
         //  입력받은 유저 아이디로 UserSubscription 조회 후 DTO로 매핑
         UserSubscriptionDTO existingUserSubscriptionDTO = this.getUserSubscription(userId).getDto();
@@ -598,9 +640,9 @@ public class UserServiceImpl implements UserService{
         UserDTO existingUserDTO = this.getUser(userId).getDto();
         UserSubscriptionDTO existingUserSubscriptionDTO = this.getUserSubscription(userId).getDto();
 
-        //  User 테이블에서 해당 유저의 subscriptionId null로 업데이트
-        existingUserDTO.setSubscriptionId(null);
-        this.updateUser(existingUserDTO);
+        //  User 테이블에서 해당 유저의 subscriptionId 1로 업데이트
+        existingUserDTO.setSubscriptionId(1);
+        userRepository.save(existingUserDTO.toEntity());
 
         //  UserSubscription 테이블에서 해당 유저의 레코드 삭제 - 크레딧 정보는 user쪽에 있으므로 삭제해도 됨
         userSubscriptionRepository.delete(existingUserSubscriptionDTO.toEntity());

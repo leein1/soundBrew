@@ -2,6 +2,7 @@ package com.soundbrew.soundbrew.controller;
 
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
+import com.soundbrew.soundbrew.service.authentication.AuthenticationService;
 import com.soundbrew.soundbrew.service.mail.MailService;
 import com.soundbrew.soundbrew.service.user.UserService;
 import com.soundbrew.soundbrew.util.PasswordGenerator;
@@ -9,11 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import static com.soundbrew.soundbrew.util.PasswordGenerator.generatePassword;
 
 @RestController
 @RequestMapping("/api/help")
@@ -23,52 +24,42 @@ import static com.soundbrew.soundbrew.util.PasswordGenerator.generatePassword;
 public class HelpContorller {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final MailService mailService;
+    private final AuthenticationService authenticationService;
 
 
-    @PostMapping("/password")
-    public ResponseEntity<ResponseDTO<String>> resetPassword(@RequestBody UserDTO userDTO){
 
-        log.info("---------------------------/api/help/resetPassword" + userDTO.toString());
+    @PostMapping("/find-password")
+    public ResponseEntity<ResponseDTO<String>> tempPassword(@RequestBody UserDTO userDTO){
 
-        //  이메일과 이름이 일치하는 계정이 있는지 조회
-        String email = userDTO.getEmail();
-        String name = userDTO.getName();
+        log.info("---------------------------/api/help/find-password" + userDTO.toString());
 
-        UserDTO result;
+        ResponseDTO responseDTO = userService.generateTemporaryPassword(userDTO);
 
-        try {
-            log.info("---------------------------유저 조회 try");
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
-            result = userService.getUserByEmailAndName(email, name).getDto();
-        } catch (Exception e){
+    @PostMapping("/reset-password")
+    public ResponseEntity<ResponseDTO<String>> resetPassword(@RequestBody UserDTO userDTO, Authentication authentication){
 
-            ResponseDTO<String> responseDTO = ResponseDTO.<String>builder()
-                            .message("해당 계정을 찾을 수 없습니다.")
-                    .build();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        log.info("----------------------------------------HelpContorller.resetPassword" + userDTO.toString());
+
+        // Authentication 의 authorities에 PASSWORD_RESET이 없는 경우 -
+        boolean isPasswordReset = authenticationService.isPasswordReset(authentication);
+
+        if(!isPasswordReset){
+
+            log.info("비밀번호 리셋 권한이 없음");
+
+            throw new IllegalArgumentException("비밀번호 변경 권한이 없습니다.");
         }
 
-        //  있다면 임의의 비밀번호 생성
-        String tempPassword = PasswordGenerator.generatePassword(8);
+        // Authentication에서 이메일 가져오기
+        String email = authenticationService.getEmail(authentication);
 
-        //  암호화
-        String encodedPassword = passwordEncoder.encode(tempPassword);
+        userDTO.setEmail(email);
 
-        //  임의의 비밀번호를 유저 데이터베이스 정보에 update + credentials_non_expired를 false로 변경
-        result.setPassword(encodedPassword);
-        result.setCredentialsNonExpired(false);
+        ResponseDTO responseDTO = userService.updatePassword(userDTO);
 
-        userService.updateUser(result);
-
-        //  이메일로 임의의 비밀번호 전송
-        String text = "임시 비밀번호 입니다.\n" + tempPassword;
-        mailService.send(email, "SoundBrew 임시 비밀번호 발급", text);
-
-        ResponseDTO<String> responseDTO = ResponseDTO.<String>builder()
-                .message("입력하신 메일로 임시 비밀번호를 발송했습니다.")
-                .build();
         return ResponseEntity.ok().body(responseDTO);
     }
 
