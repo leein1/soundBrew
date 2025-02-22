@@ -246,14 +246,47 @@ public class ServiceUnitTest {
         tagsDTO.setMood(List.of("chill"));
         tagsDTO.setGenre(List.of("pop"));
 
-        // userRepository 모킹: userId에 해당하는 사용자가 존재한다고 가정
+        // userRepository 모킹: 해당 사용자가 존재한다고 가정
         User dummyUser = User.builder().userId(userId).nickname("test-nickname").build();
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(dummyUser));
+
+        // albumRepository 모킹: Album 엔티티를 반환하도록 설정
+        Album dummyAlbum = Album.builder()
+                .albumId(1) // dummy ID 설정
+                .albumName(albumDTO.getAlbumName())
+                .albumArtPath(albumDTO.getAlbumArtPath())
+                .description(albumDTO.getDescription())
+                .userId(dummyUser.getUserId())
+                .nickname(dummyUser.getNickname())
+                .build();
+        when(albumRepository.save(any(Album.class))).thenReturn(dummyAlbum);
+
+        // musicRepository 모킹: Music 엔티티 반환
+        Music dummyMusic = Music.builder()
+                .musicId(1)
+                .title(musicDTO.getTitle())
+                .filePath(musicDTO.getFilePath())
+                .description(musicDTO.getDescription())
+                .userId(dummyUser.getUserId())
+                .nickname(dummyUser.getNickname())
+                .soundType("sound")
+                .price(3)
+                .build();
+        when(musicRepository.save(any(Music.class))).thenReturn(dummyMusic);
+
+        // albumMusicRepository 모킹: AlbumMusic 엔티티 반환(저장된 객체 그대로 반환)
+        when(albumMusicRepository.save(any(AlbumMusic.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // tagsService.linkTags() 모킹:
+        // 만약 linkTags가 void 메서드라면 doNothing()을 사용할 수 있어야 합니다.
+        // 하지만 에러가 발생한다면, linkTags가 void가 아닌 경우이므로 when()으로 스텁을 설정합니다.
+        when(tagsService.linkTags(any(Music.class), any(TagsDTO.class))).thenReturn(null);
 
         // Act: 서비스 메소드 호출
         ResponseDTO responseDTO = soundsService.createSound(userId, albumDTO, musicDTO, tagsDTO);
 
-        // Assert
+        // Assert: 응답 메시지 확인
         assertEquals("정상적으로 등록했습니다.", responseDTO.getMessage());
     }
 
