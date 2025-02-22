@@ -35,41 +35,55 @@ public class UserDetailsDTO implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         return authorities;
     }
 
     //  password는 null일수 없는 항목
     @Override
     public String getPassword() {
+
         return userDTO.getPassword();
     }
 
     //  email은 null일수 없는 항목
     @Override
     public String getUsername() {
+
         return userDTO.getEmail();
     }
 
+    //    ------------------------- Pre-Authentication Check
     @Override
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonLocked() {   // LockedException
+
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    public boolean isEnabled() {    // DisabledException
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
         return userDTO.isEmailVerified();
 //        return true;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {  // AccountExpiredException
+
+        return true;
+    }
+
+
+    //    --------------------------- Post-Authentication Checks:
+    @Override
+    public boolean isCredentialsNonExpired() {  // CredentialsExpiredException
+
+        return userDTO.isCredentialsNonExpired();
+//        return true;
+
+    }
+
+
 
 
 //    public UserDetailsDTO(UserDTO userDTO, UserRoleDTO userRoleDTO, UserSubscriptionDTO userSubscriptionDTO) {

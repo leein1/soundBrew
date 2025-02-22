@@ -77,7 +77,7 @@ const fetchData = async ({
                              params = {},
                              method = "GET",
                              handle = null,
-                             uniqueToken = {},
+                             uniqueToken = false,
                          }) => {
     const options = {
         headers: { "Content-Type": "application/json" },
@@ -93,7 +93,9 @@ const fetchData = async ({
     }
 
     if (uniqueToken) {
+        alert("!!?");
         let token = localStorage.getItem("resetToken");
+
         options.headers = {
             ...options.headers,
             Authorization: `Bearer ${token}`
@@ -124,7 +126,7 @@ export const axiosGet = async ({ endpoint, useToken = true, params = {} , handle
     fetchData({ endpoint, useToken, params, method: 'GET', handle});
 
 export const axiosPost = async ({ endpoint, body = {}, useToken = true, params = {} , handle = null, uniqueToken = false }) =>
-    fetchData({ endpoint, body, useToken, params, method: 'POST', handle, uniqueToken:false});
+    fetchData({ endpoint, body, useToken, params, method: 'POST', handle, uniqueToken });
 
 export const axiosDelete = async ({ endpoint, body = {}, useToken = true, params = {}, handle = null }) =>
     fetchData({ endpoint, body, useToken, params, method: 'DELETE', handle});

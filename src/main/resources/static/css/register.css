@@ -1,3 +1,19 @@
+:root {
+    --status-color: grey;
+}
+
+.duplicate-check-email::after,
+.duplicate-check-nickname::after {
+    content: "";
+    display: inline-block;
+    width: 10px;           /* 동그라미의 가로 크기 */
+    height: 10px;          /* 동그라미의 세로 크기 */
+    border-radius: 50%;    /* 원형으로 만들기 */
+    margin-left: 5px;      /* 텍스트와 동그라미 사이의 간격 */
+    background-color: var(--status-color, grey); /* 기본 색상은 grey */
+}
+
+
 .content-header{
     /* border: 1px solid black;  */
     margin-top: 20px;

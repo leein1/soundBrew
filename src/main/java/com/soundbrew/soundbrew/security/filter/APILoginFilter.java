@@ -24,6 +24,7 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
     CustomSecurityConfig에서 설정해준다
      */
     public APILoginFilter(String defaultFilterProcessesUrl) {
+
         super(defaultFilterProcessesUrl);
     }
 
@@ -59,6 +60,9 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
         Map<String,String> jsonData = parseRequestJSON(request);
 
         log.info("json Data : {}", jsonData);
+
+        // 요청 속성에 username 저장 - 실패 핸들러에서 사용
+        request.setAttribute("username", jsonData.get("username"));
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(jsonData.get("username"), jsonData.get("password"));

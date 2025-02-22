@@ -16,43 +16,49 @@
     <div class="content-body">
         <form id="register-form" class="register-form">
             <div class="input-group">
-                <label for="email">이메일:</label>
+                <label for="email" style="justify-content: space-between; display: flex">
+                    <span>이메일</span>
+                    <span class="duplicate-check-email">중복확인</span>
+                </label>
                 <div class="input-with-button">
                     <input type="email" id="email" name="email" required>
 <!--                    <button type="button" id="checkDuplicateEmail" class="check-button">중복확인</button>-->
-                    <input type="checkbox" id="emailChecked" disabled>
+                    <input type="checkbox" id="emailChecked" hidden>
                 </div>
             </div>
 
             <div class="input-group">
-                <label for="name">이름:</label>
+                <label for="name">이름</label>
                 <div class="input-with-button">
                     <input type="text" id="name" name="name" required>
                 </div>
             </div>
 
             <div class="input-group">
-                <label for="nickname">닉네임:</label>
+                <label for="nickname" style="justify-content: space-between; display: flex">
+                    <span>닉네임 ( 특수문자가 없는 2글자 이상 )</span>
+                    <span class="duplicate-check-nickname">중복확인</span>
+                </label>
                 <div class="input-with-button">
                     <input type="text" id="nickname" name="nickname" required>
 <!--                    <button type="button" id="checkDuplicateNickname" class="check-button">중복확인</button>-->
-                    <input type="checkbox" id="nicknameChecked" disabled>
+                    <input type="checkbox" id="nicknameChecked" hidden>
 
                 </div>
             </div>
 
             <div class="input-group">
-                <label for="password">비밀번호:</label>
+                <label for="password">비밀번호 8글자 이상 숫자,특수문자,대문자 1개 이상</label>
                 <input type="password" id="password" name="password" required>
             </div>
 
             <div class="input-group">
-                <label for="password-check">비밀번호 확인:</label>
+                <label for="password-check">비밀번호 확인</label>
                 <input type="password" id="password-check" name="password-check" required>
             </div>
 
             <div class="input-group">
-                <label>전화번호:</label>
+                <label>전화번호</label>
                 <div class="phone-number">
                     <input type="text" id="phone1" value="010" readonly>
                     <input type="text" id="phone2" maxlength="4" pattern="\d{4}" required>
@@ -61,12 +67,12 @@
             </div>
 
             <div class="input-group">
-                <label for="birth">생일 ( 선택 ):</label>
+                <label for="birth">생일 </label>
                 <input type="date" id="birth" name="birth" required>
             </div>
 
             <input type="hidden" name="phoneNumber" id="phoneNumber">
-            <button type="submit">제출</button>
+            <button type="submit">회원가입</button>
         </form>
 
     </div>
@@ -100,17 +106,19 @@
                     passwordCheckInput.style.borderColor = "";
                 } else if (password === passwordCheck) {
                     // 비밀번호와 확인 값이 일치하면 초록색 테두리
-                    passwordCheckInput.style.borderColor = "green";
+                    passwordCheckInput.style.borderColor = "limegreen";
                 } else {
                     // 비밀번호와 확인 값이 다르면 빨간색 테두리
                     passwordCheckInput.style.borderColor = "red";
                 }
             }
 
-            // 입력 이벤트 리스너 추가
+            // 비밀번호 입력 이벤트 리스너 추가
             passwordInput.addEventListener("input", validatePasswordMatch);
             passwordCheckInput.addEventListener("input", validatePasswordMatch);
 
+
+            //  이메일, 닉네임 중복 확인
             const emailInput = document.getElementById("email");
             const emailChecked = document.getElementById("emailChecked");
             let emailTimer;
@@ -119,20 +127,43 @@
             const nicknameChecked = document.getElementById("nicknameChecked");
             let nicknameTimer;
 
-            function updateInputBorder(inputElement, isAvailable) {
-                if (inputElement.value.trim() === "") {
-                    inputElement.style.borderColor = "gray"; // 기본값
-                } else if (isAvailable) {
-                    inputElement.style.borderColor = "green"; // 사용 가능
-                } else {
-                    inputElement.style.borderColor = "red"; // 중복됨
+            // function updateInputBorder(inputElement, isAvailable) {
+            //     if (inputElement.value.trim() === "") {
+            //         inputElement.style.borderColor = "gray"; // 기본값
+            //     } else if (isAvailable) {
+            //         inputElement.style.borderColor = "green"; // 사용 가능
+            //     } else {
+            //         inputElement.style.borderColor = "red"; // 중복됨
+            //     }
+            // }
+
+            // 상태에 따라 인풋와 중복확인 원의 색상을 함께 업데이트하는 함수
+            function updateInputAndCheckColor(inputElement, isAvailable, checkElement) {
+                let color = "gray";
+                if (inputElement.value.trim() !== "") {
+                    color = isAvailable ? "limegreen" : "red";
+                }
+                inputElement.style.borderColor = color;
+                if (checkElement) {
+                    checkElement.style.setProperty('--status-color', color);
                 }
             }
 
             async function checkDuplicate(inputElement, endpoint, checkedElement) {
                 if (inputElement.value.trim() === "") return;
 
+                // 해당 인풋에 맞는 중복확인 표시 요소 선택 (id에 따라 구분)
+                const checkElement = inputElement.id === "email"
+                    ? document.querySelector('.duplicate-check-email')
+                    : inputElement.id === "nickname"
+                        ? document.querySelector('.duplicate-check-nickname')
+                        : null;
+
                 inputElement.style.borderColor = "orange"; // 검사 중 표시 - 오렌지를 식별할경우는 거의 없을 것 같음
+                if (checkElement) {
+                    checkElement.style.setProperty('--status-color', "orange");
+                }
+
                 console.log(`${endpoint} 중복 체크 요청:`, inputElement.value); // 요청 로그 출력
 
                 const inputToJson = serializeInputToJSON(inputElement);
@@ -143,11 +174,15 @@
                     console.log(`${endpoint} 중복 체크 결과:`, response); // 응답 결과 로그 출력
 
                     checkedElement.checked = response.available;
-                    updateInputBorder(inputElement, response.available);
+                    // updateInputBorder(inputElement, response.available);
+                    updateInputAndCheckColor(inputElement, response.available, checkElement);
+
 
                 } catch (err) {
                     console.error(`${endpoint} 중복 체크 오류:`, err);
-                    inputElement.style.borderColor = "red"; // 오류 시 빨간색 처리
+                    // inputElement.style.borderColor = "red"; // 오류 시 빨간색 처리
+                    updateInputAndCheckColor(inputElement, false, checkElement);
+
                 }
             }
 
@@ -155,6 +190,8 @@
                 clearTimeout(emailTimer);
                 emailChecked.checked = false;
                 emailInput.style.borderColor = "gray"; // 입력 중 기본 회색
+                document.querySelector('.duplicate-check-email')
+                    .style.setProperty('--status-color', "gray");
 
                 emailTimer = setTimeout(() => checkDuplicate(emailInput, "/api/verification/email", emailChecked), 500);
             });
@@ -163,105 +200,14 @@
                 clearTimeout(nicknameTimer);
                 nicknameChecked.checked = false;
                 nicknameInput.style.borderColor = "gray"; // 입력 중 기본 회색
+                document.querySelector('.duplicate-check-nickname')
+                    .style.setProperty('--status-color', "gray");
 
                 nicknameTimer = setTimeout(() => checkDuplicate(nicknameInput, "/api/verification/nickname", nicknameChecked), 500);
             });
 
 
-            // emailInput.addEventListener("input", () => {
-            //     clearTimeout(emailTimer); // 기존 타이머 취소
-            //     emailChecked.checked = false; // 이메일 변경 시 체크 해제
-            //
-            //     emailTimer = setTimeout(async () => {
-            //         if (emailInput.value.trim() === "") return; // 입력값이 없으면 요청하지 않음
-            //
-            //         console.log("자동 이메일 중복 체크 실행:", emailInput.value);
-            //         const emailToJson = serializeInputToJSON(emailInput);
-            //
-            //         try {
-            //             const response = await axiosPost({ endpoint: "/api/verification/email", body: emailToJson });
-            //             emailChecked.checked = response.available; // 사용 가능하면 체크
-            //         } catch (err) {
-            //             console.error("이메일 중복 체크 오류:", err);
-            //         }
-            //     }, 500); // 0.5초 동안 추가 입력 없으면 실행
-            // });
-            //
-            // nicknameInput.addEventListener("input", () => {
-            //     clearTimeout(nicknameTimer); // 기존 타이머 취소
-            //     nicknameChecked.checked = false; // 닉네임 변경 시 체크 해제
-            //
-            //     nicknameTimer = setTimeout(async () => {
-            //         if (nicknameInput.value.trim() === "") return; // 입력값이 없으면 요청하지 않음
-            //
-            //         console.log("자동 닉네임 중복 체크 실행:", nicknameInput.value);
-            //         const nicknameToJson = serializeInputToJSON(nicknameInput);
-            //
-            //         try {
-            //             const response = await axiosPost({ endpoint: "/api/verification/nickname", body: nicknameToJson });
-            //             nicknameChecked.checked = response.available; // 사용 가능하면 체크
-            //         } catch (err) {
-            //             console.error("닉네임 중복 체크 오류:", err);
-            //         }
-            //     }, 500); // 0.5초 동안 추가 입력 없으면 실행
-            // });
-
-
         });
-
-        //  이메일 중복 체크
-        // document.getElementById("checkDuplicateEmail").addEventListener("click", async (e) =>{
-        //
-        //     console.log("이메일 중복 누름");
-        //
-        //     const emailInput = document.getElementById('email');
-        //     const emailToJson = serializeInputToJSON(emailInput);
-        //     console.log(emailToJson); // { email: "test@example.com" }
-        //
-        //     // const email 의 값이 현재 "입력값" 으로 들어감 "email" : "입력값" 형태로 보내야 컨트롤러에서 바인딩 가능
-        //     try{
-        //
-        //        const response = await axiosPost({endpoint:"/api/verification/email", body:emailToJson});
-        //        const emailChecked = response.available;
-        //
-        //         if (emailChecked) {
-        //             document.getElementById("emailChecked").checked = true; // 체크박스 체크
-        //         } else {
-        //             document.getElementById("emailChecked").checked = false; // 체크박스 해제
-        //         }
-        //
-        //     } catch (err){
-        //         console.log(err);
-        //     }
-        //
-        // });
-
-        //  닉네임 중복 체크
-        // document.getElementById("checkDuplicateNickname").addEventListener("click", async (e) =>{
-        //
-        //     console.log("닉네임 중복 누름");
-        //
-        //     const nicknameInput = document.getElementById('nickname');
-        //     const nicknameToJson = serializeInputToJSON(nicknameInput);
-        //     console.log(nicknameToJson); // { email: "test@example.com" }
-        //
-        //     // const email 의 값이 현재 "입력값" 으로 들어감 "email" : "입력값" 형태로 보내야 컨트롤러에서 바인딩 가능
-        //     try{
-        //
-        //         const response = await axiosPost({endpoint:"/api/verification/nickname", body:nicknameToJson});
-        //         const nicknameChecked = response.available;
-        //
-        //         if (nicknameChecked) {
-        //             document.getElementById("nicknameChecked").checked = true; // 체크박스 체크
-        //         } else {
-        //             document.getElementById("nicknameChecked").checked = false; // 체크박스 해제
-        //         }
-        //
-        //     } catch (err){
-        //         console.log(err);
-        //     }
-        //
-        // });
 
         // 폼 데이터 가져오기
         document.getElementById("register-form").addEventListener("submit", async (e) =>{
@@ -269,6 +215,9 @@
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
 
+
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
 
             try{
                 const phone1 = document.getElementById('phone1').value;

@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.controller;
 
+import com.soundbrew.soundbrew.domain.user.User;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
@@ -13,6 +14,7 @@ import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -62,13 +64,21 @@ public class MeController {
 //    service - 수정한 값 null 검증 후 수정
 //    @ApiOperation(value = "me PATCH",notes = "PATCH 방식으로 내 정보 수정")
     @PatchMapping(value = "")
-    public ResponseEntity<ResponseDTO<String>> updateMe(@RequestBody UserDTO userDTO){  //추후 토큰으로 변경
+    public ResponseEntity<ResponseDTO<String>> updateMe(@RequestBody UserDTO userDTO, Authentication authentication){
+
+        int authenticatedUserId = authenticationService.getUserId(authentication);
+
+        if (authenticatedUserId != userDTO.getUserId()) {
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                    ResponseDTO.<String>withMessage().message("수정 권한이 없습니다.").build()
+            );
+        }
+
+        log.info("요청된 업데이트 데이터: {}", userDTO);
 
         ResponseDTO<String> responseDTO = userService.updateUser(userDTO);
-
-
-        return ResponseEntity.ok().body(responseDTO);
-
+        return ResponseEntity.ok(responseDTO);
     }
 
 
@@ -81,6 +91,17 @@ public class MeController {
         int userId = authenticationService.getUserId(authentication);
 
         ResponseDTO<String> responseDTO = userService.deleteUser(userId);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<ResponseDTO<String>> changePassword(Authentication authentication,@RequestBody UserDTO userDTO){
+
+        int userId = authenticationService.getUserId(authentication);
+        userDTO.setUserId(userId);
+
+        ResponseDTO responseDTO = userService.updatePassword(userDTO);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -101,19 +122,9 @@ public class MeController {
         int subscriptionId = userDTO.getSubscriptionId();
 
         // subscriptionId로 구독제 정보 가져오기
-        try {
+        ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.getSubscription(subscriptionId);
 
-            ResponseDTO<SubscriptionDTO> responseDTO = subscriptionService.getSubscription(subscriptionId);
-
-            return ResponseEntity.ok().body(responseDTO);
-
-        } catch (NoSuchElementException e) {
-
-            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                    .message("구독중인 구독제가 없습니다.").build();
-
-            return ResponseEntity.ok().body(responseDTO);
-        }
+        return ResponseEntity.ok().body(responseDTO);
 
 
     }

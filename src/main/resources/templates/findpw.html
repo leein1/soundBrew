@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../css/findpw.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        비밀번호 찾기
+
+    </div>
+
+    <div class="content-body">
+        <form class="findpw-form" id="findpw-form">
+            <!-- <div class="input-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" placeholder="이메일 입력" required>
+            </div> -->
+            <div class="input-group">
+                <label for="email">이메일 ( 가입시 등록한 이메일을 입력해주세요 )</label>
+                <input type="email" id="email" name="email" placeholder="이메일 입력" required>
+            </div>
+
+            <div class="input-group">
+                <label for="name">이름 ( 가입시 등록한 이름을 입력해주세요 )</label>
+                <input type="name" id="name" name="name" placeholder="이름 입력" required>
+            </div>
+
+            <button type="submit">확인</button>
+
+        </form>
+    </div>
+
+    <div class="content-footer">
+<!--        <a href="#" class="footer-link">비밀번호 찾기</a>-->
+
+    </div>
+</div>
+</body>
+<th:block layout:fragment="script">
+    <script type="module">
+        import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+        import { serializeInputToJSON } from '/js/serialize/inputToJson.js';
+        import { axiosPost } from '/js/fetch/standardAxios.js';
+        import { inputHandler } from '/js/check/inputHandler.js';
+
+        document.getElementById("findpw-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+
+            try {
+
+
+                const submitButton = document.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+
+                //폼 가져오기
+                const form = document.getElementById("findpw-form");
+
+                const jsonData = serializeFormToJSON(form);
+
+                alert(jsonData.toString());
+
+                const {errors, processedData} = inputHandler(jsonData, form);
+
+                const handle = {
+                    onSuccess:(data)=>{
+                        alert(data.message);
+                        window.location.href = "/login";
+                    },
+                    onNotFound:(data)=>{
+                        alert(data.message);
+                        window.location.href="/help/find-password";
+                    }
+                }
+
+                if (!errors) {
+                    await axiosPost({endpoint: "/api/help/find-password", body: processedData, handle: handle});
+
+                }
+            }catch (err){
+                console.error(err);
+                submitButton.disabled = false;
+
+            }
+        });
+
+    </script>
+</th:block>
+
+</html>
+
+
+
+
+                
+

@@ -18,7 +18,7 @@
     /* padding: 60px; */
 }
 
-.login-form {
+.resetpw-form {
     /* border: 1px black solid; */
     
     border-radius: 8px;
@@ -65,7 +65,7 @@
 
 
 
-.login-form button {
+.resetpw-form button {
     background-color: #5b9bd5;
     /* color: white; */
     font-size: 16px;
@@ -81,7 +81,7 @@
     /* box-sizing: border-box; */
 }
 
-.login-form button:hover {
+.resetpw-form button:hover {
     background-color: #4a86c5;
 }
 

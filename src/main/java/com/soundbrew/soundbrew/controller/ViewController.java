@@ -48,18 +48,61 @@ public class ViewController {
 //
 //    }
 
-//    @GetMapping("/admin")
-//    public void adminMain(){}
+    @GetMapping("/help/find-password")
+    public String findPassword(){
 
-//    @GetMapping("/search")
-//    public String getSearch(RequestDTO requestDTO) {
-//
-//
-//        String link = requestDTO.getLink();
-//
-//        return "redirect:/search" + link;
-//
-//    }
+        return "findpw";
+    }
+
+    @GetMapping("/help/reset-password")
+    public String resetPassword(){
+
+        return "resetpw";
+    }
+
+    @GetMapping("/change-password")
+    public String changePassword(){
+
+        return "changepw";
+    }
+
+    @GetMapping("/mySubscription")
+    public void getMySubscription(){}
+
+    @GetMapping("/subscription")
+    public void getSubscription(){}
+
+
+
+    @GetMapping("/verificationPassword")
+    public void getVerificationPassword(){}
+
+    @GetMapping("/myInfo")
+//    @PreAuthorize("hasRole('USER')")
+    public void getMe(){
+
+        log.warn("----------------------------------ViewController /MyInfo 호출");
+    }
+
+    @GetMapping("")
+    public String getMain(){
+
+        return "hello";
+
+    }
+
+    @GetMapping("/admin")
+    public void adminMain(){}
+
+    @GetMapping("/search")
+    public String getSearch(RequestDTO requestDTO) {
+
+
+        String link = requestDTO.getLink();
+
+        return "redirect:/search" + link;
+
+    }
 
     //====== 경동훈 SPA view ======
 
@@ -69,19 +112,14 @@ public class ViewController {
         return "sound/music-list";
     }
 
-    @RequestMapping("/a")
-    public String a(){
-        return "template";
+    @RequestMapping(value = {"/me/sounds/**"})
+    public String soundManageSPA(){
+        return "sound/music-manage";
     }
 
-//    @RequestMapping(value = {"/me/sounds/**"})
-//    public String soundManageSPA(){
-//        return "sound/music-manage";
-//    }
-//
-//    //실제로는 /admin/sounds/...
-//    @RequestMapping(value= {"/admin/**"})
-//    public String soundAdmin(){
-//        return "admin/sounds";
-//    }
+    //실제로는 /admin/sounds/...
+    @RequestMapping(value= {"/admin/**"})
+    public String soundAdmin(){
+        return "admin/sounds";
+    }
 }

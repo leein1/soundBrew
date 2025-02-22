@@ -96,6 +96,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
                                 user.creditBalance,
                                 user.profileImagePath,
                                 user.birth,
+                                user.credentialsNonExpired,
                                 user.createDate, // BaseDTO의 필드
                                 user.modifyDate  // BaseDTO의 필드
 
@@ -139,6 +140,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
                                 user.creditBalance,
                                 user.profileImagePath,
                                 user.birth,
+                                user.credentialsNonExpired,
                                 user.createDate, // BaseDTO의 필드
                                 user.modifyDate  // BaseDTO의 필드
 
@@ -201,6 +203,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
                                 user.creditBalance,
                                 user.profileImagePath,
                                 user.birth,
+                                user.credentialsNonExpired,
                                 user.createDate,
                                 user.modifyDate
                         ).as("userDTO"),

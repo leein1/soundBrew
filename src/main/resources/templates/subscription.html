@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../css/subscription.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        구독제
+
+    </div>
+
+    <div class="content-body">
+        <div class="subscription-container">
+            <div class="subscription-card">
+                <h2>Free</h2>
+                <p>월 결제 금액: 0원</p>
+                <p>월 크레딧: 0</p>
+                <button type="button">구독하기</button>
+            </div>
+            <div class="subscription-card">
+                <h2>Basic</h2>
+                <p>월 결제 금액: 10,000원</p>
+                <p>월 크레딧: 50</p>
+                <button type="button">구독하기</button>
+            </div>
+            <div class="subscription-card">
+                <h2>Premium</h2>
+                <p>월 결제 금액: 20,000원</p>
+                <p>월 크레딧: 100</p>
+                <button type="button">구독하기</button>
+            </div>
+            <div class="subscription-card vip-card">
+                <h2>moon suck choi</h2>
+                <p>월 결제 금액: 30,000원</p>
+                <p>이 남자를 무제한으로 사용하세요!</p>
+                <button type="button">구독하기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-footer">
+<!--        <a href="#" class="footer-link">비밀번호 찾기</a>-->
+
+    </div>
+</div>
+</body>
+<th:block layout:fragment="script">
+    <script type="module">
+        import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+        import { serializeInputToJSON } from '/js/serialize/inputToJson.js';
+        import { axiosPatch } from '/js/fetch/standardAxios.js';
+        import { inputHandler } from '/js/check/inputHandler.js';
+
+
+    </script>
+</th:block>
+
+</html>
+
+
+
+
+                
+

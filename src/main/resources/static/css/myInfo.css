@@ -1,9 +1,25 @@
+:root {
+    --status-color: grey;
+}
+
+.duplicate-check-email::after,
+.duplicate-check-nickname::after {
+    content: "";
+    display: inline-block;
+    width: 10px;           /* 동그라미의 가로 크기 */
+    height: 10px;          /* 동그라미의 세로 크기 */
+    border-radius: 50%;    /* 원형으로 만들기 */
+    margin-left: 5px;      /* 텍스트와 동그라미 사이의 간격 */
+    background-color: var(--status-color, grey); /* 기본 색상은 grey */
+}
+
+
 .content-header{
     /* border: 1px solid black;  */
     margin-top: 20px;
-    height: 50px; 
+    height: 50px;
     font-size: 2rem;
-    display: flex; 
+    display: flex;
     justify-content: center;
     /* align-items: center; */
 }
@@ -17,8 +33,8 @@
     /* padding: 60px; */
 }
 
-.register-form {
-    
+.myInfo-form {
+
     border-radius: 8px;
     /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     /* padding: 20px; */
@@ -27,7 +43,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px; /* 각 입력 필드 그룹 간 간격 통일 */
-    
+
 }
 
 .input-group {
@@ -48,10 +64,10 @@
     /* color: #333; */
 }
 
-.register-form input[type="text"],
-.register-form input[type="email"],
-.register-form input[type="password"],
-.register-form input[type="date"]{
+.myInfo-form input[type="text"],
+.myInfo-form input[type="email"],
+.myInfo-form input[type="password"],
+.myInfo-form input[type="date"]{
     font-size: 14px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -93,13 +109,13 @@
     text-align: center;
 }
 
-.register-form input:focus {
+.myInfo-form input:focus {
     border-color: #5b9bd5;
     outline: none;
     box-shadow: 0 0 4px rgba(91, 155, 213, 0.5);
 }
 
-.register-form button {
+.myInfo-form button {
     background-color: #5b9bd5;
     color: white;
     font-size: 16px;
@@ -115,11 +131,16 @@
     /* box-sizing: border-box; */
 }
 
-.register-form button:hover {
+.myInfo-form button:hover {
     background-color: #4a86c5;
 }
 
-.register-form button:disabled {
+.myInfo-form button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.cancel-btn {
+    background-color: indianred;
+    color: white;
 }

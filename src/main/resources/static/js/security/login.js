@@ -5,9 +5,16 @@ export function getLoginFormProcess() {
     document.getElementById("login-form").addEventListener("submit", async (event) => {
         event.preventDefault(); // 폼의 기본 동작 막기
 
+        const loginForm = document.getElementById("login-form");
+        // submit 버튼만 선택하여 비활성화
+        const submitButton = loginForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
         const username = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const userInput = { username, password };
+
+
 
         try {
 
@@ -28,7 +35,18 @@ export function getLoginFormProcess() {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
 
-            alert(error.response.data.message);
+            alert(
+                error.response.data.message
+                + "\n" +  error.response.data.redirectUrl
+                + "\n" + error.response.data.resetToken
+            );
+
+            // submitButton.disabled = false;
+
+            const resetToken = error.response.data.resetToken
+
+            localStorage.setItem("resetToken",resetToken);
+
             window.location.href = error.response.data.redirectUrl;
         }
     });

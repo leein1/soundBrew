@@ -2,7 +2,7 @@ package com.soundbrew.soundbrew.security.filter;
 
 import com.google.gson.Gson;
 import com.soundbrew.soundbrew.security.exception.RefreshTokenException;
-import com.soundbrew.soundbrew.util.JWTUtil;
+import com.soundbrew.soundbrew.security.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +30,25 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+
+        String path = request.getRequestURI();
+
+        return path.startsWith("/css/")
+                || path.startsWith("/js/")
+                || path.startsWith("/images/")
+                || path.startsWith("/fonts/")
+                || path.startsWith("/favicon.ico");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         log.info("--------------------------------------------RefreshTokenFilter.dofilterInternal ---------------------");
         String path = request.getRequestURI();
 
         if(!path.equals(refreshPath)) {
-            log.info("요청 경로가 refreshPath가 아님 - 요청 경로 : {}" + path);
+            log.info("요청 경로가 refreshPath가 아님 - 요청 경로 : {}", path);
             filterChain.doFilter(request, response);
             return;
         }

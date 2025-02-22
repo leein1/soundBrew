@@ -7,6 +7,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService {
 
+    public boolean isPasswordReset(Authentication authentication){
+
+        boolean isPasswordReset = false;
+
+        isPasswordReset = authentication.getAuthorities().stream()
+                .map(role -> role.getAuthority())
+                .anyMatch(role -> role.equals("PASSWORD_RESET"));
+
+        return isPasswordReset;
+    }
+
     public boolean isUser(Authentication authentication){
 
         boolean isUser = false;
@@ -75,5 +86,7 @@ public class AuthenticationService {
 
         return userId;
     }
+
+
 
 }

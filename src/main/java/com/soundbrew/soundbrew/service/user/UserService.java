@@ -5,6 +5,7 @@ import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
+import org.apache.coyote.Response;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -43,16 +44,22 @@ public interface UserService {
 
     Boolean isNicknameExist(String nickname);
 
+    // 이메일과 이름으로 조회
+    ResponseDTO<UserDTO> getUserByEmailAndName(String email, String name);
+
     //  등록 및 수정
 
     //  회원 가입
     ResponseDTO<String> registerUser(UserDTO userDTO);
 
+
     //  회원 정보 수정
     ResponseDTO<String> updateUser(UserDTO userDTO);
 
+    ResponseDTO<String> generateTemporaryPassword(UserDTO userDTO);
+
     //  비밀번호 수정
-    ResponseDTO<String> updatePassword(int userId, String newPassword);
+    ResponseDTO<String> updatePassword(UserDTO userDTO);
 
     public ResponseDTO<String> verifyPassword(int userId, String inputPassword);
 

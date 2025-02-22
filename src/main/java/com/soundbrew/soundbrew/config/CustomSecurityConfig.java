@@ -7,7 +7,7 @@ import com.soundbrew.soundbrew.handler.Custom403Handler;
 import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.filter.APILoginFilter;
 import com.soundbrew.soundbrew.security.filter.TokenCheckFilter;
-import com.soundbrew.soundbrew.util.JWTUtil;
+import com.soundbrew.soundbrew.security.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -111,22 +111,15 @@ public class CustomSecurityConfig {
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
 
         // 인증 실패 핸들러
-        APILoginFailureHandler failureHandler = new APILoginFailureHandler();
+        APILoginFailureHandler failureHandler = new APILoginFailureHandler(jwtUtil);
         apiLoginFilter.setAuthenticationFailureHandler(failureHandler);
 
-        // 필터 순서
-//        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 가장 먼저 실행
-//        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class); // 로그인 필터
-//        http.addFilterAfter(tokenCheckFilter(jwtUtil), APILoginFilter.class); // 액세스 토큰 검증은 로그인 필터 이후
 
-//        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), TokenCheckFilter.class);
-
-
+        //  필터 순서 지정
         http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 리프레시 토큰 처리
         http.addFilterAfter(apiLoginFilter, RefreshTokenFilter.class); // 로그인 처리
         http.addFilterAfter(tokenCheckFilter(), APILoginFilter.class); // 액세스 토큰 검증
+
 
         // HttpSecurity 설정
         http.authorizeRequests()
@@ -143,14 +136,6 @@ public class CustomSecurityConfig {
                 .and()
                 .logout().permitAll();
 
-        // 요청 경로별 권한 설정
-//        http.authorizeHttpRequests((requests) -> requests
-//                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-//                .requestMatchers("/generateToken", "/swagger-ui/**", "/v3/api-docs/**", "/register", "/api/users/**", "/", "/files/**", "/api/sample/**").permitAll()
-//                .requestMatchers("/api/me").authenticated()
-//                .anyRequest().authenticated()
-//        );
-
         //  csrf 비활성 / 세션 비활성
         http.cors();
         http.csrf().disable();
@@ -162,30 +147,30 @@ public class CustomSecurityConfig {
         return http.build();
     }
 
-    private List<String> publicPaths(){
-        return List.of(
-                "/swagger-ui/**",
-                "/v3/api-docs/**",
-                "/fonts/**",
-                "/generateToken",
-                "/register",
-                "/api/users/**",
-                "/",
-                "/api/admin/tags",
-                "/test-s3",
-                "/me/**",
-                "/api/me/**",
-                "/files/**",
-                "/sounds/**",
-                "/api/sounds/**",
-                "/stream/**",
-                "/api/admin/**",
-                "/admin/**",
-//                        "/api/**",  // 모든 API 요청을 인증 없이 허용
-                "/myInfo",
-                "/api/sample/**"
-        );
-    }
+//    private List<String> publicPaths(){
+//        return List.of(
+//                "/swagger-ui/**",
+//                "/v3/api-docs/**",
+//                "/fonts/**",
+//                "/generateToken",
+//                "/register",
+//                "/api/users/**",
+//                "/",
+//                "/api/admin/tags",
+//                "/test-s3",
+//                "/me/**",
+//                "/api/me/**",
+//                "/files/**",
+//                "/sounds/**",
+//                "/api/sounds/**",
+//                "/stream/**",
+//                "/api/admin/**",
+//                "/admin/**",
+////                        "/api/**",  // 모든 API 요청을 인증 없이 허용
+//                "/myInfo",
+//                "/api/sample/**"
+//        );
+//    }
 
 //    @Bean
 //    public WebSecurityCustomizer webSecurityCustomizer() {
