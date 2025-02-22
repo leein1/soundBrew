@@ -272,12 +272,12 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
                     case "paymentStatus": // Boolean 필드 정렬
                         orderSpecifier = sortDir.equalsIgnoreCase("asc")
                                 ? new CaseBuilder()
-                                .when(userSubscription.paymentStatus.eq("true"))
+                                .when(userSubscription.paymentStatus.isTrue())
                                 .then(1)
                                 .otherwise(0)
                                 .asc()
                                 : new CaseBuilder()
-                                .when(userSubscription.paymentStatus.eq("true"))
+                                .when(userSubscription.paymentStatus.isTrue())
                                 .then(1)
                                 .otherwise(0)
                                 .desc();

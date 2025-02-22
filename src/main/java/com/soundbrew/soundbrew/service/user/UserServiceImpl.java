@@ -189,17 +189,17 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByNickname(nickname).isPresent();
     }
 
-    @Override
-    public ResponseDTO<UserDTO> getUserByEmailAndName(String email, String name) {
-
-        User result = userRepository.findByEmailAndName(email,name).orElseThrow();
-
-        UserDTO userDTO = modelMapper.map(result,UserDTO.class);
-
-        return ResponseDTO.<UserDTO>withSingleData()
-                .dto(userDTO)
-                .build();
-    }
+//    @Override
+//    public ResponseDTO<UserDTO> getUserByEmailAndName(String email, String name) {
+//
+//        User result = userRepository.findByEmailAndName(email,name).orElseThrow();
+//
+//        UserDTO userDTO = modelMapper.map(result,UserDTO.class);
+//
+//        return ResponseDTO.<UserDTO>withSingleData()
+//                .dto(userDTO)
+//                .build();
+//    }
 
     //    회원 가입
     @Transactional
@@ -244,6 +244,9 @@ public class UserServiceImpl implements UserService{
         String beforeEncodePassword = userDTO.getPassword();
         //  비밀번호 인코딩
         userDTO.setPassword(passwordEncoder.encode(beforeEncodePassword));
+        userDTO.setSubscriptionId(1);
+        userDTO.setCredentialsNonExpired(true);
+        userDTO.setProfileImagePath("default_profile_image.jpg");
 
         //  user 테이블 save()
         User user = userRepository.save(userDTO.toEntity());

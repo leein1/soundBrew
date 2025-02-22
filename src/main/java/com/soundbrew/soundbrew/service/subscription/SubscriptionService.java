@@ -20,7 +20,7 @@ public interface SubscriptionService {
 
     ResponseDTO<String> updateSubscriptionId(int userId, int subscriptionId);
 
-    ResponseDTO<String> updatePaymentStatus(int userId, String paymentStatus);
+    ResponseDTO<String> updatePaymentStatus(int userId, boolean paymentStatus);
 
     ResponseDTO<String> updateSubscription(int subscriptionId, SubscriptionDTO subscriptionDTO);
 }

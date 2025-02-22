@@ -88,10 +88,10 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     }
 
     @Override
-    public ResponseDTO<String> updatePaymentStatus(int userId, String paymentStatus) {
-        if (!paymentStatus.equalsIgnoreCase("true") && !paymentStatus.equalsIgnoreCase("false")) {
-            throw new IllegalArgumentException("부적절한 결제 상태 표현 : " + paymentStatus);
-        }
+    public ResponseDTO<String> updatePaymentStatus(int userId, boolean paymentStatus) {
+//        if (!paymentStatus.equalsIgnoreCase("true") && !paymentStatus.equalsIgnoreCase("false")) {
+//            throw new IllegalArgumentException("부적절한 결제 상태 표현 : " + paymentStatus);
+//        }
 
         // 바꾸자 하는 회원이 있나?
         User user = userRepository.findById(userId).orElseThrow();

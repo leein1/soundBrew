@@ -97,7 +97,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PatchMapping("/users/{userId}/payment")
-    public ResponseEntity<ResponseDTO<String>> updatePaymentStatus(@PathVariable int userId, @RequestBody String paymentStatus){
+    public ResponseEntity<ResponseDTO<String>> updatePaymentStatus(@PathVariable int userId, @RequestBody boolean paymentStatus){
         ResponseDTO<String> responseDTO = subscriptionService.updatePaymentStatus(userId, paymentStatus);
 
         return ResponseEntity.ok().body(responseDTO);
