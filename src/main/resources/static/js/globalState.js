@@ -135,13 +135,14 @@ function displaySortBar(state){
         '/me/sounds/tracks':'none',
         '/me/sounds/tags':'none',
         //admin
-        '/admin/sounds':'none',
+        '/admin':'none',
         '/admin/tracks':'none',
         '/admin/albums':'none',
         '/admin/albums/verify':'none',
         '/admin/tags/spelling':'none',
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'none',
+        '/admin/users':'none'
     };
 
     let sortItem = document.querySelector('.music-sort');
@@ -168,13 +169,14 @@ function displayViewTypeBar(state){
         '/me/sounds/tracks':'none',
         '/me/sounds/tags':'none',
         //admin
-        '/admin/sounds':'none',
+        '/admin':'none',
         '/admin/tracks':'none',
         '/admin/albums':'none',
         '/admin/albums/verify':'none',
         '/admin/tags/spelling':'none',
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'none',
+        '/admin/users':'none'
     };
 
     let viewTypeItem = document.querySelector('.view-type');
@@ -201,13 +203,14 @@ function displayTagsBar(state){
         '/me/sounds/tracks':'none',
         '/me/sounds/tags':'none',
         //admin
-        '/admin/sounds':'none',
+        '/admin':'none',
         '/admin/tracks':'none',
         '/admin/albums':'none',
         '/admin/albums/verify':'none',
         '/admin/tags/spelling':'none',
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'block',
+        '/admin/users':'none'
     };
 
     let tagsBarItem = document.querySelector('.music-tag-sort');

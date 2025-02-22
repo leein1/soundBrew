@@ -90,11 +90,11 @@ export function renderInfoSort() {
 
   item.innerHTML = `
     <div class="sort-01">
-      <span class="music-sort-left" id="sortKeyword">
+      <span class="music-sort-left" id="sortKeywordStatistic">
         <img src="/images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정보 전환" id="sortIcon">정보 전환
       </span>
       <!-- 드롭다운 메뉴 -->
-      <div class="music-sort-menu" id="musicSortMenu">
+      <div class="music-sort-menu" id="musicSortMenuStatistic">
         <ul>
           <li data-category="music">음원관련 통계</li>
           <li data-category="tag">태그관련 통계</li>
@@ -134,8 +134,8 @@ export function renderInfoSort() {
 
 // 드롭다운 메뉴 이벤트 설정 함수
 function setupInfoDropdownEvents() {
-  const sortKeyword = document.getElementById('sortKeyword');
-  const menu = document.getElementById('musicSortMenu');
+  const sortKeyword = document.getElementById('sortKeywordStatistic');
+  const menu = document.getElementById('musicSortMenuStatistic');
 
   // 정렬 아이콘 클릭 시 드롭다운 토글 (CSS에서 .visible에 대한 스타일 정의 필요)
   sortKeyword.addEventListener('click', () => {

@@ -298,15 +298,14 @@ export async function renderMyTags(data){
                     <!-- 태그 리스트가 여기에 동적으로 추가됩니다. -->
                 </ul>
                 <button type="button" class="close-modal">닫기</button>
+                                    <button type="button" class="reset-tags">태그 초기화</button>
+                                    <button type="submit" class="apply-tags">수정 확정</button>
             </div>
             <section class="uplaod-section">
                 <form id="myForm">
-                    <h2>곡에 적절한 태그를 선택해주세요.</h2>
                     <ul id="selected-tags">
                         <!-- 선택된 태그가 여기에 표시됩니다. -->
                     </ul>
-                    <button type="button" class="reset-tags">태그 초기화</button>
-                    <button type="submit">수정 확정</button>
                 </form>
             </section>
         </div>

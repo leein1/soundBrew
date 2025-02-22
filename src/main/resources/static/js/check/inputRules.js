@@ -33,11 +33,6 @@ export const validationRules = {
         maxLength:255,
         pattern: /^[a-zA-Z0-9가-힣\s]+$/,
     },
-    'description':{
-        required: true,
-        maxLength: 500,
-        pattern: /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ!?\s]+$/ // 한글 초성도 됨 , 느낌표 물음표 가능, 공백도 됨
-    },
     'albumDTO.albumName':{ // 중범주 포함 앨범네임
         required: true,
         minLength: 2,
@@ -49,6 +44,11 @@ export const validationRules = {
         minLength:2,
         maxLength:255,
         pattern: /^[a-zA-Z0-9\-!@?._/()\s'"]+$/,
+    },
+    'description':{
+        required: true,
+        maxLength: 500,
+        pattern: /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ!?.,/'_"-()\s]+$/ // 한글 초성도 됨 , 느낌표 물음표 가능, 공백도 됨
     },
     'albumDTO.description':{
         required: true,

@@ -150,6 +150,12 @@ td {
     border: none;
     display: none; /* 기본적으로 숨김 */
 }
+.visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3sease-in-out, transform 0.3sease-in-out;
+}
 .choose-paymentStatus  {
     background-color: #2196F3;
     color: white;

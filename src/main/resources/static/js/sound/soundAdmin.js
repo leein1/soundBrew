@@ -4,6 +4,8 @@ import {inputHandler} from '/js/check/inputHandler.js';
 import {axiosGet, axiosPatch, axiosPost, axiosDelete} from '/js/fetch/standardAxios.js';
 import {formatDate} from "/js/formatDate.js";
 
+
+
 // 전역 함수로 enableAdminEditing
 window.enableAdminEditing = function(button) {
     const row = button.closest('tr');
@@ -260,21 +262,26 @@ function registerTableHeaderSortForTrack() {
   });
 }
 
-// 드롭다운 메뉴 렌더링 함수
+
 export function renderAdminSoundsSort() {
   const container = document.getElementById('chart-selector-container');
   if (!container) return;
+
+  // 고유 식별자 생성 (timestamp와 랜덤 숫자 조합)
+  const uniqueSuffix = Date.now() + Math.floor(Math.random() * 1000);
+  const sortKeywordId = `sortKeyword_${uniqueSuffix}`;
+  const musicSortMenuId = `musicSortMenu_${uniqueSuffix}`;
 
   const item = document.createElement('div');
   item.classList.add('music-sort'); // 기존 스타일 재사용
 
   item.innerHTML = `
     <div class="sort-01">
-      <span class="music-sort-left" id="sortKeyword">
-        <img src="/images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정보 전환" id="sortIcon">정보 전환
+      <span class="music-sort-left" id="${sortKeywordId}">
+        <img src="/images/swap_vert_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="정보 전환">정보 전환
       </span>
       <!-- 드롭다운 메뉴 -->
-      <div class="music-sort-menu" id="musicSortMenu">
+      <div class="music-sort-menu" id="${musicSortMenuId}">
         <ul>
           <li data-category="album">앨범 정보</li>
           <li data-category="music">음원 정보</li>
@@ -286,15 +293,15 @@ export function renderAdminSoundsSort() {
   `;
 
   container.appendChild(item);
-  setupAdminSoundsDropdownEvents();
+  setupAdminSoundsDropdownEvents(sortKeywordId, musicSortMenuId);
 }
 
-// 드롭다운 메뉴 이벤트 설정 함수
-function setupAdminSoundsDropdownEvents() {
-  const sortKeyword = document.getElementById('sortKeyword');
-  const menu = document.getElementById('musicSortMenu');
+// 드롭다운 메뉴 이벤트 설정 함수 (고유 ID를 파라미터로 받음)
+function setupAdminSoundsDropdownEvents(sortKeywordId, musicSortMenuId) {
+  const sortKeyword = document.getElementById(sortKeywordId);
+  const menu = document.getElementById(musicSortMenuId);
 
-  // 정렬 아이콘 클릭 시 드롭다운 토글 (CSS에서 .visible에 대한 스타일 정의 필요)
+  // 정렬 아이콘 또는 텍스트 클릭 시 드롭다운 토글
   sortKeyword.addEventListener('click', () => {
     menu.classList.toggle('visible');
   });
@@ -305,11 +312,11 @@ function setupAdminSoundsDropdownEvents() {
       // 드롭다운 닫기
       menu.classList.remove('visible');
 
-      // active 스타일 적용 (필요에 따라 CSS 수정)
+      // 모든 항목에서 active 클래스 제거 후, 현재 항목에 추가
       menu.querySelectorAll('li').forEach(item => item.classList.remove('active'));
       li.classList.add('active');
 
-      // data-category 값에 따라 해당 URL로 이동
+      // data-category 값에 따라 라우터 이동 처리
       const category = li.getAttribute('data-category');
       switch (category) {
         case 'album':
@@ -363,7 +370,7 @@ window.cancelChanges = function(button) {
 // 폼을 서버로 전송하는 함수
 window.sendAdminAlbumsUpdateRequest = async function(albumId, formData) {
     const response = serializeFormToJSON(formData);
-
+    console.log(response);
     const { errors, processedData } = inputHandler(response,formData);
 
     const handle= {
@@ -664,7 +671,6 @@ export async function renderTagsNew(data) {
         const handle = {
             onSuccess: () => {
                 alert("태그를 정상적으로 생성했습니다.");
-                router.navigate('/api/tags/spelling');
             },
             onBadRequest: () => {
                 alert("태그를 정상적으로 생성하지 못했습니다.");
@@ -681,6 +687,8 @@ export async function renderTagsNew(data) {
                 alert(`잘못된 태그 타입: ${tagType}`);
             }
             await axiosPost({ endpoint: `/api/admin/tags`, body: tagsDto });
+
+            document.getElementById('soundDetailModal').style.display = 'none';
         }
     });
 

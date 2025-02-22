@@ -122,7 +122,7 @@ export function inputHandler(input, form) {
     let firstErrorField = null;
 
     Object.keys(flatInput).forEach((flatKey) => {
-        let value = flatInput[flatKey];
+        let value = flatInput[flatKey];     
 
         // 처리 규칙 적용
         value = inputProcessor(flatKey, value, processingRules);
