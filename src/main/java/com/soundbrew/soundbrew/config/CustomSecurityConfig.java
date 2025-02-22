@@ -111,7 +111,7 @@ public class CustomSecurityConfig {
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
 
         // 인증 실패 핸들러
-        APILoginFailureHandler failureHandler = new APILoginFailureHandler();
+        APILoginFailureHandler failureHandler = new APILoginFailureHandler(jwtUtil);
         apiLoginFilter.setAuthenticationFailureHandler(failureHandler);
 
 
@@ -119,6 +119,7 @@ public class CustomSecurityConfig {
         http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 리프레시 토큰 처리
         http.addFilterAfter(apiLoginFilter, RefreshTokenFilter.class); // 로그인 처리
         http.addFilterAfter(tokenCheckFilter(), APILoginFilter.class); // 액세스 토큰 검증
+
 
         // HttpSecurity 설정
         http.authorizeRequests()
