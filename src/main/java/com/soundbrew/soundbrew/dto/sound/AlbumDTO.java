@@ -51,7 +51,7 @@ public class AlbumDTO extends BaseEntityDTO {
         super.setModifyDate(modifyDate);
     }
 
-    public Album toEntity(List<AlbumMusic> albumMusic) {
+    public Album toEntity() {
         return Album.builder()
                 .albumId(this.albumId)
                 .userId(this.userId)
@@ -59,7 +59,6 @@ public class AlbumDTO extends BaseEntityDTO {
                 .albumName(this.albumName)
                 .albumArtPath(this.albumArtPath)
                 .description(this.description)
-                .albumMusic(albumMusic)
                 .download(this.download)
                 .build();
     }

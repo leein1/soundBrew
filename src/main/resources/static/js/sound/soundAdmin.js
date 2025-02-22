@@ -664,6 +664,7 @@ export async function renderTagsNew(data) {
         const handle = {
             onSuccess: () => {
                 alert("태그를 정상적으로 생성했습니다.");
+                router.navigate('/api/tags/spelling');
             },
             onBadRequest: () => {
                 alert("태그를 정상적으로 생성하지 못했습니다.");

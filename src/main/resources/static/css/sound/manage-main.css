@@ -1,56 +1,88 @@
+
 .linkDiv {
-    display: flex;
-    gap: 20px; /* 영역 사이 간격 (선택 사항) */
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  padding: 10px;
 }
+/* 좌측(통계)와 우측(메뉴) 영역 */
 .statistics-section,
 .frequently-list {
-    flex: 1; /* 두 영역의 너비를 동일하게 함 */
-    padding: 10px;
-    border: 1px solid #ccc; /* 경계선 추가 (선택 사항) */
+  flex: 1 1 0;
+  min-width: 0;
+}
+/* 자주 사용하는 메뉴 항목 */
+.frequently-list > li {
+  border-radius: 100px;
+  padding: 20px;
+  margin-top: 40px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+}
+.frequently-list > li:hover {
+  background-color: rgb(227, 227, 227);
+}
+.main-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+.sub-text {
+  font-size: 14px;
+  color: #5F6368;
+}
+/* 차트 선택 영역 */
+.chart-selector {
+    margin-top:35px;
+  margin-bottom: 20px;
+}
+.chart-selector button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px 5px 5px 0;
+  transition: background-color 0.3s ease;
+}
+.chart-selector button.active {
+  background-color: #2E7D32;
+}
+/* 기본 표시: 음원관련 영역 */
+#music-section {
+  display: block;
+}
+/* 차트 그룹 컨테이너: grid로 2열 배치 */
+.chart-group-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 60px;
+  width: 100%;
 }
 
-.frequently-list > li , .additional-list > li{
-    /* border: 1px solid black;  */
-    border-radius: 100px;
-    padding: 20px;
-    margin-top: 40px;
-    list-style: none;
-
-    /* 새로 추가된 스타일 */
-    display: flex; /* 플렉스 박스로 전환 */
-    align-items: center; /* 수직 중앙 정렬 */
-    justify-content: space-between; /* 양 끝 정렬 */
-}
-
-
-.frequently-list > li:hover , .additional-list > li:hover{
-    background-color: rgb(227, 227, 227);
-}
-
-.question-title {
-    padding: 10px 20px;
-    border: 2px solid rgb(165, 165, 165); /* 아웃라인 */
-    border-radius: 20px; /* 곡률 추가 */
-    display: inline-block; /* 텍스트 주변에만 스타일 적용 */
-    margin-bottom: 20px; /* 여백 추가 */
-    font-weight: bold; /* 텍스트 강조 */
-    font-size: 1.2rem;
+.tag-add-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 @media (max-width: 768px) {
-    .linkDiv{
-        flex-direction: column;
+    .chart-group-container {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 60px;
+      width: 100%;
     }
-
-   .question-list{
-    flex-direction: column;
-   }
-
-   .frequently-list{
-    width: 100%;
-   }
-
-   .additional-list{
-    width: 100%;
-   }
+}
+.chart-container {
+    min-height: 300px;
 }

@@ -41,7 +41,6 @@ public class MeController {
         if(albumUserId != givenUserId) throw new AccessDeniedException("접근할 권한이 없습니다.");
     }
 
-
     //    내 정보 보기 - GET /me/{userId}
 //    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
     @GetMapping(value = "")

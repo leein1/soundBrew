@@ -178,7 +178,7 @@ export async function renderMyTracks(data){
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>아티스트Id</th>
+                                <th>아티스트</th>
                                 <th>음원 제목</th>
                                 <th>음원 설명</th>
                                 <th>업로드일</th>
@@ -189,7 +189,7 @@ export async function renderMyTracks(data){
                             ${data.dtoList.map(manage => `
                                 <tr>
                                     <td>${manage.musicDTO.musicId}</td>
-                                    <td>${manage.musicDTO.nickname}</td>
+                                    <td>${manage.albumDTO.nickname}</td>
                                     <td>
                                         <span class="current-value" data-field="title">${manage.musicDTO.title}</span>
                                         <input type="text" class="editable-field" data-field="title" value="${manage.musicDTO.title}" style="display: none;">
@@ -707,6 +707,9 @@ export async function renderSoundUpload(){
     imageForm.addEventListener("submit", async function (e) {
         e.preventDefault(); // 기본 동작 막기
 
+        const uploadButton = imageForm.querySelector('button.upload');
+        uploadButton.disabled = true;
+
         // 파일 입력 필드 가져오기
         const fileInput = imageForm.querySelector('input[type="file"]');
         const selectedFiles = fileInput.files; // 선택된 파일 리스트
@@ -749,14 +752,12 @@ export async function renderSoundUpload(){
         const handle = {
             onSuccess: (data) => {
                 alert('이미지가 성공적으로 업로드되었습니다!');
-                const imageForm = document.getElementById("myImage");
-                imageForm.querySelectorAll('input, button').forEach(element => {
-                    element.disabled = true;
-                });
             },
             onBadRequest: ()=> {
                 alert("업로드가 실패했습니다.");
-                return null;
+                imageForm.querySelectorAll('input, button').forEach(element => {
+                    element.disabled = false;
+                });
             },
         };
 
@@ -765,6 +766,9 @@ export async function renderSoundUpload(){
 
     trackForm.addEventListener("submit", async function (e) {
         e.preventDefault(); // 기본 동작 막기
+
+        const uploadButton = trackForm.querySelector('button.upload');
+        uploadButton.disabled = true;
 
         // 파일 입력 필드 가져오기
         const fileInput = trackForm.querySelector('input[type="file"]');
@@ -809,13 +813,12 @@ export async function renderSoundUpload(){
             onSuccess: (data) => {
                 alert('음원이 성공적으로 업로드되었습니다!');
                 const trackForm = document.getElementById("myTrack");
-                trackForm.querySelectorAll('input, button').forEach(element => {
-                    element.disabled = true;
-                });
             },
             onBadRequest: ()=> {
                 alert("업로드가 실패했습니다.");
-                return null;
+                trackForm.querySelectorAll('input, button').forEach(element => {
+                    element.disabled = false;
+                });
             },
         };
 

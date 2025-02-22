@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.soundbrew.soundbrew.dto.BuilderFactory.albumMusicToEntity;
 import static com.soundbrew.soundbrew.dto.DTOFilteringFactory.hideSearchTotalResultDTO;
 
 @Service
@@ -79,9 +80,9 @@ public class SoundsServiceImpl implements SoundsService{
         musicDTO.setNickname(checkedUser.getNickname());
         musicDTO.setSoundType("sound"); // db 디폴트 설정
         musicDTO.setPrice(3); // db 디폴트 설정
-//        Album album = albumRepository.save(albumDTO.toEntity());
+        Album album = albumRepository.save(albumDTO.toEntity());
         Music music = musicRepository.save(musicDTO.toEntity());
-//        albumMusicRepository.save(albumMusicToEntity(album,music,checkedUser));
+        albumMusicRepository.save(albumMusicToEntity(album,music,checkedUser));
         tagsService.linkTags(music, tagsDTO);
 
         return ResponseDTO.withMessage().message("정상적으로 등록했습니다.").build();

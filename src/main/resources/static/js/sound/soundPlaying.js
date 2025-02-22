@@ -25,7 +25,7 @@ export function initializeMusicPlayer() {
 
     // Function Definitions
     function playSound(soundId) {
-        wavesurfer.load(`/stream/${soundId}`);
+        wavesurfer.load(`/api/stream/${soundId}`);
         if (loadedSoundId !== soundId) {
             loadedSoundId = soundId;
         }

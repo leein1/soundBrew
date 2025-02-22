@@ -76,10 +76,17 @@ export const SoundTypeCSSFiles = [
 export const SoundManageTypeCSSFiles = [
 //    "/css/sound/manage-main.css",
 //    "/css/sound/manage-albums.css",
-//    "/css/sound/manage-tags.css",
+    "/css/sound/manage-tags.css",
 //    "/css/sound/music-upload.css",
     "/css/user/user-admin.css",
     "/css/sound/admin-main.css"
+];
+
+export const SoundManageMainTypeCSSFiles = [
+    "/css/sound/manage-main.css",
+    "/css/sound/manage-albums.css",
+    "/css/sound/manage-tags.css",
+    "/css/sound/music-upload.css",
 ];
 
 export const UserAdminTypeCSSFiles=[
@@ -106,6 +113,11 @@ export async function loadSoundTypeCSS() {
 export async function loadSoundManageTypeCSS() {
     // 모든 CSS가 로드될 때까지 기다립니다.
     await Promise.all(SoundManageTypeCSSFiles.map(url => loadExternalCSS(url)));
+}
+
+export async function loadSoundManageMainTypeCSS() {
+    // 모든 CSS가 로드될 때까지 기다립니다.
+    await Promise.all(SoundManageMainTypeCSSFiles.map(url => loadExternalCSS(url)));
 }
 
 export async function loadUserAdminTypeCSS(){
