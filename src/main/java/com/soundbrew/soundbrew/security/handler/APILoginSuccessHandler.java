@@ -42,12 +42,16 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         UserDetailsDTO userDetails = (UserDetailsDTO) authentication.getPrincipal();
         int userId = userDetails.getUserDTO().getUserId();
         String nickname = userDetails.getUserDTO().getNickname();
+        String profileImagePath = userDetails.getUserDTO().getProfileImagePath();
+        int subscriptionId = userDetails.getUserDTO().getSubscriptionId();
 
         //  JWTUtil에 전달될 valueMap
         Map<String,Object> claim = Map.of(
                 "username", authentication.getName(),
                 "userId", userId,
                 "nickname", nickname,
+                "profileImagePath", profileImagePath,
+                "subscriptionId", subscriptionId,
                 "roles", roles
         );
 
@@ -56,14 +60,11 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         //  Refresh Token 기간 30일
         String refreshToken = jwtUtil.generateToken(claim,5);
 
-        //  확인을 위해 userId, nickname 정보도 같이 응답으로 보냄
+        //  로그인 성공시 응답 - 확인을 위해 userId, nickname 정보도 같이 응답으로 보냄
         Map<String,String> keyMap = Map.of(
                 "accessToken", accessToken,
                 "refreshToken", refreshToken,
-                "userId", String.valueOf(userId),
-                "nickname", nickname,
                 "redirectUrl", "/sounds/tracks"
-
         );
 
         Gson gson = new Gson();
