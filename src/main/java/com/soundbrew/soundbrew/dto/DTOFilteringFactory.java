@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DTOFilteringFactory {
-    public static AlbumDTO hideAlbumDTO(AlbumDTO albumDTO){
+    public static AlbumDTO hideAlbumDTO(AlbumDTO albumDTO) {
+        if (albumDTO == null) {
+            return null;
+        }
         albumDTO.setUserId(0);
         return albumDTO;
     }

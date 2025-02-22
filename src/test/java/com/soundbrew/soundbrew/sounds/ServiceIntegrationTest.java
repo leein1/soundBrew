@@ -174,7 +174,7 @@ public class ServiceIntegrationTest {
     @Test
     public void testGetAlbumOne_Success() {
         int userId = 2;
-        int albumId = 10;
+        int albumId = 15;
         RequestDTO requestDTO = new RequestDTO();
 
         ResponseDTO<SearchTotalResultDTO> response = soundsService.getAlbumOne(userId, albumId, requestDTO);
@@ -251,7 +251,7 @@ public class ServiceIntegrationTest {
     @Test
     public void testReadVerifyAlbumOne_WithResults() {
         int userId = 2;
-        int albumId = 10;
+        int albumId = 15;
         RequestDTO requestDTO = new RequestDTO();
 
         ResponseDTO<SearchTotalResultDTO> response = soundsService.readVerifyAlbumOne(userId, albumId, requestDTO);
@@ -395,7 +395,7 @@ public class ServiceIntegrationTest {
     // 삭제 - sounds
     @Test
     void deleteAlbum(){
-        int albumId = 10;
+        int albumId = 15;
 
         soundsService.deleteAlbum(albumId);
 
@@ -418,7 +418,7 @@ public class ServiceIntegrationTest {
     // 업데이트 - album
     @Test
     void updateAlbumForAdmin(){
-        int albumId = 10;
+        int albumId = 15;
         AlbumDTO albumDTO = new AlbumDTO();
         albumDTO.setDescription("change-description");
         albumDTO.setAlbumName("change-albumName");
@@ -522,7 +522,7 @@ public class ServiceIntegrationTest {
     //업데이트 - updateVerifyAlbum
     @Test
     void updateVerifyAlbum(){
-        int albumId = 10;
+        int albumId = 15;
 
         soundsService.updateVerifyAlbum(albumId);
 
@@ -533,7 +533,7 @@ public class ServiceIntegrationTest {
 
     @Test
     void updateAlbumForArtist_Success(){
-        int albumId = 10;
+        int albumId = 15;
         AlbumDTO albumDTO = new AlbumDTO();
         albumDTO.setDescription("change-description");
         albumDTO.setAlbumName("change-albumName");
@@ -549,7 +549,7 @@ public class ServiceIntegrationTest {
 
     @Test
     void updateAlbumForArtist_Bad(){
-        int albumId = 10;
+        int albumId = 15;
         AlbumDTO albumDTO = new AlbumDTO();
         albumDTO.setDescription("change-description");
         albumDTO.setAlbumName("change-albumName");

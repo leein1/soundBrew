@@ -3,6 +3,7 @@ package com.soundbrew.soundbrew.sounds;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 import com.soundbrew.soundbrew.repository.sound.*;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@Log4j2
 public class RepositoryIntegrationTest {
     //사운드
     @Autowired private AlbumMusicRepository albumMusicRepository;
@@ -84,9 +86,10 @@ public class RepositoryIntegrationTest {
     @Test
     public void readSoundOneId(){
         int userId =2;
-        int musicId = 10;
+        int musicId = 15;
 
         Optional<SearchTotalResultDTO> expect = musicRepository.soundOne(userId,musicId);
+        log.info(expect);
 
         assertNotNull(expect.get().getMusicDTO().getDescription(), "SoundOne - int 잘 검색했는가?");
     }
@@ -216,7 +219,7 @@ public class RepositoryIntegrationTest {
     // 읽기 - albumOne(int)
     @Test
     public void readAlbumOneId(){
-        int albumId =10;
+        int albumId =15;
         int userId = 2;
         RequestDTO requestDTO = new RequestDTO();
 
@@ -241,7 +244,7 @@ public class RepositoryIntegrationTest {
     // 읽기 - verifyAlbumOne
     @Test
     public void readVerifyAlbumOne(){
-        int albumId = 10;
+        int albumId = 15;
         int userId = 2;
         RequestDTO requestDTO = new RequestDTO();
 
