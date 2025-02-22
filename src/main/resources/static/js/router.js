@@ -357,13 +357,27 @@ document.addEventListener('DOMContentLoaded', () => {
         router.navigate('/sounds/tracks');
     });
 
+    document.querySelector('#subscriptionListRoute').addEventListener('click', () => {
+        window.location.href="/subscription";
+    });
+
     document.querySelector('#mySoundRoute').addEventListener('click', () => {
         router.navigate('/me/sounds');
     });
 
+
+
     document.querySelector('#myInfoRoute').addEventListener('click', () => {
-        router.navigate('/me/info');
+        // router.navigate('/me/info');
+        window.location.href="/myInfo";
     });
+
+    document.querySelector('#changePasswordRoute').addEventListener('click', () => {
+        // router.navigate('/me/info');
+        window.location.href="/change-password";
+    });
+
+
 
     document.getElementById("adminStatisticRoute").addEventListener("click",()=>{
         router.navigate("/admin");

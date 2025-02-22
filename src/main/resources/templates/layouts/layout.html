@@ -67,9 +67,9 @@
                 <span class="sidebar-text" >곡</span>
             </div>
 
-            <div class="sidebar-item">
+            <div class="sidebar-item" id="subscriptionListRoute">
                 <img class="sidebar-icon" th:src="@{/images/graphic_eq_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
-                <span class="sidebar-text">효과음</span>
+                <span class="sidebar-text">구독제</span>
             </div>
 
             <hr class="divider.user-view" style="display: none;">
@@ -81,20 +81,25 @@
                     <div class="sidebar-my-info-title">
                         <div class="sidebar-item">
                             <img class="sidebar-icon" th:src="@{/images/info_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
-                            <span class="sidebar-text" id="myMore">더 보기</span>
+                            <span class="sidebar-text" id="myMore">내 정보</span>
                         </div>
                     </div>
 
                     <!-- 펼쳐질 내부 내용 -->
                     <div class="user-view-content">
                         <div class="sidebar-item">
-                            <img class="sidebar-icon" th:src="@{/images/album_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}">
-                            <span class="sidebar-text" id="mySoundRoute">내 음원 조회</span>
-                        </div>
-                        <div class="sidebar-item">
                             <img class="sidebar-icon" th:src="@{/images/psychology_alt_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                             <span class="sidebar-text" id="myInfoRoute">내 정보 조회</span>
                         </div>
+                        <div class="sidebar-item">
+                            <img class="sidebar-icon" th:src="@{/images/psychology_alt_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
+                            <span class="sidebar-text" id="changePasswordRoute">비밀번호 변경</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <img class="sidebar-icon" th:src="@{/images/album_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}">
+                            <span class="sidebar-text" id="mySoundRoute">내 음원 조회</span>
+                        </div>
+
                     </div>
                 </div>
             </div>

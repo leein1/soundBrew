@@ -91,8 +91,8 @@ public class ViewController {
 
     }
 
-    @GetMapping("/admin")
-    public void adminMain(){}
+//    @GetMapping("/admin")
+//    public void adminMain(){}
 
     @GetMapping("/search")
     public String getSearch(RequestDTO requestDTO) {
@@ -112,14 +112,14 @@ public class ViewController {
         return "sound/music-list";
     }
 
-    @RequestMapping(value = {"/me/sounds/**"})
-    public String soundManageSPA(){
-        return "sound/music-manage";
-    }
-
-    //실제로는 /admin/sounds/...
-    @RequestMapping(value= {"/admin/**"})
-    public String soundAdmin(){
-        return "admin/sounds";
-    }
+//    @RequestMapping(value = {"/me/sounds/**"})
+//    public String soundManageSPA(){
+//        return "sound/music-manage";
+//    }
+//
+//    //실제로는 /admin/sounds/...
+//    @RequestMapping(value= {"/admin/**"})
+//    public String soundAdmin(){
+//        return "admin/sounds";
+//    }
 }
