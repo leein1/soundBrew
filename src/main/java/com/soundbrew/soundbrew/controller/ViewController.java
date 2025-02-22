@@ -29,11 +29,29 @@ public class ViewController {
         }
     }
 
-    @GetMapping("/help/findpw")
+    @GetMapping("/help/find-password")
     public String findPassword(){
 
         return "findpw";
     }
+
+    @GetMapping("/help/reset-password")
+    public String resetPassword(){
+
+        return "resetpw";
+    }
+
+    @GetMapping("/change-password")
+    public String changePassword(){
+
+        return "changepw";
+    }
+
+    @GetMapping("/mySubscription")
+    public void getMySubscription(){}
+
+    @GetMapping("/subscription")
+    public void getSubscription(){}
 
 
 
