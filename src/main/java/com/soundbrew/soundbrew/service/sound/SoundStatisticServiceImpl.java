@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SoundStatisticServiceImpl implements SoundsStatisticService {
+
     private final AlbumRepository albumRepository;
     private final MusicRepository musicRepository;
 
