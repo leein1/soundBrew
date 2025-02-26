@@ -58,6 +58,7 @@ public class MeController {
     }
 
 
+
     //    내 정보 수정 - PATCH /me/{userId}
 //    수정 하는 방식으로 현재는 UserDTO 를 대입하지만 Map(k,v)로 바꾸는게 좋아보임
 //    controller - Map으로 클라이언트측에서 수정한 값 가져오기,
@@ -276,5 +277,14 @@ public class MeController {
         ResponseDTO<SearchTotalResultDTO> responseDto = soundsService.getSoundMe(requestDto);
 
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/albums/{albumId}/tracks")
+    ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundsByAlbumId(@PathVariable @Positive int albumId,Authentication authentication){
+//        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
+//        int userId = authenticationService.getUserId(authentication);
+        ResponseDTO<SearchTotalResultDTO> responseDTO = soundsService.getSoundsByAlbumId(2,albumId);
+
+        return ResponseEntity.ok().body(responseDTO);
     }
 }

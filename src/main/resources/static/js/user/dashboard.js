@@ -553,6 +553,3 @@ export async function initDashboard() {
 
   window.addEventListener('resize', ChartModule.resizeCharts);
 }
-
-// 만약 모듈 로드 시 자동으로 초기화를 원하면 아래를 활성화하세요.
-// initDashboard();

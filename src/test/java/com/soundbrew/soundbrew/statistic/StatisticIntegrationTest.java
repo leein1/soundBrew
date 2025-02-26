@@ -3,6 +3,7 @@ package com.soundbrew.soundbrew.statistic;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.statistics.sound.SoundMyStatisticDTO;
 import com.soundbrew.soundbrew.dto.statistics.sound.SoundTotalStatisticDTO;
 import com.soundbrew.soundbrew.dto.statistics.tag.TagsTotalStatisticDTO;
 import com.soundbrew.soundbrew.dto.statistics.user.UserStatisticDTO;
@@ -12,6 +13,7 @@ import com.soundbrew.soundbrew.service.tag.TagsStatisticService;
 import com.soundbrew.soundbrew.service.user.UserStatisticService;
 import com.soundbrew.soundbrew.service.userSubscription.UserSubscriptionStatisticService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +30,34 @@ public class StatisticIntegrationTest {
     @Autowired private TagsStatisticService tagsStatisticService;
     @Autowired private UserSubscriptionStatisticService userSubscriptionStatisticService;
     @Autowired private SoundsStatisticService soundsStatisticService;
+
+    @Test
+    @DisplayName("사용자 음원 통계 서비스 통합 테스트")
+    public void testGetMySoundStats() {
+        // Given
+        int userId = 2; // 테스트할 유저 ID
+
+        RequestDTO requestDTO = new RequestDTO();
+        // When
+        ResponseDTO<SoundMyStatisticDTO> response = soundsStatisticService.getMySoundStats(userId);
+
+        // Then (결과 로깅)
+        log.info("=== 사용자 {}의 음원 통계 ===", userId);
+        log.info("24시간 내 업로드: {}", response.getDto().getMusicCountDay());
+        log.info("7일 내 업로드: {}", response.getDto().getMusicCountWeek());
+        log.info("30일 내 업로드: {}", response.getDto().getMusicCountMonth());
+        log.info("24시간 내 다운로드 수: {}", response.getDto().getDownloadsDay());
+        log.info("7일 내 다운로드 수: {}", response.getDto().getDownloadsWeek());
+        log.info("30일 내 다운로드 수: {}", response.getDto().getDownloadsMonth());
+        log.info("총 다운로드 수: {}", response.getDto().getTotalDownloads());
+        log.info("최다 다운로드 곡 ID: {}", response.getDto().getTopTrackId());
+        log.info("최다 다운로드 곡 제목: {}", response.getDto().getTopTrackTitle());
+        log.info("최다 다운로드 곡 다운로드 수: {}", response.getDto().getTopTrackDownloadCount());
+
+        // 검증 (데이터가 존재하는지 확인)
+        assertNotNull(response);
+        assertNotNull(response.getDto());
+    }
 
     @Test
     public void testUserStatistics() {

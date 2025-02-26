@@ -795,7 +795,7 @@ export async function renderSoundUpload(){
         const handle = {
             onSuccess: (data) => {
                 alert('음원이 성공적으로 업로드되었습니다!');
-                router.navigate("/me/sounds");
+                router.navigate("/sounds/tracks");
             },
             onBadRequest: ()=> {
                 alert("업로드가 실패했습니다.");
