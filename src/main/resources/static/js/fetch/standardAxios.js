@@ -1,6 +1,7 @@
 import {handleResponse} from "/js/handleResponse.js";
 
 const BASE_URL = "http://localhost:8080";
+// const BASE_URL = "http://Soundvbrew-env.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com";
 
 // Axios 기본 설정
 const axiosInstance = axios.create({
@@ -10,20 +11,35 @@ const axiosInstance = axios.create({
 
 // 토큰 재발급 함수
 const callRefresh = async () => {
+
+    alert("기존 토큰 다시 가져오기");
+
     const refreshToken = localStorage.getItem('refreshToken');
     const accessToken = localStorage.getItem('accessToken');
-    const tokens = {accessToken,refreshToken}
+
+    if (!refreshToken || !accessToken) {
+        throw new Error("저장된 토큰이 없습니다. 다시 로그인해주세요.");
+    }
+
+    const tokens = {accessToken, refreshToken}
 
     try {
+
+        alert("/refreshToken으로 재발급 요청 보내기");
+
         // 여기서 우리가 만든 axiosPost를 안쓰는이유는? => 쓰면 axiosPost함수의 addAuthHeader로 무한 루프 걸릴 수 있음
         const response = await axiosInstance.post('/refreshToken', tokens);
-        const newAccessToken = response.data.accessToken;
+        // const newAccessToken = response.data.accessToken;
+        // const newRefreshToken = response.data.refreshToken;
+
+        alert("새로 발급받은 토큰 set");
 
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
 
-        return newAccessToken;
+        return response.data.accessToken;
     } catch (error) {
+        alert("토큰 재발급 과정 중 오류");
         console.error("토큰 재발급 실패:", error);
         throw new Error("로그인이 필요합니다.");
     }
@@ -31,32 +47,51 @@ const callRefresh = async () => {
 
 // 토큰 포함된 요청 처리 유틸리티
 const addAuthHeader = async (options, handle = {}) => {
-    let token = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
 
-    // if (!token) {
-    //     alert("액세스 토큰이 없습니다, 다시 로그인을 진행해주세요");
-    //     window.location.href = "/login"; // 로그인 페이지로 리다이렉트
-    //     return null;
-    // }
+    if (!accessToken) {
+
+        alert("액세스 토큰이 없습니다, 다시 로그인을 진행해주세요");
+
+        window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+        return null;
+    }
 
     options.headers = {
         ...options.headers,
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${accessToken}`
     };
 
     try {
+
         const response = await axiosInstance(options);
         // response.response가 아니라 response를 참조해야 합니다.
         return handleResponse(response.status, response.data, handle);
+
     } catch (error) {
-        if (error.response?.status === 401) {
-            console.log("만료된 액세스 토큰, 재발급 시도 중...");
+        /**
+         * AccessTokenException 반환 status및 msg
+         * UNACCEPT(401, "Token is null or too short"),
+         * BADTYPE(401, "Token type Bearer"),
+         * MARFORM(403, "Malformed Token"),
+         * BADSIGN(403, "BadSignatured Token"),
+         * EXPIRED(403, "Expired Token");
+         */
+        if (error.response?.status === 401 || error.response?.status === 403) {
+
+           alert("만료되었거나 인증 실패된 토큰, 재발급 시도 중...");
+
             try {
-                const newToken = await callRefresh();
-                options.headers = { Authorization: `Bearer ${newToken}` };
+
+                const newAccessToken = await callRefresh();
+                options.headers = { Authorization: `Bearer ${newAccessToken}`};
+
+                alert("재요청");
                 const retryResponse = await axiosInstance(options); // 재요청
                 return handleResponse(retryResponse.status, retryResponse.data, handle);
+
             } catch (refreshError) {
+                alert("재요청 실패");
                 alert("인증 정보가 유효하지 않습니다. 다시 로그인하세요.");
                 window.location.href = "/login"; // 로그인 페이지로 리다이렉트
                 throw refreshError;
@@ -64,7 +99,16 @@ const addAuthHeader = async (options, handle = {}) => {
 
         } else {
             // error.response를 올바르게 참조해야 합니다.
-            throw handleResponse(error.response?.status, error.response?.data, handle);
+            // throw handleResponse(error.response?.status, error.response?.data, handle);
+            const errorResponse = error.response;
+
+            if (errorResponse) {
+
+                return handleResponse(errorResponse.status, errorResponse.data, handle);
+            }
+
+            console.error("핸들링 외 오류:", error.message);
+            throw error;
         }
     }
 };
