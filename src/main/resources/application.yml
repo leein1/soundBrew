@@ -1,12 +1,10 @@
-#server:
-#  port: 5000
 
 spring:
   application:
     name: soundBrew
 
   profiles:
-    active: prod
+    active: dev
 
 #  mail:
 #    host: smtp.gmail.com
