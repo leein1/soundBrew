@@ -4,7 +4,6 @@ import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.sound.*;
-import com.soundbrew.soundbrew.handler.custom.ResourceOwnershipException;
 import com.soundbrew.soundbrew.repository.sound.*;
 import com.soundbrew.soundbrew.service.authentication.AuthenticationService;
 import com.soundbrew.soundbrew.service.sound.SoundsService;
