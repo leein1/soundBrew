@@ -39,9 +39,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         log.info(userDetailsDTO);
 
-        String roleType = roleRepository.findById(userDetailsDTO.getUserRoleDTO().getRoleId()).orElseThrow().getRoleType();
+        String roleType = roleRepository.findById(
+                userDetailsDTO
+                        .getUserRoleDTO()
+                        .getRoleId()
+                )
+                .orElseThrow().getRoleType();
 
-        List<GrantedAuthority> grantedAuthorities = List.of(new SimpleGrantedAuthority("ROLE_" + roleType));
+        List<GrantedAuthority> grantedAuthorities = List.of(
+                new SimpleGrantedAuthority("ROLE_" + roleType)
+        );
 
         userDetailsDTO.setAuthorities(grantedAuthorities);
 
