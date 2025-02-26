@@ -8,6 +8,9 @@ import com.soundbrew.soundbrew.security.CustomUserDetailsService;
 import com.soundbrew.soundbrew.security.filter.APILoginFilter;
 import com.soundbrew.soundbrew.security.filter.TokenCheckFilter;
 import com.soundbrew.soundbrew.security.JWTUtil;
+import com.soundbrew.soundbrew.service.RoleService;
+import com.soundbrew.soundbrew.service.user.UserService;
+import com.soundbrew.soundbrew.service.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -41,6 +44,8 @@ public class CustomSecurityConfig {
     private final JWTUtil jwtUtil;
     private final PublicPathsProperties publicPathsProperties;
     private final MaintenanceConfig maintenanceConfig;
+    private final UserService userService;
+    private final RoleService roleService;
 
     // 모든 출처에서 CORS를 허용하는 설정
     @Bean
@@ -116,7 +121,7 @@ public class CustomSecurityConfig {
 
 
         //  필터 순서 지정
-        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), UsernamePasswordAuthenticationFilter.class); // 리프레시 토큰 처리
+        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil,userService,roleService), UsernamePasswordAuthenticationFilter.class); // 리프레시 토큰 처리
         http.addFilterAfter(apiLoginFilter, RefreshTokenFilter.class); // 로그인 처리
         http.addFilterAfter(tokenCheckFilter(), APILoginFilter.class); // 액세스 토큰 검증
 
