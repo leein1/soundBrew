@@ -471,68 +471,6 @@ export async function renderMyTags(data){
     });
 }
 
-export function renderMyMain(){
-    const container = document.getElementById("content-body");
-    container.innerHTML='';
-
-    const html = `
-    <div
-        <div id="question-list" class="question-list">
-            <div class="linkDiv">
-                <div class="statistics-section">
-                    <div class="Statistics">
-                        사이트 통계 자료 - 방문자 수, 트래픽양, 전체 곡 수 등 자료
-                    </div>
-                </div>
-                <div class="frequently-list">
-                    <li id="upload-sound">
-                        <span class="main-text">음원 업로드</span><br>
-                        <span class="sub-text">Album, Music, Instrument Tag, Mood Tag, Genre Tag</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                    <li id="edit-album">
-                        <span class="main-text">앨범 정보 수정</span><br>
-                        <span class="sub-text">Title, Description</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                    <li id="edit-music">
-                        <span class="main-text">음원 정보 수정</span><br>
-                        <span class="sub-text">Title, Description, soundType</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                    <li id="edit-tags">
-                        <span class="main-text">태그 정보 수정</span><br>
-                        <span class="sub-text">Instrument Tag, Mood Tag, Genre Tag</span>
-                        <img src="/images/chevron_right_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-                    </li>
-                </div>
-            </div>
-        </div>
-    `;
-
-    container.innerHTML = html;
-
-    document.getElementById("upload-sound").addEventListener("click", function () {
-        alert("음원 업로드 페이지로 이동합니다.");
-        router.navigate(`/me/sounds/upload`);
-    });
-
-    document.getElementById("edit-album").addEventListener("click", function () {
-        alert("앨범 정보 수정 페이지로 이동합니다.");
-        router.navigate('/me/sounds/albums');
-    });
-
-    document.getElementById("edit-music").addEventListener("click", function () {
-        alert("음원 정보 수정 페이지로 이동합니다.");
-        router.navigate(`/me/sounds/tracks`);
-    });
-
-    document.getElementById("edit-tags").addEventListener("click", function () {
-        alert("태그 정보 수정 페이지로 이동합니다.");
-        router.navigate('/me/sounds/tags');
-    });
-}
-
 export async function renderSoundUpload(){
     const container = document.getElementById('content-body');
     container.innerHTML ='';
