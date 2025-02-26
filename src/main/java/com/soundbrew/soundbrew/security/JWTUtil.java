@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,10 @@ public class JWTUtil {
     @Value("${com.soundbrew.jwt.secret}")
     private String key;
 
+    private byte[] getDecodedKey() {
+        return Base64.getDecoder().decode(key);
+    }
+
     //  문자열을 생성
     public String generateToken(Map<String, Object> valueMap, int days) {
 
@@ -39,14 +44,15 @@ public class JWTUtil {
         Map<String,Object> payload = new HashMap<>();
         payload.putAll(valueMap);
 
-        int time = (2) * days; //   나중에 일 단위로 변경 해야 함
+        int time = (1) * days; //   나중에 일 단위로 변경 해야 함
 
         String jwtStr = Jwts.builder()
                 .setHeader(headers)
                 .setClaims(payload)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setExpiration(Date.from(ZonedDateTime.now().plusDays(time).toInstant()))
-                .signWith(SignatureAlgorithm.HS256, key.getBytes())
+//                .signWith(SignatureAlgorithm.HS256, key.getBytes())
+                .signWith(SignatureAlgorithm.HS256, getDecodedKey())
                 .compact();
 
         return jwtStr;
@@ -56,14 +62,14 @@ public class JWTUtil {
     //  토큰을 검증
     public Map<String, Object> validateToken(String token) throws JwtException {
 
-        log.info("JWTUtil.validateToken : {}", token);
+        log.info("JWTUtil.validateToken 토큰 검증 실행 : {}", token);
 
         Map<String,Object> claims = null;
 
         try {
 
             claims = Jwts.parser()
-                    .setSigningKey(key.getBytes()) //setKey
+                    .setSigningKey(getDecodedKey()) //setKey
                     .parseClaimsJws(token)  // 파싱 + 검증, 실패시 에러
                     .getBody();
 
