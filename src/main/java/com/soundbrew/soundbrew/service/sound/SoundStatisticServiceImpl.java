@@ -1,7 +1,9 @@
 package com.soundbrew.soundbrew.service.sound;
 
+import com.soundbrew.soundbrew.domain.sound.Music;
 import com.soundbrew.soundbrew.dto.RequestDTO;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.statistics.sound.SoundMyStatisticDTO;
 import com.soundbrew.soundbrew.dto.statistics.sound.SoundStatisticDTO;
 import com.soundbrew.soundbrew.dto.statistics.sound.SoundTotalStatisticDTO;
 import com.soundbrew.soundbrew.repository.sound.AlbumRepository;
@@ -11,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -120,4 +124,64 @@ public class SoundStatisticServiceImpl implements SoundsStatisticService {
 
         return  ResponseDTO.withAll(requestDTO, bestUpload, bestUpload.size());
     }
+
+    @Override
+    public ResponseDTO<SoundMyStatisticDTO> getMySoundStats(int userId) {
+        PageRequest pageRequest = PageRequest.of(0, 5);
+
+        // 기준 시간 계산
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneDayAgo = now.minusDays(1);
+        LocalDateTime sevenDaysAgo = now.minusDays(7);
+        LocalDateTime thirtyDaysAgo = now.minusDays(30);
+
+        // 1. 내가 올린 음원 개수 (기간별)
+        int musicCountDay = musicRepository.countUserMusicSince(userId, oneDayAgo);
+        int musicCountWeek = musicRepository.countUserMusicSince(userId, sevenDaysAgo);
+        int musicCountMonth = musicRepository.countUserMusicSince(userId, thirtyDaysAgo);
+        // 전체 음원 개수와 전체 앨범 개수 (JPA 내장 메서드 사용)
+        int musicCountTotal = musicRepository.countByUserId(userId);
+
+        int albumCountTotal = albumRepository.countByUserId(userId);
+
+        // 2. 음원 다운로드 횟수 (기간별)
+        int downloadsDay = musicRepository.sumUserDownloadsSince(userId, oneDayAgo);
+        int downloadsWeek = musicRepository.sumUserDownloadsSince(userId, sevenDaysAgo);
+        int downloadsMonth = musicRepository.sumUserDownloadsSince(userId, thirtyDaysAgo);
+        // 3. 전체 다운로드 횟수 (기간 제한 없음)
+        int totalDownloads = musicRepository.sumUserDownloadsTotal(userId);
+
+        // 4. 가장 많이 다운로드된 음원 조회 (최상위 1개)
+        List<Object[]> topTrackListData = musicRepository.findTopSellingTracksByUser(userId, pageRequest);
+        List<Integer> topTrackIds = new ArrayList<>();
+        List<String> topTrackTitles = new ArrayList<>();
+        List<Integer> topTrackDownloadCounts = new ArrayList<>();
+
+        if (topTrackListData != null && !topTrackListData.isEmpty()) {
+            for (Object[] row : topTrackListData) {
+                topTrackIds.add(((Number) row[0]).intValue());
+                topTrackTitles.add((String) row[1]);
+                topTrackDownloadCounts.add(((Number) row[2]).intValue());
+            }
+        }
+
+        // DTO 빌더로 결과 조합
+        SoundMyStatisticDTO dto = SoundMyStatisticDTO.builder()
+                .musicCountDay(musicCountDay)
+                .musicCountWeek(musicCountWeek)
+                .musicCountMonth(musicCountMonth)
+                .downloadsDay(downloadsDay)
+                .downloadsWeek(downloadsWeek)
+                .downloadsMonth(downloadsMonth)
+                .totalDownloads(totalDownloads)
+                .topTrackIds(topTrackIds)
+                .topTrackTitles(topTrackTitles)
+                .topTrackDownloadCounts(topTrackDownloadCounts)
+                .musicCountTotal(musicCountTotal)
+                .albumCountTotal(albumCountTotal)
+                .build();
+
+        return ResponseDTO.<SoundMyStatisticDTO>withSingleData().dto(dto).build();
+    }
+
 }

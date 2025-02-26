@@ -95,11 +95,11 @@ function displaySearchBar(state) {
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'none',
         //me
+        '/me/statistic':'none',
         '/me/sounds/upload':'none',
-        '/me/sounds':'none',
-        '/me/sounds/albums':'none',
-        '/me/sounds/tracks':'none',
-        '/me/sounds/tags':'none',
+        '/me/sounds/albums':'block',
+        '/me/sounds/tracks':'block',
+        '/me/sounds/tags':'block',
         //admin
         '/admin/tracks':'block',
         '/admin/albums':'block',
@@ -129,8 +129,8 @@ function displaySortBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
+        '/me/statistic':'none',
         '/me/sounds/upload':'none',
-        '/me/sounds':'none',
         '/me/sounds/albums':'none',
         '/me/sounds/tracks':'none',
         '/me/sounds/tags':'none',
@@ -163,8 +163,8 @@ function displayViewTypeBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'none',
         //me
+        '/me/statistic':'none',
         '/me/sounds/upload':'none',
-        '/me/sounds':'none',
         '/me/sounds/albums':'none',
         '/me/sounds/tracks':'none',
         '/me/sounds/tags':'none',
@@ -197,8 +197,8 @@ function displayTagsBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
+        '/me/statistic':'none',
         '/me/sounds/upload':'none',
-        '/me/sounds':'none',
         '/me/sounds/albums':'none',
         '/me/sounds/tracks':'none',
         '/me/sounds/tags':'none',
@@ -232,8 +232,8 @@ function displayPaginationBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
+        '/me/statistic':'none',
         '/me/sounds/upload':'none',
-        '/me/sounds':'none',
         '/me/sounds/albums':'block',
         '/me/sounds/tracks':'block',
         '/me/sounds/tags':'block',
@@ -266,8 +266,8 @@ function displayAudioBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
+        '/me/statistic':'none',
         '/me/sounds/upload':'none',
-        '/me/sounds':'none',
         '/me/sounds/albums':'none',
         '/me/sounds/tracks':'none',
         '/me/sounds/tags':'none',
@@ -298,8 +298,8 @@ function displayAlbumInfoBar(state){
         '/sounds/tracks/one': '',
         // '/albums/one': 'block', 이 뷰 상태일때는 보여줘야 하므로 초기화 하지 않음.
         //me
+        '/me/statistic':'',
         '/me/sounds/upload':'',
-        '/me/sounds':'',
         '/me/sounds/albums':'',
         '/me/sounds/tracks':'',
         '/me/sounds/tags':'',

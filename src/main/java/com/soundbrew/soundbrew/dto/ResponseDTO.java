@@ -23,6 +23,7 @@ public class ResponseDTO<E> {
     private boolean next;   // 다음 페이지 존재 여부
     private String keyword; // 검색 키워드
     private String message;
+    private int status;
 
     @Builder(builderMethodName = "withMessage")
     public ResponseDTO(String message) {

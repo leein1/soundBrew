@@ -50,4 +50,5 @@ public class UserSubscriptionStatisticServiceImpl implements UserSubscriptionSta
 
         return ResponseDTO.<SubscriptionTotalStatisticDTO>withSingleData().dto(statisticDTO).build();
     }
+
 }

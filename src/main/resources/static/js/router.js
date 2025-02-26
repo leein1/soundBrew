@@ -6,12 +6,13 @@ import {renderSort} from "/js/sound/sort.js";
 import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
 import {renderViewType} from "/js/sound/viewType.js";
 import {globalStateManager} from "/js/globalState.js";
-import {renderMyAlbums,renderMyTracks,renderMyTags,renderMyMain,renderSoundUpload} from "/js/sound/soundManage.js";
+import {renderMeAlbums, renderMeTracks, renderMeTags,renderSoundUpload } from "/js/sound/soundManage.js";
 import {renderArtistsTracks,renderArtistsAlbums,renderTagsSpelling,renderTagsNew,renderArtistsVerify, renderArtistsVerifyOne,renderTotalSoundsVerify} from "/js/sound/soundAdmin.js";
 import { loadSoundTypeCSS, loadSoundManageTypeCSS, updateDynamicCSS , SoundTypeCSSFiles, SoundManageTypeCSSFiles, UserAdminTypeCSSFiles, loadUserAdminTypeCSS, removeAllDynamicCSS,AdminStatisticTypeCSSFiles,loadAdminStatisticTypeCSS,loadSoundManageMainTypeCSS,SoundManageMainTypeCSSFiles} from '/js/CSSLoader.js';
 import {renderUserInfoWithRole} from '/js/user/userAdmin.js';
 import {renderSubscriptionInfo } from '/js/user/subscriptionAdmin.js';
 import {initDashboard} from '/js/user/dashboard.js';
+import {initMeDashboard} from '/js/user/meDashboard.js';
 
 export class Router {
     constructor() {
@@ -194,14 +195,14 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSoundUpload();
     });
 
-    router.addRoute('/me/sounds', async () => {
-        updateDynamicCSS(SoundManageMainTypeCSSFiles);
-        await loadSoundManageMainTypeCSS();
-
-        renderMyMain();
-
-        const response = await axiosGet({endpoint: `/api/sounds/tracks`});
-    });
+//    router.addRoute('/me/sounds', async () => {
+//        updateDynamicCSS(SoundManageMainTypeCSSFiles);
+//        await loadSoundManageMainTypeCSS();
+//
+//        renderMyMain();
+//
+//        const response = await axiosGet({endpoint: `/api/sounds/tracks`});
+//    });
 
     router.addRoute('/me/sounds/albums', async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -210,8 +211,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const queryParams = window.location.search;
 
         const response = await axiosGet({endpoint: `/api/me/albums${queryParams}`});
-        await renderMyAlbums(response);
-        renderPagination(response);
+        console.log(response);
+        renderSearch();
+        await renderMeAlbums(response);
+        await renderPagination(response);
     });
 
     router.addRoute('/me/sounds/tracks', async () => {
@@ -221,7 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const queryParams = window.location.search;
 
         const response = await axiosGet({endpoint: `/api/me/tracks${queryParams}`});
-        await renderMyTracks(response);
+        renderSearch();
+        await renderMeTracks(response);
         renderPagination(response);
     });
 
@@ -232,7 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const queryParams = window.location.search;
 
         const response = await axiosGet({endpoint: `/api/me/tracks${queryParams}`});
-        await renderMyTags(response);
+        renderSearch();
+        await renderMeTags(response);
         renderPagination(response);
     });
 
@@ -241,6 +246,17 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadAdminStatisticTypeCSS();
 
         await initDashboard();
+    });
+
+    router.addRoute('/me/statistic' , async () =>{
+        updateDynamicCSS(AdminStatisticTypeCSSFiles);
+        await loadAdminStatisticTypeCSS();
+
+        const soundsStats = await axiosGet({ endpoint: '/api/statistic/sounds/stats/me' });
+        const tagsStats = await axiosGet({endpoint:'/api/statistic/tags/stats/me'});
+//        const subscriptionStats = await axiosGet({endpoint : '/api/statistic/subscription/stats/me'});
+
+        await initMeDashboard(soundsStats,tagsStats);
     });
 
     router.addRoute('/admin/tracks',async () => {
@@ -362,7 +378,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelector('#mySoundRoute').addEventListener('click', () => {
-        router.navigate('/me/sounds');
+        router.navigate('/me/sounds/albums');
+    });
+
+    document.querySelector('#mySoundStatisticRoute').addEventListener('click', () => {
+        router.navigate('/me/statistic');
     });
 
 

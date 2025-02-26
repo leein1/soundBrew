@@ -2,12 +2,12 @@
 form {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
 }
 
 /* 각 섹션 스타일 */
 section {
     padding: 20px;
+    margin-bottom: 30px;
     border-radius: 5px;
     background-color: #9d9d9d;
 }
@@ -88,7 +88,6 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 10px;
 }
 
 button:disabled {
@@ -191,10 +190,10 @@ button:hover {
 
 /* modal 안의 태그 리스트 스타일 */
 #tag-list {
-    max-height: 60vh;
+    margin-bottom:revert;
+    max-height: 28vh;
     overflow-y: auto;
     padding-right: 10px;
-    margin-bottom: 10px;
 }
 
 /* 모달 창 닫기 버튼 스타일 */
@@ -230,7 +229,7 @@ button:hover {
 #tag-list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: auto;
 }
 
 #tag-list li {
@@ -246,10 +245,3 @@ button:hover {
     margin-top: 10px;
 }
 
-
-
-#tag-list {
-    max-height: 60vh;
-    overflow-y: auto;
-    padding-right: 10px;
-}

@@ -9,7 +9,6 @@ import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
 import com.soundbrew.soundbrew.dto.sound.MusicDTO;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 import com.soundbrew.soundbrew.dto.sound.TagsDTO;
-import com.soundbrew.soundbrew.handler.custom.ResourceOwnershipException;
 import com.soundbrew.soundbrew.service.*;
 import com.soundbrew.soundbrew.service.authentication.AuthenticationService;
 import com.soundbrew.soundbrew.service.sound.SoundsService;
