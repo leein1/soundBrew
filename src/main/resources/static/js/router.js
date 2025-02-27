@@ -1,6 +1,10 @@
 import {axiosGet,axiosPost} from '/js/fetch/standardAxios.js';
 import { extractTagsFromURL,compareTagsWithUrlParams } from "/js/tagStateUtil.js";
 import {renderTotalSounds,renderTotalAlbums,renderSoundOne,renderAlbumOne} from '/js/sound/sound.js';
+import { renderMyInfo } from '/js/user/myInfo.js';
+import { renderChangePassword } from '/js/user/changepw.js';
+import { renderMySubscription } from '/js/user/mySubscription.js';
+import { renderSubscriptionPlans } from '/js/user/subscriptionPlan.js';
 import {renderPagination} from "/js/pagination.js";
 import {renderSort} from "/js/sound/sort.js";
 import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
@@ -13,6 +17,7 @@ import {renderUserInfoWithRole} from '/js/user/userAdmin.js';
 import {renderSubscriptionInfo } from '/js/user/subscriptionAdmin.js';
 import {initDashboard} from '/js/user/dashboard.js';
 import {initMeDashboard} from '/js/user/meDashboard.js';
+
 
 export class Router {
     constructor() {
@@ -80,7 +85,15 @@ export class Router {
 
 export const router = new Router();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    router.addRoute('/subscription', async ()=>{
+        //css 적용
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        await renderSubscriptionPlans();
+    });
+
     router.addRoute('/sounds/tracks', async () => {
         updateDynamicCSS(SoundTypeCSSFiles);
         await loadSoundTypeCSS();
@@ -188,21 +201,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    router.addRoute('/me/Info' , async ()=>{
+        //css 관련 로딩
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        const response = await axiosGet({endpoint:"/api/me", useToken:true});
+        await renderMyInfo(response.dto);
+    });
+
+    router.addRoute('/me/change-password', async ()=>{
+        //css 관련 로딩
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        await renderChangePassword();
+    });
+
+    router.addRoute('/me/subscription' , async ()=>{
+        //css 관련 로딩
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        await renderMySubscription();
+    });
+
     router.addRoute('/me/sounds/upload',async () => {
         updateDynamicCSS(SoundManageMainTypeCSSFiles);
         await loadSoundManageMainTypeCSS();
 
         renderSoundUpload();
     });
-
-//    router.addRoute('/me/sounds', async () => {
-//        updateDynamicCSS(SoundManageMainTypeCSSFiles);
-//        await loadSoundManageMainTypeCSS();
-//
-//        renderMyMain();
-//
-//        const response = await axiosGet({endpoint: `/api/sounds/tracks`});
-//    });
 
     router.addRoute('/me/sounds/albums', async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -241,13 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPagination(response);
     });
 
-    router.addRoute('/admin' , async () =>{
-        updateDynamicCSS(AdminStatisticTypeCSSFiles);
-        await loadAdminStatisticTypeCSS();
-
-        await initDashboard();
-    });
-
     router.addRoute('/me/statistic' , async () =>{
         updateDynamicCSS(AdminStatisticTypeCSSFiles);
         await loadAdminStatisticTypeCSS();
@@ -257,6 +279,13 @@ document.addEventListener('DOMContentLoaded', () => {
 //        const subscriptionStats = await axiosGet({endpoint : '/api/statistic/subscription/stats/me'});
 
         await initMeDashboard(soundsStats,tagsStats);
+    });
+
+    router.addRoute('/admin' , async () =>{
+        updateDynamicCSS(AdminStatisticTypeCSSFiles);
+        await loadAdminStatisticTypeCSS();
+
+        await initDashboard();
     });
 
     router.addRoute('/admin/tracks',async () => {
@@ -374,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelector('#subscriptionListRoute').addEventListener('click', () => {
-        window.location.href="/subscription";
+        router.navigate('/subscription');
     });
 
     document.querySelector('#mySoundRoute').addEventListener('click', () => {
@@ -385,19 +414,24 @@ document.addEventListener('DOMContentLoaded', () => {
         router.navigate('/me/statistic');
     });
 
-
+    document.querySelector('#mySoundUploadRoute').addEventListener('click', () => {
+        router.navigate('/me/sounds/upload');
+    });
 
     document.querySelector('#myInfoRoute').addEventListener('click', () => {
         // router.navigate('/me/info');
-        window.location.href="/myInfo";
+        router.navigate('/me/Info');
     });
 
     document.querySelector('#changePasswordRoute').addEventListener('click', () => {
         // router.navigate('/me/info');
-        window.location.href="/change-password";
+        router.navigate('/me/change-password');
     });
 
-
+    document.querySelector('#mySubscriptionRoute').addEventListener('click', () => {
+        // router.navigate('/me/info');
+        router.navigate('/me/subscription');
+    });
 
     document.getElementById("adminStatisticRoute").addEventListener("click",()=>{
         router.navigate("/admin");

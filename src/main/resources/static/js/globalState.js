@@ -95,6 +95,10 @@ function displaySearchBar(state) {
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'none',
         //me
+        '/me/Info':'none',
+        '/me/change-password':'none',
+        '/me/subscription':'none',
+        '/subscription':'none',
         '/me/statistic':'none',
         '/me/sounds/upload':'none',
         '/me/sounds/albums':'block',
@@ -129,6 +133,10 @@ function displaySortBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
+        '/me/Info':'none',
+        '/me/change-password':'none',
+        '/me/subscription':'none',
+        '/subscription':'none',
         '/me/statistic':'none',
         '/me/sounds/upload':'none',
         '/me/sounds/albums':'none',
@@ -163,6 +171,10 @@ function displayViewTypeBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'none',
         //me
+        '/me/Info':'none',
+                '/me/change-password':'none',
+                '/me/subscription':'none',
+                '/subscription':'none',
         '/me/statistic':'none',
         '/me/sounds/upload':'none',
         '/me/sounds/albums':'none',
@@ -197,6 +209,10 @@ function displayTagsBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
+        '/me/Info':'none',
+                '/me/change-password':'none',
+                '/me/subscription':'none',
+                '/subscription':'none',
         '/me/statistic':'none',
         '/me/sounds/upload':'none',
         '/me/sounds/albums':'none',
@@ -232,6 +248,10 @@ function displayPaginationBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
+        '/me/Info':'none',
+                '/me/change-password':'none',
+                '/me/subscription':'none',
+                '/subscription':'none',
         '/me/statistic':'none',
         '/me/sounds/upload':'none',
         '/me/sounds/albums':'block',
@@ -266,6 +286,10 @@ function displayAudioBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
+        '/me/Info':'none',
+                '/me/change-password':'none',
+                '/me/subscription':'none',
+                '/subscription':'none',
         '/me/statistic':'none',
         '/me/sounds/upload':'none',
         '/me/sounds/albums':'none',
@@ -298,6 +322,10 @@ function displayAlbumInfoBar(state){
         '/sounds/tracks/one': '',
         // '/albums/one': 'block', 이 뷰 상태일때는 보여줘야 하므로 초기화 하지 않음.
         //me
+        '/me/Info':'',
+                '/me/change-password':'',
+                '/me/subscription':'',
+                '/subscription':'',
         '/me/statistic':'',
         '/me/sounds/upload':'',
         '/me/sounds/albums':'',

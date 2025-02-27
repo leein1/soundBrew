@@ -1,4 +1,4 @@
-.content-header{
+.subscriptionPlan-content-header{
     /* border: 1px solid black;  */
     margin-top: 20px;
     height: 50px;
@@ -8,7 +8,7 @@
     /* align-items: center; */
 }
 
-.content-body{
+.subscriptionPlan-content-body{
     /* border: 1px black solid; */
     margin-top: 30px;
     display: flex;
