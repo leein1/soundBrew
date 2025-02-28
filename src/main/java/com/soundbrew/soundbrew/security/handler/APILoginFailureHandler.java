@@ -48,6 +48,8 @@ public class APILoginFailureHandler implements AuthenticationFailureHandler {
 
         } else if(exception instanceof CredentialsExpiredException){
 
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
             message = "비밀번호가 만료되었습니다. 비밀번호를 변경해주세요.";
 
             // 요청 속성에서 username을 추출
