@@ -1,7 +1,9 @@
 package com.soundbrew.soundbrew.handler;
 
+import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
@@ -9,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @Log4j2
 public class Custom403Handler implements AccessDeniedHandler {
@@ -38,8 +41,30 @@ public class Custom403Handler implements AccessDeniedHandler {
           json이 아닌 요청
           로그인 페이지로 error 파라미터와 함께 리다이렉트
          */
-        if(!jsonRequest){
-            response.sendRedirect("/login?error=ACCESS_DENIED");
+        if(jsonRequest){
+            log.info("리다이렉트 해줘야 함");
+
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+
+            String message = "접근 권한이 없습니다.";
+            String redirectUrl = "/login?error=ACCESS_DENIED";
+
+            // 리다이렉트 주소 JSON 형태로 응답
+            Map<String,String> keyMap = Map.of(
+                    "message", message,
+                    "redirectUrl", redirectUrl
+            );
+
+            Gson gson = new Gson();
+
+            String jsonStr = gson.toJson(keyMap);
+
+            response.getWriter().print(jsonStr);
+            response.getWriter().flush();
+
+//            모든 요청이 비동기 요청이라 작동 안함
+//            response.sendRedirect("/login?error=ACCESS_DENIED");
         }
 
     }

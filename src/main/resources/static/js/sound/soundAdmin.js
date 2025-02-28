@@ -90,16 +90,16 @@ window.applyAdminAlbumsChanges = async function(button, albumId) {
 }
 
 window.applyAdminAlbumsDelete = async function(button, albumId){
-    const handle ={
-        onSuccess:() =>{
-            alert("요청한 앨범을 삭제하였습니다.");
-            router.navigate("/sounds/tracks");
+    const handle = {
+        success: {
+            message: "요청한 앨범을 삭제하였습니다.",
+            navigate: "/sounds/tracks"
         },
-        onBadRequest:()=>{
-            alert("앨범을 삭제하지못했습니다.");
-            router.navigate("/admin/albums");
+        failure: {
+            message: "앨범을 삭제하지 못했습니다.",
+            navigate: "/admin/albums"
         }
-    }
+    };
 
     await axiosDelete({endpoint: '/api/admin/albums/' + albumId, handle});
 }
