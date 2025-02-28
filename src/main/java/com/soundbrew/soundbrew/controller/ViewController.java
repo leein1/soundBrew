@@ -65,24 +65,24 @@ public class ViewController {
 
         return "changepw";
     }
-
-    @GetMapping("/mySubscription")
-    public void getMySubscription(){}
-
-    @GetMapping("/subscription")
-    public void getSubscription(){}
-
+//
+//    @GetMapping("/mySubscription")
+//    public void getMySubscription(){}
+//
+//    @GetMapping("/subscription")
+//    public void getSubscription(){}
+//
 
 
     @GetMapping("/verificationPassword")
     public void getVerificationPassword(){}
 
-    @GetMapping("/myInfo")
-//    @PreAuthorize("hasRole('USER')")
-    public void getMe(){
-
-        log.warn("----------------------------------ViewController /MyInfo 호출");
-    }
+//    @GetMapping("/myInfo")
+////    @PreAuthorize("hasRole('USER')")
+//    public void getMe(){
+//
+//        log.warn("----------------------------------ViewController /MyInfo 호출");
+//    }
 
     @GetMapping("")
     public String getMain(){
@@ -106,7 +106,7 @@ public class ViewController {
 
     //====== 경동훈 SPA view ======
 
-    @RequestMapping(value = { "/", "/sounds/**", "/admin/**","/me/**" })
+    @RequestMapping(value = { "/", "/subscription", "/sounds/**", "/admin/**","/me/**" })
     public String soundSPA() {
         // 모든 SPA 요청을 sound/music-list.html로 리다이렉트
         return "sound/music-list";

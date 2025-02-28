@@ -16,7 +16,7 @@
 }
 
 .modal-content {
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
     padding: 16px; /* 내부 여백 추가 */
     font-family: Arial, sans-serif; /* 가독성 좋은 글꼴 */
@@ -70,9 +70,20 @@
     font-weight: bold;
 }
 
+.open-tag-modal{
+    background-color: #555;
+    color: white;
+    border: none;
+}
+.tab-button{
+    background-color:#ffffff;
+}
+.tab-button.active{
+    background-color:#4caf50;
+}
 
 .reset-tags {
-    background-color: #FF5252;
+    background-color: #777;
     color: white;
     border: none;
 }

@@ -41,7 +41,7 @@ public class Custom403Handler implements AccessDeniedHandler {
           json이 아닌 요청
           로그인 페이지로 error 파라미터와 함께 리다이렉트
          */
-        if(!jsonRequest){
+        if(jsonRequest){
             log.info("리다이렉트 해줘야 함");
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);

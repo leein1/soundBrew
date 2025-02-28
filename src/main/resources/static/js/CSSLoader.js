@@ -90,7 +90,11 @@ export const SoundManageMainTypeCSSFiles = [
 ];
 
 export const UserAdminTypeCSSFiles=[
-    "/css/user/user-admin.css"
+    "/css/user/user-admin.css",
+    "/css/user/myInfo.css",
+    "/css/user/changepw.css",
+    "/css/user/mySubscription.css",
+    "/css/user/subscriptionPlan.css"
 ]
 
 export const AdminStatisticTypeCSSFiles=[

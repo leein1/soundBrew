@@ -108,106 +108,156 @@
         import { axiosPatch } from '/js/fetch/standardAxios.js';
         import { inputHandler } from '/js/check/inputHandler.js';
 
-        document.addEventListener("DOMContentLoaded", async() =>{
+        //라우터에서 우선적으로 비동기화 통신으로 회원 정보를 불러옴
+        const response = await axiosGet({endpoint:"/api/me", useToken:true});
 
-            try{
-                const response = await axiosGet({endpoint:"/api/me", useToken:true});
+      // 모듈화 된 js 파일에서, 이제 라우터에서 넘겨준 response를 이용할꺼임.
+      export function renderMyInfoForm() {
+        const contentBody = document.getElementById('content-body');
 
-                alert(response);
+        contentBody.innerHTML = `
+          <form id="myInfo-form" class="myInfo-form">
+            <div class="input-group">
+              <label for="email" style="justify-content: space-between; display: flex">
+                <span>이메일</span>
+              </label>
+              <div class="input-with-button">
+                <input type="email" id="email" name="email" readonly required>
+                <input type="checkbox" id="emailChecked" hidden>
+              </div>
+            </div>
 
-                updateMyInfo(response.dto);
+            <div class="input-group">
+              <label for="name">이름</label>
+              <div class="input-with-button">
+                <input type="text" id="name" name="name" readonly required>
+                <button type="button" class="edit-btn" data-target="name">수정하기</button>
+                <button type="button" class="save-btn" data-target="name" hidden>수정완료</button>
+              </div>
+              <button type="button" class="cancel-btn" data-target="name" hidden>취소하기</button>
+            </div>
 
-                function updateMyInfo(dto) {
-                    document.getElementById("userId").value = dto.userId;
-                    document.getElementById("email").value = dto.email;
-                    document.getElementById("name").value = dto.name;
-                    document.getElementById("nickname").value = dto.nickname;
+            <div class="input-group">
+              <label for="nickname" style="justify-content: space-between; display: flex">
+                <span>닉네임 ( 특수문자가 없는 2글자 이상 )</span>
+                <span class="duplicate-check-nickname" hidden>중복확인</span>
+              </label>
+              <div class="input-with-button">
+                <input type="text" id="nickname" name="nickname" readonly required>
+                <input type="checkbox" id="nicknameChecked" hidden>
+                <button type="button" class="edit-btn" data-target="nickname">수정하기</button>
+                <button type="button" class="save-btn" data-target="nickname" hidden>수정완료</button>
+              </div>
+              <button type="button" class="cancel-btn" data-target="nickname" hidden>취소하기</button>
+            </div>
 
-                    // dto.phoneNumber를 3-4-4 로 나누어 표기
-                    if (dto.phoneNumber) {
+            <div class="input-group">
+              <label>전화번호</label>
+              <div class="phone-number">
+                <input type="text" id="phone1" value="010" readonly>
+                <input type="text" id="phone2" maxlength="4" pattern="\\d{4}" readonly required>
+                <input type="text" id="phone3" maxlength="4" pattern="\\d{4}" readonly required>
+                <button type="button" class="edit-btn" data-target="phoneNumber">수정하기</button>
+                <button type="button" class="save-btn" data-target="phoneNumber" hidden>수정완료</button>
+              </div>
+              <button type="button" class="cancel-btn" data-target="phoneNumber" hidden>취소하기</button>
+            </div>
 
-                        const phoneNum = dto.phoneNumber.replace(/\D/g, ""); // 공백, 특문 제거
+            <div class="input-group">
+              <label for="birth">생일 </label>
+              <input type="date" id="birth" name="birth" readonly required>
+            </div>
 
-                        if (phoneNum.length === 11) { // 01012345678 형태일 경우
-                            document.querySelector("#phone1").value = phoneNum.substring(0, 3);
-                            document.querySelector("#phone2").value = phoneNum.substring(3, 7);
-                            document.querySelector("#phone3").value = phoneNum.substring(7, 11);
-                        }
-                    }
-                    // document.getElementById("phonenumber").value = dto.phoneNumber;
-                    document.getElementById("birth").value = dto.birth;
-                }
+            <input type="hidden" name="phoneNumber" id="phoneNumber">
+            <input type="hidden" name="userId" id="userId" readonly required>
+          </form>
+        `;
+      }
 
-            }catch (error){
-                alert(error)
-                // window.location.href = "/login"
-            }
+        updateMyInfo(response.dto);
 
+        function updateMyInfo(dto) {
+            document.getElementById("userId").value = dto.userId;
+            document.getElementById("email").value = dto.email;
+            document.getElementById("name").value = dto.name;
+            document.getElementById("nickname").value = dto.nickname;
 
-            const nicknameInput = document.getElementById("nickname");
-            const nicknameChecked = document.getElementById("nicknameChecked");
-            let nicknameTimer;
+            // dto.phoneNumber를 3-4-4 로 나누어 표기
+            if (dto.phoneNumber) {
 
-            // 상태에 따라 인풋와 중복확인 원의 색상을 함께 업데이트하는 함수
-            function updateInputAndCheckColor(inputElement, isAvailable, checkElement) {
-                let color = "gray";
-                if (inputElement.value.trim() !== "") {
-                    color = isAvailable ? "limegreen" : "red";
-                }
-                inputElement.style.borderColor = color;
-                if (checkElement) {
-                    checkElement.style.setProperty('--status-color', color);
-                }
-            }
+                const phoneNum = dto.phoneNumber.replace(/\D/g, ""); // 공백, 특문 제거
 
-            async function checkDuplicate(inputElement, endpoint, checkedElement) {
-                if (inputElement.value.trim() === "") return;
-
-                // 해당 인풋에 맞는 중복확인 표시 요소 선택 (id에 따라 구분)
-                const checkElement = inputElement.id === "email"
-                    ? document.querySelector('.duplicate-check-email')
-                    : inputElement.id === "nickname"
-                        ? document.querySelector('.duplicate-check-nickname')
-                        : null;
-
-                inputElement.style.borderColor = "orange"; // 검사 중 표시 - 오렌지를 식별할경우는 거의 없을 것 같음
-                if (checkElement) {
-                    checkElement.style.setProperty('--status-color', "orange");
-                }
-
-                console.log(`${endpoint} 중복 체크 요청:`, inputElement.value); // 요청 로그 출력
-
-                const inputToJson = serializeInputToJSON(inputElement);
-
-                try {
-
-                    const response = await axiosPost({ endpoint: endpoint, body: inputToJson });
-                    console.log(`${endpoint} 중복 체크 결과:`, response); // 응답 결과 로그 출력
-
-                    checkedElement.checked = response.available;
-                    // updateInputBorder(inputElement, response.available);
-                    updateInputAndCheckColor(inputElement, response.available, checkElement);
-
-                } catch (err) {
-                    console.error(`${endpoint} 중복 체크 오류:`, err);
-                    // inputElement.style.borderColor = "red"; // 오류 시 빨간색 처리
-                    updateInputAndCheckColor(inputElement, false, checkElement);
-
+                if (phoneNum.length === 11) { // 01012345678 형태일 경우
+                    document.querySelector("#phone1").value = phoneNum.substring(0, 3);
+                    document.querySelector("#phone2").value = phoneNum.substring(3, 7);
+                    document.querySelector("#phone3").value = phoneNum.substring(7, 11);
                 }
             }
+            // document.getElementById("phonenumber").value = dto.phoneNumber;
+            document.getElementById("birth").value = dto.birth;
+        }
 
-            nicknameInput.addEventListener("input", () => {
-                clearTimeout(nicknameTimer);
-                nicknameChecked.checked = false;
-                nicknameInput.style.borderColor = "gray"; // 입력 중 기본 회색
-                document.querySelector('.duplicate-check-nickname')
-                    .style.setProperty('--status-color', "gray");
+        const nicknameInput = document.getElementById("nickname");
+        const nicknameChecked = document.getElementById("nicknameChecked");
+        let nicknameTimer;
 
-                nicknameTimer = setTimeout(() => checkDuplicate(nicknameInput, "/api/verification/nickname", nicknameChecked), 500);
-            });
+        // 상태에 따라 인풋와 중복확인 원의 색상을 함께 업데이트하는 함수
+        function updateInputAndCheckColor(inputElement, isAvailable, checkElement) {
+            let color = "gray";
+            if (inputElement.value.trim() !== "") {
+                color = isAvailable ? "limegreen" : "red";
+            }
+            inputElement.style.borderColor = color;
+            if (checkElement) {
+                checkElement.style.setProperty('--status-color', color);
+            }
+        }
 
+        async function checkDuplicate(inputElement, endpoint, checkedElement) {
+            if (inputElement.value.trim() === "") return;
+
+            // 해당 인풋에 맞는 중복확인 표시 요소 선택 (id에 따라 구분)
+            const checkElement = inputElement.id === "email"
+                ? document.querySelector('.duplicate-check-email')
+                : inputElement.id === "nickname"
+                    ? document.querySelector('.duplicate-check-nickname')
+                    : null;
+
+            inputElement.style.borderColor = "orange"; // 검사 중 표시 - 오렌지를 식별할경우는 거의 없을 것 같음
+            if (checkElement) {
+                checkElement.style.setProperty('--status-color', "orange");
+            }
+
+            console.log(`${endpoint} 중복 체크 요청:`, inputElement.value); // 요청 로그 출력
+
+            const inputToJson = serializeInputToJSON(inputElement);
+
+            try {
+
+                const response = await axiosPost({ endpoint: endpoint, body: inputToJson });
+                console.log(`${endpoint} 중복 체크 결과:`, response); // 응답 결과 로그 출력
+
+                checkedElement.checked = response.available;
+                // updateInputBorder(inputElement, response.available);
+                updateInputAndCheckColor(inputElement, response.available, checkElement);
+
+            } catch (err) {
+                console.error(`${endpoint} 중복 체크 오류:`, err);
+                // inputElement.style.borderColor = "red"; // 오류 시 빨간색 처리
+                updateInputAndCheckColor(inputElement, false, checkElement);
+
+            }
+        }
+
+        nicknameInput.addEventListener("input", () => {
+            clearTimeout(nicknameTimer);
+            nicknameChecked.checked = false;
+            nicknameInput.style.borderColor = "gray"; // 입력 중 기본 회색
+            document.querySelector('.duplicate-check-nickname')
+                .style.setProperty('--status-color', "gray");
+
+            nicknameTimer = setTimeout(() => checkDuplicate(nicknameInput, "/api/verification/nickname", nicknameChecked), 500);
         });
-
 
         // 기존의 수정 버튼 이벤트 리스너 외에 취소 버튼에 대한 이벤트 리스너 추가
         document.querySelectorAll(".cancel-btn").forEach(button => {

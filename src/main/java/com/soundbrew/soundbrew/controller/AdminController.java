@@ -9,7 +9,7 @@ import com.soundbrew.soundbrew.dto.sound.AlbumDTO;
 import com.soundbrew.soundbrew.dto.sound.MusicDTO;
 import com.soundbrew.soundbrew.dto.sound.SearchTotalResultDTO;
 import com.soundbrew.soundbrew.dto.sound.TagsDTO;
-import com.soundbrew.soundbrew.handler.custom.ResourceOwnershipException;
+import com.soundbrew.soundbrew.handler.BusinessException;
 import com.soundbrew.soundbrew.service.*;
 import com.soundbrew.soundbrew.service.authentication.AuthenticationService;
 import com.soundbrew.soundbrew.service.sound.SoundsService;
@@ -198,7 +198,7 @@ public class AdminController {  //  관리자용 컨트롤러
     // sounds for admin
     @DeleteMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO> deleteAlbum(@PathVariable @Positive int albumId, Authentication authentication){
-//        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
+        if(!authenticationService.isAdmin(authentication)) throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
 
         ResponseDTO responseDto = soundsService.deleteAlbum(albumId);
 

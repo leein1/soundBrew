@@ -69,7 +69,14 @@ const addAuthHeader = async (options, handle = {}) => {
         return handleResponse(response.status, response.data, handle);
 
     } catch (error) {
-
+        /**
+         * AccessTokenException 반환 status및 msg
+         * UNACCEPT(401, "Token is null or too short"),
+         * BADTYPE(401, "Token type Bearer"),
+         * MARFORM(403, "Malformed Token"),
+         * BADSIGN(403, "BadSignatured Token"),
+         * EXPIRED(403, "Expired Token");
+         */
         if (error.response?.status === 401) {
 
            alert("만료되었거나 인증 실패된 토큰, 재발급 시도 중...");
@@ -91,13 +98,10 @@ const addAuthHeader = async (options, handle = {}) => {
             }
 
         } else if(error.response?.status === 403){
+            const redirectUrl = error.response.data?.redirectUrl;
+            const message = error.response.response?.message;
 
-            const message = error.response?.data?.message;
-            const redirectUrl = error.response?.data?.redirectUrl;
-
-            console(message);
-            console(redirectUrl);
-
+            return handleResponse(error.response.status, error.response.data, handle);
         } else {
             // error.response를 올바르게 참조해야 합니다.
             // throw handleResponse(error.response?.status, error.response?.data, handle);

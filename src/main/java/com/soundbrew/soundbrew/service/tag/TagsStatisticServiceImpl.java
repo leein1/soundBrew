@@ -22,6 +22,44 @@ public class TagsStatisticServiceImpl implements TagsStatisticService {
     private final GenreTagRepository genreTagRepository;
 
     @Override
+    public ResponseDTO<TagsTotalStatisticDTO> getTagsWithTopUsageByUserId(int userId) {
+        // Object[]로 조회
+        List<Object[]> instObjects = instrumentTagRepository.findTopInstrumentTagsByUser(userId, PageRequest.of(0, 5));
+        List<Object[]> moodObjects = moodTagRepository.findTopMoodTagsByUser(userId, PageRequest.of(0, 5));
+        List<Object[]> genreObjects = genreTagRepository.findTopGenreTagsByUser(userId, PageRequest.of(0, 5));
+
+        // Object[] 배열을 TagStatisticDTO 리스트로 변환 (첫번째 요소: tagName, 두번째 요소: count)
+        List<TagStatisticDTO> instStatisticDTO = instObjects.stream()
+                .map(obj -> new TagStatisticDTO(
+                        (String) obj[0],
+                        ((Number) obj[1]).longValue()
+                ))
+                .collect(Collectors.toList());
+
+        List<TagStatisticDTO> moodStatisticDTO = moodObjects.stream()
+                .map(obj -> new TagStatisticDTO(
+                        (String) obj[0],
+                        ((Number) obj[1]).longValue()
+                ))
+                .collect(Collectors.toList());
+
+        List<TagStatisticDTO> genreStatisticDTO = genreObjects.stream()
+                .map(obj -> new TagStatisticDTO(
+                        (String) obj[0],
+                        ((Number) obj[1]).longValue()
+                ))
+                .collect(Collectors.toList());
+
+        // DTO에 변환한 결과 설정
+        TagsTotalStatisticDTO statisticDTO = new TagsTotalStatisticDTO();
+        statisticDTO.setInstrumentUsageCount(instStatisticDTO);
+        statisticDTO.setMoodUsageCount(moodStatisticDTO);
+        statisticDTO.setGenreUsageCount(genreStatisticDTO);
+
+        return ResponseDTO.<TagsTotalStatisticDTO>withSingleData().dto(statisticDTO).build();
+    }
+
+    @Override
     public ResponseDTO<TagsTotalStatisticDTO> getTagsWithTopUsage() {
         // Object[]로 조회
         List<Object[]> instObjects = instrumentTagRepository.findTopInstrumentTags(PageRequest.of(0, 5));

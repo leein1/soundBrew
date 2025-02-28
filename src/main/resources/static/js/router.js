@@ -1,17 +1,23 @@
 import {axiosGet,axiosPost} from '/js/fetch/standardAxios.js';
 import { extractTagsFromURL,compareTagsWithUrlParams } from "/js/tagStateUtil.js";
 import {renderTotalSounds,renderTotalAlbums,renderSoundOne,renderAlbumOne} from '/js/sound/sound.js';
+import { renderMyInfo } from '/js/user/myInfo.js';
+import { renderChangePassword } from '/js/user/changepw.js';
+import { renderMySubscription } from '/js/user/mySubscription.js';
+import { renderSubscriptionPlans } from '/js/user/subscriptionPlan.js';
 import {renderPagination} from "/js/pagination.js";
 import {renderSort} from "/js/sound/sort.js";
 import {renderTagsFromSearch} from "/js/sound/soundTagsModule.js";
 import {renderViewType} from "/js/sound/viewType.js";
 import {globalStateManager} from "/js/globalState.js";
-import {renderMyAlbums,renderMyTracks,renderMyTags,renderMyMain,renderSoundUpload} from "/js/sound/soundManage.js";
+import {renderMeAlbums, renderMeTracks, renderMeTags,renderSoundUpload } from "/js/sound/soundManage.js";
 import {renderArtistsTracks,renderArtistsAlbums,renderTagsSpelling,renderTagsNew,renderArtistsVerify, renderArtistsVerifyOne,renderTotalSoundsVerify} from "/js/sound/soundAdmin.js";
 import { loadSoundTypeCSS, loadSoundManageTypeCSS, updateDynamicCSS , SoundTypeCSSFiles, SoundManageTypeCSSFiles, UserAdminTypeCSSFiles, loadUserAdminTypeCSS, removeAllDynamicCSS,AdminStatisticTypeCSSFiles,loadAdminStatisticTypeCSS,loadSoundManageMainTypeCSS,SoundManageMainTypeCSSFiles} from '/js/CSSLoader.js';
 import {renderUserInfoWithRole} from '/js/user/userAdmin.js';
 import {renderSubscriptionInfo } from '/js/user/subscriptionAdmin.js';
 import {initDashboard} from '/js/user/dashboard.js';
+import {initMeDashboard} from '/js/user/meDashboard.js';
+
 
 export class Router {
     constructor() {
@@ -79,7 +85,15 @@ export class Router {
 
 export const router = new Router();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    router.addRoute('/subscription', async ()=>{
+        //css 적용
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        await renderSubscriptionPlans();
+    });
+
     router.addRoute('/sounds/tracks', async () => {
         updateDynamicCSS(SoundTypeCSSFiles);
         await loadSoundTypeCSS();
@@ -187,20 +201,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    router.addRoute('/me/Info' , async ()=>{
+        //css 관련 로딩
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        const response = await axiosGet({endpoint:"/api/me", useToken:true});
+        await renderMyInfo(response.dto);
+    });
+
+    router.addRoute('/me/change-password', async ()=>{
+        //css 관련 로딩
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        await renderChangePassword();
+    });
+
+    router.addRoute('/me/subscription' , async ()=>{
+        //css 관련 로딩
+        updateDynamicCSS(UserAdminTypeCSSFiles);
+        await loadUserAdminTypeCSS();
+
+        await renderMySubscription();
+    });
+
     router.addRoute('/me/sounds/upload',async () => {
         updateDynamicCSS(SoundManageMainTypeCSSFiles);
         await loadSoundManageMainTypeCSS();
 
         renderSoundUpload();
-    });
-
-    router.addRoute('/me/sounds', async () => {
-        updateDynamicCSS(SoundManageMainTypeCSSFiles);
-        await loadSoundManageMainTypeCSS();
-
-        renderMyMain();
-
-        const response = await axiosGet({endpoint: `/api/sounds/tracks`});
     });
 
     router.addRoute('/me/sounds/albums', async () => {
@@ -210,8 +240,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const queryParams = window.location.search;
 
         const response = await axiosGet({endpoint: `/api/me/albums${queryParams}`});
-        await renderMyAlbums(response);
-        renderPagination(response);
+        console.log(response);
+        renderSearch();
+        await renderMeAlbums(response);
+        await renderPagination(response);
     });
 
     router.addRoute('/me/sounds/tracks', async () => {
@@ -221,7 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const queryParams = window.location.search;
 
         const response = await axiosGet({endpoint: `/api/me/tracks${queryParams}`});
-        await renderMyTracks(response);
+        renderSearch();
+        await renderMeTracks(response);
         renderPagination(response);
     });
 
@@ -232,8 +265,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const queryParams = window.location.search;
 
         const response = await axiosGet({endpoint: `/api/me/tracks${queryParams}`});
-        await renderMyTags(response);
+        renderSearch();
+        await renderMeTags(response);
         renderPagination(response);
+    });
+
+    router.addRoute('/me/statistic' , async () =>{
+        updateDynamicCSS(AdminStatisticTypeCSSFiles);
+        await loadAdminStatisticTypeCSS();
+
+        const soundsStats = await axiosGet({ endpoint: '/api/statistic/sounds/stats/me' });
+        const tagsStats = await axiosGet({endpoint:'/api/statistic/tags/stats/me'});
+//        const subscriptionStats = await axiosGet({endpoint : '/api/statistic/subscription/stats/me'});
+
+        await initMeDashboard(soundsStats,tagsStats);
     });
 
     router.addRoute('/admin' , async () =>{
@@ -358,26 +403,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelector('#subscriptionListRoute').addEventListener('click', () => {
-        window.location.href="/subscription";
+        router.navigate('/subscription');
     });
 
     document.querySelector('#mySoundRoute').addEventListener('click', () => {
-        router.navigate('/me/sounds');
+        router.navigate('/me/sounds/albums');
     });
 
+    document.querySelector('#mySoundStatisticRoute').addEventListener('click', () => {
+        router.navigate('/me/statistic');
+    });
 
+    document.querySelector('#mySoundUploadRoute').addEventListener('click', () => {
+        router.navigate('/me/sounds/upload');
+    });
 
     document.querySelector('#myInfoRoute').addEventListener('click', () => {
         // router.navigate('/me/info');
-        window.location.href="/myInfo";
+        router.navigate('/me/Info');
     });
 
     document.querySelector('#changePasswordRoute').addEventListener('click', () => {
         // router.navigate('/me/info');
-        window.location.href="/change-password";
+        router.navigate('/me/change-password');
     });
 
-
+    document.querySelector('#mySubscriptionRoute').addEventListener('click', () => {
+        // router.navigate('/me/info');
+        router.navigate('/me/subscription');
+    });
 
     document.getElementById("adminStatisticRoute").addEventListener("click",()=>{
         router.navigate("/admin");

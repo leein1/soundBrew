@@ -5,6 +5,7 @@ import com.soundbrew.soundbrew.dto.statistics.tag.TagStatisticDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +22,16 @@ public interface MoodTagRepository extends JpaRepository<MoodTag, Integer> {
         ORDER BY COUNT(mi) DESC
     """)
     List<Object[]> findTopMoodTags(Pageable pageable);
+
+    //+ 나
+    @Query("""
+        SELECT i.moodTagName, COUNT(mi)
+        FROM MoodTag i
+        LEFT JOIN i.musicMoodTag mi
+        LEFT JOIN mi.music m
+        WHERE m.user.userId = :userId
+        GROUP BY i.moodTagId, i.moodTagName
+        ORDER BY COUNT(mi) DESC
+    """)
+    List<Object[]> findTopMoodTagsByUser(@Param("userId") int userId, Pageable pageable);
 }
