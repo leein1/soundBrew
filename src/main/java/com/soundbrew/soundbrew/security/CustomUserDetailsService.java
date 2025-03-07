@@ -1,6 +1,5 @@
 package com.soundbrew.soundbrew.security;
 
-import com.soundbrew.soundbrew.dto.user.MemberSecurityDTO;
 import com.soundbrew.soundbrew.dto.user.UserDetailsDTO;
 import com.soundbrew.soundbrew.repository.role.RoleRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
@@ -24,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-//    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 

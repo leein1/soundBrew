@@ -164,9 +164,6 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
                 String username = (String) values.get("username");
 
-                /*
-                 부여하는 SimpleGrantedAuthority 문자열이 애매해 보임.
-                */
                 List<GrantedAuthority> authorities= new ArrayList<>();;
                 authorities.add(new SimpleGrantedAuthority("PASSWORD_RESET"));
 

@@ -27,11 +27,14 @@ public class ResponseDTO<E> {
 
     @Builder(builderMethodName = "withMessage")
     public ResponseDTO(String message) {
+
         this.message = message;
     }
 
     @Builder(builderMethodName = "withSingleData")
+
     public ResponseDTO(E dto) { // 단수형 데이터 생성자
+
         this.dto = dto;
 
     }

@@ -39,6 +39,10 @@ public class GlobalExceptionHandler {
 
         return buildErrorResponse(ex.getStatus(), ex.getClientMessage(), ex.getStatus().getReasonPhrase());
     }
+    
+
+
+
 
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<ExceptionResponseDTO> handleAllExceptions(Exception ex) {

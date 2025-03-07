@@ -29,6 +29,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
 
         log.info(authentication);
         log.info(authentication.getName());
@@ -55,10 +56,14 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
                 "roles", roles
         );
 
+        Map<String,Object> refreshClaims = Map.of(
+                "username", authentication.getName()
+        );
+
         // Access Token 기간 1일
         String accessToken = jwtUtil.generateToken(claim,4);
         //  Refresh Token 기간 30일
-        String refreshToken = jwtUtil.generateToken(claim,30);
+        String refreshToken = jwtUtil.generateToken(refreshClaims,30);
 
         //  로그인 성공시 응답 - 확인을 위해 userId, nickname 정보도 같이 응답으로 보냄
         Map<String,String> keyMap = Map.of(

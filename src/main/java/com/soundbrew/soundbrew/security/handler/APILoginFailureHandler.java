@@ -31,7 +31,7 @@ public class APILoginFailureHandler implements AuthenticationFailureHandler {
         response.setCharacterEncoding("UTF-8");
 
         String message = "";
-        String redirectUrl = "";
+        String redirectUrl = "/login";
         String resetToken = "";
 
         if(exception instanceof LockedException){
@@ -61,8 +61,8 @@ public class APILoginFailureHandler implements AuthenticationFailureHandler {
                     "type", "password_reset"
             );
 
-            // 예를 들어, 유효기간 15분 (여기서는 간단하게 1분으로 예시)
-            resetToken = jwtUtil.generateToken(claim, 5);
+            // 예를 들어, 유효기간 15분
+            resetToken = jwtUtil.generateTokenWithMinutes(claim, 15);
 
 
             redirectUrl = "/help/reset-password";

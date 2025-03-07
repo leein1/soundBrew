@@ -46,15 +46,25 @@ public class MeController {
 //    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
 //    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "")
-    public ResponseEntity<ResponseDTO<UserDTO>> getMe(Authentication authentication) {
+    public ResponseEntity<ResponseDTO<?>> getMe(Authentication authentication) {
 
         int userId = authenticationService.getUserId(authentication);
+
+        if(!authenticationService.isUser(authentication)){
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                    ResponseDTO.<String>withMessage().message("수정 권한이 없습니다.").build()
+            );
+        }
+
+
 
         ResponseDTO<UserDTO> responseDTO = userService.getUser(userId);
 
         log.info("******************************************" + responseDTO.toString());
 
         return ResponseEntity.ok().body(responseDTO);
+
     }
 
 
@@ -69,7 +79,7 @@ public class MeController {
 
         int authenticatedUserId = authenticationService.getUserId(authentication);
 
-        if (authenticatedUserId != userDTO.getUserId()) {
+        if (authenticatedUserId != userDTO.getUserId() || !authenticationService.isUser(authentication)) {
 
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
                     ResponseDTO.<String>withMessage().message("수정 권한이 없습니다.").build()
@@ -99,6 +109,13 @@ public class MeController {
     @PatchMapping("/password")
     public ResponseEntity<ResponseDTO<String>> changePassword(Authentication authentication,@RequestBody UserDTO userDTO){
 
+        if(!authenticationService.isUser(authentication)){
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                    ResponseDTO.<String>withMessage().message("수정 권한이 없습니다.").build()
+            );
+        }
+
         int userId = authenticationService.getUserId(authentication);
         userDTO.setUserId(userId);
 
@@ -112,7 +129,7 @@ public class MeController {
 //    반환형으로 SubscriptionDTO ? UserSubscriptionDTO
 //    @ApiOperation(value = "subscription GET", notes = "GET 내 구독제 정보 가져오기")
     @GetMapping("/subscription")
-    public ResponseEntity<ResponseDTO<?>> getSubscriptionInfo(Authentication authentication){
+    public ResponseEntity<ResponseDTO<SubscriptionDTO>> getSubscriptionInfo(Authentication authentication){
 
         int userId = authenticationService.getUserId(authentication);
 
