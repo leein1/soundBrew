@@ -4,6 +4,7 @@
 회원/구독제 음원 판매 사이트 
 
 ## 관련 문서
+https://leeinwon.notion.site/3-1aea7464bbfc80ec84f0d3b7c0a5a991
 
 ## 🛠 사용 기술
 - Spring Boot 2.7.18
