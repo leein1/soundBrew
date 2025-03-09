@@ -37,21 +37,22 @@ public class Custom403Handler implements AccessDeniedHandler {
 
         log.info("JSON Request: " + jsonRequest);
 
-        /*
-          json이 아닌 요청
-          로그인 페이지로 error 파라미터와 함께 리다이렉트
-         */
-        if(jsonRequest){
-            log.info("리다이렉트 해줘야 함");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
 
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding("UTF-8");
+        String message = "";
+        String redirectUrl = "";
 
-            String message = "접근 권한이 없습니다.";
-            String redirectUrl = "/login?error=ACCESS_DENIED";
+        // json 요청이 아닌 경우
+        if(!jsonRequest) {
+            log.warn("잘못된 요청 : JSON이 아닙니다");
 
-            // 리다이렉트 주소 JSON 형태로 응답
-            Map<String,String> keyMap = Map.of(
+            response.setStatus(HttpStatus.BAD_REQUEST.value()); // 400
+
+            message = "잘못된 요청 입니다.";
+            redirectUrl = "/";
+
+            Map<String, String> keyMap = Map.of(
                     "message", message,
                     "redirectUrl", redirectUrl
             );
@@ -63,7 +64,28 @@ public class Custom403Handler implements AccessDeniedHandler {
             response.getWriter().print(jsonStr);
             response.getWriter().flush();
 
+            return;
         }
+
+        log.info("리다이렉트 해줘야 함");
+
+        message = "접근 권한이 없습니다.";
+        redirectUrl = "/login?error=ACCESS_DENIED";
+
+        // 리다이렉트 주소 JSON 형태로 응답
+        Map<String,String> keyMap = Map.of(
+                "message", message,
+                "redirectUrl", redirectUrl
+        );
+
+        Gson gson = new Gson();
+
+        String jsonStr = gson.toJson(keyMap);
+
+        response.getWriter().print(jsonStr);
+        response.getWriter().flush();
+
+
 
     }
 
