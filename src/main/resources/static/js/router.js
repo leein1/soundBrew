@@ -17,6 +17,7 @@ import {renderUserInfoWithRole} from '/js/user/userAdmin.js';
 import {renderSubscriptionInfo } from '/js/user/subscriptionAdmin.js';
 import {initDashboard} from '/js/user/dashboard.js';
 import {initMeDashboard} from '/js/user/meDashboard.js';
+import {renderIndex} from '/js/renderIndex.js';
 
 
 export class Router {
@@ -86,6 +87,10 @@ export class Router {
 export const router = new Router();
 
 document.addEventListener('DOMContentLoaded', async () => {
+    router.addRoute('/', async()=>{
+        await renderIndex();
+    });
+
     router.addRoute('/subscription', async ()=>{
         //css 적용
         updateDynamicCSS(UserAdminTypeCSSFiles);

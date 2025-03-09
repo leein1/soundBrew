@@ -84,12 +84,12 @@ public class ViewController {
 //        log.warn("----------------------------------ViewController /MyInfo 호출");
 //    }
 
-    @GetMapping("")
-    public String getMain(){
-
-        return "hello";
-
-    }
+//    @GetMapping("")
+//    public String getMain(){
+//
+//        return "hello";
+//
+//    }
 
 //    @GetMapping("/admin")
 //    public void adminMain(){}
@@ -106,7 +106,7 @@ public class ViewController {
 
     //====== 경동훈 SPA view ======
 
-    @RequestMapping(value = { "/", "/subscription", "/sounds/**", "/admin/**","/me/**" })
+    @RequestMapping(value = { "", "/subscription", "/sounds/**", "/admin/**","/me/**" })
     public String soundSPA() {
         // 모든 SPA 요청을 sound/music-list.html로 리다이렉트
         return "sound/music-list";
