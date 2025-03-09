@@ -104,7 +104,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
             log.error("MalformedJwtException-----------------------------------------------------------------");
             log.error("MalformedJwtException: {}", malformedJwtException.getMessage());
-            throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.MARFORM);
+            throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.MALFORM);
 
         }catch (SignatureException signatureException){
 

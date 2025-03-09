@@ -169,7 +169,7 @@ public class MeController {
     }
 
     @PostMapping("/tracks/{musicId}/tags")
-    ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable @Positive int musicId, @RequestBody  TagsDTO tagsDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> updateLinkTags(@PathVariable @Positive int musicId, @RequestBody  TagsDTO tagsDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
 
         int userId = authenticationService.getUserId(authentication);
@@ -180,7 +180,7 @@ public class MeController {
     }
 
     @PostMapping("/sounds")
-    ResponseEntity<ResponseDTO> createSound(@RequestBody SoundCreateDTO soundCreateDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> createSound(@RequestBody SoundCreateDTO soundCreateDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
 
         int userId = authenticationService.getUserId(authentication);
@@ -195,7 +195,7 @@ public class MeController {
     }
 
     @PatchMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO> updateAlbum(@PathVariable @Positive int albumId, @RequestBody AlbumDTO albumDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> updateAlbum(@PathVariable @Positive int albumId, @RequestBody AlbumDTO albumDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
 
         int userId = authenticationService.getUserId(authentication);
@@ -206,7 +206,7 @@ public class MeController {
     }
 
     @PatchMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO> updateMusic(@PathVariable @Positive int musicId, @RequestBody MusicDTO musicDto, Authentication authentication ){
+    ResponseEntity<ResponseDTO<String>> updateMusic(@PathVariable @Positive int musicId, @RequestBody MusicDTO musicDto, Authentication authentication ){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
 
         int userId = authenticationService.getUserId(authentication);

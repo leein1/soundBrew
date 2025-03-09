@@ -43,6 +43,16 @@ public class Custom403Handler implements AccessDeniedHandler {
          */
         if(jsonRequest){
             log.info("리다이렉트 해줘야 함");
+            log.info("리다이렉트 해줘야 함");
+            log.info("리다이렉트 해줘야 함");
+            log.info("리다이렉트 해줘야 함");
+            log.info("리다이렉트 해줘야 함");
+            log.info("리다이렉트 해줘야 함");
+            log.info("리다이렉트 해줘야 함");
+            log.info("리다이렉트 해줘야 함");
+            log.info("리다이렉트 해줘야 함");
+
+
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");

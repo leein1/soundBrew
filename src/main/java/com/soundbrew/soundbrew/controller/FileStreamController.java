@@ -23,10 +23,6 @@ public class FileStreamController {
     ResponseEntity<byte[]> streamSound(@RequestHeader(value = HttpHeaders.RANGE, required = false) String rangeHeader, @PathVariable String fileName) throws IOException {
         final long FIXED_RANGE_SIZE = 2 * 1024 * 1024; // 2 MB
         HttpRange range;
-
-        System.err.println("fileName : "+fileName);
-        System.err.println("fileName : "+fileName);
-        System.err.println("fileName : "+fileName);
         // Range 헤더와 관계없이 항상 고정 크기 2MB 범위를 설정
         long start = 0;
         if (rangeHeader != null) {

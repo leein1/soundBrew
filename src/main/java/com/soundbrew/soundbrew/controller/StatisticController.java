@@ -54,29 +54,24 @@ public class StatisticController {
     }
 
     @GetMapping("/tags/stats")
-    public ResponseEntity<ResponseDTO<TagsTotalStatisticDTO>> getBestTags(){
+    public ResponseEntity<ResponseDTO<TagsTotalStatisticDTO>> getBestTags(Authentication authentication){
         ResponseDTO<TagsTotalStatisticDTO> response = tagsStatisticService.getTagsWithTopUsage();
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/users/stats")
-    public ResponseEntity<ResponseDTO<UserStatisticDTO>> getUsersStatsForAdmin() {
+    public ResponseEntity<ResponseDTO<UserStatisticDTO>> getUsersStatsForAdmin(Authentication authentication) {
         ResponseDTO<UserStatisticDTO> response = userStatisticService.getUsersStatsForAdmin();
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/subscription/stats")
-    public ResponseEntity<ResponseDTO<SubscriptionTotalStatisticDTO>> getUserSubscriptionStatsForAdmin() {
+    public ResponseEntity<ResponseDTO<SubscriptionTotalStatisticDTO>> getUserSubscriptionStatsForAdmin(Authentication authentication) {
         ResponseDTO<SubscriptionTotalStatisticDTO> response = userSubscriptionStatisticService.getUserSubscriptionStatsForAdmin();
         return ResponseEntity.ok().body(response);
     }
 
-    // 음원
-
-    // 내가 올린 앨범(일주월)
-    // 내가 올린 음원(일 주 월)
-    // 음원이 다운로드 된 횟수 (일주월, 총, 가장 많이된곡)
-    // 내가 받은 크레딧(다운로드 횟수 x 크레딧) (일 주 월)
+    // 나의 통계
     @GetMapping("/sounds/stats/me")
     public ResponseEntity<ResponseDTO<SoundMyStatisticDTO>> getMySoundsStats(){
 //        int userId = authenticationService.getUserId(authentication);
@@ -95,6 +90,7 @@ public class StatisticController {
 
     @GetMapping("/subscription/stats/me")
     public ResponseEntity<ResponseDTO<SubscriptionTotalStatisticDTO>> getMySubscriptionStats() {
+        //        int userId = authenticationService.getUserId(authentication);
         ResponseDTO<SubscriptionTotalStatisticDTO> response = userSubscriptionStatisticService.getUserSubscriptionStatsForAdmin();
         return ResponseEntity.ok().body(response);
     }

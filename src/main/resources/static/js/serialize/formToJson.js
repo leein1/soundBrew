@@ -32,7 +32,7 @@ export function serializeFormToJSON(form) {
         let current = jsonObject;
 
         keys.forEach((k, index) => {
-            if (index === keys.length - 1) {
+            if (index === keys.length - 1) {//반복 중인 k(키)가 배열 keys의 마지막 요소인지 여부
                 if (k === 'instrument' || k === 'genre'  || k === 'mood' ) { // 현재 키가 'instrument'인지 확인
                     // instrument가 배열이면 기존 배열에 추가, 아니면 새 배열로 생성
                     if (Array.isArray(current[k])) {
