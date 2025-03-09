@@ -43,6 +43,10 @@ public class GlobalExceptionHandler {
 
         return buildErrorResponse(ex.getStatus(), ex.getClientMessage(), ex.getStatus().getReasonPhrase());
     }
+    
+
+
+
 
     @ExceptionHandler(AccessTokenException.class)
     public ResponseEntity<ExceptionResponseDTO> handleAccessTokenException(AccessTokenException ex){

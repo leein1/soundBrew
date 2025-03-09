@@ -73,8 +73,6 @@ public class Custom403Handler implements AccessDeniedHandler {
             response.getWriter().print(jsonStr);
             response.getWriter().flush();
 
-//            모든 요청이 비동기 요청이라 작동 안함
-//            response.sendRedirect("/login?error=ACCESS_DENIED");
         }
 
     }

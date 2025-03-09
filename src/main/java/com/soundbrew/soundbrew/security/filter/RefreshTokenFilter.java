@@ -146,7 +146,9 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
     private void sendTokens(String accessTokenValue, String refreshTokenValue, HttpServletResponse response){
 
+        response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
 
         Gson gson = new Gson();
 
@@ -183,7 +185,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         log.info("RefreshTokenFilter 실행 ");
 
         //  Json에서 accessToken + refreshToken 가져오기
-        Map<String,String> tokens = parseRequestJSon(request);
+        Map<String,String> tokens = this.parseRequestJSon(request);
 
         /*
         아래 코드에서 대입한 값이 null일 경우
@@ -198,8 +200,8 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
         try{
 
-            log.info("RefreshTokenFilter.dofilterInternal - checkAccessToken() 실행");
-            checkAccessToken(accessToken);
+            log.info("RefresvhTokenFilter.dofilterInternal - checkAccessToken() 실행");
+            this.checkAccessToken(accessToken);
 
         }catch (RefreshTokenException refreshTokenException){
 
@@ -213,7 +215,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
             log.info("RefreshTokenFilter.dofilterInternal - checkRefreshToken() 실행");
 
             // checkRefreshToken()에서 검증 후 각 k,v를 Map 으로 반환해줌
-            refreshClaims = checkRefreshToken(refreshToken);
+            refreshClaims = this.checkRefreshToken(refreshToken);
             log.info("checkRefreshToken() 결과 : {}", refreshClaims);
 
             /*
@@ -240,7 +242,6 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
             /**
              *  여기까지 도달할 경우 무조건 AccessToken새로 발급
-             *             재발급시 claim 내용 추가해야함
              */
             log.info("AccessToken 새로 발급");
             String accessTokenValue = jwtUtil.generateToken(claim,4);
@@ -248,7 +249,6 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
             /**
              * refreshToken이 3일도 안 남은 경우
-             *             재발급시 claim 내용 추가해야함
              */
             if(gapTime < (1000* 60 * 60 * 24 * 3)){
                 log.info("RefreshToken 유효기간 3일 미만 - 새로 발급");
@@ -259,7 +259,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
             log.info("NEW accessTokenValue : {}", accessTokenValue);
             log.info("NEW refreshTokenValue : {}", refreshTokenValue);
 
-            sendTokens(accessTokenValue,refreshTokenValue,response);
+            this.sendTokens(accessTokenValue,refreshTokenValue,response);
 
         }catch (RefreshTokenException refreshTokenException){
 
@@ -272,3 +272,4 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
 
 }
+

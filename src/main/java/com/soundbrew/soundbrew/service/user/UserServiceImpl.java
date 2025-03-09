@@ -404,7 +404,11 @@ public class UserServiceImpl implements UserService{
 
         User user = null;
 
-        //  유저 존재하는지 검증 DTO 변환
+        /** 사용자 존재 검증
+         * 사용자가 비밀번호를 변경하는 2가지 경우
+         * 비밀번호를 분실하여 임시 비밀번호를 발급받고 로그인 후 변경하는 경우 - 토큰에 username(email)만 포함되어 있음
+         * 사용자가 정상적인 접근으로 스스로 비밀번호를 바꾸려 하는 경우 - 토큰에 userId 가 포함 되어 있음
+         */
         if(userId != 0){
 
             user = userRepository.findByUserId(userId).orElseThrow();

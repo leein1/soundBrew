@@ -30,26 +30,6 @@ public class VerificationController {
     private final ActivationCodeService activationCodeService;
     private final UserService userService;
 
-//    private final VerifyService verifyService;
-////    @ApiOperation(value = "verify-password POST", notes = "POST 비밀번호 인증")
-//    @PostMapping("/password")
-//    ResponseEntity<ResponseDTO<String>> verifyPassword(@RequestParam String nickname, @RequestParam String password) {
-//        ResponseDTO<String> responseDTO = verifyService.verifyPassword(nickname, password);
-//        if (responseDTO.getMessage().equals("확인되었습니다.")) {
-//
-//            // 토큰 또는 세션 데이터 생성 필요
-//
-//            return ResponseEntity.ok(ResponseDTO.<String>withMessage()
-//                    .message("인증 성공")
-//                    .build());  // 토큰 또는 세션 정보 담아야 함
-//        }
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                .body(responseDTO);
-//    }
-
-
-
-
     //  유저 활성화
     @PostMapping("/activation")
     public ResponseEntity<ResponseDTO<String>> activationUser(@RequestBody ActivationCodeDTO activationCodeDTO){
@@ -106,13 +86,13 @@ public class VerificationController {
     }
 
     // 비밀번호 분실시
-    @PatchMapping("/password")
-    public ResponseEntity<ResponseDTO> changePassword(@RequestBody int userId, @RequestBody String newPassword){
-
-        // 입력받은 비밀번호가 없다면 자체적으로 비밀번호 reset
-        // 입력받은 비밀번호가 있다면 입력받은것으로 변경
-        return null;
-    }
+//    @PatchMapping("/password")
+//    public ResponseEntity<ResponseDTO> changePassword(@RequestBody int userId, @RequestBody String newPassword){
+//
+//        // 입력받은 비밀번호가 없다면 자체적으로 비밀번호 reset
+//        // 입력받은 비밀번호가 있다면 입력받은것으로 변경
+//        return null;
+//    }
 
 
 }

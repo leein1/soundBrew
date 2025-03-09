@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!--
+        PortOne 개발자 센터
+        문서에 나와 있진 않지만 영상을 보니 jQuery CDN을 추가하는것으로 보아 포트원 라이브러리가 JQuery 기반으로 보임
+        https://developers.portone.io/opi/ko/readme?v=v1
+        -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+
+</head>
+<body>
+
+    <button type="button" id="order">결제 요청</button>
+</body>
+<script>
+
+    document.getElementById("order").addEventListener("click", function (){
+        // 결제창을 호출할 페이지에서 다음과 같이 포트원 SDK를 초기화합니다.
+        // https://developers.portone.io/sdk/ko/v1-sdk/javascript-sdk/payrq
+
+        // 주문 고유 번호(merchant_uid) 관련 유의사항
+        //
+        // 주문 고유 번호는 개별 결제 요청을 구분하기 위해 사용되는 문자열입니다.
+        //
+        //     따라서 주문 고유 번호는 결제 요청 시 항상 고유한 값으로 채번되어야 하며, 결제 완료 이후 결제 기록 조회나 위변조 대사 작업 시 사용되기 때문에 고객사 DB 상에 별도로 저장해야 합니다.
+
+        var IMP = window.IMP;
+        IMP.init("imp56588103"); // 예: 'imp00000000'
+
+        var merchant_uid = "O" + new Date().getTime(); // 고유한 주문번호 생성
+
+        const BASE_URL = "http://localhost:8080";
+
+        IMP.request_pay(
+            {
+                channelKey: "channel-key-f51d492f-e699-410e-8a93-75ca6eda8638",
+                pay_method: "card",
+                merchant_uid: merchant_uid, // 주문 고유 번호
+                name: "최문석 히트텍",
+                amount: 1,
+                buyer_email: "inwon.private@icloud.com",
+                buyer_name: "이인원",
+                buyer_tel: "010-7106-0745",
+                buyer_addr: "대구 광역시 월곡로45길 49",
+                buyer_postcode: "42792",
+                // 모바일 환경에서의 결제는 대부분 리다이렉트 방식으로 이루어집니다.
+                // 리다이렉트 방식에서는 브라우저가 결제창으로 리다이렉트되었다가,
+                // 결제창에서의 작업이 끝나면 지정한 m_redirect_url로 다시 리다이렉트됩니다.
+                // 이 경우에는 함수 호출 결과를 이용할 수 없고, 결제 성공 여부 등은 쿼리 문자열로 전달받게 됩니다.
+                m_redirect_url: `${BASE_URL}/payment-redirect`, // 리다이렉트 방식의 경우 콜백은 실행되지 않습니다.
+                // 위 경우 http://localhost:8080/payment-redirect?merchant_uid=내가 설정한 maerchant_uid로 리다이렉트 됨
+
+            },
+            // function (response) {
+            async (response) =>{
+                // 결제 종료 시 호출되는 콜백 함수
+                // response.imp_uid 값으로 결제 단건조회 API를 호출하여 결제 결과를 확인하고,
+                // 결제 결과를 처리하는 로직을 작성합니다.
+                if (response.error_code != null) {
+                    return alert(`결제에 실패하였습니다. 에러 내용: ${response.error_msg}`);
+                }
+
+                return alert('결제 성공'+ '\n'
+                    + response.imp_uid + '\n'
+                    + response.merchant_uid + '\n'
+                    + response.m_redirect_url);
+
+                // 최종 결제 결과 처리는 반드시 웹훅을 이용하여 안정적으로 처리해 주셔야 합니다.
+                //
+                //     웹훅 연동을 생략하시는 경우 결제 결과를 정상적으로 수신받지 못하는 상황이 발생합니다.
+
+                // const notified = await fetch(`${SERVER_BASE_URL}/payment/complete`, {
+                //     method: "POST",
+                //     headers: { "Content-Type": "application/json" },
+                //     // imp_uid와 merchant_uid, 주문 정보를 서버에 전달합니다
+                //     body: JSON.stringify({
+                //         imp_uid: response.imp_uid,
+                //         merchant_uid: response.merchant_uid,
+                //         // 주문 정보...
+                //     }),
+                // });
+
+                // 4. 결제 완료 처리하기
+                // imp_uid와 merchant_uid를 서버에 전달하면,
+                // 서버는 포트원의 결제 조회 API를 호출하여 해당 결제 건의 상태를 확인하고
+                // 결제 완료 처리를 진행하여야 합니다.
+                // 예시로, 위에서 사용했던 /payment/complete 엔드포인트를 다음과 같이 구현할 수 있습니다.
+
+//              // JSON 요청을 처리하기 위해 body-parser 미들웨어 세팅
+//                 app.use(bodyParser.json());
+//
+//              // POST 요청을 받는 /payments/complete
+//                 app.post("/payment/complete", async (req, res) => {
+//                     try {
+//                         // 요청의 body로 imp_uid와 merchant_uid가 전달되기를 기대합니다.
+//                         const { imp_uid, merchant_uid } = req.body;
+//
+//                         // 1. 포트원 API 엑세스 토큰 발급
+//                         const tokenResponse = await fetch("https://api.iamport.kr/users/getToken", {
+//                             method: "POST",
+//                             headers: { "Content-Type": "application/json" },
+//                             body: JSON.stringify({
+//                                 imp_key: "imp_apikey", // REST API 키
+//                                 imp_secret: "ekKoeW8RyKuT0zgaZsUtXXTLQ4AhPFW", // REST API Secret
+//                             }),
+//                         });
+//                         if (!tokenResponse.ok)
+//                             throw new Error(`tokenResponse: ${await tokenResponse.json()}`);
+//                         const { response } = await tokenResponse.json();
+//                         const { access_token } = response;
+//
+//                         // 2. 포트원 결제내역 단건조회 API 호출
+//                         const paymentResponse = await fetch(
+//                             `https://api.iamport.kr/payments/${imp_uid}`,
+//                             { headers: { Authorization: access_token } },
+//                         );
+//                         if (!paymentResponse.ok)
+//                             throw new Error(`paymentResponse: ${await paymentResponse.json()}`);
+//                         const payment = await paymentResponse.json();
+//
+//                         // 3. 고객사 내부 주문 데이터의 가격과 실제 지불된 금액을 비교합니다.
+//                         const order = await OrderService.findById(merchant_uid);
+//                         if (order.amount === payment.amount) {
+//                             switch (payment.status) {
+//                                 case "ready": {
+//                                     // 가상 계좌가 발급된 상태입니다.
+//                                     // 계좌 정보를 이용해 원하는 로직을 구성하세요.
+//                                     break;
+//                                 }
+//                                 case "paid": {
+//                                     // 모든 금액을 지불했습니다! 완료 시 원하는 로직을 구성하세요.
+//                                     break;
+//                                 }
+//                             }
+//                         } else {
+//                             // 결제 금액이 불일치하여 위/변조 시도가 의심됩니다.
+//                         }
+//                     } catch (e) {
+//                         // 결제 검증에 실패했습니다.
+//                         res.status(400).send(e);
+//                     }
+//                 });
+            },
+        );
+
+    });
+
+</script>
+</html>

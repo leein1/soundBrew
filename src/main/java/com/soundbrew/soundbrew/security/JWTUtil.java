@@ -18,11 +18,6 @@ import java.util.Map;
 @Log4j2
 public class JWTUtil {
 
-    /*
-    서명을 처리하기 위한 비밀키가 필요함
-    application.properties에 추가했음
-
-     */
     @Value("${com.soundbrew.jwt.secret}")
     private String key;
 
@@ -33,7 +28,7 @@ public class JWTUtil {
     //  문자열을 생성
     public String generateToken(Map<String, Object> valueMap, int days) {
 
-        log.info("-------------JWTUTIL.generateToken 키 생성 : " + key);
+        log.info("-------------JWTUTIL.generateToken 키 확인 : " + key);
 
         //  헤더부분
         Map<String,Object> headers = new HashMap<>();
@@ -51,6 +46,35 @@ public class JWTUtil {
                 .setClaims(payload)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setExpiration(Date.from(ZonedDateTime.now().plusDays(time).toInstant()))
+//                .signWith(SignatureAlgorithm.HS256, key.getBytes())
+                .signWith(SignatureAlgorithm.HS256, getDecodedKey())
+                .compact();
+
+        return jwtStr;
+
+    }
+
+    //  문자열을 생성
+    public String generateTokenWithMinutes(Map<String, Object> valueMap, int minutes) {
+
+        log.info("-------------JWTUTIL.generateToken 키 확인 : " + key);
+
+        //  헤더부분
+        Map<String,Object> headers = new HashMap<>();
+        headers.put("typ", "JWT");
+        headers.put("alg", "HS256");
+
+        //  payload 부분 설정
+        Map<String,Object> payload = new HashMap<>();
+        payload.putAll(valueMap);
+
+        int time = (1) * minutes; //   나중에 일 단위로 변경 해야 함
+
+        String jwtStr = Jwts.builder()
+                .setHeader(headers)
+                .setClaims(payload)
+                .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
+                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(time).toInstant()))
 //                .signWith(SignatureAlgorithm.HS256, key.getBytes())
                 .signWith(SignatureAlgorithm.HS256, getDecodedKey())
                 .compact();

@@ -2,6 +2,7 @@ package com.soundbrew.soundbrew.security.filter;
 
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
+import org.apache.catalina.Manager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -19,10 +20,13 @@ import java.util.Map;
 public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
 
 
-    /*
-    AbstractAuthenticationProcessingFilter 는 로그인 처리로 인해 로그인처리 경로와 실제 인증처리를 하는 Authentication-Manager 객체 설정이 필요
-    CustomSecurityConfig에서 설정해준다
+    /**
+     *  AbstractAuthenticationProcessingFilter 는 로그인 처리로 인해 로그인처리 경로와 실제 인증처리를 하는
+     *  AuthenticationManager 객체 설정이 필요
+     *  CustomSecurityConfig에서 설정해준다
      */
+
+
     public APILoginFilter(String defaultFilterProcessesUrl) {
 
         super(defaultFilterProcessesUrl);
@@ -47,7 +51,9 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
         log.info("-------------------------API Login Filter.attemptAuthentication ----------------------------");
 

@@ -60,6 +60,7 @@ public class FileController {
         return handleFileUpload(file, title, "ALBUM");
     }
 
+
     @GetMapping("/music/{filename}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {// 추후 토큰 사용
 
