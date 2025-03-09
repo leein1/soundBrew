@@ -73,7 +73,7 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public ResponseDTO<TagsDTO> getAllTags(RequestDTO requestDTO){
         Optional<List<SearchTotalResultDTO>> result = musicRepository.getAllTags(requestDTO);
-        System.out.println(result.get());
+
         if(result.get().isEmpty()) return ResponseDTO.<TagsDTO>withMessage().message("검색된 태그가 없습니다.").build();
         TagsDTO tagsDTO = new TagsDTO();
         Set<String> instTagSet = new HashSet<>();

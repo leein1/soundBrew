@@ -71,7 +71,7 @@ public class SoundController {
     }
 
     // ** 그냥 존재하는 모든 태그들을 표시 **
-    @GetMapping("/tags") // 관리자모드 태그 정보
+    @GetMapping("/tags")
     ResponseEntity<ResponseDTO<TagsDTO>> getTags(){
         ResponseDTO<TagsDTO> responseDto = tagsService.getTags();
 

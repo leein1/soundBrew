@@ -16,7 +16,6 @@ public class DTOFilteringFactory {
         return albumDTO;
     }
 
-    // List<SearchTotalResultDTO>에 대한 메서드 (유틸리티 클래스에 추가)
     public static List<SearchTotalResultDTO> hideAlbumDTO(List<SearchTotalResultDTO> dtoList) {
         return dtoList.stream()
                 .peek(dto -> dto.setAlbumDTO(hideAlbumDTO(dto.getAlbumDTO())))

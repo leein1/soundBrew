@@ -118,7 +118,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PostMapping("/tags")
-    ResponseEntity<ResponseDTO> createTag(@RequestBody @Valid TagsDTO tagsDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> createTag(@RequestBody @Valid TagsDTO tagsDto, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
 
         ResponseDTO responseDto = tagsService.createTag(tagsDto);
@@ -127,7 +127,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PatchMapping("/tags/instruments/{beforeName}")
-    ResponseEntity<ResponseDTO> updateInstrumentTagSpelling(
+    ResponseEntity<ResponseDTO<String>> updateInstrumentTagSpelling(
             @PathVariable
             @Size(min = 2, max = 50)
             @Pattern(regexp = "^[a-z0-9\\s]*$")
@@ -139,7 +139,7 @@ public class AdminController {  //  관리자용 컨트롤러
 
             Authentication authentication
     ){
-//        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
+        //if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
 
         ResponseDTO responseDto  = tagsService.updateInstrumentTagSpelling(beforeName, afterName);
 
@@ -147,7 +147,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PatchMapping("/tags/moods/{beforeName}")
-    ResponseEntity<ResponseDTO> updateMoodTagSpelling(
+    ResponseEntity<ResponseDTO<String>> updateMoodTagSpelling(
             @PathVariable
             @Size(min = 2, max = 50)
             @Pattern(regexp = "^[a-z0-9\\s]*$")
@@ -167,7 +167,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PatchMapping("/tags/genres/{beforeName}")
-    ResponseEntity<ResponseDTO> updateGenreTagSpelling(
+    ResponseEntity<ResponseDTO<String>> updateGenreTagSpelling(
             @PathVariable
             @Size(min = 2, max = 50)
             @Pattern(regexp = "^[a-z0-9\\s]*$")
@@ -187,7 +187,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PostMapping("/tags/{musicId}")
-    ResponseEntity<ResponseDTO> updateLinkTags(@PathVariable @Positive int musicId, @RequestBody @Valid TagsDTO tagsDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> updateLinkTags(@PathVariable @Positive int musicId, @RequestBody @Valid TagsDTO tagsDto, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
 
         ResponseDTO responseDto = tagsService.updateLinkTagsForAdmin(musicId,tagsDto);
@@ -197,7 +197,7 @@ public class AdminController {  //  관리자용 컨트롤러
 
     // sounds for admin
     @DeleteMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO> deleteAlbum(@PathVariable @Positive int albumId, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> deleteAlbum(@PathVariable @Positive int albumId, Authentication authentication){
         if(!authenticationService.isAdmin(authentication)) throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
 
         ResponseDTO responseDto = soundsService.deleteAlbum(albumId);
@@ -206,7 +206,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @DeleteMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO> deleteMusic(@PathVariable @Positive int musicId, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> deleteMusic(@PathVariable @Positive int musicId, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
 
         ResponseDTO responseDto = soundsService.deleteMusic(musicId);
@@ -215,7 +215,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PatchMapping("/albums/{albumId}")
-    ResponseEntity<ResponseDTO> updateAlbum(@PathVariable @Positive int albumId, @RequestBody @Validated(UpdateGroup.class) AlbumDTO albumDto, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> updateAlbum(@PathVariable @Positive int albumId, @RequestBody @Validated(UpdateGroup.class) AlbumDTO albumDto, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
 
         ResponseDTO responseDto = soundsService.updateAlbumForAdmin(albumId,albumDto);
@@ -224,7 +224,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PatchMapping("/albums/{albumId}/verify")
-    ResponseEntity<ResponseDTO> updateVerifyAlbum(@PathVariable @Positive int albumId, Authentication authentication){
+    ResponseEntity<ResponseDTO<String>> updateVerifyAlbum(@PathVariable @Positive int albumId, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
 
         ResponseDTO responseDTO = soundsService.updateVerifyAlbum(albumId);
@@ -251,7 +251,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     @PatchMapping("/tracks/{musicId}")
-    ResponseEntity<ResponseDTO> updateMusic(@PathVariable @Positive int musicId, @RequestBody @Validated(UpdateGroup.class) MusicDTO musicDto, Authentication authentication ){
+    ResponseEntity<ResponseDTO<String>> updateMusic(@PathVariable @Positive int musicId, @RequestBody @Validated(UpdateGroup.class) MusicDTO musicDto, Authentication authentication ){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
 
         ResponseDTO responseDto = soundsService.updateMusicForAdmin(musicId,musicDto);

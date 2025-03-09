@@ -50,20 +50,6 @@ export function loadExternalCSS(url) {
 
     return promise;
 }
-//
-//export function removeExternalCSS(url) {
-//    // CSS가 아직 로딩 중이라면 취소
-//    if (cssRegistry.has(url)) {
-//        cssRegistry.get(url).cancel();
-//    }
-//    const link = document.querySelector(`link[data-dynamic][href="${url}"]`);
-//    if (link) {
-//        link.remove();
-//        console.log(`${url} CSS가 제거되었습니다.`);
-//    } else {
-//        console.log(`${url} CSS가 존재하지 않습니다.`);
-//    }
-//}
 
 // 기존 그룹 배열 (필요에 따라 그룹별 관리 가능)
 export const SoundTypeCSSFiles = [
@@ -74,10 +60,7 @@ export const SoundTypeCSSFiles = [
 ];
 
 export const SoundManageTypeCSSFiles = [
-//    "/css/sound/manage-main.css",
-//    "/css/sound/manage-albums.css",
     "/css/sound/manage-tags.css",
-//    "/css/sound/music-upload.css",
     "/css/user/user-admin.css",
     "/css/sound/admin-main.css"
 ];
@@ -100,14 +83,6 @@ export const UserAdminTypeCSSFiles=[
 export const AdminStatisticTypeCSSFiles=[
     "/css/sound/admin-main.css"
 ]
-
-//export function removeSoundTypeCSS() {
-//    SoundTypeCSSFiles.forEach(removeExternalCSS);
-//}
-//
-//export function removeSoundManageTypeCSS() {
-//    SoundManageTypeCSSFiles.forEach(removeExternalCSS);
-//}
 
 export async function loadSoundTypeCSS() {
     // 모든 CSS가 로드될 때까지 기다립니다.

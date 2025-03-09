@@ -11,9 +11,7 @@ public class TagListValidator implements ConstraintValidator<ValidTagList, List<
     @Override
     public boolean isValid(List<String> tags, ConstraintValidatorContext context) {
         // 비어있거나 null이면 검증 통과
-        if (tags == null || tags.isEmpty()) {
-            return true; // 필수가 아니라면 null/빈 리스트 허용
-        }
+        if (tags == null || tags.isEmpty()) { return true; }
 
         for (String tag : tags) {
             if (tag == null || tag.length() < 2 || tag.length() > 50 || !VALID_PATTERN.matcher(tag).matches()) {
