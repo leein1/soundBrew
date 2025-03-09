@@ -48,19 +48,19 @@ public class GlobalExceptionHandler {
 
 
 
-    @ExceptionHandler(AccessTokenException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleAccessTokenException(AccessTokenException ex){
-        logger.warn("AccessToken Exception(Throw) 발생:{}. 상세정보:{}", ex.getDeveloperMessage(), ex.toString(), ex);
-
-        return buildErrorResponse(ex.getStatus(), ex.getClientMessage(), ex.getStatus().getReasonPhrase());
-    }
-
-    @ExceptionHandler(RefreshTokenException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleRefrashTokenException(RefreshTokenException ex){
-        logger.warn("RefreshToken Exception(Throw) 발생:{}. 상세정보:{}", ex.getDeveloperMessage(), ex.toString(), ex);
-
-        return buildErrorResponse(ex.getStatus(), ex.getClientMessage(), ex.getStatus().getReasonPhrase());
-    }
+//    @ExceptionHandler(AccessTokenException.class)
+//    public ResponseEntity<ExceptionResponseDTO> handleAccessTokenException(AccessTokenException ex){
+//        logger.warn("AccessToken Exception(Throw) 발생:{}. 상세정보:{}", ex.getDeveloperMessage(), ex.toString(), ex);
+//
+//        return buildErrorResponse(ex.getStatus(), ex.getClientMessage(), ex.getStatus().getReasonPhrase());
+//    }
+//
+//    @ExceptionHandler(RefreshTokenException.class)
+//    public ResponseEntity<ExceptionResponseDTO> handleRefrashTokenException(RefreshTokenException ex){
+//        logger.warn("RefreshToken Exception(Throw) 발생:{}. 상세정보:{}", ex.getDeveloperMessage(), ex.toString(), ex);
+//
+//        return buildErrorResponse(ex.getStatus(), ex.getClientMessage(), ex.getStatus().getReasonPhrase());
+//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponseDTO> handleAllExceptions(Exception ex) throws Exception {
