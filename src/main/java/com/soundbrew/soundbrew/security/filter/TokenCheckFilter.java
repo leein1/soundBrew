@@ -147,7 +147,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         try{
 
             //  전달받은 토큰 검증
-            Map<String,Object> values = validateAccessToken(request);
+            Map<String,Object> values = this.validateAccessToken(request);
 
             log.info("Token Check Filter 인증 정보 생성 시작, 전달받은 토큰 내용: {}", values.toString());
 

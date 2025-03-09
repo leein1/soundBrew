@@ -15,6 +15,7 @@ public class RefreshTokenException extends RuntimeException {
     private ErrorCase errorCase;
 
     public enum ErrorCase {
+
         NO_ACCESS,
         BAD_ACCESS,
         NO_REFRESH,
@@ -23,21 +24,31 @@ public class RefreshTokenException extends RuntimeException {
     }
 
     public RefreshTokenException(ErrorCase errorCase) {
+
         super(errorCase.name());
         this.errorCase = errorCase;
     }
 
     public void sendResponseError(HttpServletResponse response) {
+
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         Gson gson = new Gson();
 
-        String responseStr = gson.toJson(Map.of("msg", errorCase.name(), "time", new Date()));
+        String responseStr = gson.toJson(
+                Map.of(
+                        "msg", errorCase.name(),
+                        "time", new Date()
+                )
+        );
 
         try{
+
             response.getWriter().println(responseStr);
+
         }catch (IOException e){
+
             throw new RuntimeException(e);
         }
     }
