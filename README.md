@@ -27,13 +27,16 @@ https://leeinwon.notion.site/3-1aea7464bbfc80ec84f0d3b7c0a5a991
 
 ## 🛠 사용 기술
 - Spring Boot 2.7.18
+- SpringSecurity
+- JWT
 - MySql
 - thymeleaf
-- JWT
 - Axios
+- SPA
 
 ## 📊 시스템 구조
-[시스템 구조도 이미지]
+<br>
+
 ```mermaid
 graph TD
     subgraph Web_Browser["Web Browser (SPA)"]
@@ -41,29 +44,42 @@ graph TD
     end
 
     subgraph AWS ["AWS Infrastructure"]
-        subgraph EC2 ["EC2 (Spring Boot App)"]
-            subgraph Security_Layer ["Security Layer"]
-                SpringSecurity["Spring Security"]
-                JWT["JWT Token Authentication"]
-            end
+        subgraph EC2 ["EC2"]
+            
             subgraph Server_Layer ["Server Layer"]
-                Controller["Spring Controller"]
+
+                subgraph Security_Layer ["Security Layer"]
+                    SpringSecurity["Spring Security"]
+                    JWT["JWT Token Authentication"]
+                end
+
+                subgraph View_Layer ["View Layer"]
+                    ViewController["View Controller"]
+                end
+
+                Controller["API Controller"] 
+
                 Service["Service Layer"]
             end
+        
         end
 
-        subgraph RDS ["Amazon RDS (Database)"]
+        subgraph RDS ["Amazon RDS"]
             Database["RDS (MySQL/PostgreSQL)"]
         end
 
-        subgraph S3 ["Amazon S3 (Static Files)"]
+        subgraph S3 ["Amazon S3"]
             StaticFiles["Static Files"]
         end
     end
 
     %% 요청 흐름
+    Browser -->|Initial View Request| ViewController
+    ViewController --> |Serve HTML JS| Browser
+
     Browser -->|API Request| SpringSecurity
     SpringSecurity -->|Validate Token| JWT
+    JWT --> |Token Validated| SpringSecurity
     SpringSecurity -->|Authentication Success| Controller
     Controller -->|Process Request| Service
     Service -->|Fetch Data| Database
@@ -83,9 +99,12 @@ graph TD
    - OAuth2.0 소셜 로그인
 
 2. 음원 관리
+   - 앨범 
+   - 음원
+
 3. 음원 재생
 4. 파일 업/다운로드
-5. 결제
+5. 구독 결제
 
 ## 🎯 주요 사항
 -
