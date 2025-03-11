@@ -40,11 +40,11 @@ https://leeinwon.notion.site/3-1aea7464bbfc80ec84f0d3b7c0a5a991
 
 ```mermaid
 graph TD
-    subgraph Web_Browser["Web Browser (SPA)"]
-        Browser["User's Browser"]
+    subgraph Web_Browser["브라우저 (SPA)"]
+        Browser["Browser"]
     end
 
-    subgraph AWS ["AWS Infrastructure"]
+    subgraph AWS ["AWS"]
         subgraph EC2 ["EC2"]
             
             subgraph Server_Layer ["Server Layer"]
@@ -75,22 +75,22 @@ graph TD
     end
 
     %% 요청 흐름
-    Browser -->|Initial View Request| ViewController
-    ViewController --> |Serve HTML JS| Browser
+    Browser -->|최초 뷰 요청| ViewController
+    ViewController --> |SPA를 위한 HTML , JS 제공| Browser
 
-    Browser -->|API Request| SpringSecurity
-    SpringSecurity -->|Validate Token| JWT
-    JWT --> |Token Validated| SpringSecurity
-    SpringSecurity -->|Authentication Success| Controller
-    Controller -->|Process Request| Service
-    Service -->|Fetch Data| Database
-    Service -->|Fetch File| StaticFiles
+    Browser -->|API 요청| SpringSecurity
+    SpringSecurity -->|Token 검증| JWT
+    JWT --> |Token 검증 결과| SpringSecurity
+    SpringSecurity -->|인증 성공| Controller
+    Controller -->|요청 처리| Service
+    Service -->|데이터 요청| Database
+    Service -->|파일 요청| StaticFiles
 
     %% 응답 흐름
-    Database -->|Return Data| Service
-    StaticFiles -->|Return File| Service
-    Service -->|Send Response| Controller
-    Controller -->|Send API Response| Browser
+    Database -->|데이터 응답| Service
+    StaticFiles -->|파일 응답| Service
+    Service -->|처리결과 응답| Controller
+    Controller -->|Api 응답| Browser
 
 ```
 
