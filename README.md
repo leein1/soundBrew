@@ -110,6 +110,31 @@ graph TD
     Controller -->|Api 응답| Browser
 
 ```
+<br>
+## 프로젝트 구조
+
+```plaintext
+src/
+└── main/
+    ├── java/
+    │   └── com.soundbrew.soundbrew/
+    │       ├── config/
+    │       ├── controller/
+    │       ├── domain/
+    │       ├── dto/
+    │       ├── handler/
+    │       ├── repository/
+    │       ├── security/
+    │       ├── service/
+    │       ├── util/
+    │       └── SoundBrewApplication
+    └── resources/
+        ├── static/
+        ├── templates/
+        ├── application.yml
+        ├── application-dev.yml
+        └── application-prod.yml
+```
 
 ## 🔍 주요 기능( 좀 더 자세히x -> 적절한 단어 찾아봐야 할듯)
 1. 회원 관리
