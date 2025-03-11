@@ -135,14 +135,15 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 // 서브쿼리에서 필터링한 ID로 다시 조건을 제한
                 .where(albumMusic.id.in(filteredIds))
                 .groupBy(
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname, album.download,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate, music.download
+                        album.albumId,
+                        music.musicId
                 )
                 .orderBy(orderSpecifier)
                 .offset(requestDTO.getPageable().getOffset())
                 .limit(requestDTO.getPageable().getPageSize())
                 .fetch();
 
+        System.out.println("쿼리 리절트 : "+results.toString());
         Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
         return Optional.of(pageResult);
     }
