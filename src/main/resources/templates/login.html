@@ -45,6 +45,9 @@
     <script type="module">
         import { getLoginFormProcess } from "/js/security/login.js";
 
+        const searchContainer = document.querySelector('#searchbar');
+        console.log(searchContainer);
+
         document.addEventListener("DOMContentLoaded", () => {
             getLoginFormProcess();
         });

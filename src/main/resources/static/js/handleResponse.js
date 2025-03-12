@@ -9,8 +9,6 @@ export const handleResponse = (status, data, handle) => {
     switch (status) {
         // 200번: 성공 – handle.success가 있으면 alert와 화면전환을 수행, 없으면 data.message가 있을 경우 alert 후 반환
         case 200:
-            alert("!!");
-            console.log(data);
             if (handle?.success) {
                 if (handle.success.message) alert(handle.success.message);
                 if (handle.success.navigate){
