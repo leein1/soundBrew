@@ -20,7 +20,9 @@ REST를 최대한 준수하는것이 목표였으며, '실제 회사에서 프�
 <br>
 <br>
 
-## 관련 문서
+## 상세 문서
+<br>
+아래는 Notion으로 작성한 프로젝트 전반에 대한 상세 문서 링크 입니다.<br>
 <br>
 https://leeinwon.notion.site/3-1aea7464bbfc80ec84f0d3b7c0a5a991
 <br>
