@@ -118,6 +118,7 @@
 
 /*  */
 .sound-tag-list {
+
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -130,6 +131,7 @@
 }
 
 .tag-items {
+
     display: flex;
     flex-wrap: wrap;
     gap: 10px;

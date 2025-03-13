@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      layout:decorate="~{layouts/layout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -133,7 +133,9 @@
                 }
             }catch (err){
                 console.error(err);
+                alert("접근 권한이 없습니다.");
                 submitButton.disabled = false;
+                window.location.href = "/login";
 
             }
         });
