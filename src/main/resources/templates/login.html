@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      layout:decorate="~{layouts/layout.html}">
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
@@ -44,6 +44,9 @@
 
     <script type="module">
         import { getLoginFormProcess } from "/js/security/login.js";
+
+        const searchContainer = document.querySelector('#searchbar');
+        console.log(searchContainer);
 
         document.addEventListener("DOMContentLoaded", () => {
             getLoginFormProcess();

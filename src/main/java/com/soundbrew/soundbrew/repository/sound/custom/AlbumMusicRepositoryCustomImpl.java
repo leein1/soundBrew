@@ -1,9 +1,11 @@
 package com.soundbrew.soundbrew.repository.sound.custom;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.soundbrew.soundbrew.domain.sound.*;
 import com.soundbrew.soundbrew.dto.RequestDTO;
@@ -31,86 +33,49 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
     private final QGenreTag genreTag = QGenreTag.genreTag;
 
     @Override
-    public Optional<Page<SearchTotalResultDTO>> search(RequestDTO requestDTO){
+    public Optional<Page<SearchTotalResultDTO>> search(RequestDTO requestDTO) {
         List<String> instruments = new ArrayList<>();
         List<String> moods = new ArrayList<>();
         List<String> genres = new ArrayList<>();
 
-        if(requestDTO.getMore() != null && !requestDTO.getMore().isEmpty()){
-            for(Map.Entry<String, String> entry : requestDTO.getMore().entrySet()){
+        if (requestDTO.getMore() != null && !requestDTO.getMore().isEmpty()) {
+            for (Map.Entry<String, String> entry : requestDTO.getMore().entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                switch (key.toLowerCase()){
-                    case "instrument":
-                        instruments = Arrays.asList(value.split(","));
-                        break;
-                    case "genre":
-                        genres = Arrays.asList(value.split(","));
-                        break;
-                    case "mood":
-                        moods = Arrays.asList(value.split(","));
-                        break;
+
+                switch (key.toLowerCase()) {
+                    case "instrument": instruments = Arrays.asList(value.split(",")); break;
+                    case "genre": genres = Arrays.asList(value.split(",")); break;
+                    case "mood": moods = Arrays.asList(value.split(",")); break;
                 }
             }
         }
 
-        // 동적 정렬 조건 생성
         OrderSpecifier<?> orderSpecifier = createOrderSpecifierForMusic(requestDTO);
 
-        // HAVING 조건을 위한 BooleanBuilder (집계 함수 사용)
         BooleanBuilder havingBuilder = new BooleanBuilder();
-        for(String instrument : instruments) {
-            havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName)
-                    .matches("%" + instrument + "%"));
+        for (String instrument : instruments) {
+            havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", instrumentTag.instrumentTagName).contains(instrument));
         }
-        for(String genre : genres){
-            havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName)
-                    .contains(genre));
+        for (String genre : genres) {
+            havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", genreTag.genreTagName).contains(genre));
         }
-        for(String mood : moods){
-            havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName)
-                    .contains(mood));
+        for (String mood : moods) {
+            havingBuilder.and(Expressions.stringTemplate("group_concat_distinct({0})", moodTag.moodTagName).contains(mood));
         }
 
-        // WHERE 조건 (집계 이전의 필터)
         BooleanBuilder builder = new BooleanBuilder();
-        if(requestDTO.getType() != null) {
-            List<String> types = List.of(requestDTO.getType());
-            for (String type : types) {
+        if (requestDTO.getType() != null) {
+            for (String type : List.of(requestDTO.getType())) {
                 switch (type.toLowerCase()) {
-                    case "t":
-                        builder.and(music.title.contains(requestDTO.getKeyword()));
-                        break;
-                    case "n":
-                        builder.and(music.nickname.contains(requestDTO.getKeyword()));
-                        break;
+                    case "t": builder.and(music.title.contains(requestDTO.getKeyword())); break;
+                    case "n": builder.and(music.nickname.contains(requestDTO.getKeyword())); break;
                 }
             }
         }
 
-        // 먼저 필터 조건에 맞는 albumMusic.id 목록을 서브쿼리로 가져오기
-        List<AlbumMusicId> filteredIds = queryFactory
-                .select(albumMusic.id)
-                .from(albumMusic)
-                .leftJoin(album).on(albumMusic.album.eq(album))
-                .leftJoin(music).on(albumMusic.music.eq(music))
-                .leftJoin(musicInstrumentTag).on(musicInstrumentTag.music.eq(music))
-                .leftJoin(instrumentTag).on(musicInstrumentTag.instrumentTag.eq(instrumentTag))
-                .leftJoin(musicMoodTag).on(musicMoodTag.music.eq(music))
-                .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
-                .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
-                .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
-                .where(builder)
-                .groupBy(albumMusic.id)
-                .having(havingBuilder)
-                .fetch();
-
-        // 총 건수는 서브쿼리 결과의 사이즈로 계산
-        long total = filteredIds.size();
-
-        // 필터링된 ID만 이용하여 최종 결과 조회 (필요한 경우 추가 조인 및 프로젝션)
-        List<SearchTotalResultDTO> results = queryFactory
-                .select(Projections.bean(SearchTotalResultDTO.class,
+        // 데이터 조회 및 개수 계산을 한 번에 처리
+        JPAQuery<SearchTotalResultDTO> query = queryFactory.select(Projections.bean(SearchTotalResultDTO.class,
                         Projections.bean(AlbumDTO.class,
                                 album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname
                         ).as("albumDTO"),
@@ -132,18 +97,22 @@ public class AlbumMusicRepositoryCustomImpl implements AlbumMusicRepositoryCusto
                 .leftJoin(moodTag).on(musicMoodTag.moodTag.eq(moodTag))
                 .leftJoin(musicGenreTag).on(musicGenreTag.music.eq(music))
                 .leftJoin(genreTag).on(musicGenreTag.genreTag.eq(genreTag))
-                // 서브쿼리에서 필터링한 ID로 다시 조건을 제한
-                .where(albumMusic.id.in(filteredIds))
+                .where(builder)
                 .groupBy(
-                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname, album.download,
-                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate, music.download
+                        album.albumId, album.albumName, album.albumArtPath, album.description, album.nickname,
+                        music.musicId, music.title, music.filePath, music.price, music.description, music.createDate, music.modifyDate
                 )
-                .orderBy(orderSpecifier)
+                .having(havingBuilder)
+                .orderBy(orderSpecifier);
+
+        // 페이징 처리 및 전체 개수 계산을 위한 fetchResults 사용
+        QueryResults<SearchTotalResultDTO> queryResults = query
                 .offset(requestDTO.getPageable().getOffset())
                 .limit(requestDTO.getPageable().getPageSize())
-                .fetch();
+                .fetchResults();
 
-        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(results, requestDTO.getPageable(), total);
+        // 페이징 결과를 Page로 래핑하여 반환
+        Page<SearchTotalResultDTO> pageResult = new PageImpl<>(queryResults.getResults(), requestDTO.getPageable(), queryResults.getTotal());
         return Optional.of(pageResult);
     }
 

@@ -1,3 +1,5 @@
+import TokenUtil from '/js/tokenUtil.js';
+
 export class GlobalState {
     constructor() {
         // 초기 상태 정의
@@ -8,6 +10,7 @@ export class GlobalState {
             moodTags: [],
             genreTags: [],
             isFirstTagLoad:true,
+            isRole: 'visitor',
         };
 
         // Pub/Sub 관련
@@ -53,6 +56,8 @@ export class GlobalState {
             case 'SET_TAG_LOAD_STATUS':
                 this.setState(({ isFirstTagLoad: action.payload}));
                 break;
+            case 'SET_IS_ROLE':
+                this.setState({ isRole: action.payload });
             default:
                 break;
         }
@@ -85,6 +90,7 @@ export const actions = {
     SET_MOOD_TAGS: 'SET_MOOD_TAGS',
     SET_GENRE_TAGS: 'SET_GENRE_TAGS',
     SET_TAG_LOAD_STATUS:'SET_TAG_LOAD_STATUS',
+    SET_IS_ROLE: 'SET_IS_ROLE',
 };
 
 function displaySearchBar(state) {
@@ -384,3 +390,18 @@ globalStateManager.dispatch({
     type: 'SET_GENRE_TAGS',
     payload: []  // 초기 genreTags 상태 설정
 });
+
+const token = TokenUtil.getToken();
+if (token) {
+    const userInfo = TokenUtil.getUserInfo(token);
+    if (userInfo && userInfo.roles && userInfo.roles.length > 0) {
+        globalStateManager.dispatch({ type: 'SET_LOGIN_STATUS', payload: true });
+        globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: userInfo.roles });
+    } else {
+        globalStateManager.dispatch({ type: 'SET_LOGIN_STATUS', payload: false });
+        globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: 'visitor' });
+    }
+} else {
+    globalStateManager.dispatch({ type: 'SET_LOGIN_STATUS', payload: false });
+    globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: 'visitor' });
+}

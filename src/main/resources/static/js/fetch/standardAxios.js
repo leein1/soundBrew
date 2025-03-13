@@ -10,10 +10,8 @@ const axiosInstance = axios.create({
 });
 
 // 토큰 재발급 함수
-const callRefresh = async () => {
-
-    alert("기존 토큰 다시 가져오기");
-
+export const callRefresh = async () => {
+//    alert("기존 토큰 다시 가져오기");
     const refreshToken = localStorage.getItem('refreshToken');
     const accessToken = localStorage.getItem('accessToken');
 
@@ -24,23 +22,19 @@ const callRefresh = async () => {
     const tokens = {accessToken, refreshToken}
 
     try {
-
-        alert("/refreshToken으로 재발급 요청 보내기");
-
+//        alert("/refreshToken으로 재발급 요청 보내기");
         // 여기서 우리가 만든 axiosPost를 안쓰는이유는? => 쓰면 axiosPost함수의 addAuthHeader로 무한 루프 걸릴 수 있음
         const response = await axiosInstance.post('/refreshToken', tokens);
         // const newAccessToken = response.data.accessToken;
         // const newRefreshToken = response.data.refreshToken;
-
-        alert("새로 발급받은 토큰 set");
-
+//        alert("새로 발급받은 토큰 set");
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
 
         return response.data.accessToken;
     } catch (error) {
-        alert("토큰 재발급 과정 중 오류");
-        console.error("토큰 재발급 실패:", error);
+        alert("토큰 재발급 과정 중 오류, 로그인이 필요합니다.");
+        window.location.href='/login';
         throw new Error("로그인이 필요합니다.");
     }
 };
@@ -142,7 +136,6 @@ const fetchData = async ({
     }
 
     if (uniqueToken) {
-        alert("!!?");
         let token = localStorage.getItem("resetToken");
 
         options.headers = {

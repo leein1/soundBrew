@@ -102,7 +102,8 @@ dependencies {
     //  jjwt
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
-
+    //스트리밍 관련 파일 읽기
+    implementation 'javazoom:jlayer:1.0.1'
 
 
     annotationProcessor(

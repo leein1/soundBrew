@@ -44,9 +44,9 @@ public class RequestDTO {
     }
 
     public Pageable getPageable(String... props){
-        return PageRequest.of(this.page -1, this.size, Sort.by(props).descending());
+        return PageRequest.of(this.page -1, this.size, Sort.by(props));
     }
-
+//다달숲벚먹도대고
 //    public String getLink(){
 //
 //        if(link == null) {

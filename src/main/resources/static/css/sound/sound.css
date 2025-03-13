@@ -161,3 +161,59 @@
     color: #ff8800; /* 링크에 마우스를 올렸을 때의 색상 */
     text-decoration: underline;
 }
+
+/* 모든 스타일을 #project-index 내부로 한정 */
+#project-index {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+#project-index #top-section{
+    display: flex;
+    flex-direction: row;
+}
+#project-index #description{
+    align-content: center;
+    padding: 30px;
+}
+#project-index section {
+    margin-bottom: 40px;
+}
+#project-index h1,
+#project-index h2 {
+    color: #333;
+}
+#project-index .team-members,
+#project-index .additional-images {
+    display: flex;
+    gap: 20px;
+}
+#project-index .member {
+    text-align: center;
+}
+#project-index .member img{
+    width:200px;
+}
+#project-index img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+#project-index a {
+    color: #007BFF;
+    text-decoration: none;
+}
+#project-index a:hover {
+    text-decoration: underline;
+}
+#project-index button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007BFF;
+    border: none;
+    color: white;
+    border-radius: 4px;
+}
+#project-index button:hover {
+    background-color: #0056b3;
+}
