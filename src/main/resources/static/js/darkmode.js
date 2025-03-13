@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const uploadMyForm =document.querySelector('.myForm');
 
     const audioBar = document.querySelector('.audio-player-bar');
+    const tagitem = document.querySelector('.tag-item');
 
 
     // 다크 모드 상태를 토글하는 함수
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadMyTrack?.classList.toggle('dark-mode');
         uploadMyForm?.classList.toggle('dark-mode');
         uploadMyImage?.classList.toggle('dark-mode');
+        tagitem?.classList.toggle('dark-mode');
         html?.classList.toggle('dark-mode');
 
 
@@ -55,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadMyImage?.classList.add('dark-mode');
         uploadMyTrack?.classList.add('dark-mode');
         uploadMyForm?.classList.add('dark-mode');
+        tagitem?.classList.add('dark-mode');
         html?.classList.add('dark-mode');
 
         darkModeToggle.checked = true; // 토글 버튼 상태도 동기화

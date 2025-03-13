@@ -74,7 +74,7 @@ public class ViewController {
 //
 
 
-    @GetMapping("/verificationPassword")
+    @GetMapping("/verification-password")
     public void getVerificationPassword(){}
 
 //    @GetMapping("/myInfo")

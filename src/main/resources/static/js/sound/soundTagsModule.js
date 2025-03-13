@@ -9,13 +9,13 @@ export function renderTagsFromSearch(data, initialParams = {}) {
         <div class="music-tag-sort">
             <div class="music-tag-sort-list">
                 <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
-                <span class="music-tag-sort-toggle" data-type="instrument">악기</span>
+                <span class="music-tag-sort-toggle" data-type="instrument">악기 접기</span>
 
                 <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
-                <span class="music-tag-sort-toggle" data-type="mood">분위기</span>
+                <span class="music-tag-sort-toggle" data-type="mood">분위기 접기</span>
 
                 <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
-                <span class="music-tag-sort-toggle" data-type="genre">장르</span>
+                <span class="music-tag-sort-toggle" data-type="genre">장르 접기</span>
 
             </div>
             <div class="music-tag-display">
@@ -42,6 +42,14 @@ export function renderTagsFromSearch(data, initialParams = {}) {
                 // 열기 애니메이션 (fadeIn)
                 section.classList.remove('hidden');
                 section.classList.remove('fade-out');
+
+                if (toggle.dataset.type === "instrument") {
+                    toggle.textContent = "악기 접기";
+                } else if (toggle.dataset.type === "mood") {
+                    toggle.textContent = "분위기 접기";
+                } else if (toggle.dataset.type === "genre") {
+                    toggle.textContent = "장르 접기";
+                }
             } else {
                 // 닫기 애니메이션 (fadeOut)
                 section.classList.add('fade-out');
@@ -50,6 +58,14 @@ export function renderTagsFromSearch(data, initialParams = {}) {
                     section.classList.remove('fade-out'); // fade-out 클래스 제거
                     section.removeEventListener('animationend', handleAnimationEnd); // 이벤트 리스너 제거
                 });
+
+                if (toggle.dataset.type === "instrument") {
+                    toggle.textContent = "악기 펼치기";
+                } else if (toggle.dataset.type === "mood") {
+                    toggle.textContent = "분위기 펼치기";
+                } else if (toggle.dataset.type === "genre") {
+                    toggle.textContent = "장르 펼치기";
+                }
             }
         });
     });
@@ -72,6 +88,11 @@ export function renderTagsFromSearch(data, initialParams = {}) {
     function createTagItem(value, type) {
         return `<span class="tag-item" data-value="${value}" data-type="${type}">${value}</span>`;
     }
+
+    // function createTagItem(value, type) {
+    //     const darkModeClass = localStorage.getItem('darkMode') === 'enabled' ? ' dark-mode' : '';
+    //     return `<span class="tag-item${darkModeClass}" data-value="${value}" data-type="${type}">${value}</span>`;
+    // }
 
     function activateTag(tag) {
         tag.classList.add('active');
