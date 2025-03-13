@@ -39,8 +39,8 @@ export function getLoginFormProcess() {
 
             alert(
                 error.response.data.message
-                + "\n" +  error.response.data.redirectUrl
-                + "\n" + error.response.data.resetToken
+                // + "\n" +  error.response.data.redirectUrl
+                // + "\n" + error.response.data.resetToken
             );
 
             // submitButton.disabled = false;

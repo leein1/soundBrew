@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderViewType();
 
             // 태그 API 호출
-            const renderTags = await axiosGet({ endpoint: `/api/sounds/tags/mapped${queryParams}` });
+            const renderTags = await axiosGet({ endpoint: `/api/sounds/tags/mapped${queryParams}`,useToken:false });
 
             renderTagsFromSearch(renderTags); // 태그 UI 렌더링
             extractTagsFromURL(); // 태그 상태 업데이트
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
         }
         // 트랙 데이터를 항상 가져옴 (검색 결과는 항상 갱신해야 하므로)
-        const response = await axiosGet({ endpoint: `/api/sounds/tracks${queryParams}` });
+        const response = await axiosGet({ endpoint: `/api/sounds/tracks${queryParams}`,useToken:false });
 
         console.log(response);
         renderTotalSounds(response.dtoList); // 트랙 리스트 렌더링
