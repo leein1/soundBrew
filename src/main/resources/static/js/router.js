@@ -42,7 +42,12 @@ export class Router {
         if (routeInfo) {
             // 권한 검사: 만약 사용자의 역할이 라우트의 allowedRoles에 포함되어 있지 않다면
             if (!this.checkPermission(routeInfo)) {
-                this.callRefreshWithState();
+                this.callRefreshWithState(); // 토큰 갱신 시도
+                if (!this.checkPermission(routeInfo)) { // 갱신 후에도 권한이 없으면 차단
+                    alert("요청한 '"+ path +"'에 접근 권한이 없습니다.");
+                    window.location.href='/sounds/tracks'; // 403 페이지로 이동 (필요에 따라 변경 가능)
+                    return;
+                }
             }
             // 권한이 있으면 해당 핸들러 호출
             routeInfo.handler();
@@ -56,8 +61,8 @@ export class Router {
         this.updateStateFromURL();
     }
 
-    callRefreshWithState(){
-        const token = callRefresh();
+    async callRefreshWithState(){
+        const token = await callRefresh();
         if (token) {
             const userInfo = TokenUtil.getUserInfo(token);
             if (userInfo && userInfo.roles && userInfo.roles.length > 0) {
@@ -74,14 +79,15 @@ export class Router {
 
     // 현재 사용자가 해당 라우트에 접근할 수 있는지 체크
     checkPermission(routeInfo) {
-        // allowedRoles가 비어있다면(제한이 없다면) 모두 접근 가능
         if (!routeInfo.allowedRoles || routeInfo.allowedRoles.length === 0) {
             return true;
         }
-        // 현재 사용자의 역할 가져오기 (globalStateManager 내의 isRole 사용)
-        const userRole = globalStateManager.getState().isRole;
-        // 등록된 allowedRoles 배열에 현재 사용자 역할이 포함되어 있는지 확인
-        return routeInfo.allowedRoles.includes(userRole);
+        const userRoles = globalStateManager.getState().isRole; // 유저 역할 (배열)
+
+        console.log("User Roles:", userRoles);
+        console.log("Allowed Roles:", routeInfo.allowedRoles);
+
+        return userRoles.some(role => routeInfo.allowedRoles.includes(role));
     }
 
     // 상태 업데이트: URL에 따른 현재 뷰 업데이트
@@ -162,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(response);
         renderTotalSounds(response.dtoList); // 트랙 리스트 렌더링
         renderPagination(response); // 페이지네이션 렌더링
-    },['ddd']);
+        });
 
     router.addRoute('/sounds/albums', async () => {
         updateDynamicCSS(SoundTypeCSSFiles);
@@ -240,7 +246,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const response = await axiosGet({endpoint:"/api/me", useToken:true});
         await renderMyInfo(response.dto);
-    }, []);
+    }, ['ROLE_USER']);
 
     router.addRoute('/me/change-password', async ()=>{
         //css 관련 로딩
@@ -248,7 +254,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadUserAdminTypeCSS();
 
         await renderChangePassword();
-    });
+    }, ['ROLE_USER']);
 
     router.addRoute('/me/subscription' , async ()=>{
         //css 관련 로딩
@@ -256,14 +262,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadUserAdminTypeCSS();
 
         await renderMySubscription();
-    });
+    }, ['ROLE_USER']);
 
     router.addRoute('/me/sounds/upload',async () => {
         updateDynamicCSS(SoundManageMainTypeCSSFiles);
         await loadSoundManageMainTypeCSS();
 
         renderSoundUpload();
-    });
+    }, ['ROLE_USER']);
 
     router.addRoute('/me/sounds/albums', async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -276,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSearch();
         await renderMeAlbums(response);
         await renderPagination(response);
-    });
+    }, ['ROLE_USER']);
 
     router.addRoute('/me/sounds/tracks', async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -288,7 +294,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSearch();
         await renderMeTracks(response);
         renderPagination(response);
-    });
+    }, ['ROLE_USER']);
 
     router.addRoute('/me/sounds/tags', async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -300,7 +306,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSearch();
         await renderMeTags(response);
         renderPagination(response);
-    });
+    }, ['ROLE_USER']);
 
     router.addRoute('/me/statistic' , async () =>{
         updateDynamicCSS(AdminStatisticTypeCSSFiles);
@@ -311,14 +317,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 //        const subscriptionStats = await axiosGet({endpoint : '/api/statistic/subscription/stats/me'});
 
         await initMeDashboard(soundsStats,tagsStats);
-    });
+    }, ['ROLE_USER']);
 
     router.addRoute('/admin' , async () =>{
         updateDynamicCSS(AdminStatisticTypeCSSFiles);
         await loadAdminStatisticTypeCSS();
 
         await initDashboard();
-    });
+    }, ['ROLE_ADMIN']);
 
     router.addRoute('/admin/tracks',async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -330,7 +336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await renderArtistsTracks(response);
         await renderPagination(response);
         renderSearch();
-    });
+    }, ['ROLE_ADMIN']);
 
     router.addRoute('/admin/albums',async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -342,7 +348,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderArtistsAlbums(response);
         renderPagination(response);
         renderSearch();
-    });
+    }, ['ROLE_ADMIN']);
 
     router.addRoute('/admin/albums/verify',async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -354,7 +360,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await renderArtistsVerify(response);
         renderPagination(response);
         // renderSearch();
-    });
+    }, ['ROLE_ADMIN']);
 
     router.addRoute('/admin/tags/spelling',async () => {
         updateDynamicCSS(SoundManageTypeCSSFiles);
@@ -365,16 +371,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const renderTags = await axiosGet({endpoint: `/api/sounds/tags${queryParams}`});
         renderTagsSpelling(renderTags);
         renderPagination();
-    });
+    }, ['ROLE_ADMIN']);
 
     router.addRoute('/admin/tags/new',async()=>{
         updateDynamicCSS(SoundManageTypeCSSFiles);
         await loadSoundManageTypeCSS();
 
         renderTagsNew();
-    });
+    }, ['ROLE_ADMIN']);
 
-    router.addRoute(`/admin/albums/one/verify`, async()=>{
+    router.addRoute('/admin/albums/one/verify', async()=>{
         updateDynamicCSS(SoundTypeCSSFiles);
         await loadSoundTypeCSS();
 
@@ -397,7 +403,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 최초 호출 이후에는 상태를 false로 변경
             globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
         }
-    });
+    }, ['ROLE_ADMIN']);
 
     router.addRoute('/admin/users', async () =>{
         //css 로딩/삭제
@@ -416,7 +422,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderPagination(response);
         renderSearch();
 
-    });
+    }, ['ROLE_ADMIN']);
 
     router.addRoute('/admin/subscription', async () =>{
         //css 로딩/삭제
@@ -428,7 +434,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 2. 이후 데이터(response)로 렌더링
         renderSubscriptionInfo(response);
-    });
+    }, ['ROLE_ADMIN']);
 
     document.querySelector('#soundTracksRoute')?.addEventListener('click', () => {
         router.navigate('/sounds/tracks');

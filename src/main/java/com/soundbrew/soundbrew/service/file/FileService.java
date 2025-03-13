@@ -3,6 +3,7 @@ package com.soundbrew.soundbrew.service.file;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.util.IOUtils;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
@@ -116,28 +117,30 @@ public class FileService {
     }
 
     public ResponseDTO<SoundStreamDTO> streamSound(HttpRange range, String fileName) throws IOException {
-        final long FIXED_RANGE_SIZE = 2 * 1024 * 1024; // 2 MB
+        // S3 객체 키 설정
+        String objectKey = "sounds/" + fileName;
 
-        // S3 객체의 메타데이터를 통해 파일 크기 확인
-        String objectKey =  "sounds/"+fileName;
+        // 파일 존재 여부와 메타데이터 조회
+        ObjectMetadata metadata;
         try {
-            amazonS3Client.getObjectMetadata(bucket, objectKey);
+            metadata = amazonS3Client.getObjectMetadata(bucket, objectKey);
         } catch (AmazonS3Exception e) {
             if (e.getStatusCode() == 404) {
                 throw new FileNotFoundException("S3에 해당 파일이 없습니다: " + objectKey);
             }
-            throw e; // 다른 예외는 그대로 전달
+            throw e;
         }
+        long fileLength = metadata.getContentLength();
 
-        long fileLength = amazonS3Client.getObjectMetadata(bucket, objectKey).getContentLength();
         long start = range.getRangeStart(fileLength);
-        long end = Math.min(start + FIXED_RANGE_SIZE - 1, fileLength - 1);
+        // 2MB 단위로 범위를 제한, 파일의 남은 부분이 작으면 그만큼만 요청
+        long end = Math.min(start + (2 * 1024 * 1024) - 1, fileLength - 1);
 
         if (start >= fileLength) {
             throw new IllegalArgumentException("음원 재생 길이를 초과하는 요청입니다.");
         }
 
-        // S3에서 지정된 범위의 데이터를 가져오기
+        // S3에서 범위 지정 요청 생성
         GetObjectRequest rangeRequest = new GetObjectRequest(bucket, objectKey)
                 .withRange(start, end);
 
@@ -147,10 +150,16 @@ public class FileService {
             data = IOUtils.toByteArray(inputStream);
         }
 
-        // 결과를 DTO에 담아 반환
         return ResponseDTO.<SoundStreamDTO>withSingleData()
                 .dto(new SoundStreamDTO(data, start, end, fileLength))
                 .build();
+    }
+
+    // 추가: 파일의 전체 길이를 가져오는 메서드
+    public long getFileLength(String fileName) throws IOException {
+        String objectKey = "sounds/" + fileName;
+        ObjectMetadata metadata = amazonS3Client.getObjectMetadata(bucket, objectKey);
+        return metadata.getContentLength();
     }
 }
 
