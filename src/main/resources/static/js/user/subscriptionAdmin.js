@@ -45,26 +45,11 @@ async function applyChanges(button) {
     creditPerMonth: updatedCreditPerMonth,
   };
 
-//  const handle = {
-//    onSuccess: (data) => {
-//      alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
-//      // 성공 시 span에 수정된 값 반영
-//      const priceSpan = row.querySelector('span.current-value[data-field="subscriptionPrice"]');
-//      const creditSpan = row.querySelector('span.current-value[data-field="creditPerMonth"]');
-//      if (priceSpan) priceSpan.textContent = updatedSubscriptionPrice;
-//      if (creditSpan) creditSpan.textContent = updatedCreditPerMonth;
-//
-//      // 페이지 이동
-//      router.navigate("/admin/users/subscription");
-//    },
-//    onBadRequest: () => {
-//      alert("정보를 관리자 권한으로 수정하는 것을 실패했습니다.");
-//    },
-//  };
+  console.log(updatedSubscriptionDTO);
 
   const handle = {
     success:{
-      navigate:"/admin/users/subscription"
+      navigate:"/admin/subscription"
     },
   };
 

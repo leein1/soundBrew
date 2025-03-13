@@ -399,9 +399,9 @@ if (token) {
         globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: userInfo.roles });
     } else {
         globalStateManager.dispatch({ type: 'SET_LOGIN_STATUS', payload: false });
-        globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: 'visitor' });
+        globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: ['visitor'] });
     }
 } else {
     globalStateManager.dispatch({ type: 'SET_LOGIN_STATUS', payload: false });
-    globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: 'visitor' });
+    globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: ['visitor'] });
 }

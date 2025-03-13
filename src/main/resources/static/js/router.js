@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await initMeDashboard(soundsStats,tagsStats);
     }, ['ROLE_USER']);
 
-    router.addRoute('/admin' , async () =>{
+    router.addRoute('/admin/statistic' , async () =>{
         updateDynamicCSS(AdminStatisticTypeCSSFiles);
         await loadAdminStatisticTypeCSS();
 

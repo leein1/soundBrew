@@ -689,8 +689,14 @@ export async function renderTagsNew(data) {
 //            },
 //        };
 
+        const handle={
+            success:{
+                navigate:"/admin/tags"
+            },
+        }
+
         const jsonData = serializeFormToJSON(event.target);
-        const { errors, processedData } = inputHandler(jsonData, event.target, handle);
+        const { errors, processedData } = inputHandler(jsonData, event.target);
 
         if (!errors) {
             if (tagsDto.hasOwnProperty(tagType)) {
@@ -698,7 +704,7 @@ export async function renderTagsNew(data) {
             } else {
                 alert(`잘못된 태그 타입: ${tagType}`);
             }
-            await axiosPost({ endpoint: `/api/admin/tags`, body: tagsDto });
+            await axiosPost({ endpoint: `/api/admin/tags`, body: tagsDto, handle});
 
             document.getElementById('soundDetailModal').style.display = 'none';
         }

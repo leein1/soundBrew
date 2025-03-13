@@ -45,9 +45,9 @@ const addAuthHeader = async (options, handle = {}) => {
 
     if (!accessToken) {
 
-        alert("액세스 토큰이 없습니다, 다시 로그인을 진행해주세요");
-
-        window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+//        alert("액세스 토큰이 없습니다, 다시 로그인을 진행해주세요");
+//
+//        window.location.href = "/login"; // 로그인 페이지로 리다이렉트
         return null;
     }
 
