@@ -103,36 +103,32 @@
 
                 const jsonData = serializeFormToJSON(form);
 
-                alert(jsonData.toString());
+                // alert(jsonData.toString());
 
                 const {errors, processedData} = inputHandler(jsonData, form);
 
                 const handle = {
-                    success:()=>{
-                        // 선택 사항 1 :  얼럿. 성공도 메세지를 보내나, 일단 빼는 케이스 예시
-                        alert("성공했음.");
-                        // 선택 사항 2 : 주소 넘기기.
-                        window.location.href = "/login";
+                    success: {
+                        location: "/login"
                     },
-                    //선택사항 3 : 예외에 대해서는 우리가 메세지를 잘 보내줌 -> 비동기 결과 data 그대로 씀
-                    failure:(data)=>{
-                        alert(data.message); // 그 data의 .message
-                        //선택사항 4 : 주소 넘기기
-                        window.location.href="/help/find-password";
-                        //선택사항 5 : front 요소에 대한 컨트롤
-                        submitButton.disabled = false;
+                    failure: {
+                        message: "오류가 발생하였습니다. 문의부탁 드립니다.",
+                        location: "/login"
                     }
                 }
 
                 const resetToken = localStorage.getItem("resetToken");
 
-                alert(resetToken.toString());
+                // alert(resetToken.toString());
 
                 if (!errors) {
 
                     await axiosPost({endpoint: "/api/help/reset-password", body: processedData, useToken: false, uniqueToken: true,handle});
                     localStorage.removeItem("resetToken");
-                    alert("종료")
+                    // alert("종료")
+                }else {
+                    submitButton.disabled = false;
+
                 }
             }catch (err){
                 console.error(err);

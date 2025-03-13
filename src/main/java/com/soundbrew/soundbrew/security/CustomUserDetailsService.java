@@ -49,7 +49,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
 
         userDetailsDTO.setAuthorities(grantedAuthorities);
-
+        log.info(userDetailsDTO.toString());
         return userDetailsDTO;
 
         //  우리가 작성한 User 클래스 아님 - 테스트용

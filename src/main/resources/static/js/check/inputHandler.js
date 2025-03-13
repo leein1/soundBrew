@@ -61,11 +61,11 @@ export function inputValidator(key, value, rules) {
         // 배열 내의 각 항목에 대해 패턴 검사
         value.forEach((item, index) => {
             if (!rules.pattern.test(item)) {
-                errors.push(`${key}[${index}] has an invalid format.`);
+                errors.push(`${key}[${index}] 가 양식에 맞지 않습니다.`);
             }
         });
     } else if (rules.pattern && !Array.isArray(value) && !rules.pattern.test(value)) {
-        errors.push(`${key} has an invalid format.`);
+        errors.push(`${key} 가 양식에 맞지 않습니다.`);
     }
 
     // 숫자 타입 확인

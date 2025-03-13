@@ -36,17 +36,25 @@ public class APILoginFailureHandler implements AuthenticationFailureHandler {
 
         if(exception instanceof LockedException){
 
+            log.info("계정이 잠겨 있습니다.");
+
             message = "계정이 잠겨 있습니다.";
 
         } else if(exception instanceof DisabledException){
+
+            log.info("계정이 비활성화되었습니다.");
 
             message = "계정이 비활성화되었습니다.";
 
         } else if(exception instanceof AccountExpiredException){
 
+            log.info("계정이 만료되었습니다.");
+
             message = "계정이 만료되었습니다.";
 
         } else if(exception instanceof CredentialsExpiredException){
+
+            log.info("비밀번호가 만료되었습니다. 비밀번호를 변경해주세요.");
 
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
@@ -69,9 +77,13 @@ public class APILoginFailureHandler implements AuthenticationFailureHandler {
 
         } else if(exception instanceof BadCredentialsException){
 
+            log.info("아이디 또는 비밀번호가 올바르지 않습니다.");
+
             message = "아이디 또는 비밀번호가 올바르지 않습니다.";
 
         } else if(exception instanceof AuthenticationServiceException){
+
+            log.info("현재 인증 서비스에 문제가 있습니다. 잠시후 시도하시거나 문의해주세요.");
 
             message = "현재 인증 서비스에 문제가 있습니다. 잠시후 시도하시거나 문의해주세요.";
 

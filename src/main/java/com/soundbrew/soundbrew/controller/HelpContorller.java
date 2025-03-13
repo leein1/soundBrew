@@ -50,7 +50,10 @@ public class HelpContorller {
 
             log.info("비밀번호 리셋 권한이 없음");
 
-            throw new IllegalArgumentException("비밀번호 변경 권한이 없습니다.");
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage().message("오류가 발생했습니다.").build();
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
+
         }
 
         // Authentication에서 이메일 가져오기

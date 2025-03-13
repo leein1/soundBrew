@@ -27,10 +27,10 @@
         </form>
     </div>
 
-    <div class="content-footer">
-        <a href="#" class="footer-link">메일 재요청(모달이든 뭐든 아이디 비밀번호 새로 입력하고 재 전송 하는 기능 필요)</a>
+<!--    <div class="content-footer">-->
+<!--        <a href="#" class="footer-link">메일 재요청(모달이든 뭐든 아이디 비밀번호 새로 입력하고 재 전송 하는 기능 필요)</a>-->
 
-    </div>
+<!--    </div>-->
 </div>
 </body>
 <th:block layout:fragment="script">
@@ -52,14 +52,25 @@
                 //폼 데이터 직렬화
                 const jsonData = serializeFormToJSON(form);
 
+                // const handle = {
+                //     onSuccess:()=>{
+                //         alert('인증되었습니다. 로그인 해주세요')
+                //         window.location.href = "/login";
+                //     },
+                //     onServerError:()=>{
+                //         alert("서비스 오류 입니다. 잠시 후 다시 시도 해주세요. 지속적인 문제 발생시 문의 해주세요.")
+                //         window.location.href="/activation";
+                //     }
+                // }
+
                 const handle = {
-                    onSuccess:()=>{
-                        alert('인증되었습니다. 로그인 해주세요')
-                        window.location.href = "/login";
+                    success :{
+                        message : "인증되었습니다. 로그인 해주세요",
+                        location : "/login"
                     },
-                    onServerError:()=>{
-                        alert("서비스 오류 입니다. 잠시 후 다시 시도 해주세요. 지속적인 문제 발생시 문의 해주세요.")
-                        window.location.href="/activation";
+                    failure : {
+                        message : "서비스 오류 입니다. 잠시 후 다시 시도 해주세요. 지속적인 문제 발생시 문의 해주세요.",
+                        location : "/activation"
                     }
                 }
 

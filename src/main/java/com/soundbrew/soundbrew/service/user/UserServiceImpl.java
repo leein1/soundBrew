@@ -355,8 +355,30 @@ public class UserServiceImpl implements UserService{
         String email = userDTO.getEmail();
         String name = userDTO.getName();
 
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = null;
+
+        try{
+
+            user = userRepository.findByEmail(email).orElseThrow();
+
+        }catch (Exception e){
+
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>builder()
+                    .message("입력하신 메일을 찾을 수 없습니다.")
+                    .build();
+            return responseDTO;
+        }
+
         UserDTO existingUserDTO = modelMapper.map(user, UserDTO.class);
+
+        // 이름이 일치하는지 검사
+        if(!userDTO.name.equals(existingUserDTO.name)){
+
+            ResponseDTO<String> responseDTO = ResponseDTO.<String>builder()
+                    .message("사용자 정보가 일치하지 않습니다.")
+                    .build();
+            return responseDTO;
+        }
 
         //  있다면 임의의 비밀번호 생성
         String tempPassword = PasswordGenerator.generatePassword(8);

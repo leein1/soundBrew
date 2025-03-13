@@ -51,9 +51,7 @@
         document.getElementById("findpw-form").addEventListener("submit", async (e) => {
             e.preventDefault();
 
-
             try {
-
 
                 const submitButton = document.querySelector('button[type="submit"]');
                 submitButton.disabled = true;
@@ -63,23 +61,25 @@
 
                 const jsonData = serializeFormToJSON(form);
 
-                alert(jsonData.toString());
+                // alert(jsonData.toString());
 
                 const {errors, processedData} = inputHandler(jsonData, form);
 
                 const handle = {
-                    onSuccess:(data)=>{
-                        alert(data.message);
-                        window.location.href = "/login";
+                    success: {
+                        location: "/login"
                     },
-                    onNotFound:(data)=>{
-                        alert(data.message);
-                        window.location.href="/help/find-password";
+                    failure: {
+                        location: "/help/find-password"
                     }
                 }
 
                 if (!errors) {
-                    await axiosPost({endpoint: "/api/help/find-password", body: processedData, handle: handle});
+                    await axiosPost({endpoint: "/api/help/find-password",useToken:false, body: processedData, handle: handle});
+
+                }
+                else{
+                    submitButton.disabled = true;
 
                 }
             }catch (err){
