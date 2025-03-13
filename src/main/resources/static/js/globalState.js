@@ -10,7 +10,7 @@ export class GlobalState {
             moodTags: [],
             genreTags: [],
             isFirstTagLoad:true,
-            isRole: 'visitor',
+            isRole: ['visitor'],
         };
 
         // Pub/Sub 관련

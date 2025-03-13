@@ -70,7 +70,7 @@ export class Router {
                 globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: userInfo.roles });
             } else {
                 globalStateManager.dispatch({ type: 'SET_LOGIN_STATUS', payload: false });
-                globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: 'visitor' });
+                globalStateManager.dispatch({ type: 'SET_IS_ROLE', payload: ['visitor'] });
             }
         } else {
             alert("권한에서 문제가 발생해도 이 얼럿이 뜨면 안됨(이전에 잡아졌어야함)");
