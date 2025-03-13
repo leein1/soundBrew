@@ -48,10 +48,13 @@ public class AccessTokenException extends RuntimeException {
     public void sendResponseError(HttpServletResponse response){
         response.setStatus(token_error.getStatus());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+
 
         Gson gson = new Gson();
 
-        String responseStr = gson.toJson(Map.of("msg", token_error.getMsg(),"time", new Date()));
+//        String responseStr = gson.toJson(Map.of("message", token_error.getMsg(),"time", new Date()));
+        String responseStr = gson.toJson(Map.of("message", "접근 권한이 없습니다.","time", new Date()));
 
         try{
             response.getWriter().println(responseStr);

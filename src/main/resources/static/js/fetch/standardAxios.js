@@ -43,13 +43,13 @@ export const callRefresh = async () => {
 const addAuthHeader = async (options, handle = {}) => {
     let accessToken = localStorage.getItem("accessToken");
 
-    if (!accessToken) {
-
-//        alert("액세스 토큰이 없습니다, 다시 로그인을 진행해주세요");
+//     if (!accessToken) {
 //
-//        window.location.href = "/login"; // 로그인 페이지로 리다이렉트
-        return null;
-    }
+// //        alert("액세스 토큰이 없습니다, 다시 로그인을 진행해주세요");
+// //
+// //        window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+// //         return null;
+//     }
 
     options.headers = {
         ...options.headers,
@@ -74,7 +74,7 @@ const addAuthHeader = async (options, handle = {}) => {
         if (error.response?.status === 401) {
 
            alert("만료되었거나 인증 실패된 토큰, 재발급 시도 중...");
-
+            alert(error.response.data.message);
             try {
 
                 const newAccessToken = await callRefresh();
