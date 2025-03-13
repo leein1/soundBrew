@@ -38,10 +38,6 @@ public class MeController {
     private final TagsService tagsService;
     private final AuthenticationService authenticationService;
 
-    public void check(int albumUserId, int givenUserId,String reason) {
-        if(albumUserId != givenUserId) throw new AccessDeniedException("접근할 권한이 없습니다.");
-    }
-
     //    내 정보 보기 - GET /me/{userId}
 //    @ApiOperation(value = "me GET",notes = "GET 방식으로 내 정보 조회")
 //    @PreAuthorize("hasRole('ADMIN')")
@@ -187,6 +183,7 @@ public class MeController {
 
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/tracks/{musicId}/tags")
     ResponseEntity<ResponseDTO<String>> updateLinkTags(@PathVariable @Positive int musicId, @RequestBody  TagsDTO tagsDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -198,6 +195,7 @@ public class MeController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/sounds")
     ResponseEntity<ResponseDTO<String>> createSound(@RequestBody SoundCreateDTO soundCreateDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -213,6 +211,7 @@ public class MeController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO<String>> updateAlbum(@PathVariable @Positive int albumId, @RequestBody AlbumDTO albumDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -235,6 +234,7 @@ public class MeController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable("musicId") @Positive int id, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -246,6 +246,7 @@ public class MeController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable("albumId") @Positive int id,  @Valid RequestDTO requestDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -257,6 +258,7 @@ public class MeController {
         return  ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/tracks")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundMe(@Valid RequestDTO requestDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -270,6 +272,7 @@ public class MeController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/albums")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumMe( @Valid RequestDTO requestDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -283,6 +286,7 @@ public class MeController {
         return  ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/tags")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTagsMe(  @Valid RequestDTO requestDto, Authentication authentication){
         if(!authenticationService.isUser(authentication))throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -296,6 +300,7 @@ public class MeController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/albums/{albumId}/tracks")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundsByAlbumId(@PathVariable @Positive int albumId,Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");

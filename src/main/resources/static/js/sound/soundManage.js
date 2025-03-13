@@ -114,16 +114,22 @@ window.sendMeAlbumsUpdateRequest = async function(albumId, formData) {
   const response = serializeFormToJSON(formData);
   console.log(response);
   const { errors, processedData } = inputHandler(response, formData);
+//  const handle = {
+//    onBadRequest: () => {
+//      alert("입력한 정보에 오류가 있습니다.");
+//      router.navigate("/me/sounds/albums");
+//    },
+//    onSuccess: () => {
+//      alert("앨범 정보를 수정했습니다.");
+//      router.navigate("/me/sounds/albums");
+//    }
+//  };
   const handle = {
-    onBadRequest: () => {
-      alert("입력한 정보에 오류가 있습니다.");
-      router.navigate("/me/sounds/albums");
-    },
-    onSuccess: () => {
-      alert("앨범 정보를 수정했습니다.");
-      router.navigate("/me/sounds/albums");
-    }
+      success:{
+         navigate:"/me/sounds/albums"
+      },
   };
+
   if (!errors) {
     await axiosPatch({ endpoint: '/api/me/albums/' + albumId, body: processedData, handle });
   }
@@ -133,15 +139,10 @@ window.sendMeTracksUpdateRequest = async function(musicId, formData) {
   const response = serializeFormToJSON(formData);
   const { errors, processedData } = inputHandler(response, formData);
   const handle = {
-    onBadRequest: () => {
-      alert("입력한 정보에 오류가 있습니다.");
-      router.navigate("/me/sounds/tracks");
-    },
-    onSuccess: () => {
-      alert("트랙 정보를 수정했습니다.");
-      router.navigate("/me/sounds/tracks");
-    }
-  };
+        success:{
+           navigate:"/me/sounds/tracks"
+        },
+    };
   if (!errors) {
     await axiosPatch({ endpoint: '/api/me/tracks/' + musicId, body: processedData, handle });
   }
@@ -642,15 +643,10 @@ function openTagModal(trackId) {
       console.log("Tag form data:", jsonData); // 디버깅 출력
       const { errors, processedData } = inputHandler(jsonData, tagForm);
       const handle = {
-        onBadRequest: () => {
-          alert("입력한 정보에 오류가 있습니다.");
-          router.navigate("/me/sounds/tags");
-        },
-        onSuccess: () => {
-          alert("태그 정보를 수정했습니다.");
-          router.navigate("/me/sounds/tags");
-        },
-      };
+            success:{
+               navigate:"/me/sounds/tags"
+            },
+        };
       if (!errors) {
         await axiosPost({ endpoint: `/api/me/tracks/${trackId}/tags`, body: processedData, handle });
         tagModal.classList.add("hidden");
@@ -975,16 +971,17 @@ export async function renderSoundUpload(){
     const titleInput = imageForm.querySelector('input[name="title"]');
     titleInput.value = selectedFile.name;
     const formData = new FormData(imageForm);
-    const handle = {
-      onSuccess: (data) => {
-        alert('이미지가 성공적으로 업로드되었습니다!');
-      },
-      onBadRequest: () => {
-        alert("업로드가 실패했습니다.");
-        imageForm.querySelectorAll('input, button').forEach(el => el.disabled = false);
-      }
-    };
-    uploadImage = await axiosPost({ endpoint: "/api/files/albums", body: formData, handle });
+//    const handle = {
+//      onSuccess: (data) => {
+//        alert('이미지가 성공적으로 업로드되었습니다!');
+//      },
+//      onBadRequest: () => {
+//        alert("업로드가 실패했습니다.");
+//        imageForm.querySelectorAll('input, button').forEach(el => el.disabled = false);
+//      }
+//    };
+
+    uploadImage = await axiosPost({ endpoint: "/api/files/albums", body: formData });
   });
 
   // === 음원 파일 업로드 처리 ===
@@ -1021,16 +1018,16 @@ export async function renderSoundUpload(){
     const titleInput = trackForm.querySelector('input[name="title"]');
     titleInput.value = selectedFile.name;
     const formData = new FormData(trackForm);
-    const handle = {
-      onSuccess: (data) => {
-        alert('음원이 성공적으로 업로드되었습니다!');
-      },
-      onBadRequest: () => {
-        alert("업로드가 실패했습니다.");
-        trackForm.querySelectorAll('input, button').forEach(el => el.disabled = false);
-      }
-    };
-    uploadTrack = await axiosPost({ endpoint: "/api/files/tracks", body: formData, handle });
+//    const handle = {
+//      onSuccess: (data) => {
+//        alert('음원이 성공적으로 업로드되었습니다!');
+//      },
+//      onBadRequest: () => {
+//        alert("업로드가 실패했습니다.");
+//        trackForm.querySelectorAll('input, button').forEach(el => el.disabled = false);
+//      }
+//    };
+    uploadTrack = await axiosPost({ endpoint: "/api/files/tracks", body: formData });
   });
 
   // === 최종 메타 데이터 제출 처리 ===
@@ -1060,15 +1057,23 @@ export async function renderSoundUpload(){
 
     const jsonData = serializeFormToJSON(form);
     const { errors, processedData } = inputHandler(jsonData, form);
+//    const handle = {
+//      onSuccess: (data) => {
+//        alert('음원이 성공적으로 업로드되었습니다!');
+//        router.navigate("/sounds/tracks");
+//      },
+//      onBadRequest: () => {
+//        alert("업로드가 실패했습니다.");
+//      }
+//    };
+
+    // 서버 응답 핸들링 객체
     const handle = {
-      onSuccess: (data) => {
-        alert('음원이 성공적으로 업로드되었습니다!');
-        router.navigate("/sounds/tracks");
-      },
-      onBadRequest: () => {
-        alert("업로드가 실패했습니다.");
-      }
+        success:{
+            navigate:"/sounds/tracks"
+        },
     };
+
     if (!errors) {
       await axiosPost({ endpoint: '/api/me/sounds', body: processedData, handle });
     }

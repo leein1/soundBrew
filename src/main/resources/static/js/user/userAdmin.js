@@ -129,20 +129,26 @@ async function applyCreditBalanceChange(button) {
 		return;
 	}
 
-	const handle = {
-		onSuccess: (data) => {
-			alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
-			const spanField = row.querySelector('span.current-value[data-field="creditBalance"]');
-			if (spanField) {
-				spanField.textContent = newCreditBalance;
-				spanField.style.display = 'inline-block';
-			}
-			router.navigate("/admin/users");
-		},
-		onBadRequest: () => {
-			alert("업로드가 실패했습니다.");
-		},
-	};
+//	const handle = {
+//		onSuccess: (data) => {
+//			alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
+//			const spanField = row.querySelector('span.current-value[data-field="creditBalance"]');
+//			if (spanField) {
+//				spanField.textContent = newCreditBalance;
+//				spanField.style.display = 'inline-block';
+//			}
+//			router.navigate("/admin/users");
+//		},
+//		onBadRequest: () => {
+//			alert("업로드가 실패했습니다.");
+//		},
+//	};
+
+    const handle = {
+        success:{
+            navigate:"/admin/users"
+        },
+    };
 
 	await axiosPatch({ endpoint: `/api/admin/users/${userId}/credit`, body: newCreditBalance, handle });
 	cancelChanges(button);
@@ -157,20 +163,25 @@ async function applySubscriptionId(button) {
 
 	console.log(`User ${userId} 구독ID 변경: ${newSubscriptionId}`);
 
-	const handle = {
-		onSuccess: (data) => {
-			alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
-			const spanField = row.querySelector('span.current-value[data-field="subscriptionId"]');
-			if (spanField) {
-				spanField.textContent = newSubscriptionId;
-				spanField.style.display = 'inline-block';
-			}
-			router.navigate("/admin/users");
-		},
-		onBadRequest: () => {
-			alert("업로드가 실패했습니다.");
-		},
-	};
+//	const handle = {
+//		onSuccess: (data) => {
+//			alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
+//			const spanField = row.querySelector('span.current-value[data-field="subscriptionId"]');
+//			if (spanField) {
+//				spanField.textContent = newSubscriptionId;
+//				spanField.style.display = 'inline-block';
+//			}
+//			router.navigate("/admin/users");
+//		},
+//		onBadRequest: () => {
+//			alert("업로드가 실패했습니다.");
+//		},
+//	};
+    const handle = {
+        success:{
+            navigate:"/admin/users"
+        },
+    };
 
 	await axiosPatch({ endpoint: `/api/admin/users/${userId}/subscription`, body: newSubscriptionId, handle });
 	cancelChanges(button);
@@ -185,20 +196,26 @@ async function applyPaymentStatus(button) {
 
 	console.log(`User ${userId} 결제 상태 변경: ${newPaymentStatus}`);
 
-	const handle = {
-		onSuccess: (data) => {
-			alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
-			const spanField = row.querySelector('span.current-value[data-field="paymentStatus"]');
-			if (spanField) {
-				spanField.textContent = newPaymentStatus;
-				spanField.style.display = 'inline-block';
-			}
-			router.navigate("/admin/users");
-		},
-		onBadRequest: () => {
-			alert("업로드가 실패했습니다.");
-		},
-	};
+//	const handle = {
+//		onSuccess: (data) => {
+//			alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
+//			const spanField = row.querySelector('span.current-value[data-field="paymentStatus"]');
+//			if (spanField) {
+//				spanField.textContent = newPaymentStatus;
+//				spanField.style.display = 'inline-block';
+//			}
+//			router.navigate("/admin/users");
+//		},
+//		onBadRequest: () => {
+//			alert("업로드가 실패했습니다.");
+//		},
+//	};
+
+    const handle = {
+        success:{
+            navigate:"/admin/users"
+        },
+    };
 
 	await axiosPatch({ endpoint: `/api/admin/users/${userId}/payment`, body: newPaymentStatus, handle });
 	cancelChanges(button);

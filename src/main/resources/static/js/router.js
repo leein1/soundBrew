@@ -144,15 +144,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderSort();
             renderViewType();
 
-            // const handle = {
-            //     onSuccess: (data) => {
-            //         console.log("태그 데이터를 성공적으로 불러왔음:", data);
-            //     },
-            //     onBadRequest: (data) => {
-            //         console.error("태그 데이터 요청 실패:", data);
-            //     },
-            // };
-
             // 태그 API 호출
             const renderTags = await axiosGet({ endpoint: `/api/sounds/tags/mapped${queryParams}` });
 

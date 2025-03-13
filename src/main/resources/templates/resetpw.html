@@ -108,16 +108,19 @@
                 const {errors, processedData} = inputHandler(jsonData, form);
 
                 const handle = {
-                    onSuccess:(data)=>{
-
-                        alert(data.message);
+                    success:()=>{
+                        // 선택 사항 1 :  얼럿. 성공도 메세지를 보내나, 일단 빼는 케이스 예시
+                        alert("성공했음.");
+                        // 선택 사항 2 : 주소 넘기기.
                         window.location.href = "/login";
                     },
-                    onBadRequest:(data)=>{
-                        alert(data.message);
+                    //선택사항 3 : 예외에 대해서는 우리가 메세지를 잘 보내줌 -> 비동기 결과 data 그대로 씀
+                    failure:(data)=>{
+                        alert(data.message); // 그 data의 .message
+                        //선택사항 4 : 주소 넘기기
                         window.location.href="/help/find-password";
+                        //선택사항 5 : front 요소에 대한 컨트롤
                         submitButton.disabled = false;
-
                     }
                 }
 

@@ -92,13 +92,8 @@ window.applyAdminAlbumsChanges = async function(button, albumId) {
 window.applyAdminAlbumsDelete = async function(button, albumId){
     const handle = {
         success: {
-            message: "요청한 앨범을 삭제하였습니다.",
             navigate: "/sounds/tracks"
         },
-        failure: {
-            message: "앨범을 삭제하지 못했습니다.",
-            navigate: "/admin/albums"
-        }
     };
 
     await axiosDelete({endpoint: '/api/admin/albums/' + albumId, handle});
@@ -107,15 +102,20 @@ window.applyAdminAlbumsDelete = async function(button, albumId){
 window.applyAdminTrackDelete = async function(button, musicId){
     alert(musicId);
 
+//    const handle ={
+//        onSuccess:() =>{
+//            alert("요청한 트랙을 삭제하였습니다.");
+//            router.navigate("/admin/tracks");
+//        },
+//        onBadRequest:()=>{
+//            alert("트랙을 삭제하지못했습니다.");
+//            router.navigate("/admin/tracks");
+//        }
+//    }
     const handle ={
-        onSuccess:() =>{
-            alert("요청한 트랙을 삭제하였습니다.");
-            router.navigate("/admin/tracks");
+        success:{
+            navigate:"/admin/tracks"
         },
-        onBadRequest:()=>{
-            alert("트랙을 삭제하지못했습니다.");
-            router.navigate("/admin/tracks");
-        }
     }
 
     await axiosDelete({ endpoint:'/api/admin/tracks/'+musicId, handle });
@@ -373,16 +373,22 @@ window.sendAdminAlbumsUpdateRequest = async function(albumId, formData) {
     console.log(response);
     const { errors, processedData } = inputHandler(response,formData);
 
-    const handle= {
-        onBadRequest: ()=>{
-            alert("입력한 정보에서 오류가 발생했습니다.");
-            router.navigate("/admin/albums");
+//    const handle= {
+//        onBadRequest: ()=>{
+//            alert("입력한 정보에서 오류가 발생했습니다.");
+//            router.navigate("/admin/albums");
+//        },
+//        onSuccess:()=>{
+//            alert("입력한 정보로 수정했습니다.")
+//            router.navigate("/admin/albums");
+//        },
+//    }
+    // 서버 응답 핸들링 객체
+    const handle = {
+        success:{
+            navigate:"/admin/albums"
         },
-        onSuccess:()=>{
-            alert("입력한 정보로 수정했습니다.")
-            router.navigate("/admin/albums");
-        },
-    }
+    };
 
     if (!errors) {
         await axiosPatch({endpoint: '/api/admin/albums/' + albumId, body: processedData,handle});
@@ -396,16 +402,22 @@ window.sendAdminTracksUpdateRequest = async function(musicId, formData) {
 
     const { errors, processedData } = inputHandler(response,formData);
 
-    const handle= {
-        onBadRequest: ()=>{
-            alert("입력한 정보에서 오류가 발생했습니다.");
-            router.navigate("/admin/tracks");
+//    const handle= {
+//        onBadRequest: ()=>{
+//            alert("입력한 정보에서 오류가 발생했습니다.");
+//            router.navigate("/admin/tracks");
+//        },
+//        onSuccess:()=>{
+//            alert("입력한 정보로 수정했습니다.")
+//            router.navigate("/admin/tracks");
+//        },
+//    }
+    // 서버 응답 핸들링 객체
+    const handle = {
+        success:{
+            navigate:"/admin/albums"
         },
-        onSuccess:()=>{
-            alert("입력한 정보로 수정했습니다.")
-            router.navigate("/admin/tracks");
-        },
-    }
+    };
 
     if (!errors) {
         await axiosPatch({ endpoint: '/api/admin/tracks/' + musicId, body: processedData,handle });
@@ -668,14 +680,14 @@ export async function renderTagsNew(data) {
             genre: []
         };
 
-        const handle = {
-            onSuccess: () => {
-                alert("태그를 정상적으로 생성했습니다.");
-            },
-            onBadRequest: () => {
-                alert("태그를 정상적으로 생성하지 못했습니다.");
-            },
-        };
+//        const handle = {
+//            onSuccess: () => {
+//                alert("태그를 정상적으로 생성했습니다.");
+//            },
+//            onBadRequest: () => {
+//                alert("태그를 정상적으로 생성하지 못했습니다.");
+//            },
+//        };
 
         const jsonData = serializeFormToJSON(event.target);
         const { errors, processedData } = inputHandler(jsonData, event.target, handle);
@@ -943,16 +955,22 @@ window.applyAdminTagSpellingChanges = async function (button, originalTag, categ
 
     const newTag = inputField.value;
     const afterNewTag = newTag.replace(/"/g, '');
-    const handle ={
-        onSuccess:() =>{
-            alert("요청한 태그 철자 변경을 수행했습니다.");
-            router.navigate("/admin/tags/spelling");
+//    const handle ={
+//        onSuccess:() =>{
+//            alert("요청한 태그 철자 변경을 수행했습니다.");
+//            router.navigate("/admin/tags/spelling");
+//        },
+//        onBadRequest:()=>{
+//            alert("요청한 태그 변경을 수행하지 못했습니다.");
+//            router.navigate("/admin/tags/spelling");
+//        }
+//    }
+    // 서버 응답 핸들링 객체
+    const handle = {
+        success:{
+            navigate:"/admin/tags/spelling"
         },
-        onBadRequest:()=>{
-            alert("요청한 태그 변경을 수행하지 못했습니다.");
-            router.navigate("/admin/tags/spelling");
-        }
-    }
+    };
 
     const pattern = new RegExp("^[a-z0-9.,()-_\\s]+$");
     if (pattern.test(afterNewTag)) {
@@ -971,12 +989,18 @@ window.applyAdminTagSpellingChanges = async function (button, originalTag, categ
 }
 
 window.applyAdminAlbumsVerify = async function(button, albumId){
-    const handle ={
-        onSuccess:()=>{
-          alert("대기중인 앨범을 성공적으로 확인했습니다.");
-          router.navigate('/admin/albums/verify')
+//    const handle ={
+//        onSuccess:()=>{
+//          alert("대기중인 앨범을 성공적으로 확인했습니다.");
+//          router.navigate('/admin/albums/verify')
+//        },
+//    }
+    // 서버 응답 핸들링 객체
+    const handle = {
+        success:{
+            navigate:"/admin/albums/verify"
         },
-    }
+    };
 
     await axiosPatch({ endpoint:`/api/admin/albums/${albumId}/verify`, handle});
 }

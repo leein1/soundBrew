@@ -20,6 +20,7 @@ import com.soundbrew.soundbrew.util.valid.UpdateGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -117,6 +118,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/tags")
     ResponseEntity<ResponseDTO<String>> createTag(@RequestBody @Valid TagsDTO tagsDto, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -126,6 +128,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/tags/instruments/{beforeName}")
     ResponseEntity<ResponseDTO<String>> updateInstrumentTagSpelling(
             @PathVariable
@@ -146,6 +149,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/tags/moods/{beforeName}")
     ResponseEntity<ResponseDTO<String>> updateMoodTagSpelling(
             @PathVariable
@@ -166,6 +170,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return  ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/tags/genres/{beforeName}")
     ResponseEntity<ResponseDTO<String>> updateGenreTagSpelling(
             @PathVariable
@@ -186,6 +191,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/tags/{musicId}")
     ResponseEntity<ResponseDTO<String>> updateLinkTags(@PathVariable @Positive int musicId, @RequestBody @Valid TagsDTO tagsDto, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -196,6 +202,7 @@ public class AdminController {  //  관리자용 컨트롤러
     }
 
     // sounds for admin
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO<String>> deleteAlbum(@PathVariable @Positive int albumId, Authentication authentication){
         if(!authenticationService.isAdmin(authentication)) throw new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_ACCESS);
@@ -205,6 +212,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO<String>> deleteMusic(@PathVariable @Positive int musicId, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -214,6 +222,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/albums/{albumId}")
     ResponseEntity<ResponseDTO<String>> updateAlbum(@PathVariable @Positive int albumId, @RequestBody @Validated(UpdateGroup.class) AlbumDTO albumDto, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -223,6 +232,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/albums/{albumId}/verify")
     ResponseEntity<ResponseDTO<String>> updateVerifyAlbum(@PathVariable @Positive int albumId, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -232,6 +242,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/albums/verify")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> readVerifyAlbum( @Valid RequestDTO requestDTO, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -241,6 +252,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/albums/{userId}/title/{albumId}/verify")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> readVerifyAlbumOne(@PathVariable("userId") @Positive int userId, @PathVariable("albumId") @Positive int albumId, @Valid RequestDTO requestDTO, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -250,6 +262,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/tracks/{musicId}")
     ResponseEntity<ResponseDTO<String>> updateMusic(@PathVariable @Positive int musicId, @RequestBody @Validated(UpdateGroup.class) MusicDTO musicDto, Authentication authentication ){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -259,6 +272,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/tracks/{userId}/{musicId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundOne(@PathVariable @Positive int userId, @PathVariable("musicId") @Positive int id, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -268,6 +282,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/tracks/{userId}/albums/{albumId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getSoundsByAlbumId(@PathVariable @Positive int userId, @PathVariable @Positive int albumId){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -276,6 +291,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/albums/{userId}/{albumId}")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbumOne(@PathVariable @Positive int userId, @PathVariable("albumId") @Positive int id, @Valid RequestDTO requestDTO, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -285,6 +301,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/tracks")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getTracks(@ModelAttribute @Valid RequestDTO requestDTO, Authentication authentication ){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");
@@ -294,6 +311,7 @@ public class AdminController {  //  관리자용 컨트롤러
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/albums")
     ResponseEntity<ResponseDTO<SearchTotalResultDTO>> getAlbums(@ModelAttribute @Valid RequestDTO requestDTO, Authentication authentication){
 //        if(!authenticationService.isAdmin(authentication)) throw new ResourceOwnershipException("해당 기능에 접근할 권한이 없습니다");

@@ -1,50 +1,5 @@
 import {router} from "/js/router.js";
 
-export function renderTagsFromSearch(data) {
-    // const container = document.getElementById("render-tags-sort-container");
-    const container = document.getElementById("render-tags-sort-container");
-    container.innerHTML = ''; // 기존 내용 초기화
-
-    const html = `
-        <div class="music-tag-sort">
-            <div class="music-tag-sort-list">
-                <img src="/images/label_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="태그">
-
-                <!-- 악기 태그 -->
-                <span class="music-tag-sort-toggle" data-target="instrument-section">악기</span>
-                <img src="/images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
-                <div class="tag-section hidden" id="instrument-section">
-                    ${data.dto.instrument
-                        .map(instrument => `<span class="tag-item">${instrument}</span>`)
-                        .join('')}
-                </div>
-
-                <!-- 분위기 태그 -->
-                <span class="music-tag-sort-toggle" data-target="mood-section">분위기</span>
-                <img src="/images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
-                <div class="tag-section hidden" id="mood-section">
-                    ${data.dto.mood
-                        .map(mood => `<span class="tag-item">${mood}</span>`)
-                        .join('')}
-                </div>
-
-                <!-- 장르 태그 -->
-                <span class="music-tag-sort-toggle" data-target="genre-section">장르</span>
-                <img src="/images/arrow_drop_down_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="늘리기">
-                <div class="tag-section hidden" id="genre-section">
-                    ${data.dto.genre
-                        .map(genre => `<span class="tag-item">${genre}</span>`)
-                        .join('')}
-                </div>
-            </div>
-            <div class="music-tag-display"></div>
-        </div>
-    `;
-
-    container.innerHTML = html;
-
-}
-
 export function renderSoundOne(data, data2){
     // const container = document.getElementById("render-sound-one-container");
     const container = document.getElementById("content-body");
@@ -62,7 +17,7 @@ console.log(data);
                     <span>Artist</span> <a href="javascript:void(0);" id="artist-link" class="artist-link">${data.musicDTO.nickname}</a>
                 </div>
                 <div class="sound-info-reaction">
-                    <button class="btn sound-btn">Get sound</button>
+                    <button class="btn sound-btn download-btn" data-filePath="${data.musicDTO.filePath}">Get sound</button>
                     <button class="btn sound-btn share-btn" data-nickname="${data.albumDTO.nickname}" data-title="${data.musicDTO.title}">Share sound</button>
                 </div>
             </div>
@@ -122,6 +77,15 @@ console.log(data);
                     });
             }
         });
+    });
+
+    document.querySelectorAll('.download-btn').forEach((downloadBtn) => {
+        const download = event.target.closest('.download-btn');
+        if(download){
+            const filePath = downloadBtn.dataset.filePath;
+            alert(filePath);
+
+        }
     });
 
     // 복사 성공 알림 표시 함수
@@ -243,7 +207,6 @@ export function renderTotalSounds(data) {
     data.forEach((sound) => {
         const musicItem = document.createElement('div');
         musicItem.classList.add('music-item');
-
         musicItem.innerHTML = `
             <!-- 알림 메시지 -->
             <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
@@ -275,7 +238,7 @@ export function renderTotalSounds(data) {
 
             <div class="music-item-right">
                 <div class="music-actions">
-                    <img src="/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="다운로드">
+                    <img src="/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" class="download-btn" data-filepath="${sound.musicDTO.filePath}" alt="다운로드">
                     <img src="/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">
                     <img src="/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="공유" class="share-btn" data-nickname="${sound.albumDTO.nickname}" data-title="${sound.musicDTO.title}">
                 </div>
@@ -305,6 +268,16 @@ export function renderTotalSounds(data) {
                     .catch((err) => {
                         console.error('복사 실패:', err);
                     });
+            }
+        });
+    });
+
+    document.querySelectorAll('.download-btn').forEach((downloadBtn) => {
+        downloadBtn.addEventListener('click', (event) => {
+            const download = event.target.closest('.download-btn');
+            if(download){
+                const filePath = download.dataset.filepath;
+                alert(filePath);
             }
         });
     });

@@ -45,29 +45,31 @@ async function applyChanges(button) {
     creditPerMonth: updatedCreditPerMonth,
   };
 
-  const handle = {
-    onSuccess: (data) => {
-      alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
-      // 성공 시 span에 수정된 값 반영
-      const priceSpan = row.querySelector('span.current-value[data-field="subscriptionPrice"]');
-      const creditSpan = row.querySelector('span.current-value[data-field="creditPerMonth"]');
-      if (priceSpan) priceSpan.textContent = updatedSubscriptionPrice;
-      if (creditSpan) creditSpan.textContent = updatedCreditPerMonth;
+//  const handle = {
+//    onSuccess: (data) => {
+//      alert('정보가 관리자 권한으로 성공적으로 수정되었습니다!');
+//      // 성공 시 span에 수정된 값 반영
+//      const priceSpan = row.querySelector('span.current-value[data-field="subscriptionPrice"]');
+//      const creditSpan = row.querySelector('span.current-value[data-field="creditPerMonth"]');
+//      if (priceSpan) priceSpan.textContent = updatedSubscriptionPrice;
+//      if (creditSpan) creditSpan.textContent = updatedCreditPerMonth;
+//
+//      // 페이지 이동
+//      router.navigate("/admin/users/subscription");
+//    },
+//    onBadRequest: () => {
+//      alert("정보를 관리자 권한으로 수정하는 것을 실패했습니다.");
+//    },
+//  };
 
-      // 페이지 이동
-      router.navigate("/admin/users/subscription");
-    },
-    onBadRequest: () => {
-      alert("정보를 관리자 권한으로 수정하는 것을 실패했습니다.");
+  const handle = {
+    success:{
+      navigate:"/admin/users/subscription"
     },
   };
 
   // PATCH 요청 전송 (백엔드의 SubscriptionDTO와 매칭되도록 body 전달)
-  await axiosPatch({
-    endpoint: `/api/admin/subscription/${subscriptionId}`,
-    body: updatedSubscriptionDTO,
-    handle,
-  });
+  await axiosPatch({endpoint: `/api/admin/subscription/${subscriptionId}`,body: updatedSubscriptionDTO,handle,});
 
   // 변경 후 취소하여 초기 상태로 복귀
   cancelChanges(button);

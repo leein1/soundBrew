@@ -1,5 +1,5 @@
 import TokenUtil from '/js/tokenUtil.js';
-import {axiosPost, axiosPatch} from '/js/fetch/standardAxios.js';
+import {axiosPost, axiosPatch, callRefresh} from '/js/fetch/standardAxios.js';
 // 요소 선택
 const profileModal = document.getElementById('profileModal');
 const profileForm = document.getElementById('profileForm');
@@ -81,12 +81,14 @@ profileForm.addEventListener('submit', async (e) => {
 
     // 서버 응답 핸들링 객체
     const handle = {
-        onSuccess: (data) => {
-            alert(data || "프로필 사진이 저장소에 성공적으로 업로드되었습니다!");
+        success:{
+            location:"/sounds/tracks",
+            callback: async ()=>{
+                await callRefresh();
+            }
         },
-        onBadRequest: () => {
-            alert("업로드가 실패했습니다.");
-            return null;
+        failure:{
+
         },
     };
 

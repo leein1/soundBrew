@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,28 +46,31 @@ public class FileController {
         } catch (IOException e) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패: 서버 오류"); }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping(value = "/tracks", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadMusic(@RequestParam("file") MultipartFile file, @RequestParam("title") String title) {
         return handleFileUpload(file, title, "SOUND");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping(value = "/profiles", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadProfile(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId) {
         return handleFileUpload(file, Integer.toString(userId), "PROFILE");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping(value = "/albums", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAlbumImage(@RequestParam("file") MultipartFile file, @RequestParam("title") String title) {
         return handleFileUpload(file, title, "ALBUM");
     }
 
-
-    @GetMapping("/music/{filename}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("/sounds/{filename}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {// 추후 토큰 사용
-
+        String currentFile = "sounds/"+filename;
         try {
-            Resource resource = fileService.downloadSoundFile(filename);
-            Path filePath = Path.of(fileService.getFile(filename));
+            Resource resource = fileService.downloadSoundFile(currentFile);
+            Path filePath = Path.of(fileService.getFile(currentFile));
 //            Path filePath = fileService.getFile(filename);
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath))
@@ -76,19 +80,8 @@ public class FileController {
         } catch (IOException e) {return ResponseEntity.status(500).body(null); }
     }
 
-    @GetMapping("/profile/{userId}")
-    public Resource getProfile(@PathVariable int userId){
-
-        return null;
-    }
-
-    @PatchMapping("/profile/{userId}")
-    public Resource modifyProfile(@PathVariable int userId){
-
-        return null;
-    }
-
     //수정시에는 이전의 프로필 사진 삭제
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/profile/{userId}")
     public ResponseEntity<String> deleteProfile(@PathVariable int userId){
 

@@ -292,13 +292,15 @@ async function submitFieldChange(targetId, endpoint, onSuccess) {
 
   const jsonData = serializeFormToJSON(form);
   const { errors, processedData } = inputHandler(jsonData, form);
+
+    const handle = {
+        success:{
+            navigate:"/me/info"
+        },
+    };
+
   if (!errors) {
-    await axiosPatch({
-      endpoint,
-      body: processedData,
-      handle: { onSuccess },
-      useToken: true
-    });
+    await axiosPatch({endpoint,body: processedData,handle,useToken: true});
   }
 }
 
