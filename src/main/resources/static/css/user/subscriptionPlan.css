@@ -1,0 +1,126 @@
+.subscriptionPlan-content-header{
+    /* border: 1px solid black;  */
+    margin-top: 20px;
+    height: 50px;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+.subscriptionPlan-content-body{
+    /* border: 1px black solid; */
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* padding: 60px; */
+}
+
+.subscription-container{
+    display: flex;
+    margin: 80px; /* 카드 사이에 20px 간격 추가 */
+    gap: 20px;
+}
+
+
+
+
+
+/* 구독제 개별 카드 */
+.subscription-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 250px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;              /* flex 컨테이너로 변경 */
+    flex-direction: column;     /* 세로 방향 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+/* VIP 카드에만 적용 */
+.subscription-card.vip-card {
+    position: relative;      /* 가상요소를 배치하기 위한 기준 */
+    overflow: visible;       /* pseudo요소가 카드 바깥에도 보이도록 */
+    /*background: #fff;        !* 카드 내부는 흰색 *!*/
+    background-clip: padding-box; /* 내부에 pseudo요소 효과가 보이지 않게 함 */
+}
+
+/*.subscription-card.vip-card::after {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    top: -5px;       !* 확장 범위 줄임 *!*/
+/*    left: -5px;*/
+/*    right: -5px;*/
+/*    bottom: -5px;*/
+/*    background: conic-gradient(red, orange, yellow, green, blue, indigo, violet, red);*/
+/*    filter: blur(15px);   !* 더 부드럽게 *!*/
+/*    z-index: -1;*/
+/*    pointer-events: none;*/
+/*    animation: corona 3s infinite alternate;*/
+/*}*/
+
+
+/* corona 효과 애니메이션: 약간의 변위, 스케일 변화, 투명도 변화 */
+@keyframes corona {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.8;
+    }
+    30% {
+        transform: translate(-5px, 5px) scale(1.1);
+        opacity: 0.7;
+    }
+    60% {
+        transform: translate(5px, -5px) scale(1.05);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(-3px, -3px) scale(1);
+        opacity: 0.8;
+    }
+}
+
+@media (max-width: 1200px){
+    .subscription-card{
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .subscription-container{
+        flex-direction: column;
+    }
+
+    .subscription-card{
+        width: 250px;
+    }
+}
+
+.subscription-card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.subscription-card p {
+    margin: 5px 0;
+}
+
+.subscription-card button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: auto;
+    /*width: 50%;*/
+}
+
+.subscription-card button:hover {
+    background-color: #0056b3;
+}

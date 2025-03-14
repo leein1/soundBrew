@@ -26,32 +26,17 @@ public class ResponseDTO<E> {
 
     @Builder(builderMethodName = "withMessage")
     public ResponseDTO(String message) {
+
         this.message = message;
     }
 
     @Builder(builderMethodName = "withSingleData")
+
     public ResponseDTO(E dto) { // 단수형 데이터 생성자
+
         this.dto = dto;
 
     }
-
-//    @Builder(builderMethodName = "withAll")
-//    public ResponseDTO(RequestDTO requestDTO, List<E> dtoList, int total) {
-////        if (total <= 0) return;
-//        this.keyword = requestDTO.getKeyword();
-//        this.page = requestDTO.getPage();
-//        this.size = requestDTO.getSize();
-//        this.total = total;
-//        this.dtoList = dtoList;
-//        this.end = (int) (Math.ceil(this.page / 10.0)) * 10; // 화면에서 마지막 번호
-//        this.start = this.end - 9; // 화면에서 시작 번호
-//        int last = (int) (Math.ceil(total / (double) size));
-//        this.end = end > last ? last : end;
-//        this.prev = this.page > 1;
-////        this.prev = this.start > 1;
-////        this.next = total > this.end * this.size;
-//        this.next = this.page < Math.ceil((double) total / this.size);
-//    }
 
     public static <E> ResponseDTO<E> withAll(RequestDTO requestDTO, List<E> dtoList, int total) {
         ResponseDTO<E> responseDTO = new ResponseDTO<>();

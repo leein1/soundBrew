@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface AlbumRepository extends JpaRepository<Album, Integer>, AlbumRepositoryCustom {
     Optional<List<Album>> findByUserId(int userId);
-
+    int countByUserId(int userId);
 }
 

@@ -3,6 +3,7 @@ package com.soundbrew.soundbrew.dto.sound;
 import com.soundbrew.soundbrew.domain.sound.GenreTag;
 import com.soundbrew.soundbrew.domain.sound.InstrumentTag;
 import com.soundbrew.soundbrew.domain.sound.MoodTag;
+import com.soundbrew.soundbrew.util.valid.ValidTagList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +19,12 @@ import java.util.stream.Collectors;
 public class TagsDTO {
     private Integer musicId;
     private String title;
+
+    @ValidTagList
     private List<String> instrument;
+    @ValidTagList
     private List<String> mood;
+    @ValidTagList
     private List<String> genre;
 
     public List<InstrumentTag> InstToEntity(){

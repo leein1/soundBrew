@@ -17,11 +17,11 @@ public class UserRoleDTO {
 
     private int userId;
 
-    public UserRole toEntity(UserRoleDTO userRoleDTO){
+    public UserRole toEntity(){
 
         UserRoleId userRoleId = UserRoleId.builder()
-                .roleId(userRoleDTO.getRoleId())
-                .userId(userRoleDTO.getUserId())
+                .roleId(this.roleId)
+                .userId(this.userId)
                 .build();
 
         return UserRole.builder()

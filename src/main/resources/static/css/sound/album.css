@@ -1,11 +1,8 @@
 /* 기본 스타일 */
 .list-albums {
     margin-bottom: 20px;
-    margin-top: 25px;
-    padding-top: 25px;
     padding-bottom: 25px;
     border-bottom: 1px solid #eee;
-    border-top: 1px solid #eee;
 }
 
 .list-albums-title {
@@ -20,13 +17,18 @@
     gap: 20px;
     
 }
+.album-info-text{
+    border-bottom: 1px solid #ddd;
+    padding-top: 25px;
+    padding-bottom: 50px;
+}
 
 .list-album-item {
-    background-color: #eee;
-    text-align: center;
-    border-radius: 15px;
-    padding: 10px;
-    max-width: 250px; /* 최대 크기를 300px로 제한 */
+background-color: #eee;
+text-align: center;
+border-radius: 15px;
+padding: 10px;
+max-width: 250px; /* 최대 크기를 300px로 제한 */
     margin: 0 auto; /* 가운데 정렬 */
 }
 /* 호버 시 스타일 */
@@ -66,23 +68,23 @@
     text-decoration: underline;
 }
 
-/* Media query for smaller monitors (3 items per row) */
-@media (max-width: 1200px) {
-    .list-albums-list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 3개 아이템 표시 */
-    }
-}
+/*!* Media query for smaller monitors (3 items per row) *!*/
+/*@media (max-width: 1200px) {*/
+/*    .list-albums-list {*/
+/*        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); !* 3개 아이템 표시 *!*/
+/*    }*/
+/*}*/
 
-/* Media query for tablets and small screens (2 items per row) */
-@media (max-width: 768px) {
-    .list-albums-list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 2개 아이템 표시 */
-    }
-}
+/*!* Media query for tablets and small screens (2 items per row) *!*/
+/*@media (max-width: 768px) {*/
+/*    .list-albums-list {*/
+/*        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); !* 2개 아이템 표시 *!*/
+/*    }*/
+/*}*/
 
-/* Media query for mobile (1 item per row) */
-@media (max-width: 480px) {
-    .list-albums-list {
-        grid-template-columns: 1fr; /* 1개 아이템 표시 */
-    }
-}
+/*!* Media query for mobile (1 item per row) *!*/
+/*@media (max-width: 480px) {*/
+/*    .list-albums-list {*/
+/*        grid-template-columns: 1fr; !* 1개 아이템 표시 *!*/
+/*    }*/
+/*}*/

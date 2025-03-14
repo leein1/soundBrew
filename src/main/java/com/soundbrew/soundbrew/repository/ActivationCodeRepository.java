@@ -10,6 +10,8 @@ public interface ActivationCodeRepository extends JpaRepository<ActivationCode, 
 
     Optional<ActivationCode> findByUser(User user);
 
+    Optional<ActivationCode> findByActivationCode(String activationCode);
+
     void deleteByUser(User user);
 
 }

@@ -1,0 +1,63 @@
+
+spring:
+  application:
+    name: soundBrew
+
+  profiles:
+    active: prod
+
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: soundbrew.dev@gmail.com
+#    password: kcdfifoafllakbdp
+#    smtp:
+#      auth: true
+#      starttls:
+#        enable: true
+#    debug: true
+
+#  datasource:
+#    url: jdbc:mysql://awseb-e-r2p2bfwpm9-stack-awsebrdsdatabase-g9uubo1wjksq.ct6s00mcadjs.ap-northeast-2.rds.amazonaws.com/soundbrew_test
+#    username: soundbrew
+#    password: soundbrew
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+    database: mysql
+    database-platform: com.soundbrew.soundbrew.config.CustomMySQLDialect
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  logging:
+    level:
+      org.springframework: info
+      com.soundbrew: debug
+      org.springframework.security: trace
+
+mvc:
+  pathmatch:
+    matching-strategy: ant_path_matcher
+
+#com:
+#  soundbrew:
+#    jwt:
+#      secret: happy2025
+
+file:
+  upload-dir: uploads
+
+player:
+  sounds: /Users/kyoung/soundBrew/src/main/resources/static/sounds
+
+web:
+  resources:
+    static-locations: file:./uploads/

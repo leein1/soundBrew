@@ -2,22 +2,45 @@
 form {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
 }
 
 /* 각 섹션 스타일 */
 section {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 30px;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #9d9d9d;
+}
+
+section input, select {
+    padding: 6px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+h1{
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+section h3 {
+    margin-bottom: 10px;
+}
+
+.tag-add-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 section h2 {
+    overflow: hidden;
+    white-space: nowrap;
     margin-bottom: 10px;
-    font-size: 18px;
-    color: #333;
+    font-size: 14px;
 }
 
 /* Select div 스타일 */
@@ -35,7 +58,7 @@ section h2 {
 }
 
 /* 입력창 스타일 */
-input[type="text"],
+/*input[type="text"],*/
 input[type="file"],
 textarea {
     width: 100%;
@@ -44,6 +67,12 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 10px;
+}
+
+form#myForm input{
+    padding: 6px;
+    margin-bottom: 10px;
+    font-size: 1rem;
 }
 
 textarea {
@@ -56,11 +85,9 @@ button {
     padding: 10px 15px;
     font-size: 16px;
     background-color: #4CAF50;
-    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 10px;
 }
 
 button:disabled {
@@ -74,13 +101,6 @@ button:disabled {
     padding: 0;
 }
 
-#selected-tags li {
-    display: inline-block;
-    background-color: #e0e0e0;
-    padding: 5px 10px;
-    margin: 5px;
-    border-radius: 20px;
-}
 
 #selected-tags li button {
     background: none;
@@ -89,34 +109,13 @@ button:disabled {
     cursor: pointer;
 }
 
-/* 모달 창 스타일 */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: white;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-}
-
-.close-modal {
-    position: absolute;
-    top: 0;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
+#selected-tags li {
+    font-size: 12px;
+    display: inline-block;
+    margin: 4px;
+    padding: 3px 3px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
 }
 
 /* 태그 리스트 스타일 */
@@ -136,7 +135,7 @@ button:disabled {
 
 /* 추가된 섹션 버튼 스타일 */
 .reset-tags {
-    background-color: #f8f9fa;
+    background-color: #b2ebf2;
     border: 1px solid #ccc;
     padding: 5px 10px;
     font-size: 14px;
@@ -156,7 +155,7 @@ textarea {
 
 /* 버튼 스타일 */
 button {
-    background-color: #e0f7fa; /* 연한 파랑색 */
+    background-color: #2196F3;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
@@ -171,22 +170,14 @@ button:hover {
 }
 
 /* 모달 스타일 */
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 400px;
-    width: 100%;
-}
+/*.modal-content {*/
+/*    background: #fff;*/
+/*    padding: 20px;*/
+/*    border-radius: 8px;*/
+/*    max-width: 400px;*/
+/*    width: 100%;*/
+/*}*/
 
-/* 선택된 태그 리스트 */
-#selected-tags li {
-    display: inline-block;
-    margin-right: 8px;
-    padding: 5px 10px;
-    background-color: #e0e0e0;
-    border-radius: 4px;
-}
 
 /* 태그 검색 입력 스타일 */
 #tag-search {
@@ -199,10 +190,10 @@ button:hover {
 
 /* modal 안의 태그 리스트 스타일 */
 #tag-list {
-    max-height: 60vh;
+    margin-bottom:revert;
+    max-height: 28vh;
     overflow-y: auto;
     padding-right: 10px;
-    margin-bottom: 10px;
 }
 
 /* 모달 창 닫기 버튼 스타일 */
@@ -210,34 +201,26 @@ button:hover {
     background-color: #ff8a80;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    font-size: 16px;
 }
 
 .close-modal:hover {
     background-color: #ff5f57;
 }
 
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 400px;
-    width: 100%;
-}
+        #tag-modal {
+            max-height: 80vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
 .hidden {
     display: none;
@@ -246,7 +229,7 @@ button:hover {
 #tag-list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: auto;
 }
 
 #tag-list li {
@@ -262,24 +245,3 @@ button:hover {
     margin-top: 10px;
 }
 
-#selected-tags li {
-    display: inline-block;
-    margin-right: 8px;
-    padding: 5px 10px;
-    background-color: #e0e0e0;
-    border-radius: 4px;
-}
-
-#tag-modal {
-    max-height: 80vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-#tag-list {
-    max-height: 60vh;
-    overflow-y: auto;
-    padding-right: 10px;
-}

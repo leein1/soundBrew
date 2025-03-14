@@ -1,19 +1,26 @@
 package com.soundbrew.soundbrew.service.file;
 
-import com.soundbrew.soundbrew.config.FileProperties;
-import com.soundbrew.soundbrew.repository.MusicFileRepository;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.util.IOUtils;
+import com.soundbrew.soundbrew.dto.ResponseDTO;
+import com.soundbrew.soundbrew.dto.sound.SoundStreamDTO;
+import com.soundbrew.soundbrew.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpRange;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
 
@@ -21,167 +28,279 @@ import org.springframework.core.io.Resource;
 @Log4j2
 @RequiredArgsConstructor
 public class FileService {
+    private final UserService userService;
+    private final AmazonS3Client amazonS3Client;
 
-    /*
-    DB update는 생략 나중에 추가해야 함
-     */
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
-    private final FileProperties fileProperties;
-    private final MusicFileRepository repository;
+    public String getFile(String filename) {
+        // S3 객체 URL 반환
+        return amazonS3Client.getUrl(bucket, filename).toString();
+    }
 
-    //  파일 경로 새로 지정해주어야 함 - 현재 테스트용으로 되는대로 작성함
-    private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "upload");
-    private final Path profileImageDir = uploadDir.resolve("profile-images");
+    // 공용 메서드: 파일 업로드
+    private String uploadToS3(MultipartFile file, String pathPrefix, String filenamePrefix) throws IOException {
+        // 고유 파일 이름 생성
+        String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")).toLowerCase();
+        String uniqueFilename = pathPrefix + "/" + filenamePrefix.replaceAll("\\..*$", "-") + UUID.randomUUID() + extension;
 
-
-
-
-    //  업로드 (mp3,wav 확장자만 지원)
-    public String uploadFile(MultipartFile file,String title) throws IOException {
-
-        //  확장자 검증
-        String filename = file.getOriginalFilename();
-        String extension = filename.substring(filename.lastIndexOf("."));
-
-
-        //  null이거나 , !(mp3 or wav) 인 경우
-        if(filename == null || !(extension.equals(".mp3") || extension.equals(".wav"))){
-            throw new IllegalArgumentException(
-                    "지원하지 않는 파일 형식." + filename.substring((filename.lastIndexOf(".")))
-            );
+        // S3에 파일 업로드
+        try (InputStream inputStream = file.getInputStream()) {
+            amazonS3Client.putObject(bucket, uniqueFilename, inputStream, null);
         }
-
-        //  디렉토리 없으면 생성
-        if (!Files.exists(uploadDir)) {
-            Files.createDirectories(uploadDir);
-        }
-
-        String uniqueFilename = UUID.randomUUID().toString() + extension;
-
-        //  저장
-        Path destinationPath = uploadDir.resolve(uniqueFilename);
-        Files.copy(file.getInputStream(), destinationPath);
 
         return uniqueFilename;
-
-//        String uploadDir = fileProperties.getUploadDir();
-//        Path uploadPath = Paths.get(System.getProperty("user.dir"), uploadDir);
-//
-//        //  경로 없으면 생성
-//        if (!Files.exists(uploadPath)) {
-//            Files.createDirectories(uploadPath);
-//        }
-//
-//
-//        String originalFilename = file.getOriginalFilename();
-//        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-//        String uniqueFilename = UUID.randomUUID().toString() + extension;
-//
-//        //  저장
-//        Path destinationPath = uploadPath.resolve(uniqueFilename);
-//        Files.copy(file.getInputStream(), destinationPath);
-//
-//        return uniqueFilename;
     }
 
-    //  파일 다운로드
-    public Resource downloadFile(String filename) throws IOException { // 토큰 인증 해야 함!!!!
-
-    /*
-    토큰 인증 필요
-     */
-
-        Path filePath = uploadDir.resolve(filename);
-
-        return new ByteArrayResource(Files.readAllBytes(filePath));
-
-//        String uploadDir = fileProperties.getUploadDir();
-//
-//        return Paths.get(System.getProperty("user.dir"), uploadDir, filename);
+    // 음원 파일 업로드
+    public String uploadSoundFile(MultipartFile file, String title) throws IOException {
+        validateFileExtension(file.getOriginalFilename(), List.of(".mp3", ".wav"));
+        return uploadToS3(file, "sounds", title);
     }
 
-
-
-    public Resource streamFile(String filename, String rangeHeader) throws IOException {    // 토큰 인증 해야 함!!!!
-        /*
-        토큰 인증 필요
-         */
-
-        Path filePath = uploadDir.resolve(filename);
-
-        if (rangeHeader != null) {
-
-            String[] ranges = rangeHeader.replace("bytes=", "").split("-");
-            long start = Long.parseLong(ranges[0]);
-            long end = ranges.length > 1 ? Long.parseLong(ranges[1]) : Files.size(filePath) - 1;
-
-            if (end >= Files.size(filePath)) end = Files.size(filePath) - 1;
-
-            byte[] data = readPartialFile(filePath, start, end);
-            return new ByteArrayResource(data);
-        }
-
-        return new ByteArrayResource(Files.readAllBytes(filePath));
-    }
-
-
-    public byte[] readPartialFile(Path filePath, long start, long end) throws IOException {
-        try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
-            file.seek(start);
-            byte[] data = new byte[(int) (end - start + 1)];
-            file.readFully(data);
-            return data;
-        }
+    // 앨범 이미지 업로드
+    public String uploadAlbumImage(MultipartFile file, String title) throws IOException {
+        validateFileExtension(file.getOriginalFilename(), List.of(".jpg", ".jpeg", ".png"));
+        return uploadToS3(file, "album-images", title);
     }
 
     // 프로필 이미지 업로드
-    public String uploadProfileImage(MultipartFile file, String userId) throws IOException {
-        String filename = file.getOriginalFilename();
-        String extension = filename.substring(filename.lastIndexOf(".")).toLowerCase();
-
-        if (filename == null || !(extension.equals(".jpg") || extension.equals(".jpeg") || extension.equals(".png"))) {
-            throw new IllegalArgumentException("지원하지 않는 이미지 형식: " + extension);
-        }
-
-        if (!Files.exists(profileImageDir)) {
-            Files.createDirectories(profileImageDir);
-        }
-
-        String uniqueFilename = userId + extension;
-        Path destinationPath = profileImageDir.resolve(uniqueFilename);
-        Files.copy(file.getInputStream(), destinationPath);
-
-        return uniqueFilename;
+    public ResponseDTO<String> uploadProfileImage(MultipartFile file, String userId) throws IOException {
+        validateFileExtension(file.getOriginalFilename(), List.of(".jpg", ".jpeg", ".png"));
+        String fileName = uploadToS3(file, "profile-images", userId);
+        return userService.updateProfile(Integer.parseInt(userId), fileName);
     }
 
-    // 프로필 이미지 출력
+    // 파일 다운로드
+    public Resource downloadSoundFile(String filename) throws IOException {
+        String fileKey = "sounds/" + filename;
+
+        try (S3Object s3Object = amazonS3Client.getObject(bucket, fileKey)) {
+            byte[] data = s3Object.getObjectContent().readAllBytes();
+            return new ByteArrayResource(data);
+        } catch (AmazonS3Exception e) {
+            throw new FileNotFoundException("S3에서 파일을 찾을 수 없습니다: " + fileKey);
+        }
+    }
+
+    // 프로필 이미지 가져오기
     public Resource getProfileImage(String userId) throws IOException {
-        Path imagePath = profileImageDir.resolve(userId + ".jpg");
-        if (!Files.exists(imagePath)) {
-            throw new FileNotFoundException("프로필 이미지가 존재하지 않습니다: " + userId);
-        }
-        return new ByteArrayResource(Files.readAllBytes(imagePath));
-    }
+        String fileKey = "profile-images/" + userId + ".jpg";
 
-    // 프로필 이미지 삭제
-    public void deleteProfileImage(String userId) throws IOException {
-        Path imagePath = profileImageDir.resolve(userId + ".jpg");
-        if (Files.exists(imagePath)) {
-            Files.delete(imagePath);
+        try (S3Object s3Object = amazonS3Client.getObject(bucket, fileKey)) {
+            byte[] data = s3Object.getObjectContent().readAllBytes();
+            return new ByteArrayResource(data);
+        } catch (AmazonS3Exception e) {
+            throw new FileNotFoundException("S3에서 프로필 이미지를 찾을 수 없습니다: " + fileKey);
         }
     }
 
-    public void validateToken(String token) {
+    // 파일 삭제
+    public void deleteProfileImage(String userId) {
+        String fileKey = "profile-images/" + userId + ".jpg";
 
-        if (!token.equals("user")) {
-            throw new SecurityException("유효하지 않은 토큰입니다.");
+        try {
+            amazonS3Client.deleteObject(bucket, fileKey);
+        } catch (AmazonS3Exception e) {
+            log.error("S3 파일 삭제 실패: " + fileKey, e);
+            throw new IllegalStateException("S3 파일 삭제에 실패했습니다.");
         }
     }
 
-    public Path getFile(String filename) {
-        return uploadDir.resolve(filename);
+    // 공용 메서드: 확장자 검증
+    private void validateFileExtension(String filename, List<String> validExtensions) {
+        String extension = filename.substring(filename.lastIndexOf(".")).toLowerCase();
+        if (validExtensions.stream().noneMatch(extension::equals)) {
+            throw new IllegalArgumentException("지원하지 않는 파일 형식: " + extension);
+        }
     }
 
+    public ResponseDTO<SoundStreamDTO> streamSound(HttpRange range, String fileName) throws IOException {
+        // S3 객체 키 설정
+        String objectKey = "sounds/" + fileName;
 
+        // 파일 존재 여부와 메타데이터 조회
+        ObjectMetadata metadata;
+        try {
+            metadata = amazonS3Client.getObjectMetadata(bucket, objectKey);
+        } catch (AmazonS3Exception e) {
+            if (e.getStatusCode() == 404) {
+                throw new FileNotFoundException("S3에 해당 파일이 없습니다: " + objectKey);
+            }
+            throw e;
+        }
+        long fileLength = metadata.getContentLength();
 
+        long start = range.getRangeStart(fileLength);
+        // 2MB 단위로 범위를 제한, 파일의 남은 부분이 작으면 그만큼만 요청
+        long end = Math.min(start + (2 * 1024 * 1024) - 1, fileLength - 1);
+
+        if (start >= fileLength) {
+            throw new IllegalArgumentException("음원 재생 길이를 초과하는 요청입니다.");
+        }
+
+        // S3에서 범위 지정 요청 생성
+        GetObjectRequest rangeRequest = new GetObjectRequest(bucket, objectKey)
+                .withRange(start, end);
+
+        byte[] data;
+        try (S3Object s3Object = amazonS3Client.getObject(rangeRequest);
+             InputStream inputStream = s3Object.getObjectContent()) {
+            data = IOUtils.toByteArray(inputStream);
+        }
+
+        return ResponseDTO.<SoundStreamDTO>withSingleData()
+                .dto(new SoundStreamDTO(data, start, end, fileLength))
+                .build();
+    }
+
+    // 추가: 파일의 전체 길이를 가져오는 메서드
+    public long getFileLength(String fileName) throws IOException {
+        String objectKey = "sounds/" + fileName;
+        ObjectMetadata metadata = amazonS3Client.getObjectMetadata(bucket, objectKey);
+        return metadata.getContentLength();
+    }
 }
+
+
+//
+//@Service
+//@Log4j2
+//@RequiredArgsConstructor
+//public class FileService {
+//    private final UserService userService;
+//
+//    private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads");
+//    private final Path profileImageDir = uploadDir.resolve("profile-images");
+//    private final Path albumImageDir = uploadDir.resolve("album-images");
+//    private final Path soundDir = uploadDir.resolve("sounds");
+//
+//    // 공용 메서드: 디렉토리 생성
+//    private void ensureDirectoryExists(Path directory) throws IOException {
+//        if (!Files.exists(directory)) {
+//            Files.createDirectories(directory);
+//        }
+//    }
+//
+//    // 공용 메서드: 파일 읽기
+//    private byte[] readFile(Path filePath) throws IOException {
+//        if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+//            throw new FileNotFoundException("파일을 읽을 수 없습니다: " + filePath);
+//        }
+//        return Files.readAllBytes(filePath);
+//    }
+//
+//    // 공용 메서드: 부분 파일 읽기
+//    private byte[] readPartialFile(Path filePath, long start, long end) throws IOException {
+//        try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+//            file.seek(start);
+//            byte[] data = new byte[(int) (end - start + 1)];
+//            file.readFully(data);
+//            return data;
+//        }
+//    }
+//
+//    // 공용 메서드: 확장자 검증
+//    private void validateFileExtension(String filename, List<String> validExtensions) {
+//        String extension = filename.substring(filename.lastIndexOf(".")).toLowerCase();
+//        if (validExtensions.stream().noneMatch(extension::equals)) {
+//            throw new IllegalArgumentException("지원하지 않는 파일 형식: " + extension);
+//        }
+//    }
+//
+//    // 공용 메서드: 파일 업로드
+//    private String uploadFile(MultipartFile file, Path uploadDir, List<String> validExtensions, String filenamePrefix) throws IOException {
+//        // 확장자 검증
+//        validateFileExtension(file.getOriginalFilename(), validExtensions);
+//
+//        // 디렉토리 존재 확인 및 생성
+//        ensureDirectoryExists(uploadDir);
+//
+//        // 고유 파일 이름 생성
+//        String filenameFixed = filenamePrefix.replaceAll("\\..*$", "-");
+//        System.err.println(filenameFixed);
+//        String uniqueFilename = filenameFixed + UUID.randomUUID() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+//        Path destinationPath = uploadDir.resolve(uniqueFilename);
+//
+//        // 파일 복사
+//        Files.copy(file.getInputStream(), destinationPath);
+//
+//        return uniqueFilename;
+//    }
+//
+//    // 음원 파일 업로드
+//    public String uploadSoundFile(MultipartFile file, String title) throws IOException {
+//        return uploadFile(file, soundDir, List.of(".mp3", ".wav"), title);
+//    }
+//
+//    // 앨범 이미지 업로드
+//    public String uploadAlbumImage(MultipartFile file, String title) throws IOException {
+//        return uploadFile(file, albumImageDir, List.of(".jpg", ".jpeg", ".png"), title);
+//    }
+//
+//    // 프로필 이미지 업로드
+//    public ResponseDTO<String> uploadProfileImage(MultipartFile file, String userId) throws IOException {
+//        String fileUploadName = uploadFile(file, profileImageDir, List.of(".jpg", ".jpeg", ".png"), userId);
+//        return userService.updateProfile(Integer.parseInt(userId),fileUploadName);
+//    }
+//
+//
+//    //  음원 파일 다운로드
+//    public Resource downloadSoundFile(String filename) throws IOException {
+//        Path filePath = soundDir.resolve(filename);
+//        return new ByteArrayResource(readFile(filePath));
+//    }
+//
+//    // 파일 스트리밍
+//    public ResponseDTO<SoundStreamDTO> streamSound(HttpRange range, String fileName) throws IOException {
+//        final long FIXED_RANGE_SIZE = 2 * 1024 * 1024; // 2 MB
+//        Path filePath = soundDir.resolve(fileName);
+//
+//        byte[] data;
+//        long fileLength = Files.size(filePath);
+//        long start = range.getRangeStart(fileLength);
+//        long end = Math.min(start + FIXED_RANGE_SIZE - 1, fileLength - 1);
+//
+//        if (start >= fileLength) {
+//            throw new IllegalArgumentException("음원 재생 길이를 초과하는 요청입니다.");
+//        }
+//
+//        data = readPartialFile(filePath, start, end);
+//
+//        return ResponseDTO.<SoundStreamDTO>withSingleData()
+//                .dto(new SoundStreamDTO(data, start, end, fileLength))
+//                .build();
+//    }
+//
+//    // 프로필 이미지 가져오기
+//    public Resource getProfileImage(String userId) throws IOException {
+//        Path imagePath = profileImageDir.resolve(userId + ".jpg");
+//        return new ByteArrayResource(readFile(imagePath));
+//    }
+//
+////    // 앨범 이미지 가져오기
+////    public Resource getAlbumImage(){
+////
+////    }
+//
+//    // 프로필 이미지 삭제
+//    public void deleteProfileImage(String userId) throws IOException {
+//        Path imagePath = profileImageDir.resolve(userId + ".jpg");
+//        if (Files.exists(imagePath)) {
+//            Files.delete(imagePath);
+//        }
+//    }
+//
+//    // 인증 토큰 검증 (간단한 예시)
+//    public void validateToken(String token) {
+//        if (!"user".equals(token)) {
+//            throw new SecurityException("유효하지 않은 토큰입니다.");
+//        }
+//    }
+//
+//    // 파일 경로 가져오기
+//    public Path getFile(String filename) {
+//        return uploadDir.resolve(filename);
+//    }
+//}

@@ -26,7 +26,7 @@ public class Music extends BaseEntity {
     @Column(nullable = true, length = 50)
     private String nickname;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 50, nullable = false)
     private String title;
 
     @Column(length = 255, nullable = false)
@@ -40,6 +40,9 @@ public class Music extends BaseEntity {
 
     @Column(nullable = false)
     private String soundType;
+
+    @Column
+    private int download;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false, insertable = false, updatable = false) // userId와 User의 관계 설정

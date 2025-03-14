@@ -29,13 +29,24 @@ repositories {
     mavenCentral()
 }
 
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
 dependencies {
+    implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
+
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -51,6 +62,10 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
+    // 테스트시 junit, localstack을 사용하기 위한 라이브러리 설정
+//    testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
+//    testImplementation 'org.testcontainers:localstack:1.17.6'
+
     //thymeleaf 레이아웃을 위한 라이브러리
     implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.1.0'
 
@@ -61,7 +76,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     //  메일 전송
+
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // 아마존 aws s3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.167'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
     //  swaggerUI
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
@@ -75,6 +95,16 @@ dependencies {
 
     //QueryDSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+
+    // JSON처리
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+    //  jjwt
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    //스트리밍 관련 파일 읽기
+    implementation 'javazoom:jlayer:1.0.1'
+
 
     annotationProcessor(
             "javax.persistence:javax.persistence-api",

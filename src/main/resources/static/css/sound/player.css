@@ -1,0 +1,205 @@
+    /* Global styles */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .audio-player-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: white;
+        /*color: #fff;*/
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.4);
+        margin-left: 80px;
+    }
+
+    /* Player container */
+    .player-container {
+        display: flex;
+        flex-direction: column; /* 위아래 배치 */
+        gap: 0;
+    }
+
+    .player-top-layer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+        height:0;
+    }
+
+    #waveform {
+        width:40%;
+        width: 600px;  /* 원하는 픽셀 값으로 설정 */
+        height: 50px;  /* 높이도 원래대로 설정 */
+    }
+
+    .player-bottom-layer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-left: 20px;
+        margin-right:100px;
+    }
+
+    /* Controls and progress bar */
+    .player-bottom-layer button {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .player-bottom-layer .time {
+        font-size: 14px;
+        margin: 0 10px;
+    }
+
+    .progress-container{
+        width:100%;
+        display: flex;
+    }
+
+/* 슬라이더 바 스타일 */
+.progress-container input[type="range"] {
+-webkit-appearance: none; /* 기본 브라우저 스타일 제거 */
+appearance: none;
+width: 100%;
+height: 3px;
+outline: none;
+cursor: pointer;
+margin:0;
+}
+
+/* 슬라이더 버튼(Thumb) 없애기 */
+.progress-container input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 0;
+height: 0;
+background: none; /* 배경 제거 */
+border: none; /* 테두리 제거 */
+}
+
+
+    .player-bottom-layer input[type="range"] {
+        width: 60%;
+        -webkit-appearance: none;
+        appearance: none;
+        background: #555;
+        height: 4px;
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .player-bottom-layer input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        background: black;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .volume-container {
+        display: flex;
+        align-items: center;
+        gap:10px;
+        width:20%;
+    }
+
+    .volume-container input[type="range"] {
+        width: 100%;
+    }
+    .player-item-left,
+.player-item-center,
+.player-item-right{
+    display: flex;
+    gap:15px;
+    align-items: center;
+    white-space: nowrap;
+}
+.player-play-btn {
+    align-content: center;
+}
+.player-play-btn img{
+    width: 35px;
+    height: 35px;
+}
+.player-info h3 {
+    font-size: 18px;
+    /*color: black;*/
+    font-weight: bold;
+    margin: 0;
+}
+
+.player-info-time {
+    align-content: center;
+}
+
+.player-info-tag span,
+.player-info p,
+.player-info-time p {
+    font-size: 14px;
+    /*color: #555;*/
+    margin: 0;
+}
+.volume-container img{
+    width: 35px;
+    height: 35px;
+}
+    .music-album-img{
+    width: 50px;
+    height: 50px;
+}
+    .active-music {
+    background-color: rgba(0, 93, 160, 0.1);
+    border-left: 4px solid #005da0;
+}
+
+@media (max-width: 1200px) {
+    .volume-container{
+     width: 15%;
+    }
+    .volume-bar{
+        display: none;
+    }
+}
+    
+@media (max-width: 768px) {
+    .audio-player-bar {
+        margin-left: 0;
+    }
+
+    .player-info-time{
+        display: none;
+    }
+
+    .player-item-left{
+        margin-right: 10px;
+    }
+
+    .waveform{
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .player-album-img{
+        display: none;
+    }
+}

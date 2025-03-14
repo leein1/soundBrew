@@ -1,0 +1,264 @@
+.content-header {
+    /*margin-top:10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;*/
+}
+
+.content-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.table-actions {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-actions label {
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.table-wrapper {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow-y: hidden; /* 세로 스크롤은 숨김 */
+    max-width: 100%; /* 부모 요소를 벗어나지 않도록 설정 */
+    white-space: nowrap; /* 줄바꿈 방지 (옵션) */
+}
+
+table {
+    width: 100%;
+    table-layout: fixed; /* 고정 레이아웃 설정 */
+    border-collapse: collapse;
+}
+
+
+thead th {
+    background-color: #f4f4f4;
+    text-align: left;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr {
+    background-color: #fff;
+    transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+td .button-wrapper {
+    display: flex;
+    gap: 5px; /* 버튼 간격 조절 */
+    overflow-x: auto; /* 가로 스크롤 허용 */
+    max-width: 100%; /* 부모 크기 맞춤 */
+    padding-bottom: 5px; /* 스크롤 여백 */
+}
+
+td {
+    max-width: 200px;
+    overflow-x: auto; /* 내용이 넘칠 경우 가로 스크롤바 표시 */
+    white-space: nowrap; /* 한 줄 유지 */
+}
+
+tbody td {
+    max-width: 200px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+
+td {
+    padding: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.actions button {
+    padding: 5px 10px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: #0056b3;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #007bff;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: #f4f4f4;
+}
+
+.pagination .active a {
+    background-color: #007bff;
+    color: #fff;
+    pointer-events: none;
+}
+
+.cancel-button {
+    background-color: #FF5252;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+
+.apply-button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+.choose-creditBalance {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+.choose-subscriptionId {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+.visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3sease-in-out, transform 0.3sease-in-out;
+}
+.choose-paymentStatus  {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+.choose-roleId {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+
+.apply-creditBalance {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+.apply-subscriptionId {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+.apply-paymentStatus  {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+.apply-roleId {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    display: none; /* 기본적으로 숨김 */
+}
+
+.edit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.delete-button {
+    background-color: #FF5252;
+    color: white;
+    border: none;
+}
+
+button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 모달 백그라운드: 전체 화면 오버레이 */
+.detailModal {
+    display: none; /* 기본 숨김 */
+    position: fixed;
+    z-index: 1000; /* 다른 요소 위에 표시 */
+    left: 0;
+    top: 0;
+    width: 100%; /* 전체 너비 */
+    height: 100%; /* 전체 높이 */
+    overflow: auto; /* 필요 시 스크롤 */
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정색 배경 */
+}
+
+/* 모달 내부 콘텐츠 */
+.detail-modal-content {
+    background-color: #fff;
+    margin: 15% 15%; /* 상단에서 10% 떨어진 곳에 중앙 배치 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* 화면 크기에 따라 조절 가능 */
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+/* 모달 제목 스타일 */
+.detail-modal-content h2 {
+    margin-bottom: 10px;
+    margin-top: 0;
+    text-align: center;
+}
+
+/* 닫기 버튼 스타일 */
+.detail-modal-content .close {
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    transition: color 0.3s;
+}
+
+.detail-modal-content .close:hover,
+.detail-modal-content .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

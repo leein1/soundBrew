@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link href="../css/activation.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        메일 인증하기
+    </div>
+
+    <div class="content-body">
+
+        <form id="activation-form" class="activation-form">
+
+            <div class="input-group">
+                <label for="activationCode">인증 문자를 입력해주세요 ( 띄워쓰기 없이 입력해주세요 )</label>
+                <input type="text" id="activationCode" name="activationCode" placeholder="인증 문자 입력" required>
+            </div>
+
+            <button type="submit">인증하기</button>
+
+        </form>
+    </div>
+
+<!--    <div class="content-footer">-->
+<!--        <a href="#" class="footer-link">메일 재요청(모달이든 뭐든 아이디 비밀번호 새로 입력하고 재 전송 하는 기능 필요)</a>-->
+
+<!--    </div>-->
+</div>
+</body>
+<th:block layout:fragment="script">
+    <script type="module">
+        import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+        import {axiosPost} from '/js/fetch/standardAxios.js';
+
+        console.log("loaded script..");
+
+        document.getElementById("activation-form").addEventListener("submit", async (event) => {
+
+            event.preventDefault(); // 폼의 기본 동작 막기
+
+            try {
+
+                //폼 가져오기
+                const form = document.getElementById("activation-form");
+
+                //폼 데이터 직렬화
+                const jsonData = serializeFormToJSON(form);
+
+                // const handle = {
+                //     onSuccess:()=>{
+                //         alert('인증되었습니다. 로그인 해주세요')
+                //         window.location.href = "/login";
+                //     },
+                //     onServerError:()=>{
+                //         alert("서비스 오류 입니다. 잠시 후 다시 시도 해주세요. 지속적인 문제 발생시 문의 해주세요.")
+                //         window.location.href="/activation";
+                //     }
+                // }
+
+                const handle = {
+                    success :{
+                        message : "인증되었습니다. 로그인 해주세요",
+                        location : "/login"
+                    },
+                    failure : {
+                        message : "서비스 오류 입니다. 잠시 후 다시 시도 해주세요. 지속적인 문제 발생시 문의 해주세요.",
+                        location : "/activation"
+                    }
+                }
+
+                const response = await axiosPost({endpoint: `/api/verification/activation`, body: jsonData, handle:handle});
+
+            } catch (err) {
+                console.error("Error:", err);
+            }
+
+
+        }, false);
+
+    </script>
+</th:block>
+
+
+</html>

@@ -13,7 +13,10 @@ export function inputProcessor(key, value, rules) {
                 break;
             case 'toLowerCase':
                 if (typeof processedValue === 'string') {
+                    alert("!!");
+                    alert("before : "+processedValue);
                     processedValue = processedValue.toLowerCase();
+                    alert("after : "+processedValue);
                 }
                 break;
             case 'trimMiddle':
@@ -43,6 +46,11 @@ export function inputValidator(key, value, rules) {
         errors.push(`${key} is required.`);
     }
 
+    // 최소 길이 확인
+    if (rules.minLength && value?.length < rules.minLength) {
+        errors.push(`${key} must not exceed ${rules.minLength} characters.`);
+    }
+
     // 최대 길이 확인
     if (rules.maxLength && value?.length > rules.maxLength) {
         errors.push(`${key} must not exceed ${rules.maxLength} characters.`);
@@ -53,11 +61,11 @@ export function inputValidator(key, value, rules) {
         // 배열 내의 각 항목에 대해 패턴 검사
         value.forEach((item, index) => {
             if (!rules.pattern.test(item)) {
-                errors.push(`${key}[${index}] has an invalid format.`);
+                errors.push(`${key}[${index}] 가 양식에 맞지 않습니다.`);
             }
         });
     } else if (rules.pattern && !Array.isArray(value) && !rules.pattern.test(value)) {
-        errors.push(`${key} has an invalid format.`);
+        errors.push(`${key} 가 양식에 맞지 않습니다.`);
     }
 
     // 숫자 타입 확인
@@ -114,7 +122,7 @@ export function inputHandler(input, form) {
     let firstErrorField = null;
 
     Object.keys(flatInput).forEach((flatKey) => {
-        let value = flatInput[flatKey];
+        let value = flatInput[flatKey];     
 
         // 처리 규칙 적용
         value = inputProcessor(flatKey, value, processingRules);
@@ -134,8 +142,7 @@ export function inputHandler(input, form) {
 
     if (Object.keys(errors).length > 0) {
         const firstErrorMessage = errors[firstErrorField][0];
-        alert(`Validation Error: ${firstErrorMessage}`);
-
+        alert(`Validation Error: ${firstErrorMessage}`); // 사용자에게 에러 메시지 알림
         // 수정된 부분: firstErrorField 그대로 사용
         const firstErrorFieldOriginal = firstErrorField;
 

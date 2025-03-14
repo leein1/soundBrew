@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/myInfo.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-header">
+        내 정보
+    </div>
+
+    <div class="content-body">
+        <form id="myInfo-form" class="myInfo-form">
+            <div class="input-group">
+                <label for="email" style="justify-content: space-between; display: flex">
+                    <span>이메일</span>
+<!--                    <span class="duplicate-check-email">중복확인</span>-->
+                </label>
+                <div class="input-with-button">
+                    <input type="email" id="email" name="email" readonly required>
+                    <!--                    <button type="button" id="checkDuplicateEmail" class="check-button">중복확인</button>-->
+                    <input type="checkbox" id="emailChecked" hidden>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="name">이름</label>
+                <div class="input-with-button">
+                    <input type="text" id="name" name="name" readonly required>
+                    <button type="button" class="edit-btn" data-target="name">수정하기</button>
+
+                    <button type="button" class="save-btn" data-target="name" hidden>수정완료</button>
+                </div>
+                <button type="button" class="cancel-btn" data-target="name" hidden>취소하기</button>
+            </div>
+
+            <div class="input-group">
+                <label for="nickname" style="justify-content: space-between; display: flex">
+                    <span>닉네임 ( 특수문자가 없는 2글자 이상 )</span>
+                    <span class="duplicate-check-nickname" hidden>중복확인</span>
+                </label>
+                <div class="input-with-button">
+                    <input type="text" id="nickname" name="nickname" readonly required>
+                    <!--                    <button type="button" id="checkDuplicateNickname" class="check-button">중복확인</button>-->
+                    <input type="checkbox" id="nicknameChecked" hidden>
+                    <button type="button" class="edit-btn" data-target="nickname">수정하기</button>
+                    <button type="button" class="save-btn" data-target="nickname" hidden>수정완료</button>
+                </div>
+                <button type="button" class="cancel-btn" data-target="nickname" hidden>취소하기</button>
+
+            </div>
+
+<!--            <div class="input-group">-->
+<!--                <label for="password">비밀번호 8글자 이상 숫자,특수문자,대문자 1개 이상</label>-->
+<!--                <input type="password" id="password" name="password" required>-->
+<!--            </div>-->
+
+<!--            <div class="input-group">-->
+<!--                <label for="password-check">비밀번호 확인</label>-->
+<!--                <input type="password" id="password-check" name="password-check" required>-->
+<!--            </div>-->
+
+            <div class="input-group">
+                <label>전화번호</label>
+                <div class="phone-number">
+                    <input type="text" id="phone1" value="010" readonly>
+                    <input type="text" id="phone2" maxlength="4" pattern="\d{4}" readonly required>
+                    <input type="text" id="phone3" maxlength="4" pattern="\d{4}" readonly required>
+                    <button type="button" class="edit-btn" data-target="phoneNumber">수정하기</button>
+                    <button type="button" class="save-btn" data-target="phoneNumber" hidden>수정완료</button>
+                </div>
+                <button type="button" class="cancel-btn" data-target="phoneNumber" hidden>취소하기</button>
+
+            </div>
+
+            <div class="input-group">
+                <label for="birth">생일 </label>
+                <input type="date" id="birth" name="birth" readonly required>
+<!--                <button type="button" class="edit-btn" data-target="birth">수정하기</button>-->
+<!--                <button type="button" class="save-btn" data-target="birth" hidden>수정완료</button>-->
+            </div>
+
+            <input type="hidden" name="phoneNumber" id="phoneNumber">
+            <input type="hidden" name="userId" id="userId"  readonly required>
+        </form>
+
+    </div>
+
+    <div class="content-footer" style="border: 1px green solid;">
+        푸터 - 버튼 위치할 예정
+    </div>
+</div>
+</body>
+
+<!--<script type="module" layout:fragment="script" th:inline="javascript">-->
+<th:block layout:fragment="script">
+
+    <script type="module">
+
+        import { axiosGet } from '/js/fetch/standardAxios.js';
+        import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+        import { serializeInputToJSON } from '/js/serialize/inputToJson.js';
+        import { axiosPost } from '/js/fetch/standardAxios.js';
+        import { axiosPatch } from '/js/fetch/standardAxios.js';
+        import { inputHandler } from '/js/check/inputHandler.js';
+
+        //라우터에서 우선적으로 비동기화 통신으로 회원 정보를 불러옴
+        const response = await axiosGet({endpoint:"/api/me", useToken:true});
+
+      // 모듈화 된 js 파일에서, 이제 라우터에서 넘겨준 response를 이용할꺼임.
+      export function renderMyInfoForm() {
+        const contentBody = document.getElementById('content-body');
+
+        contentBody.innerHTML = `
+          <form id="myInfo-form" class="myInfo-form">
+            <div class="input-group">
+              <label for="email" style="justify-content: space-between; display: flex">
+                <span>이메일</span>
+              </label>
+              <div class="input-with-button">
+                <input type="email" id="email" name="email" readonly required>
+                <input type="checkbox" id="emailChecked" hidden>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="name">이름</label>
+              <div class="input-with-button">
+                <input type="text" id="name" name="name" readonly required>
+                <button type="button" class="edit-btn" data-target="name">수정하기</button>
+                <button type="button" class="save-btn" data-target="name" hidden>수정완료</button>
+              </div>
+              <button type="button" class="cancel-btn" data-target="name" hidden>취소하기</button>
+            </div>
+
+            <div class="input-group">
+              <label for="nickname" style="justify-content: space-between; display: flex">
+                <span>닉네임 ( 특수문자가 없는 2글자 이상 )</span>
+                <span class="duplicate-check-nickname" hidden>중복확인</span>
+              </label>
+              <div class="input-with-button">
+                <input type="text" id="nickname" name="nickname" readonly required>
+                <input type="checkbox" id="nicknameChecked" hidden>
+                <button type="button" class="edit-btn" data-target="nickname">수정하기</button>
+                <button type="button" class="save-btn" data-target="nickname" hidden>수정완료</button>
+              </div>
+              <button type="button" class="cancel-btn" data-target="nickname" hidden>취소하기</button>
+            </div>
+
+            <div class="input-group">
+              <label>전화번호</label>
+              <div class="phone-number">
+                <input type="text" id="phone1" value="010" readonly>
+                <input type="text" id="phone2" maxlength="4" pattern="\\d{4}" readonly required>
+                <input type="text" id="phone3" maxlength="4" pattern="\\d{4}" readonly required>
+                <button type="button" class="edit-btn" data-target="phoneNumber">수정하기</button>
+                <button type="button" class="save-btn" data-target="phoneNumber" hidden>수정완료</button>
+              </div>
+              <button type="button" class="cancel-btn" data-target="phoneNumber" hidden>취소하기</button>
+            </div>
+
+            <div class="input-group">
+              <label for="birth">생일 </label>
+              <input type="date" id="birth" name="birth" readonly required>
+            </div>
+
+            <input type="hidden" name="phoneNumber" id="phoneNumber">
+            <input type="hidden" name="userId" id="userId" readonly required>
+          </form>
+        `;
+      }
+
+        updateMyInfo(response.dto);
+
+        function updateMyInfo(dto) {
+            document.getElementById("userId").value = dto.userId;
+            document.getElementById("email").value = dto.email;
+            document.getElementById("name").value = dto.name;
+            document.getElementById("nickname").value = dto.nickname;
+
+            // dto.phoneNumber를 3-4-4 로 나누어 표기
+            if (dto.phoneNumber) {
+
+                const phoneNum = dto.phoneNumber.replace(/\D/g, ""); // 공백, 특문 제거
+
+                if (phoneNum.length === 11) { // 01012345678 형태일 경우
+                    document.querySelector("#phone1").value = phoneNum.substring(0, 3);
+                    document.querySelector("#phone2").value = phoneNum.substring(3, 7);
+                    document.querySelector("#phone3").value = phoneNum.substring(7, 11);
+                }
+            }
+            // document.getElementById("phonenumber").value = dto.phoneNumber;
+            document.getElementById("birth").value = dto.birth;
+        }
+
+        const nicknameInput = document.getElementById("nickname");
+        const nicknameChecked = document.getElementById("nicknameChecked");
+        let nicknameTimer;
+
+        // 상태에 따라 인풋와 중복확인 원의 색상을 함께 업데이트하는 함수
+        function updateInputAndCheckColor(inputElement, isAvailable, checkElement) {
+            let color = "gray";
+            if (inputElement.value.trim() !== "") {
+                color = isAvailable ? "limegreen" : "red";
+            }
+            inputElement.style.borderColor = color;
+            if (checkElement) {
+                checkElement.style.setProperty('--status-color', color);
+            }
+        }
+
+        async function checkDuplicate(inputElement, endpoint, checkedElement) {
+            if (inputElement.value.trim() === "") return;
+
+            // 해당 인풋에 맞는 중복확인 표시 요소 선택 (id에 따라 구분)
+            const checkElement = inputElement.id === "email"
+                ? document.querySelector('.duplicate-check-email')
+                : inputElement.id === "nickname"
+                    ? document.querySelector('.duplicate-check-nickname')
+                    : null;
+
+            inputElement.style.borderColor = "orange"; // 검사 중 표시 - 오렌지를 식별할경우는 거의 없을 것 같음
+            if (checkElement) {
+                checkElement.style.setProperty('--status-color', "orange");
+            }
+
+            console.log(`${endpoint} 중복 체크 요청:`, inputElement.value); // 요청 로그 출력
+
+            const inputToJson = serializeInputToJSON(inputElement);
+
+            try {
+
+                const response = await axiosPost({ endpoint: endpoint, body: inputToJson });
+                console.log(`${endpoint} 중복 체크 결과:`, response); // 응답 결과 로그 출력
+
+                checkedElement.checked = response.available;
+                // updateInputBorder(inputElement, response.available);
+                updateInputAndCheckColor(inputElement, response.available, checkElement);
+
+            } catch (err) {
+                console.error(`${endpoint} 중복 체크 오류:`, err);
+                // inputElement.style.borderColor = "red"; // 오류 시 빨간색 처리
+                updateInputAndCheckColor(inputElement, false, checkElement);
+
+            }
+        }
+
+        nicknameInput.addEventListener("input", () => {
+            clearTimeout(nicknameTimer);
+            nicknameChecked.checked = false;
+            nicknameInput.style.borderColor = "gray"; // 입력 중 기본 회색
+            document.querySelector('.duplicate-check-nickname')
+                .style.setProperty('--status-color', "gray");
+
+            nicknameTimer = setTimeout(() => checkDuplicate(nicknameInput, "/api/verification/nickname", nicknameChecked), 500);
+        });
+
+        // 기존의 수정 버튼 이벤트 리스너 외에 취소 버튼에 대한 이벤트 리스너 추가
+        document.querySelectorAll(".cancel-btn").forEach(button => {
+            button.addEventListener("click", event => {
+                const targetId = event.target.getAttribute("data-target");
+                const inputField = document.getElementById(targetId);
+                const editButton = document.querySelector(`.edit-btn[data-target="${targetId}"]`);
+                const saveButton = document.querySelector(`.save-btn[data-target="${targetId}"]`);
+                const cancelButton = event.target; // 클릭된 취소 버튼
+
+                if (targetId === "nickname") {
+                    const duplicateCheck = document.querySelector(".duplicate-check-nickname");
+                    if (duplicateCheck) {
+                        duplicateCheck.hidden = true; // 중복확인 버튼 보이도록 설정
+                    }
+                }
+
+                if (targetId === "phoneNumber") {
+
+                    const phone2 = document.getElementById("phone2");
+                    const phone3 = document.getElementById("phone3");
+
+                    phone2.setAttribute("readonly", "true");
+                    phone3.setAttribute("readonly", "true");
+
+                    phone2.style.borderColor = "";
+                    phone3.style.borderColor = "";
+
+                }
+
+                // 입력 필드를 다시 readonly로 설정
+                inputField.setAttribute("readonly", "true");
+                inputField.style.borderColor = ""; // 테두리 색상 초기화
+
+
+
+                // 버튼 상태 복원: 수정완료, 취소 버튼 숨기고, 수정하기 버튼 표시
+                saveButton.hidden = true;
+                cancelButton.hidden = true;
+                editButton.hidden = false;
+            });
+        });
+
+
+        // 모든 수정 버튼에 이벤트 리스너 추가
+        document.querySelectorAll(".edit-btn").forEach(button => {
+            button.addEventListener("click", event => {
+
+                if (document.querySelectorAll(".save-btn:not([hidden])").length > 0) {
+                    alert("다른 항목을 수정 중입니다. 먼저 현재 항목의 수정을 완료하거나 취소해주세요.");
+                    return; // 현재 클릭한 수정 버튼의 작동을 중단
+                }
+
+                const targetId = event.target.getAttribute("data-target");
+                const saveButton = document.querySelector(`.save-btn[data-target="${targetId}"]`);
+                const cancelButton = document.querySelector(`.cancel-btn[data-target="${targetId}"]`);
+
+
+                // 닉네임 수정 버튼이 클릭된 경우 "중복확인" 버튼 표시
+                if (targetId === "nickname") {
+                    const duplicateCheck = document.querySelector(".duplicate-check-nickname");
+                    if (duplicateCheck) {
+                        duplicateCheck.hidden = false; // 중복확인 버튼 보이도록 설정
+                    }
+                }
+
+                // 전화번호 수정 버튼이 클릭된 경우
+                if (targetId === "phoneNumber") {
+
+                    const phone2 = document.getElementById("phone2");
+                    const phone3 = document.getElementById("phone3");
+
+                    phone2.removeAttribute("readonly");
+                    phone3.removeAttribute("readonly");
+
+                    phone2.style.borderColor = "orange";
+                    phone3.style.borderColor = "orange";
+
+                } else {
+                    // 일반 입력 필드
+                    const inputField = document.getElementById(targetId);
+                    if (inputField) {
+
+                        inputField.removeAttribute("readonly");
+                        inputField.style.borderColor = "orange"; // 테두리 색 변경
+                    }
+                }
+
+                saveButton.style.backgroundColor = "orange";
+                saveButton.style.color = "white"; // 텍스트 가독성을 위해 흰색으로 변경
+
+                // 버튼 상태 변경
+                event.target.hidden = true; // "수정하기" 버튼 숨김
+                saveButton.hidden = false;  // "수정완료" 버튼 표시
+                cancelButton.hidden = false; // 취소하기 표시
+
+            });
+        });
+
+        // 사용자가 수정완료 버튼을 눌렀을때
+        document.querySelectorAll(".save-btn").forEach(button => {
+            button.addEventListener("click", async event => {
+
+                event.preventDefault(); // 기본 폼 제출 방지
+
+                const targetId = event.target.getAttribute("data-target");
+                // const editButton = document.querySelector(`.edit-btn[data-target="${targetId}"]`);
+                const userIdInput = document.getElementById("userId");
+
+                let updatedData = {}; // 서버에 보낼 데이터 객체
+
+                // 닉네임을 수정 했다면
+                if (targetId === "nickname") {
+
+                    const nicknameChecked = document.getElementById("nicknameChecked").checked;
+                    const nicknameInput = document.getElementById("nickname");
+
+
+                    if (!nicknameChecked) {
+
+                        alert("닉네임 중복입니다 다른 닉네임을 입력해주세요.");
+                        nicknameInput.focus();
+
+                        return;
+                    }
+
+                    const form = document.createElement("form");
+
+                    const nicknameInputClone = nicknameInput.cloneNode();
+                    nicknameInputClone.value = document.getElementById("nickname").value;
+                    form.appendChild(nicknameInputClone);
+
+                    const userIdInputClone = userIdInput.cloneNode();
+                    userIdInputClone.value = document.getElementById("userId").value;
+                    form.appendChild(userIdInputClone);
+
+                    //폼 데이터 직렬화
+                    const jsonData = serializeFormToJSON(form);
+
+                    //  input value 검증
+                    const{errors,processedData} = inputHandler(jsonData,form);
+
+                    const handle = {
+                        onSuccess:()=>{
+                            alert("닉네임 수정을 완료 하였습니다.");
+                            window.location.href = "/myInfo";
+                        }
+                    }
+
+                    if(!errors){
+                        await axiosPatch({endpoint:"/api/me", body:processedData, handle:handle, useToken: true});
+                    }
+
+
+                } else if (targetId === "phoneNumber") {
+
+                    const phone1 = document.getElementById("phone1");
+                    const phone2 = document.getElementById("phone2");
+                    const phone3 = document.getElementById("phone3");
+
+                    if (phone2.value.length !== 4 || phone3.value.length !== 4) {
+                        alert('전화번호를 올바르게 입력해주세요.');
+                        return;
+                    }
+
+                    const fullPhoneNumber = `${phone1.value}${phone2.value}${phone3.value}`;
+                    const phoneNumber = document.getElementById('phoneNumber');
+                    phoneNumber.value = fullPhoneNumber;
+
+                    const form = document.createElement("form");
+
+                    const phoneNumberInputClone = phoneNumber.cloneNode();
+                    phoneNumberInputClone.value = document.getElementById("phoneNumber").value;
+                    form.appendChild(phoneNumberInputClone);
+
+                    const userIdInputClone = userIdInput.cloneNode();
+                    userIdInputClone.value = document.getElementById("userId").value;
+                    form.appendChild(userIdInputClone);
+
+                    //폼 데이터 직렬화
+                    const jsonData = serializeFormToJSON(form);
+
+                    //  input value 검증
+                    const{errors,processedData} = inputHandler(jsonData,form);
+
+                    const handle = {
+                        onSuccess:()=>{
+                            alert("전화번호 수정을 완료 하였습니다.");
+                            window.location.href = "/myInfo";
+                        }
+                    }
+
+                    if(!errors){
+                        await axiosPatch({endpoint:"/api/me", body:processedData, handle:handle, useToken: true});
+                    }
+
+
+
+                } else if (targetId === "name") {
+
+                    const nameInput = document.getElementById("name");
+
+                    const form = document.createElement("form");
+
+                    const nameInputClone = nameInput.cloneNode();
+                    nameInputClone.value = document.getElementById("name").value;
+                    form.appendChild(nameInputClone);
+
+                    const userIdInputClone = userIdInput.cloneNode();
+                    userIdInputClone.value = document.getElementById("userId").value;
+                    form.appendChild(userIdInputClone);
+
+                    //폼 데이터 직렬화
+                    const jsonData = serializeFormToJSON(form);
+
+                    //  input value 검증
+                    const{errors,processedData} = inputHandler(jsonData,form);
+
+                    const handle = {
+                        onSuccess:()=>{
+                            alert("이름 수정을 완료 하였습니다.");
+                            window.location.href = "/myInfo";
+                        }
+                    }
+
+                    if(!errors){
+                        await axiosPatch({endpoint:"/api/me", body:processedData, handle:handle, useToken: true});
+                    }
+
+                }
+
+            });
+        });
+
+
+
+
+    </script>
+</th:block>
+</html>
+
+
+
+
+                
+

@@ -3,6 +3,7 @@ package com.soundbrew.soundbrew.service.subscription;
 
 import com.soundbrew.soundbrew.domain.user.Subscription;
 import com.soundbrew.soundbrew.domain.user.User;
+import com.soundbrew.soundbrew.domain.user.UserSubscription;
 import com.soundbrew.soundbrew.dto.*;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -62,6 +64,63 @@ public class SubscriptionServiceImpl implements SubscriptionService{
                 .build();
     }
 
+    // userSubscription 이랑, user 에 subscriptionid 가 각각있기 때문에, 둘 다 고쳐줘야함
+    @Override
+    @Transactional
+    public ResponseDTO<String> updateSubscriptionId(int userId, int subscriptionId) {
+        // 바꿀려는 하는 회원이 있나?
+        User user = userRepository.findById(userId).orElseThrow();
+        // 바꿀려는 구독 등급이 있나?
+        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
+        // 바꿀려는 회원의 회원구독DB 정보가 있나?
+        UserSubscription userSubscription = userSubscriptionRepository.findById(user.getUserId()).orElseThrow();
+
+        //okay 회원db의 subscriptionId 값부터 바꾸자
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        userDTO.setSubscriptionId(subscriptionId);
+        userRepository.save(userDTO.toEntity());
+
+        UserSubscriptionDTO userSubscriptionDTO = modelMapper.map(userSubscription, UserSubscriptionDTO.class);
+        userSubscriptionDTO.setSubscriptionId(subscription.getSubscriptionId());
+        userSubscriptionRepository.save(userSubscriptionDTO.toEntity());
+
+        return ResponseDTO.<String>withMessage().message("회원의 구독 등급을 변경했습니다.").build();
+    }
+
+    @Override
+    public ResponseDTO<String> updatePaymentStatus(int userId, boolean paymentStatus) {
+//        if (!paymentStatus.equalsIgnoreCase("true") && !paymentStatus.equalsIgnoreCase("false")) {
+//            throw new IllegalArgumentException("부적절한 결제 상태 표현 : " + paymentStatus);
+//        }
+
+        // 바꾸자 하는 회원이 있나?
+        User user = userRepository.findById(userId).orElseThrow();
+
+        // okay, 그러면 바꾸자 하는 회원의 회원구독DB 정보가 있나?
+        UserSubscription userSubscription = userSubscriptionRepository.findById(user.getUserId()).orElseThrow();
+        // dto로 변환,
+        UserSubscriptionDTO userSubscriptionDTO = modelMapper.map(userSubscription, UserSubscriptionDTO.class);
+
+        userSubscriptionDTO.setPaymentStatus(paymentStatus);
+
+        userSubscriptionRepository.save(userSubscriptionDTO.toEntity());
+
+        return ResponseDTO.<String>withMessage().message("회원의 결제 상태를 관리자 권한으로 변경했습니다.").build();
+    }
+
+    @Override
+    public ResponseDTO<String> updateSubscription(int subscriptionId,SubscriptionDTO subscriptionDTO) {
+        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
+
+        SubscriptionDTO dto = modelMapper.map(subscription, SubscriptionDTO.class);
+
+        dto.setSubscriptionPrice(subscriptionDTO.getSubscriptionPrice());
+        dto.setCreditPerMonth(subscription.getCreditPerMonth());
+
+        subscriptionRepository.save(dto.toEntity());
+
+        return ResponseDTO.<String>withMessage().message("구독제의 정보를 관리자 권한으로 변경했습니다.").build();
+    }
 
 
 //    //    구독제 등록
