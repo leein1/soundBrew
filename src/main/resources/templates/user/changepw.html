@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      layout:decorate="~{layouts/layout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -39,9 +39,10 @@
 </div>
 </body>
 <th:block layout:fragment="script">
+
     <script type="module">
         import { serializeFormToJSON } from '/js/serialize/formToJson.js';
-        import { serializeInputToJSON } from '/js/serialize/inputToJson.js';
+
         import { axiosPatch } from '/js/fetch/standardAxios.js';
         import { inputHandler } from '/js/check/inputHandler.js';
 
@@ -107,17 +108,26 @@
 
                 const {errors, processedData} = inputHandler(jsonData, form);
 
+                // const handle = {
+                //     onSuccess:(data)=>{
+                //
+                //         alert(data.message);
+                //         alert("다시 로그인 해주세요.");
+                //         window.location.href = "/login";
+                //     },
+                //     onBadRequest:(data)=>{
+                //         alert(data.message);
+                //         window.location.href="/sounds/tracks";
+                //         submitButton.disabled = false;
+                //     }
+                // }
                 const handle = {
-                    onSuccess:(data)=>{
-
-                        alert(data.message);
-                        alert("다시 로그인 해주세요.");
-                        window.location.href = "/login";
+                    success: {
+                        location: "/login"
                     },
-                    onBadRequest:(data)=>{
-                        alert(data.message);
-                        window.location.href="/sounds/tracks";
-                        submitButton.disabled = false;
+                    failure: {
+                        message: "오류가 발생하였습니다. 문의부탁 드립니다.",
+                        location: "/login"
                     }
                 }
 

@@ -33,9 +33,9 @@ export async function renderSubscriptionPlans() {
                 <button type="button" class="subscribe-btn" data-plan="Premium">구독하기</button>
             </div>
             <div class="subscription-card vip-card">
-                <h2>moon suck choi</h2>
+                <h2>VIP</h2>
                 <p>월 결제 금액: 30,000원</p>
-                <p>이 남자를 무제한으로 사용하세요!</p>
+                <p>무제한으로 사용하세요!</p>
                 <button type="button" class="subscribe-btn" data-plan="VIP">구독하기</button>
             </div>
         </div>
@@ -50,11 +50,12 @@ function attachSubscriptionEventHandlers() {
     subscribeButtons.forEach((button) => {
         button.addEventListener("click", (event) => {
             const plan = event.target.dataset.plan;
-            alert(`${plan} 플랜을 선택하셨습니다.`);
+            alert("결제 기능과 함께 업데이트 예정입니다.");
+            // alert(`${plan} 플랜을 선택하셨습니다.`);
 
-            if (plan === "VIP") {
-                alert("moon suck choi는 무제한 서비스입니다. 고민하지 말고 바로 구독하세요!");
-            }
+            // if (plan === "VIP") {
+            //     alert("VIP는 무제한 서비스입니다. 고민하지 말고 바로 구독하세요!");
+            // }
         });
     });
 }

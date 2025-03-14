@@ -448,7 +448,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     document.querySelector('#myInfoRoute')?.addEventListener('click', () => {
-        router.navigate('/me/Info');
+        router.navigate('/me/info');
     });
 
     document.querySelector('#changePasswordRoute')?.addEventListener('click', () => {

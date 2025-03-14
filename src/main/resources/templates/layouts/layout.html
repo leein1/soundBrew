@@ -70,6 +70,7 @@
             <div class="sidebar-item" id="subscriptionListRoute">
                 <img class="sidebar-icon" th:src="@{/images/graphic_eq_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                 <span class="sidebar-text">구독제</span>
+
             </div>
 
             <hr class="divider.user-view" style="display: none;">
@@ -98,6 +99,11 @@
                         <div class="sidebar-item">
                             <img class="sidebar-icon" th:src="@{/images/psychology_alt_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg}">
                             <span class="sidebar-text" id="mySubscriptionRoute">내 구독제 조회</span>
+                            <script>
+                                document.getElementById("mySubscriptionRoute").addEventListener("click",()=>{
+                                    alert("결제 기능과 함께 업데이트 예정입니다.");
+                                })
+                            </script>
                         </div>
                         <div class="sidebar-item">
                             <img class="sidebar-icon" th:src="@{/images/album_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg}">

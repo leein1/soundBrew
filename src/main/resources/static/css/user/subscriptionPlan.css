@@ -46,23 +46,23 @@
 .subscription-card.vip-card {
     position: relative;      /* 가상요소를 배치하기 위한 기준 */
     overflow: visible;       /* pseudo요소가 카드 바깥에도 보이도록 */
-    background: #fff;        /* 카드 내부는 흰색 */
+    /*background: #fff;        !* 카드 내부는 흰색 *!*/
     background-clip: padding-box; /* 내부에 pseudo요소 효과가 보이지 않게 함 */
 }
 
-.subscription-card.vip-card::after {
-    content: "";
-    position: absolute;
-    top: -5px;       /* 확장 범위 줄임 */
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    background: conic-gradient(red, orange, yellow, green, blue, indigo, violet, red);
-    filter: blur(15px);   /* 더 부드럽게 */
-    z-index: -1;
-    pointer-events: none;
-    animation: corona 3s infinite alternate;
-}
+/*.subscription-card.vip-card::after {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    top: -5px;       !* 확장 범위 줄임 *!*/
+/*    left: -5px;*/
+/*    right: -5px;*/
+/*    bottom: -5px;*/
+/*    background: conic-gradient(red, orange, yellow, green, blue, indigo, violet, red);*/
+/*    filter: blur(15px);   !* 더 부드럽게 *!*/
+/*    z-index: -1;*/
+/*    pointer-events: none;*/
+/*    animation: corona 3s infinite alternate;*/
+/*}*/
 
 
 /* corona 효과 애니메이션: 약간의 변위, 스케일 변화, 투명도 변화 */

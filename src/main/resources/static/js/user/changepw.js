@@ -1,3 +1,8 @@
+import { serializeFormToJSON } from '/js/serialize/formToJson.js';
+import { inputHandler } from '/js/check/inputHandler.js';
+import { axiosPatch } from '/js/fetch/standardAxios.js';
+
+
 export async function renderChangePassword() {
   const contentBody = document.getElementById('content-body');
   if (!contentBody) {
@@ -92,22 +97,33 @@ export function initChangePasswordFormEvents() {
 
       const { errors, processedData } = inputHandler(jsonData, changePwForm);
 
+      // const handle = {
+      //   onSuccess: (data) => {
+      //     alert(data.message);
+      //     alert("다시 로그인 해주세요.");
+      //     window.location.href = "/login";
+      //   },
+      //   onBadRequest: (data) => {
+      //     alert(data.message);
+      //     window.location.href = "/sounds/tracks";
+      //     submitButton.disabled = false;
+      //   }
+      // };
+
       const handle = {
-        onSuccess: (data) => {
-          alert(data.message);
-          alert("다시 로그인 해주세요.");
-          window.location.href = "/login";
+        success: {
+          location: "/login"
         },
-        onBadRequest: (data) => {
-          alert(data.message);
-          window.location.href = "/sounds/tracks";
-          submitButton.disabled = false;
+        failure: {
+          message: "오류가 발생하였습니다. 문의부탁 드립니다.",
+          location: "/login"
         }
-      };
+      }
 
       if (!errors) {
         await axiosPatch({ endpoint: "/api/me/password", body: processedData, useToken: true, handle });
         alert("요청 보냄");
+
       }
     } catch (err) {
       console.error(err);
