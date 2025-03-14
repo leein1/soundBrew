@@ -121,7 +121,32 @@ export const router = new Router();
 
 document.addEventListener('DOMContentLoaded', async () => {
     router.addRoute('/', async()=>{
-        await renderIndex();
+        updateDynamicCSS(SoundTypeCSSFiles);
+        await loadSoundTypeCSS();
+
+        const queryParams = window.location.search; // 현재 URL 쿼리 파라미터 가져오기
+
+        // 초기 로딩이거나, 태그가 변경된 경우 API 호출
+        if (globalStateManager.getState().isFirstTagLoad || compareTagsWithUrlParams()) {
+            renderSearch();
+            renderSort();
+            renderViewType();
+
+            // 태그 API 호출
+            const renderTags = await axiosGet({ endpoint: `/api/sounds/tags/mapped${queryParams}`});
+
+            renderTagsFromSearch(renderTags); // 태그 UI 렌더링
+            extractTagsFromURL(); // 태그 상태 업데이트
+
+            // 최초 호출 이후에는 상태를 false로 변경
+            globalStateManager.dispatch({ type : 'SET_TAG_LOAD_STATUS', payload: false});
+        }
+        // 트랙 데이터를 항상 가져옴 (검색 결과는 항상 갱신해야 하므로)
+        const response = await axiosGet({ endpoint: `/api/sounds/tracks${queryParams}`});
+
+        console.log(response);
+        renderTotalSounds(response.dtoList); // 트랙 리스트 렌더링
+        renderPagination(response); // 페이지네이션 렌더링
     });
 
     router.addRoute('/subscription', async ()=>{
@@ -159,7 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(response);
         renderTotalSounds(response.dtoList); // 트랙 리스트 렌더링
         renderPagination(response); // 페이지네이션 렌더링
-        });
+    });
 
     router.addRoute('/sounds/albums', async () => {
         updateDynamicCSS(SoundTypeCSSFiles);
