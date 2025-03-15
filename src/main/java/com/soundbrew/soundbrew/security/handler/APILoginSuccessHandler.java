@@ -61,7 +61,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         );
 
         // Access Token 기간 1일
-        String accessToken = jwtUtil.generateToken(claim,4);
+        String accessToken = jwtUtil.generateToken(claim,1);
         //  Refresh Token 기간 30일
         String refreshToken = jwtUtil.generateToken(refreshClaims,30);
 
