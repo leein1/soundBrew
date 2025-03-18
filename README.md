@@ -22,11 +22,10 @@ _"내가 만든 음원을 손쉽게 찾고, 간편하게 업로드하고, 사람
 ## 👨‍💻 프로젝트 참여 인원  
 | 이인원                                | 경동훈                               |
 |--------------------------------------|--------------------------------------|
-| ![Image](https://github.com/user-attachments/assets/3ab9ccf1-c6a1-407e-b152-e563b7f88046)            | ![Image](https://github.com/user-attachments/assets/b9ef1a89-87d6-4a43-ac38-e86f746ab3c9)                |
+| <img src="https://github.com/user-attachments/assets/3ab9ccf1-c6a1-407e-b152-e563b7f88046" alt="Image" width="150"> | <img src="https://github.com/user-attachments/assets/b9ef1a89-87d6-4a43-ac38-e86f746ab3c9" alt="Image" width="150"> |
 | **역할**: Backend/front              | **역할**: Backend/front           |
 | **연락처**: inwon.private@icloud.com   | **연락처**: ddjsj12@naver.com     |
-| **이력서**: [이인원 이력서](URL)     | **이력서**: [경동훈 이력서](URL)     |
-| **포트폴리오**: [이인원 포트폴리오](URL) | **포트폴리오**: [경동흔 포트폴리오](URL) |
+
 
 ## 사용 기술
 
