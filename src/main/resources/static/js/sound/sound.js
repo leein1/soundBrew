@@ -10,7 +10,7 @@ console.log(data);
     const html = `
         <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
         <div class="content-header-info">
-            <img class="sound-image" src="https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${data.albumDTO.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
+            <img class="sound-image" src="http://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${data.albumDTO.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
             <div class="sound-info">
                 <div class="sound-title font-size-large">${data.musicDTO.title}</div>
                 <div class="artist-name font-size-medium">
@@ -108,7 +108,7 @@ export function renderAlbumOne(data) {
     const html = `
         <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
         <div class="content-header-info">
-            <img class="sound-image" src="https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${data.dtoList[0].albumDTO.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
+            <img class="sound-image" src="http://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${data.dtoList[0].albumDTO.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
             <div class="sound-info">    
                 <span>Artist</span>
                 <div class="sound-title font-size-large">
@@ -211,7 +211,7 @@ export function renderTotalSounds(data) {
             <!-- 알림 메시지 -->
             <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
             <div class="music-item-left">
-                <img alt="앨범 이미지" class="music-album-img" src="https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
+                <img alt="앨범 이미지" class="music-album-img" src="http://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
                 <div class="music-play-btn" data-sound-id="${sound.musicDTO.filePath}" data-sound-album="${sound.albumDTO.albumName}" data-sound-title="${sound.musicDTO.title}" data-sound-art="${sound.albumDTO.albumArtPath}">
                     <img src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                 </div>
@@ -307,7 +307,7 @@ export function renderTotalAlbums(data) {
             <div class="list-albums-list">
                 ${data.map(album => `
                     <div class="list-album-item" data-album-name="${album.albumDTO.albumName}" data-nickname="${album.albumDTO.nickname}">
-                        <img class="list-album-image" src="https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${album.albumDTO.albumArtPath}" alt="Album Image" onerror="this.src='/images/album-default-image-01.jpeg'">
+                        <img class="list-album-image" src="http://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${album.albumDTO.albumArtPath}" alt="Album Image" onerror="this.src='/images/album-default-image-01.jpeg'">
                         <div class="list-album-name">${album.albumDTO.albumName}</div>
                         <div class="list-album-artist">${album.albumDTO.nickname}</div>
                     </div>
