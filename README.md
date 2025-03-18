@@ -24,7 +24,7 @@
 ---
 
 ## 프로젝트 소개
-"내가 만든 음원을 손쉽게 찾고, 간편하게 업로드하고, 사람들에게 들려줄 수 있다면?"_  
+"내가 만든 음원을 손쉽게 찾고, 간편하게 업로드하고, 사람들에게 들려줄 수 있다면?"
 
 이 단순한 아이디어에서 프로젝트가 시작되었습니다.  
 팀원 전원이 **실용음악과 출신**으로, 직접 **음원 공유 사이트를 만들어 보고 싶다**는 목표를 가지고 주제를 선정했습니다.  
@@ -46,7 +46,7 @@
 | <img src="https://github.com/user-attachments/assets/3ab9ccf1-c6a1-407e-b152-e563b7f88046" alt="Image" width="150"> | <img src="https://github.com/user-attachments/assets/b9ef1a89-87d6-4a43-ac38-e86f746ab3c9" alt="Image" width="150"> |
 | **역할**: Backend/Front 개발          | **역할**: Backend/Front 개발         |
 | **연락처**: inwon.private@icloud.com  | **연락처**: ddjsj12@naver.com         |
-| **깃허브**: [leein1](https://github.com/leein1)   | **깃허브**: [kyoungdonghun](https://github.com/kyoungdonghun) |
+| **깃허브**: [leeinwon](https://github.com/leein1)   | **깃허브**: [kyoungdonghun](https://github.com/kyoungdonghun) |
 
 ---
 
