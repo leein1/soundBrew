@@ -33,7 +33,21 @@
 - **서버는 API 제공에 집중**하고  
 - **클라이언트는 UI 렌더링을 전담**하는 **SPA 방식**을 채택하는 것을 목표로 하였습니다.  
 
----
+
+<br>
+
+<a href="https://www.notion.so/leeinwon/SoundBrew-1aea7464bbfc80ec84f0d3b7c0a5a991">
+  <img src="https://github.com/user-attachments/assets/fb384dee-42eb-448f-a38e-5f581fc85eb0" alt="image" width="20"/>
+  SoundBrew 프로젝트 통합 기술문서 확인하기
+</a>
+
+<br>
+<br>
+
+<a href="http://soundvbrew-env.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com/sounds/tracks">
+  <img src="https://github.com/user-attachments/assets/26bec2d6-c899-4cf6-b0ba-275746615857" alt="Google Chrome" width="20">
+  SoundBrew 프로젝트 웹 페이지 확인하기
+</a>
 
 ## 프로젝트 배경
 현실적인 개발 환경을 고려하여 **설계, 개발, 유지보수** 등 다양한 부분을 체계적으로 진행하며, "실제 회사에서 프로젝트를 한다면?"이라는 관점에서 접근하였습니다.
@@ -206,19 +220,10 @@ src/
         └── application-prod.yml
 ```
 
----
-
-## 추후 개발 방향
-- **장바구니 및 결제 기능**  
-  - 정기 구독제 및 크레딧 시스템  
-  - 주문 및 결제 이력 관리  
-  - 구매 및 구독 시스템
-
----
-
 ## 프로젝트 미리보기
 
-###  <img src="https://github.com/user-attachments/assets/fb384dee-42eb-448f-a38e-5f581fc85eb0" alt="image" width="25"/>   [더 다양한 페이지 보기](https://leeinwon.notion.site/1baa7464bbfc80c1ac0bd231770f1ec3?pvs=74)
+###  <img src="https://github.com/user-attachments/assets/fb384dee-42eb-448f-a38e-5f581fc85eb0" alt="image" width="20"/>   [더 다양한 페이지 보기](https://leeinwon.notion.site/1baa7464bbfc80c1ac0bd231770f1ec3?pvs=74)
+
 
 ### 1. 메인화면 (Desktop)
 <img width="700" alt="메인화면 Desktop" src="https://github.com/user-attachments/assets/4081f606-05e3-45b5-9226-c61b0ee6c99b" />
@@ -233,7 +238,3 @@ src/
 <img width="700" alt="통계 Desktop" src="https://github.com/user-attachments/assets/b5599d6e-0093-4946-873e-fadaf67b578d" />
 
 ---
-
-## 추가 링크
-- [더 다양한 페이지 보기](https://leeinwon.notion.site/1baa7464bbfc80c1ac0bd231770f1ec3?pvs=74)
-
