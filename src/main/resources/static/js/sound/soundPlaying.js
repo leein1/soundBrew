@@ -55,7 +55,7 @@ export function initializeMusicPlayer() {
     function updatePlayerUI(soundData) {
         document.querySelector('.player-info h3').textContent = soundData.title;
         document.querySelector('.player-info p').textContent = soundData.albumName;
-        const imageSrc = `https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${soundData.albumArtPath}`;
+        const imageSrc = `http://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${soundData.albumArtPath}`;
 
         // 이미지 src 업데이트
         document.querySelector('.player-album-img').src = imageSrc;

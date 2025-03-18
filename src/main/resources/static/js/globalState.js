@@ -101,7 +101,7 @@ function displaySearchBar(state) {
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'none',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
         '/me/change-password':'none',
         '/me/subscription':'none',
         '/subscription':'none',
@@ -139,7 +139,7 @@ function displaySortBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
         '/me/change-password':'none',
         '/me/subscription':'none',
         '/subscription':'none',
@@ -177,7 +177,7 @@ function displayViewTypeBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'none',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
                 '/me/change-password':'none',
                 '/me/subscription':'none',
                 '/subscription':'none',
@@ -215,7 +215,7 @@ function displayTagsBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
                 '/me/change-password':'none',
                 '/me/subscription':'none',
                 '/subscription':'none',
@@ -254,7 +254,7 @@ function displayPaginationBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
                 '/me/change-password':'none',
                 '/me/subscription':'none',
                 '/subscription':'none',
@@ -292,7 +292,7 @@ function displayAudioBar(state){
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
                 '/me/change-password':'none',
                 '/me/subscription':'none',
                 '/subscription':'none',
@@ -328,7 +328,7 @@ function displayAlbumInfoBar(state){
         '/sounds/tracks/one': '',
         // '/albums/one': 'block', 이 뷰 상태일때는 보여줘야 하므로 초기화 하지 않음.
         //me
-        '/me/Info':'',
+        '/me/info':'',
                 '/me/change-password':'',
                 '/me/subscription':'',
                 '/subscription':'',
