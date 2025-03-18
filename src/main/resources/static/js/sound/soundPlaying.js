@@ -1,5 +1,6 @@
 import { globalStateManager } from '/js/globalState.js';
 import {router} from "/js/router.js";
+import WaveSurfer from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/wavesurfer.esm.js'
 
 // Main Function to Initialize All Event Listeners and Wavesurfer
 export function initializeMusicPlayer() {

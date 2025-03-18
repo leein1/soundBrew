@@ -1,7 +1,7 @@
 import {handleResponse} from "/js/handleResponse.js";
 
-const BASE_URL = "http://localhost:8080";
-// const BASE_URL = "http://Soundvbrew-env.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com";
+//const BASE_URL = "http://localhost:8080";
+ const BASE_URL = "http://Soundvbrew-env.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com";
 
 // Axios 기본 설정
 const axiosInstance = axios.create({

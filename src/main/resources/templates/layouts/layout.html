@@ -50,7 +50,7 @@
             </div>
             <div class="admin-view" style="display: none;">
                 <div class="profile" >
-                    <img onerror="this.onerror=null; this.src='/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';" alt="User Profile" class="profile-image">
+                    <img onerror="this.onerror=null; this.src='/images/account_circle_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg';" id="admin-profile-image" alt="User Profile" class="profile-image">
                 </div>
 
                 <div class="info1">
@@ -223,45 +223,50 @@
 
             // 토큰이 존재하고 만료되지 않았다면
             if (token && !TokenUtil.isTokenExpired(token)) {
-            document.querySelectorAll('.guest-view').forEach(view => {
-                view.style.display = "none";
-            });
-
-            const userInfo = TokenUtil.getUserInfo(token);
-            document.getElementById("myNickname").innerText = userInfo.nickname;
-
-            // 유저 프로필 이미지 경로 (예제 값)
-            const profileImagePath = userInfo.profileImagePath;
-
-            // 이미지 태그 가져오기
-            const profileImageElement = document.getElementById('user-profile-image');
-            const baseUrl = 'https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/';
-            // S3 DB 주고 까지 붙여서
-            profileImageElement.src = `${baseUrl}${profileImagePath}`;
-
-            document.querySelectorAll('.user-view, .admin-view').forEach(view => {
-                view.style.display = "none";
-            });
-
-            // 역할에 따라 적절한 뷰를 표시합니다.
-            if (userInfo.roles.includes("ROLE_ADMIN")) {
-                document.querySelectorAll('.admin-view').forEach(view => {
-                    view.style.display = "block";
+                // guest-view 숨기기
+                document.querySelectorAll('.guest-view').forEach(view => {
+                    view.style.display = "none";
                 });
-                document.getElementById("myRoles").innerText = "관리자";
-            } else if (userInfo.roles.includes("ROLE_USER")) {
-                document.querySelectorAll('.user-view').forEach(view => {
-                    view.style.display = "block";
+
+                const userInfo = TokenUtil.getUserInfo(token);
+                document.getElementById("myNickname").innerText = userInfo.nickname;
+
+                // 프로필 이미지 경로 (예제 값)
+                const profileImagePath = userInfo.profileImagePath;
+                const baseUrl = 'https://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/';
+
+                // user-view와 admin-view 모두 숨김 처리
+                document.querySelectorAll('.user-view, .admin-view').forEach(view => {
+                    view.style.display = "none";
                 });
-                document.getElementById("myRoles").innerText = "회원";
-            } else {
-                alert("회원 권한이 등록되지 않았습니다. token 정보 혹은 DB를 확인하세요.");
+
+                // 역할에 따라 적절한 뷰를 표시하고 프로필 이미지를 업데이트함
+                if (userInfo.roles.includes("ROLE_ADMIN")) {
+                    document.querySelectorAll('.admin-view').forEach(view => {
+                        view.style.display = "block";
+                    });
+                    // 관리자용 프로필 이미지 태그에 id="admin-profile-image"가 있어야 함
+                    const adminProfileImageElement = document.getElementById('admin-profile-image');
+                    if (adminProfileImageElement) {
+                        adminProfileImageElement.src = `${baseUrl}${profileImagePath}`;
+                    }
+                    document.getElementById("myRoles").innerText = "관리자";
+                } else if (userInfo.roles.includes("ROLE_USER")) {
+                    document.querySelectorAll('.user-view').forEach(view => {
+                        view.style.display = "block";
+                    });
+                    // 사용자용 프로필 이미지 태그에 id="user-profile-image"가 있어야 함
+                    const userProfileImageElement = document.getElementById('user-profile-image');
+                    if (userProfileImageElement) {
+                        userProfileImageElement.src = `${baseUrl}${profileImagePath}`;
+                    }
+                    document.getElementById("myRoles").innerText = "회원";
+                } else {
+                    alert("회원 권한이 등록되지 않았습니다. token 정보 혹은 DB를 확인하세요.");
+                }
+
+                console.log("로그인 사용자 정보:", userInfo);
             }
-
-            console.log("로그인 사용자 정보:", userInfo);
-        }
-            //layout route
-            //userProfile.js
         });
     </script>
     <th:block layout:fragment="script">
