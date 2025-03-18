@@ -1,6 +1,6 @@
 # SoundBrew
 
-## 📝 프로젝트 소개
+## 프로젝트 소개
 <br>
 회원/구독제 음원 판매 사이트 
 <br>
@@ -28,7 +28,7 @@ https://leeinwon.notion.site/3-1aea7464bbfc80ec84f0d3b7c0a5a991
 <br>
 <br>
 
-## 🛠 사용 기술
+## 사용 기술
 
 <span>
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">
@@ -54,7 +54,7 @@ https://leeinwon.notion.site/3-1aea7464bbfc80ec84f0d3b7c0a5a991
 </span>
 <br>
 
-## 📊 시스템 구조
+## 시스템 구조
 <br>
 
 ```mermaid
@@ -143,11 +143,9 @@ src/
         └── application-prod.yml
 ```
 
-## 🔍 주요 기능( 좀 더 자세히x -> 적절한 단어 찾아봐야 할듯)
+## 주요 기능( 좀 더 자세히x -> 적절한 단어 찾아봐야 할듯)
 <br>
-1. 현재 가능한 기능
-    1.     ㅁㄴㅇㄹ
-    2. 
+1. 
 <br>
 2. 개발중인 기능
 
