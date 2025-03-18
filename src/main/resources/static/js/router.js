@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    router.addRoute('/me/Info' , async ()=>{
+    router.addRoute('/me/info' , async ()=>{
         //css 관련 로딩
         updateDynamicCSS(UserAdminTypeCSSFiles);
         await loadUserAdminTypeCSS();
