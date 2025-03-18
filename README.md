@@ -46,7 +46,7 @@
 | <img src="https://github.com/user-attachments/assets/3ab9ccf1-c6a1-407e-b152-e563b7f88046" alt="Image" width="150"> | <img src="https://github.com/user-attachments/assets/b9ef1a89-87d6-4a43-ac38-e86f746ab3c9" alt="Image" width="150"> |
 | **역할**: Backend/Front 개발          | **역할**: Backend/Front 개발         |
 | **연락처**: inwon.private@icloud.com  | **연락처**: ddjsj12@naver.com         |
-| **깃허브**: [leeinwon](https://github.com/leein1)   | **깃허브**: [kyoungdonghun](https://github.com/kyoungdonghun) |
+| **깃허브**: [leein1](https://github.com/leein1)   | **깃허브**: [kyoungdonghun](https://github.com/kyoungdonghun) |
 
 ---
 
@@ -217,6 +217,8 @@ src/
 ---
 
 ## 프로젝트 미리보기
+
+###  <img src="https://github.com/user-attachments/assets/fb384dee-42eb-448f-a38e-5f581fc85eb0" alt="image" width="25"/>   [더 다양한 페이지 보기](https://leeinwon.notion.site/1baa7464bbfc80c1ac0bd231770f1ec3?pvs=74)
 
 ### 1. 메인화면 (Desktop)
 <img width="700" alt="메인화면 Desktop" src="https://github.com/user-attachments/assets/4081f606-05e3-45b5-9226-c61b0ee6c99b" />
