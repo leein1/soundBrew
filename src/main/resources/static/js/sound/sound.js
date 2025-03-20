@@ -1,12 +1,49 @@
-import {router} from "/js/router.js";
+import { router } from "/js/router.js";
 
-export function renderSoundOne(data, data2){
-    // const container = document.getElementById("render-sound-one-container");
+// Clipboard 복사 fallback 함수
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    // 화면에 보이지 않도록 설정
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            console.log("Fallback: 복사 성공");
+        } else {
+            console.error("Fallback: 복사 실패");
+        }
+    } catch (err) {
+        console.error("Fallback: 복사 에러", err);
+    }
+    document.body.removeChild(textArea);
+}
+
+// 복사 성공 알림 함수 (각 함수 내에서 재사용)
+function showCopyAlert() {
+    const alertBox = document.getElementById('copy-alert');
+    if (alertBox) {
+        alertBox.textContent = '링크가 복사되었습니다!';
+        alertBox.classList.add('show');
+        // 2초 후 알림 숨기기
+        setTimeout(() => {
+            alertBox.classList.remove('show');
+        }, 2000);
+    }
+}
+
+export function renderSoundOne(data, data2) {
     const container = document.getElementById("content-body");
     container.innerHTML = '';
-console.log(data);
-
     console.log(data);
+
     const html = `
         <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
         <div class="content-header-info">
@@ -18,7 +55,7 @@ console.log(data);
                 </div>
                 <div class="sound-info-reaction">
                     <button class="btn sound-btn download-btn" data-filePath="${data.musicDTO.filePath}">Get sound</button>
-                    <button class="btn sound-btn share-btn" data-nickname="${data.albumDTO.nickname}" data-title="${data.musicDTO.title}">Share sound</button>
+                    <button class="btn sound-btn share-btn" data-nickname="${data.musicDTO.nickname}" data-title="${data.musicDTO.title}">Share sound</button>
                 </div>
             </div>
         </div>
@@ -27,28 +64,26 @@ console.log(data);
             <div class="tag-category">
                 <h3>Mood</h3>
                 <div class="tag-items">
-                    ${data2.dto.mood.map( mood => `<span>${mood}</span>` ).join('')}
+                    ${data2.dto.mood.map(mood => `<span>${mood}</span>`).join('')}
                 </div>
             </div>
-
             <div class="tag-category">
                 <h3>Instrument</h3>
                 <div class="tag-items">
-                    ${data2.dto.instrument.map( instrument => `<span>${instrument}</span>` ).join('')}
+                    ${data2.dto.instrument.map(instrument => `<span>${instrument}</span>`).join('')}
                 </div>
             </div>
-
             <div class="tag-category">
                 <h3>Genre</h3>
                 <div class="tag-items">
-                    ${data2.dto.genre.map( genre => `<span>${genre}</span>` ).join('')}
+                    ${data2.dto.genre.map(genre => `<span>${genre}</span>`).join('')}
                 </div>
             </div>
         </div>
     `;
     container.innerHTML = html;
 
-    // 이벤트 리스너를 동적으로 추가
+    // 아티스트 링크 클릭 이벤트
     const artistLink = document.getElementById("artist-link");
     artistLink.addEventListener("click", () => {
         const newUrl = `/sounds/albums?keyword=${encodeURIComponent(data.musicDTO.nickname)}&type=n`;
@@ -62,43 +97,37 @@ console.log(data);
             if (shareInfo) {
                 const nickname = shareInfo.dataset.nickname;
                 const title = shareInfo.dataset.title;
-
                 const url = window.location.origin;
-                // 닉네임과 타이틀을 포함한 완성된 경로
                 const shareText = `${url}/sounds/tracks/one?nickname=${encodeURIComponent(nickname)}&title=${encodeURIComponent(title)}`;
 
-                // 클립보드에 텍스트 복사
-                navigator.clipboard.writeText(shareText)
-                    .then(() => {
-                        showCopyAlert();
-                    })
-                    .catch((err) => {
-                        console.error('복사 실패:', err);
-                    });
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(shareText)
+                        .then(() => {
+                            showCopyAlert();
+                        })
+                        .catch((err) => {
+                            console.error('복사 실패:', err);
+                            fallbackCopyTextToClipboard(shareText);
+                            showCopyAlert();
+                        });
+                } else {
+                    fallbackCopyTextToClipboard(shareText);
+                    showCopyAlert();
+                }
             }
         });
     });
 
+    // 다운로드 버튼 클릭 이벤트 (수정)
     document.querySelectorAll('.download-btn').forEach((downloadBtn) => {
-        const download = event.target.closest('.download-btn');
-        if(download){
-            const filePath = downloadBtn.dataset.filePath;
-            alert(filePath);
-
-        }
+        downloadBtn.addEventListener('click', (event) => {
+            const download = event.target.closest('.download-btn');
+            if (download) {
+                const filePath = download.dataset.filePath;
+                alert(filePath);
+            }
+        });
     });
-
-    // 복사 성공 알림 표시 함수
-    function showCopyAlert() {
-        const alertBox = document.getElementById('copy-alert');
-        alertBox.textContent = '링크가 복사되었습니다!';
-        alertBox.classList.add('show');
-
-        // 2초 후 알림 숨기기
-        setTimeout(() => {
-            alertBox.classList.remove('show');
-        }, 2000);
-    }
 }
 
 export function renderAlbumOne(data) {
@@ -109,7 +138,7 @@ export function renderAlbumOne(data) {
         <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
         <div class="content-header-info">
             <img class="sound-image" src="http://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${data.dtoList[0].albumDTO.albumArtPath}" alt="음원 이미지" onerror="this.src='/images/album-default-image-01.jpeg'">
-            <div class="sound-info">    
+            <div class="sound-info">
                 <span>Artist</span>
                 <div class="sound-title font-size-large">
                     <a href="javascript:void(0);" id="artist-link" class="artist-link" style="text-decoration: none; transition: color 0.3s; color: #0056b3;">${data.dtoList[0].albumDTO.nickname}</a>
@@ -141,7 +170,6 @@ export function renderAlbumOne(data) {
     });
 
     function checkTextOverflow() {
-        // 더보기 버튼 표시 여부 판단
         if (albumDescription.scrollHeight > albumDescription.clientHeight) {
             showMoreBtn.style.display = 'block';
         } else {
@@ -164,42 +192,32 @@ export function renderAlbumOne(data) {
         if (shareInfo) {
             const nickname = shareInfo.dataset.nickname;
             const title = shareInfo.dataset.title;
-
             const url = window.location.origin;
             const shareText = `${url}/sounds/albums/one?nickname=${encodeURIComponent(nickname)}&albumName=${encodeURIComponent(title)}`;
 
-            // 클립보드에 텍스트 복사
-            navigator.clipboard.writeText(shareText)
-                .then(() => {
-                    showCopyAlert();
-                })
-                .catch((err) => {
-                    console.error('복사 실패:', err);
-                });
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareText)
+                    .then(() => {
+                        showCopyAlert();
+                    })
+                    .catch((err) => {
+                        console.error('복사 실패:', err);
+                        fallbackCopyTextToClipboard(shareText);
+                        showCopyAlert();
+                    });
+            } else {
+                fallbackCopyTextToClipboard(shareText);
+                showCopyAlert();
+            }
         }
     });
-
-    // 복사 성공 알림 표시 함수
-    function showCopyAlert() {
-        const alertBox = document.getElementById('copy-alert');
-        alertBox.textContent = '링크가 복사되었습니다!';
-        alertBox.classList.add('show');
-
-        // 2초 후 알림 숨기기
-        setTimeout(() => {
-            alertBox.classList.remove('show');
-        }, 2000);
-    }
 }
 
-//<div id="render-sounds-container" class="content-body"></div>
 export function renderTotalSounds(data) {
     const container = document.getElementById("content-body");
-
-    container.innerHTML = ''; // 기존 내용 초기화
+    container.innerHTML = '';
 
     if (!data || data.length === 0) {
-        // 검색 결과가 없을 경우 메시지 렌더링
         container.innerHTML = '<span>검색결과가 없습니다</span>';
         return;
     }
@@ -208,7 +226,6 @@ export function renderTotalSounds(data) {
         const musicItem = document.createElement('div');
         musicItem.classList.add('music-item');
         musicItem.innerHTML = `
-            <!-- 알림 메시지 -->
             <div id="copy-alert" class="copy-alert">링크가 복사되었습니다!</div>
             <div class="music-item-left">
                 <img alt="앨범 이미지" class="music-album-img" src="http://soundbrew.storage.s3.ap-northeast-2.amazonaws.com/${sound.albumDTO.albumArtPath}" onerror="this.src='/images/album-default-image-01.jpeg'">
@@ -216,15 +233,14 @@ export function renderTotalSounds(data) {
                     <img src="/images/play_circle_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="재생">
                 </div>
                 <div class="music-info">
-                        <h3 class="track-title" data-track-title="${sound.musicDTO.title}" data-nickname="${sound.albumDTO.nickname}">
-                            ${sound.musicDTO.title}
-                        </h3>
-                        <p class="album-name" data-album-name="${sound.albumDTO.albumName}" data-nickname="${sound.albumDTO.nickname}">
-                            ${sound.albumDTO.albumName}
-                        </p>
+                    <h3 class="track-title" data-track-title="${sound.musicDTO.title}" data-nickname="${sound.albumDTO.nickname}">
+                        ${sound.musicDTO.title}
+                    </h3>
+                    <p class="album-name" data-album-name="${sound.albumDTO.albumName}" data-nickname="${sound.albumDTO.nickname}">
+                        ${sound.albumDTO.albumName}
+                    </p>
                 </div>
                 <div class="music-info-time">
-                <!--<p>${sound.musicDTO.musicDuration || '0:00'}</p>-->
                 </div>
             </div>
 
@@ -239,12 +255,11 @@ export function renderTotalSounds(data) {
             <div class="music-item-right">
                 <div class="music-actions">
                     <img src="/images/download_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" class="download-btn" data-filepath="${sound.musicDTO.filePath}" alt="다운로드">
-                    <img src="/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">
+                    <!--<img src="/images/shopping_bag_48dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="장바구니">-->
                     <img src="/images/link_50dp_5F6368_FILL0_wght400_GRAD0_opsz48.svg" alt="공유" class="share-btn" data-nickname="${sound.albumDTO.nickname}" data-title="${sound.musicDTO.title}">
                 </div>
             </div>
         `;
-
         container.appendChild(musicItem);
     });
 
@@ -255,50 +270,42 @@ export function renderTotalSounds(data) {
             if (shareInfo) {
                 const nickname = shareInfo.dataset.nickname;
                 const title = shareInfo.dataset.title;
-
                 const url = window.location.origin;
-                // 닉네임과 타이틀을 포함한 완성된 경로
                 const shareText = `${url}/sounds/tracks/one?nickname=${encodeURIComponent(nickname)}&title=${encodeURIComponent(title)}`;
 
-                // 클립보드에 텍스트 복사
-                navigator.clipboard.writeText(shareText)
-                    .then(() => {
-                        showCopyAlert();
-                    })
-                    .catch((err) => {
-                        console.error('복사 실패:', err);
-                    });
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(shareText)
+                        .then(() => {
+                            showCopyAlert();
+                        })
+                        .catch((err) => {
+                            console.error('복사 실패:', err);
+                            fallbackCopyTextToClipboard(shareText);
+                            showCopyAlert();
+                        });
+                } else {
+                    fallbackCopyTextToClipboard(shareText);
+                    showCopyAlert();
+                }
             }
         });
     });
 
+    // 다운로드 버튼 클릭 이벤트
     document.querySelectorAll('.download-btn').forEach((downloadBtn) => {
         downloadBtn.addEventListener('click', (event) => {
             const download = event.target.closest('.download-btn');
-            if(download){
+            if (download) {
                 const filePath = download.dataset.filepath;
                 alert(filePath);
             }
         });
     });
-
-    // 복사 성공 알림 표시 함수
-    function showCopyAlert() {
-        const alertBox = document.getElementById('copy-alert');
-        alertBox.textContent = '링크가 복사되었습니다!';
-        alertBox.classList.add('show');
-
-        // 2초 후 알림 숨기기
-        setTimeout(() => {
-            alertBox.classList.remove('show');
-        }, 2000);
-    }
 }
 
 export function renderTotalAlbums(data) {
-    // const container = document.getElementById("render-sounds-container");
     const container = document.getElementById("content-body");
-    container.innerHTML = ''; // 기존 내용 초기화
+    container.innerHTML = '';
 
     const albumListHTML = `
         <div class="list-albums">
@@ -323,9 +330,7 @@ export function renderTotalAlbums(data) {
         item.addEventListener('click', async () => {
             const albumName = item.dataset.albumName;
             const nickname = item.dataset.nickname;
-            // 페이지 이동
             const newURL = `/sounds/albums/one?nickname=${nickname}&albumName=${albumName}`;
-
             router.navigate(newURL);
         });
     });

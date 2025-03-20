@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     document.getElementById("adminStatisticRoute")?.addEventListener("click", () => {
-        router.navigate("/admin");
+        router.navigate("/admin/statistic");
     });
 
     document.getElementById("adminInfoRoute")?.addEventListener("click", () => {
