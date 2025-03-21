@@ -49,7 +49,9 @@
   SoundBrew 프로젝트 웹 페이지 확인하기
 </a>
 
+<br>
 테스트 계정 : inwon.private@gmail.com
+
 테스트 계정비밀번호 : testTEST123!@#
 
 ## 프로젝트 배경
