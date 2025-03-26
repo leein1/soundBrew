@@ -49,6 +49,8 @@ public class AdminController {  //  관리자용 컨트롤러
     private final SoundsService soundsService;
     private final TagsService tagsService;
     private final AuthenticationService authenticationService;
+    // adfasdf for action test
+
 
     //  모든 유저 조회
     @GetMapping("/users")
