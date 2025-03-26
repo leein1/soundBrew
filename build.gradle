@@ -112,7 +112,9 @@ dependencies {
             "com.querydsl:querydsl-apt:${queryDslVersion}:jpa"
     )
 }
-
+jar {
+    enabled = false
+}
 tasks.named('test') {
     useJUnitPlatform()
 }
@@ -137,3 +139,5 @@ sourceSets {
 tasks.withType(JavaCompile) {
     options.annotationProcessorGeneratedSourcesDirectory = file(generatedDir)
 }
+
+
