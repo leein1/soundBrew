@@ -56,7 +56,7 @@ public class AdminController {  //  관리자용 컨트롤러
 
         ResponseDTO responseDTO = userService.getAllUserWithDetails(requestDTO);
 
-        return ResponseEntity.ok().body(responseDTO);
+        return ResponseEntity.ok().body(responseDTO)
     }
 
     @GetMapping("/users/{userId}")
