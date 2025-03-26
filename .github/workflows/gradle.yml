@@ -44,11 +44,11 @@ jobs:
         utcOffset: "+09:00"
 
     - name: Set artifact
-    run: |
-      artifact=$(ls ./build/libs)
-      echo "artifact<<EOF" >> $GITHUB_ENV
-      echo "$artifact" >> $GITHUB_ENV
-      echo "EOF" >> $GITHUB_ENV
+      run: |
+        artifact=$(ls ./build/libs)
+        echo "artifact<<EOF" >> $GITHUB_ENV
+        echo "$artifact" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
     # - name: Set artifact
     #   run: echo "artifact=$(ls ./build/libs)" >> $GITHUB_ENV
 
