@@ -36,6 +36,28 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
+    - name: time for Versioning
+      uses: 1466587594/get-current-time@v2
+      id: current-time
+      with:
+        format: YYYY-MM-DDTHH-mm-ss
+        utcOffset: "+09:00"
+        
+    - name: Set artifact
+      run: echo "artifact=$(ls ./build/libs)" >> $GITHUB_ENV
+
+    - name: Deploy
+      uses: einaregilsson/beanstalk-deploy@v20
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: awskk
+        environment_name: awskk-env
+        version_label: main-${{ steps.current-time.outputs.formattedTime }}
+        region: ap-northeast-2
+        deployment_package: ./build/libs/${{env.artifact}}
+        wait_for_environment_recovery: 30
+
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
     #
