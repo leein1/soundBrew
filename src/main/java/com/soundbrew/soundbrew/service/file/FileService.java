@@ -74,15 +74,18 @@ public class FileService {
 
     // 파일 다운로드
     public Resource downloadSoundFile(String filename) throws IOException {
-        String fileKey = "sounds/" + filename;
-
-        try (S3Object s3Object = amazonS3Client.getObject(bucket, fileKey)) {
+        try {
+            S3Object s3Object = amazonS3Client.getObject(bucket, filename);
             byte[] data = s3Object.getObjectContent().readAllBytes();
+
+            System.out.println("다운로드한 파일 크기: " + data.length + " bytes"); // 로그 확인
+
             return new ByteArrayResource(data);
         } catch (AmazonS3Exception e) {
-            throw new FileNotFoundException("S3에서 파일을 찾을 수 없습니다: " + fileKey);
+            throw new FileNotFoundException("S3에서 파일을 찾을 수 없습니다: " + filename);
         }
     }
+
 
     // 프로필 이미지 가져오기
     public Resource getProfileImage(String userId) throws IOException {
@@ -160,6 +163,11 @@ public class FileService {
         String objectKey = "sounds/" + fileName;
         ObjectMetadata metadata = amazonS3Client.getObjectMetadata(bucket, objectKey);
         return metadata.getContentLength();
+    }
+
+    public String getContentType(String filename) {
+        ObjectMetadata metadata = amazonS3Client.getObjectMetadata(bucket, filename);
+        return metadata.getContentType();
     }
 }
 

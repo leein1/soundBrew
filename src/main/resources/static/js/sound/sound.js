@@ -1,4 +1,5 @@
 import { router } from "/js/router.js";
+import { axiosGet } from"/js/fetch/standardAxios.js"
 
 // Clipboard 복사 fallback 함수
 function fallbackCopyTextToClipboard(text) {
@@ -293,11 +294,23 @@ export function renderTotalSounds(data) {
 
     // 다운로드 버튼 클릭 이벤트
     document.querySelectorAll('.download-btn').forEach((downloadBtn) => {
-        downloadBtn.addEventListener('click', (event) => {
+        downloadBtn.addEventListener('click', async (event) => {
             const download = event.target.closest('.download-btn');
             if (download) {
                 const filePath = download.dataset.filepath;
-                alert(filePath);
+                try{
+                const response = await axiosGet({ endpoint: `/api/files/${filePath}`, useToken: true, responseType: 'blob' });
+                const url = window.URL.createObjectURL(new Blob([response]));
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filePath; // 원하는 파일명으로 지정
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                } catch (error) {
+                  console.error("다운로드 오류:", error);
+                }
             }
         });
     });
