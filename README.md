@@ -44,9 +44,10 @@
 <br>
 <br>
 
-<a href="http://soundvbrew-env.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com/sounds/tracks">
+
   <img src="https://github.com/user-attachments/assets/26bec2d6-c899-4cf6-b0ba-275746615857" alt="Google Chrome" width="20">
   SoundBrew 프로젝트 웹 페이지 확인하기
+  <a href="https://soundbrew.art">https://soundbrew.art
 </a>
 
 <br>
