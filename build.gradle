@@ -105,7 +105,7 @@ dependencies {
     //스트리밍 관련 파일 읽기
     implementation 'javazoom:jlayer:1.0.1'
 
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+//    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
 
 
