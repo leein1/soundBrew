@@ -28,7 +28,7 @@ export const callRefresh = async () => {
 
         return response.data.accessToken;
     } catch (error) {
-        alert("토큰 재발급 과정 중 오류, 로그인이 필요합니다.");
+        // alert("토큰 재발급 과정 중 오류, 로그인이 필요합니다.");
         window.location.href = '/login';
         throw new Error("로그인이 필요합니다.");
     }
@@ -48,18 +48,18 @@ const addAuthHeader = async (options, handle = {}) => {
         return handleResponse(response.status, response.data, handle);
     } catch (error) {
         if (error.response?.status === 401) {
-            alert("만료되었거나 인증 실패된 토큰, 재발급 시도 중...");
-            alert(error.response.data.message);
+            // alert("만료되었거나 인증 실패된 토큰, 재발급 시도 중...");
+            // alert(error.response.data.message);
             try {
                 const newAccessToken = await callRefresh();
                 options.headers = { Authorization: `Bearer ${newAccessToken}` };
 
-                alert("재요청");
+                // alert("재요청");
                 const retryResponse = await axiosInstance(options); // 재요청
                 return handleResponse(retryResponse.status, retryResponse.data, handle);
             } catch (refreshError) {
-                alert("재요청 실패");
-                alert("인증 정보가 유효하지 않습니다. 다시 로그인하세요.");
+                // alert("재요청 실패");
+                alert("로그인이 필요합니다.");
                 window.location.href = "/login"; // 로그인 페이지로 리다이렉트
                 throw refreshError;
             }
