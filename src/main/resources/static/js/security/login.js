@@ -19,8 +19,9 @@ export function getLoginFormProcess() {
         try {
 
             // const response = await axios.post("http://localhost:8080/generateToken", userInput);
-            // const response = await axios.post("http://Soundvbrew-envenv.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com/generateToken", userInput);
-            const response = await axios.post("http://localhost:8080/generateToken", userInput);
+//             const response = await axios.post("http://Soundvbrew-env.eba-gpmigkef.ap-northeast-2.elasticbeanstalk.com/generateToken", userInput);
+            const response = await axios.post("https://soundbrew.art/generateToken", userInput);
+
             console.log("generateTokenFromLogin - " + response.status); //확인용
 
             const accessToken = response.data.accessToken;

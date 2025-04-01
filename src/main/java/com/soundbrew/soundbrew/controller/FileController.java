@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -66,18 +68,24 @@ public class FileController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/sounds/{filename}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {// 추후 토큰 사용
-        String currentFile = "sounds/"+filename;
+    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {
+        String currentFile = "sounds/" + filename;
         try {
             Resource resource = fileService.downloadSoundFile(currentFile);
-            Path filePath = Path.of(fileService.getFile(currentFile));
-//            Path filePath = fileService.getFile(filename);
+            // 파일 확장자에 따라 콘텐츠 타입 지정
+            String contentType = "audio/mpeg"; // 기본값
+            if (filename.toLowerCase().endsWith(".wav")) {
+                contentType = "audio/wav";
+            }
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, contentType)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + URLEncoder.encode(filename, StandardCharsets.UTF_8))
                     .body(resource);
-        } catch (SecurityException e) { return ResponseEntity.status(401).body(null);
-        } catch (IOException e) {return ResponseEntity.status(500).body(null); }
+        } catch (SecurityException e) {
+            return ResponseEntity.status(401).body(null);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     //수정시에는 이전의 프로필 사진 삭제

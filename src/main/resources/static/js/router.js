@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    router.addRoute('/me/Info' , async ()=>{
+    router.addRoute('/me/info' , async ()=>{
         //css 관련 로딩
         updateDynamicCSS(UserAdminTypeCSSFiles);
         await loadUserAdminTypeCSS();
@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     document.getElementById("adminStatisticRoute")?.addEventListener("click", () => {
-        router.navigate("/admin");
+        router.navigate("/admin/statistic");
     });
 
     document.getElementById("adminInfoRoute")?.addEventListener("click", () => {

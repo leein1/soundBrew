@@ -105,6 +105,9 @@ dependencies {
     //스트리밍 관련 파일 읽기
     implementation 'javazoom:jlayer:1.0.1'
 
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+
 
     annotationProcessor(
             "javax.persistence:javax.persistence-api",
@@ -112,7 +115,9 @@ dependencies {
             "com.querydsl:querydsl-apt:${queryDslVersion}:jpa"
     )
 }
-
+jar {
+    enabled = false
+}
 tasks.named('test') {
     useJUnitPlatform()
 }
@@ -137,3 +142,5 @@ sourceSets {
 tasks.withType(JavaCompile) {
     options.annotationProcessorGeneratedSourcesDirectory = file(generatedDir)
 }
+
+
