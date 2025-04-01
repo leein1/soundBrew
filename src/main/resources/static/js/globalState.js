@@ -95,13 +95,14 @@ export const actions = {
 
 function displaySearchBar(state) {
     const stateActions = {
+        '/': 'block',
         //sounds
         '/sounds/tracks': 'block',
         '/sounds/albums': 'block',
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'none',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
         '/me/change-password':'none',
         '/me/subscription':'none',
         '/subscription':'none',
@@ -119,6 +120,7 @@ function displaySearchBar(state) {
         '/admin/albums/one/verify':'none',
         '/admin/sounds':'none',
         '/admin/users':'block',
+        '/admin/statistic':'none'
     };
 
     const searchItem = document.querySelector('.search-sort');
@@ -134,12 +136,13 @@ function displaySearchBar(state) {
 function displaySortBar(state){
     // alert("displaySortBar");
     const stateActions={
+        '/': 'block',
         '/sounds/tracks': 'block',
         '/sounds/albums': 'block',
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
         '/me/change-password':'none',
         '/me/subscription':'none',
         '/subscription':'none',
@@ -156,7 +159,8 @@ function displaySortBar(state){
         '/admin/tags/spelling':'none',
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'none',
-        '/admin/users':'none'
+        '/admin/users':'none',
+        '/admin/statistic':'none'
     };
 
     let sortItem = document.querySelector('.music-sort');
@@ -172,12 +176,13 @@ function displaySortBar(state){
 function displayViewTypeBar(state){
     // alert("viewTypeBar : "+state.currentView);
     const stateActions={
+        '/': 'block',
         '/sounds/tracks': 'block',
         '/sounds/albums': 'block',
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'none',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
                 '/me/change-password':'none',
                 '/me/subscription':'none',
                 '/subscription':'none',
@@ -194,7 +199,8 @@ function displayViewTypeBar(state){
         '/admin/tags/spelling':'none',
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'none',
-        '/admin/users':'none'
+        '/admin/users':'none',
+        '/admin/statistic':'none'
     };
 
     let viewTypeItem = document.querySelector('.view-type');
@@ -210,12 +216,13 @@ function displayViewTypeBar(state){
 function displayTagsBar(state){
     // alert("displayTagsBar");
     const stateActions={
+        '/': 'block',
         '/sounds/tracks': 'block',
         '/sounds/albums': 'block',
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
                 '/me/change-password':'none',
                 '/me/subscription':'none',
                 '/subscription':'none',
@@ -232,7 +239,8 @@ function displayTagsBar(state){
         '/admin/tags/spelling':'none',
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'block',
-        '/admin/users':'none'
+        '/admin/users':'none',
+        '/admin/statistic':'none'
     };
 
     let tagsBarItem = document.querySelector('.music-tag-sort');
@@ -248,13 +256,14 @@ function displayTagsBar(state){
 function displayPaginationBar(state){
     // 페이지 바에 대해서, 가리거나 등등.
     const stateActions = {
+        '/': 'block',
         //sounds
         '/sounds/tracks': 'block',
         '/sounds/albums': 'block',
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
                 '/me/change-password':'none',
                 '/me/subscription':'none',
                 '/subscription':'none',
@@ -272,6 +281,7 @@ function displayPaginationBar(state){
         '/admin/albums/one/verify':'block',
         '/admin/sounds':'none',
         '/admin/users' : 'block',
+        '/admin/statistic':'none'
     };
 
     const pageItem = document.querySelector('.pagination-container');
@@ -286,13 +296,14 @@ function displayPaginationBar(state){
 
 function displayAudioBar(state){
     const stateActions = {
+        '/': 'block',
         //sounds
         '/sounds/tracks': 'block',
         '/sounds/albums': 'block',
         '/sounds/tracks/one': 'none',
         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'none',
+        '/me/info':'none',
                 '/me/change-password':'none',
                 '/me/subscription':'none',
                 '/subscription':'none',
@@ -309,6 +320,7 @@ function displayAudioBar(state){
         '/admin/tags/spelling':'none',
         '/admin/tags/new':'none',
         '/admin/albums/one/verify':'block',
+        '/admin/statistic':'none'
     };
 
     let albumInfoBar = document.querySelector('.audio-player-bar');
@@ -323,27 +335,29 @@ function displayAudioBar(state){
 
 function displayAlbumInfoBar(state){
     const stateActions={
-        '/sounds/tracks': '',
-        '/sounds/albums': '',
-        '/sounds/tracks/one': '',
-        // '/albums/one': 'block', 이 뷰 상태일때는 보여줘야 하므로 초기화 하지 않음.
+        '/': 'none',
+        '/sounds/tracks': 'none',
+        '/sounds/albums': 'none',
+        '/sounds/tracks/one': 'none',
+         '/sounds/albums/one': 'block',
         //me
-        '/me/Info':'',
-                '/me/change-password':'',
-                '/me/subscription':'',
-                '/subscription':'',
-        '/me/statistic':'',
-        '/me/sounds/upload':'',
-        '/me/sounds/albums':'',
-        '/me/sounds/tracks':'',
-        '/me/sounds/tags':'',
+        '/me/info':'none',
+        '/me/change-password':'none',
+        '/me/subscription':'none',
+        '/subscription':'none',
+        '/me/statistic':'none',
+        '/me/sounds/upload':'none',
+        '/me/sounds/albums':'none',
+        '/me/sounds/tracks':'none',
+        '/me/sounds/tags':'none',
         //admin
-        '/admin/tracks':'',
-        '/admin/albums':'',
-        '/admin/albums/verify':'',
-        '/admin/tags/spelling':'',
-        '/admin/tags/new':'',
+        '/admin/tracks':'none',
+        '/admin/albums':'none',
+        '/admin/albums/verify':'none',
+        '/admin/tags/spelling':'none',
+        '/admin/tags/new':'none',
         '/admin/albums/one/verify':'block',
+        '/admin/statistic':'none'
     };
 
     let albumInfoBar = document.querySelector('.render-album-info-container');
@@ -351,7 +365,7 @@ function displayAlbumInfoBar(state){
 
     if(albumInfoBar){
         if(displayStyle !== undefined) {
-            albumInfoBar.innerHTML= displayStyle;
+            albumInfoBar.style.display= displayStyle;
         }
     }
 }

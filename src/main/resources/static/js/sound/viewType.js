@@ -52,12 +52,13 @@ async function updateViewData() {
     currentParams.delete('page');
 
     const currentView = globalStateManager.getState().currentView;
-    // alert("currentView : "+currentView)
-    const currentURL = currentView === '/sounds/tracks' ? '/sounds/albums' : '/sounds/tracks' ;
+    // '/'도 트랙 뷰로 간주
+    const isTrackView = (currentView === '/sounds/tracks' || currentView === '/');
+    // 트랙 뷰일 경우 앨범 뷰로 전환, 그 외(앨범 뷰)라면 기본 페이지인 '/'로 전환
+    const nextURL = isTrackView ? '/sounds/albums' : '/sounds/tracks';
 
     const newQueryString = currentParams.toString();
-
-    const newUrl = `${currentURL}?${newQueryString}`;
+    const newUrl = `${nextURL}?${newQueryString}`;
 
     router.navigate(newUrl);
 }

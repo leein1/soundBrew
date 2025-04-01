@@ -1,0 +1,110 @@
+server:
+  port: 5000
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: soundbrew.dev@gmail.com
+    password: ${SPRING_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    debug: true
+
+  datasource:
+    url: jdbc:mysql://awseb-e-r2p2bfwpm9-stack-awsebrdsdatabase-g9uubo1wjksq.ct6s00mcadjs.ap-northeast-2.rds.amazonaws.com/soundbrew_test
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+com:
+  soundbrew:
+    jwt:
+      secret: ${JWT_SECRET}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: soundbrew.storage
+    stack:
+      auto: false
+    ec2:
+      metadata:
+        enabled: false
+
+maintenance:
+  mode: false
+
+public:
+  paths:
+    #    - /api/sounds/**
+#    - /api/admin/**
+    - /sounds/**
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    - /fonts/**
+    - /generateToken
+    - /register
+    - /api/verification/activation
+    - /api/verification/email
+    - /api/verification/nickname
+    - /activation
+    - /api/users/**
+    - /
+    - /files/**
+    - /me/info
+    - /change-password
+    - /api/sample/**
+    - /help/find-password
+    - /api/help/find-password
+    - /help/reset-password
+    - /mySubscription
+    - /subscription
+    # 🔑 인증 및 사용자 관련
+    - /generateToken           # JWT 토큰 발급
+    - /register               # 회원가입
+    - /change-password        # 비밀번호 변경
+    - /activation             # 계정 활성화
+    - /me/**                  # 내 정보 조회 및 수정
+
+    # 📧 인증 (Verification)
+    - /api/verification/activation     # 계정 활성화 검증
+    - /api/verification/email         # 이메일 중복 검증
+    - /api/verification/nickname      # 닉네임 중복 검증
+
+    # 🎧 사운드 & 스트리밍
+    - /api/sounds/**        # 사운드 데이터 API
+    - /api/stream/**        # 오디오 스트리밍 API
+
+    # 📊 통계 & 샘플 데이터
+    #    - /api/statistic/**     # 통계 데이터 API
+    - /api/sample/**        # 샘플 데이터 API
+
+    # 🔑 사용자 API
+    - /api/users/**         # 사용자 관련 API
+
+    # 🔐 관리자 기능
+    - /admin/**             # 관리자 페이지
+
+    # 🌐 프론트엔드 페이지
+    - /                     # 메인 페이지
+    - /sounds/**            # 사운드 페이지
+    - /subscription         # 구독 페이지
+
+    # 📄 API 문서
+    - /swagger-ui/**        # Swagger UI
+    - /v3/api-docs/**       # API 문서
+
+    # 🔤 기타
+    - /fonts/**             # 폰트 파일
+    - /hello                # 테스트 엔드포인트

@@ -61,5 +61,8 @@ Icon?              # MacOS에서 아이콘 설정 시 생성되는 파일
 *.log              # 애플리케이션 실행 시 생성되는 로그 파일
 *.tmp              # 임시 파일
 
+# application-dev.yml 파일 무시
+application-dev.yml
+
 # Lombok 관련 파일 무시
 .lombok/           # Lombok 라이브러리 사용 시 생성되는 파일
