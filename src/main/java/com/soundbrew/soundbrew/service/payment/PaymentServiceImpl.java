@@ -1,4 +1,4 @@
-package com.soundbrew.soundbrew.service.payment;
-
-public class PaymentServiceImpl implements PaymentService{
-}
+//package com.soundbrew.soundbrew.service.payment;
+//
+//public class PaymentServiceImpl implements PaymentService{
+//}
