@@ -66,3 +66,5 @@ application-dev.yml
 
 # Lombok 관련 파일 무시
 .lombok/           # Lombok 라이브러리 사용 시 생성되는 파일
+
+keystore.p12
