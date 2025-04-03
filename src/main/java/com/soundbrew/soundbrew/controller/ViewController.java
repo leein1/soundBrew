@@ -16,8 +16,11 @@ public class ViewController {
 
     @GetMapping("/payments")
     public String getPayments() {
+
         return "/payments/checkout";
+
     }
+
     @GetMapping("/register")
     public void getRegister(){}
 
