@@ -66,6 +66,7 @@ public class HelpContorller {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    //헬스 체크 용도
     @RequestMapping(value = {"/health"})
     public ResponseEntity<String> healthCheck() {
 //        String response = "Spring Boot api-server application(" + profile + ")";
