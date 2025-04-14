@@ -120,8 +120,10 @@ export function initChangePasswordFormEvents() {
         }
       }
 
+        console.log(errors);
+        console.log(processedData);
       if (!errors) {
-        await axiosPatch({ endpoint: "/api/me/password", body: processedData, useToken: true, handle });
+//        await axiosPatch({ endpoint: "/api/me/password", body: processedData, useToken: true, handle });
         alert("요청 보냄");
 
       }
