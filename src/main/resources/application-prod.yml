@@ -108,3 +108,4 @@ public:
     # 🔤 기타
     - /fonts/**             # 폰트 파일
     - /hello                # 테스트 엔드포인트
+    - /api/help/health
