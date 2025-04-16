@@ -41,5 +41,5 @@ public interface SoundsService {
     ResponseDTO<SearchTotalResultDTO> getSoundOneForAdmin(int userId, int id);
     ResponseDTO<SearchTotalResultDTO> getAlbumOneForAdmin(int userId, int id,RequestDTO requestDTO);
 
-
+    void addCountDownload(int musicId);
 }
