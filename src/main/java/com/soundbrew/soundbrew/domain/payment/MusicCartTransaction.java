@@ -35,6 +35,4 @@ public class MusicCartTransaction extends BaseEntity {
     private int credit;
 
     private String status;
-
-    private LocalDateTime createDate;
 }

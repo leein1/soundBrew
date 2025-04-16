@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.dto.payment;
 
 import com.soundbrew.soundbrew.domain.payment.SubscriptionPaymentRecord;
+import com.soundbrew.soundbrew.dto.BaseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubscriptionPaymentRecordDTO {
+public class SubscriptionPaymentRecordDTO extends BaseDTO {
     private int subscriptionPaymentRecordId;
     private int userId;
     private String orderId;        // 주문 번호

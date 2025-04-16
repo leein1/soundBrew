@@ -1,6 +1,7 @@
 package com.soundbrew.soundbrew.service.payment;
 
 import com.soundbrew.soundbrew.domain.payment.SubscriptionPaymentRecord;
+import com.soundbrew.soundbrew.domain.payment.SubscriptionTransaction;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.payment.SubscriptionPaymentRecordDTO;
 import com.soundbrew.soundbrew.dto.payment.SubscriptionTransactionDTO;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +82,17 @@ public class SubscriptionPaymentServiceImpl implements SubscriptionPaymentServic
         subscriptionPaymentRecordRepository.deleteByUserIdAndStatus(userId,status);
 
         return ResponseDTO.<String>withMessage().message("기존 결제 기록을 삭제했습니다.").build();
+    }
+
+    @Override
+    public ResponseDTO<SubscriptionTransactionDTO> getSubscriptionTransaction(int userId) {
+        List<SubscriptionTransaction> subscriptionTransaction = subscriptionTransactionRepository.findByUserId( userId);
+
+        List<SubscriptionTransactionDTO> subscriptionTransactionDTOS = subscriptionTransaction.stream()
+                .map(dto -> modelMapper.map(dto, SubscriptionTransactionDTO.class))
+                .toList();
+
+        return ResponseDTO.<SubscriptionTransactionDTO>builder().dtoList(subscriptionTransactionDTOS).build();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.soundbrew.soundbrew.domain.payment;
 
+import com.soundbrew.soundbrew.domain.BaseEntity;
 import com.soundbrew.soundbrew.domain.sound.Album;
 import lombok.*;
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Entity
-public class SubscriptionPaymentRecord {
+public class SubscriptionPaymentRecord extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int subscriptionPaymentRecordId;

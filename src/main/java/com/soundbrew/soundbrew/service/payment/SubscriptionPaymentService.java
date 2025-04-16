@@ -19,4 +19,7 @@ public interface SubscriptionPaymentService {
 
     // 5. 임시 결제 기록( record) 딜리트
     ResponseDTO<String> subscriptionRecordDelete(int userId, String status);
+
+    // 6. 최종 결제 기록 GET
+    ResponseDTO<SubscriptionTransactionDTO> getSubscriptionTransaction(int userId);
 }

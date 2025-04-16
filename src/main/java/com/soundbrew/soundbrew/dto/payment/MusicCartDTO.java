@@ -24,7 +24,6 @@ public class MusicCartDTO extends BaseDTO {
     private String soundType;
     private int credit;
     private String status;
-    private LocalDateTime createDate;
 
     public MusicCartRecord toRecordEntity() {
         return MusicCartRecord.builder()

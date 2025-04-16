@@ -15,22 +15,29 @@ public class PaymentController {
     private final SubscriptionPaymentService subscriptionPaymentService;
 
     @PostMapping("/draft")
-    public ResponseEntity<ResponseDTO<String>> SubscriptionPaymentSave(@RequestBody SubscriptionPaymentRecordDTO subscriptionPaymentRecordDTO){
+    public ResponseEntity<ResponseDTO<String>> subscriptionPaymentSave(@RequestBody SubscriptionPaymentRecordDTO subscriptionPaymentRecordDTO){
         ResponseDTO<String> responseDTO = subscriptionPaymentService.subscriptionPaymentSave(subscriptionPaymentRecordDTO);
 
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/verification/{userId}/{status}")
-    public ResponseEntity<ResponseDTO<SubscriptionPaymentRecordDTO>> SubscriptionPaymentVerification(@PathVariable("userId") int userId, @PathVariable("status") String status){
+    public ResponseEntity<ResponseDTO<SubscriptionPaymentRecordDTO>> subscriptionPaymentVerification(@PathVariable("userId") int userId, @PathVariable("status") String status){
         ResponseDTO<SubscriptionPaymentRecordDTO> response = subscriptionPaymentService.subscriptionPaymentVerification(userId, status);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/transaction/{userId}")
+    public ResponseEntity<ResponseDTO<SubscriptionTransactionDTO>> getSubscriptionTransaction(@PathVariable("userId")int userId){
+        ResponseDTO<SubscriptionTransactionDTO> response = subscriptionPaymentService.getSubscriptionTransaction(userId);
 
         return ResponseEntity.ok().body(response);
     }
 
     // 최종 결제를 끝내고 transcation에 생성(찐 결제 기록)
     @PostMapping("/transaction")
-    public ResponseEntity<ResponseDTO<String>> SubscriptionTransactionSave(@RequestBody SubscriptionTransactionDTO subscriptionTransactionDTO){
+    public ResponseEntity<ResponseDTO<String>> subscriptionTransactionSave(@RequestBody SubscriptionTransactionDTO subscriptionTransactionDTO){
         ResponseDTO<String> response = subscriptionPaymentService.subscriptionTransactionSave(subscriptionTransactionDTO);
 
         return ResponseEntity.ok().body(response);
@@ -38,7 +45,7 @@ public class PaymentController {
 
     // 최종 결제를 끝내고 record에 update(결제 상태 마무리)
     @PatchMapping("/verification")
-    public ResponseEntity<ResponseDTO<String>> SubscriptionRecordVerificationUpdate(@RequestBody SubscriptionPaymentRecordDTO subscriptionPaymentRecordDTO){
+    public ResponseEntity<ResponseDTO<String>> subscriptionRecordVerificationUpdate(@RequestBody SubscriptionPaymentRecordDTO subscriptionPaymentRecordDTO){
         ResponseDTO<String> response = subscriptionPaymentService.subscriptionRecordUpdate(subscriptionPaymentRecordDTO);
 
         return  ResponseEntity.ok().body(response);
@@ -46,7 +53,7 @@ public class PaymentController {
 
     // 임시 결제 기록 ( Record ) 지우기
     @DeleteMapping("/draft/{userId}/{status}")
-    public ResponseEntity<ResponseDTO<String>> SubscriptionRecordDelete(@PathVariable("userId")int userId, @PathVariable("status")String status ){
+    public ResponseEntity<ResponseDTO<String>> subscriptionRecordDelete(@PathVariable("userId")int userId, @PathVariable("status")String status ){
         ResponseDTO<String> response = subscriptionPaymentService.subscriptionRecordDelete(userId, status);
 
         return ResponseEntity.ok().body(response);
