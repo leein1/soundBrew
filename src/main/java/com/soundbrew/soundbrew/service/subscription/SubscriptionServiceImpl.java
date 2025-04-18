@@ -8,6 +8,7 @@ import com.soundbrew.soundbrew.dto.*;
 import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.dto.user.UserDTO;
 import com.soundbrew.soundbrew.dto.user.UserSubscriptionDTO;
+import com.soundbrew.soundbrew.handler.BusinessException;
 import com.soundbrew.soundbrew.repository.subscription.SubscriptionRepository;
 import com.soundbrew.soundbrew.repository.user.UserRepository;
 import com.soundbrew.soundbrew.repository.user.UserSubscriptionRepository;
@@ -73,7 +74,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         // 바꿀려는 구독 등급이 있나?
         Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow();
         // 바꿀려는 회원의 회원구독DB 정보가 있나?
-        UserSubscription userSubscription = userSubscriptionRepository.findById(user.getUserId()).orElseThrow();
+        UserSubscription userSubscription = userSubscriptionRepository.findById(user.getUserId())
+                .orElseThrow(() -> new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_FOUND));
 
         //okay 회원db의 subscriptionId 값부터 바꾸자
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
@@ -97,7 +99,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         User user = userRepository.findById(userId).orElseThrow();
 
         // okay, 그러면 바꾸자 하는 회원의 회원구독DB 정보가 있나?
-        UserSubscription userSubscription = userSubscriptionRepository.findById(user.getUserId()).orElseThrow();
+        UserSubscription userSubscription = userSubscriptionRepository.findById(user.getUserId())
+                .orElseThrow(() -> new BusinessException(BusinessException.BUSINESS_ERROR.RESOURCE_NOT_FOUND));
         // dto로 변환,
         UserSubscriptionDTO userSubscriptionDTO = modelMapper.map(userSubscription, UserSubscriptionDTO.class);
 

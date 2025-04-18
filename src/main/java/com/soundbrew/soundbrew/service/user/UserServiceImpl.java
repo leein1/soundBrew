@@ -418,7 +418,7 @@ public class UserServiceImpl implements UserService{
         if(!userValidator.isPasswordFormatValid(newPassword)) {
 
             ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
-                    .message("비밀번호는 6자리 이상 16자리 이하, 특수문자,대문자,숫자 각 1개 이상이 포함되어야 합니다.")
+                    .message("비밀번호는 6자리 이상 16자리 이하, 특수문자,대문자,숫자 각 1개 이상이 포함되어야 합니다. 다시 로그인해주세요.")
                     .build();
 
             return responseDTO;
@@ -492,7 +492,15 @@ public class UserServiceImpl implements UserService{
     public ResponseDTO<String> updateCreditBalance(int userId, int creditBalance) {
         UserDTO user = this.getUser(userId).getDto();
         user.setCreditBalance(creditBalance);
-        return this.updateUser(user);
+//        return this.updateUser(user);
+
+        userRepository.save(user.toEntity());
+
+        ResponseDTO<String> responseDTO = ResponseDTO.<String>withMessage()
+                .message("수정 되었습니다.")
+                .build();
+
+        return responseDTO;
     }
 
 
@@ -614,6 +622,9 @@ public class UserServiceImpl implements UserService{
         UserSubscriptionDTO userSubscriptionDTO = UserSubscriptionDTO.builder()
                 .userId(userId)
                 .subscriptionId(subscriptionId)
+                .firstBillingDate(LocalDateTime.now())
+                .nextBillingDate(LocalDateTime.now().plusMonths(1))
+                .paymentStatus(true)
                 .build();
 
         //    Entity로 변경 후  user_subscription 테이블에 save()
@@ -671,6 +682,8 @@ public class UserServiceImpl implements UserService{
 
         //  변경할 구독제 subscriptionid set()
         existingUserSubscriptionDTO.setSubscriptionId(subscriptionId);
+        existingUserSubscriptionDTO.setNextBillingDate(LocalDateTime.now().plusMonths(1));
+        existingUserSubscriptionDTO.setPaymentStatus(true);
 
         //    Entity로 변경 후 save()
        this.modifyUserSubscription(existingUserSubscriptionDTO);
@@ -705,5 +718,27 @@ public class UserServiceImpl implements UserService{
 
         return responseDTO;
     }
+
+    @Override
+    @Transactional
+    public ResponseDTO<String> minusCredit(int userId, int credit) {
+        UserDTO user = this.getUser(userId).getDto();
+        int currentBalance = Optional.ofNullable(user.getCreditBalance()).orElse(0);
+
+        if (currentBalance < credit) {
+            return ResponseDTO.<String>withMessage()
+                    .message("잔여 크레딧이 부족합니다.")
+                    .build();
+        }
+
+        user.setCreditBalance(currentBalance - credit);
+        userRepository.save(user.toEntity());
+
+        return ResponseDTO.<String>withMessage()
+                .message("크레딧이 정상적으로 차감되었습니다.")
+                .build();
+    }
+
+
 
 }

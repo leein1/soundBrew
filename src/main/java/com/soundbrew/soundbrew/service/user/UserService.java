@@ -98,6 +98,8 @@ public interface UserService {
     //  구독제 취소
     ResponseDTO<String> deleteUserSubscription(int userId);
 
+    // 크래딧 차감
+    ResponseDTO<String> minusCredit(int userId, int credit);
 
     //  ---------------------------------------VerifyService 로 이동
 //    활성화 위한 메일 발송

@@ -168,6 +168,13 @@ public class SoundsServiceImpl implements SoundsService{
         return this.getAlbumOne(userId,id,requestDTO);
     }
 
+    @Override
+    @Transactional
+    public void addCountDownload(int musicId) {
+        Music music = musicRepository.findById(musicId).orElseThrow();
+        music.addCount(1);
+    }
+
     // 아티스트용: 소유권 검증을 수행한 후 업데이트
     @Override
     @Transactional
