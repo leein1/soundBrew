@@ -706,7 +706,7 @@ public class UserServiceImpl implements UserService{
         UserSubscriptionDTO existingUserSubscriptionDTO = this.getUserSubscription(userId).getDto();
 
         //  User 테이블에서 해당 유저의 subscriptionId 1로 업데이트
-        existingUserDTO.setSubscriptionId(4);
+        existingUserDTO.setSubscriptionId(1);
         userRepository.save(existingUserDTO.toEntity());
 
         //  UserSubscription 테이블에서 해당 유저의 레코드 삭제 - 크레딧 정보는 user쪽에 있으므로 삭제해도 됨

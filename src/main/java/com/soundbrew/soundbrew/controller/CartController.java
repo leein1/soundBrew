@@ -37,7 +37,7 @@ public class CartController {
     }
 
     // 장바구니 결제 (트랜잭션 생성, 다운로드 처리 포함)
-    @PostMapping("/transactions/{userId}")
+    @PostMapping("/transaction/{userId}")
     public ResponseEntity<ResponseDTO<String>> addSoundTransaction(@PathVariable("userId") int userId, @RequestBody List<Integer> musicIds) throws IOException {
         ResponseDTO<String> response = soundPaymentService.addSoundTransaction(userId, musicIds);
         return ResponseEntity.ok(response);
@@ -51,7 +51,7 @@ public class CartController {
     }
 
     // 결제 내역 조회
-    @GetMapping("/transactions/{userId}")
+    @GetMapping("/transaction/{userId}")
     public ResponseEntity<ResponseDTO<MusicCartDTO>> getSoundTransaction(@PathVariable int userId) {
         ResponseDTO<MusicCartDTO> response = soundPaymentService.getSoundTransaction(userId);
         return ResponseEntity.ok(response);

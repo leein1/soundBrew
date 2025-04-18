@@ -3,16 +3,28 @@ package com.soundbrew.soundbrew.controller;
 import com.soundbrew.soundbrew.dto.ResponseDTO;
 import com.soundbrew.soundbrew.dto.payment.SubscriptionPaymentRecordDTO;
 import com.soundbrew.soundbrew.dto.payment.SubscriptionTransactionDTO;
+import com.soundbrew.soundbrew.dto.user.SubscriptionDTO;
 import com.soundbrew.soundbrew.service.payment.SubscriptionPaymentService;
+import com.soundbrew.soundbrew.service.subscription.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/payment")
 @RequiredArgsConstructor
 public class PaymentController {
     private final SubscriptionPaymentService subscriptionPaymentService;
+    private final SubscriptionService subscriptionService;
+
+    @GetMapping("/plans")
+    public ResponseEntity<ResponseDTO<SubscriptionDTO>> getPlans(){
+        ResponseDTO<SubscriptionDTO> subscriptionDTO = subscriptionService.getAllSubscription();
+
+        return ResponseEntity.ok().body(subscriptionDTO);
+    }
 
     @PostMapping("/draft")
     public ResponseEntity<ResponseDTO<String>> subscriptionPaymentSave(@RequestBody SubscriptionPaymentRecordDTO subscriptionPaymentRecordDTO){

@@ -43,10 +43,35 @@ public class SoundPaymentServiceImpl implements SoundPaymentService{
 
     @Override
     public ResponseDTO<String> addSoundCart(MusicCartDTO musicCartDTO) {
+        int userId  = musicCartDTO.getUserId();
+        int musicId = musicCartDTO.getMusicId();
+
+        // 1) 이미 구매한 음원인지 체크
+        MusicCartTransaction bought = musicCartTransactionRepository
+                .findByUserIdAndMusicId(userId, musicId);
+        if (bought != null) {
+            return ResponseDTO.<String>withMessage()
+                    .message("이미 구매하신 음원은 장바구니에 담을 수 없습니다.")
+                    .build();
+        }
+
+        // 2) 장바구니에 이미 담겨 있는지 체크
+        MusicCartRecord existing = musicCartRecordRepository
+                .findByUserIdAndMusicId(userId, musicId);
+        if (existing != null) {
+            return ResponseDTO.<String>withMessage()
+                    .message("이미 장바구니에 담겨 있는 음원입니다.")
+                    .build();
+        }
+
+        // 3) 두 조건 모두 만족(구매도 안 했고, 장바구니에도 없을 때)만 저장
         musicCartRecordRepository.save(musicCartDTO.toRecordEntity());
 
-        return ResponseDTO.<String>withMessage().message("카트에 음원을 추가했습니다.").build();
+        return ResponseDTO.<String>withMessage()
+                .message("카트에 음원을 추가했습니다.")
+                .build();
     }
+
 
     @Override
     public ResponseDTO<String> deleteSoundCart(int userId, int musicId) {
@@ -83,8 +108,8 @@ public class SoundPaymentServiceImpl implements SoundPaymentService{
                 musicCartTransactionRepository.save(dto.toTransactionEntity());
                 // 음원 다운로드 카운트 올려주기
                 soundsService.addCountDownload(record.getMusicId());
-                // 파일 다운로드
-                fileService.downloadSoundFile(record.getFilePath());
+                // 파일 다운로드(파일 다운로드는 front 측에서 따로 요청)
+//                fileService.downloadSoundFile(record.getFilePath());
                 // 카드 기록 삭제
                 musicCartRecordRepository.deleteById(record.getMusicCartRecordId());
             }
