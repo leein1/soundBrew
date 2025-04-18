@@ -40,7 +40,13 @@ public class CartController {
     @PostMapping("/transaction/{userId}")
     public ResponseEntity<ResponseDTO<String>> addSoundTransaction(@PathVariable("userId") int userId, @RequestBody List<Integer> musicIds) throws IOException {
         ResponseDTO<String> response = soundPaymentService.addSoundTransaction(userId, musicIds);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/transaction")
+    public ResponseEntity<ResponseDTO<String>> addSoundTransactionOne(@RequestBody MusicCartDTO musicCartDTO){
+        ResponseDTO<String> response = soundPaymentService.addSoundTransactionDirect(musicCartDTO);
+        return ResponseEntity.ok().body(response);
     }
 
     // 결제 후 재다운로드

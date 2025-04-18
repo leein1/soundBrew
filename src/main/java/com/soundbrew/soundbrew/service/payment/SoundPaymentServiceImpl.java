@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -47,20 +48,18 @@ public class SoundPaymentServiceImpl implements SoundPaymentService{
         int musicId = musicCartDTO.getMusicId();
 
         // 1) 이미 구매한 음원인지 체크
-        MusicCartTransaction bought = musicCartTransactionRepository
-                .findByUserIdAndMusicId(userId, musicId);
-        if (bought != null) {
+        Boolean b = isInCart(userId, musicId);
+        if(b){
             return ResponseDTO.<String>withMessage()
-                    .message("이미 구매하신 음원은 장바구니에 담을 수 없습니다.")
+                    .message("이미 장바구니에 담겨 있는 음원입니다.")
                     .build();
         }
 
-        // 2) 장바구니에 이미 담겨 있는지 체크
-        MusicCartRecord existing = musicCartRecordRepository
-                .findByUserIdAndMusicId(userId, musicId);
-        if (existing != null) {
+        // 2) 결제기록에 이미 기록되어 있는지 체크
+        Boolean bo = isInTransaction(userId, Collections.singletonList(musicId));
+        if (bo) {
             return ResponseDTO.<String>withMessage()
-                    .message("이미 장바구니에 담겨 있는 음원입니다.")
+                    .message("이미 결제했던 음원입니다.")
                     .build();
         }
 
@@ -121,6 +120,34 @@ public class SoundPaymentServiceImpl implements SoundPaymentService{
     }
 
     @Override
+    public ResponseDTO<String> addSoundTransactionDirect(MusicCartDTO musicCartDTO) {
+        // 바로 결제 때릴꺼임.
+        int userId  = musicCartDTO.getUserId();
+        int musicId = musicCartDTO.getMusicId();
+
+        // 카트에 있냐? -> 있으면 카트에도 지워줘라.
+        Boolean b = isInCart(userId, musicId);
+        if(b){
+            musicCartRecordRepository.deleteByUserIdAndMusicId(userId,musicId);
+        }
+
+        // 결제 기록에 있냐? -> 있으면 결제 하지마라.
+        Boolean bo = isInTransaction(userId, Collections.singletonList(musicId));
+        if(bo){
+            return ResponseDTO.<String>withMessage()
+                    .message("이미 결제했던 음원입니다.")
+                    .build();
+        }
+
+        musicCartTransactionRepository.save(musicCartDTO.toTransactionEntity());
+        soundsService.addCountDownload(musicId);
+
+        return ResponseDTO.<String>withMessage()
+                .message("결제가 완료되었습니다.")
+                .build();
+    }
+
+    @Override
     @Transactional
     public ResponseDTO<String> checkSoundTransaction(int userId, int musicId) throws IOException {
         MusicCartTransaction musicCartTransaction = musicCartTransactionRepository.findByUserIdAndMusicId(userId,musicId);
@@ -138,6 +165,24 @@ public class SoundPaymentServiceImpl implements SoundPaymentService{
 
         return ResponseDTO.<MusicCartDTO>builder().dtoList(musicCartDTO).build();
     }
+
+    @Override
+    public Boolean isInCart(int userId, int musicId) {
+        MusicCartRecord bought = musicCartRecordRepository.findByUserIdAndMusicId(userId, musicId);
+        return bought != null;
+    }
+
+    @Override
+    public Boolean isInTransaction(int userId, List<Integer> musicIds) {
+        for (Integer musicId : musicIds) {
+            MusicCartTransaction res = musicCartTransactionRepository.findByUserIdAndMusicId(userId, musicId);
+            if (res != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
 }
