@@ -21,6 +21,16 @@ public class ViewController {
 
     }
 
+    @GetMapping("/success")
+    public String getSuccess() {
+        return "/payments/success";
+    }
+
+    @GetMapping("/fail")
+    public String getFail() {
+        return "/payments/fail";
+    }
+
     @GetMapping("/register")
     public void getRegister(){}
 
