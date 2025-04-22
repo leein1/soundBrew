@@ -5,6 +5,7 @@ import com.soundbrew.soundbrew.dto.payment.MusicCartDTO;
 import com.soundbrew.soundbrew.service.payment.SoundPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ public class CartController {
     }
 
     @PostMapping("/transaction")
+    @Transactional
     public ResponseEntity<ResponseDTO<String>> addSoundTransactionOne(@RequestBody MusicCartDTO musicCartDTO){
         ResponseDTO<String> response = soundPaymentService.addSoundTransactionDirect(musicCartDTO);
         return ResponseEntity.ok().body(response);

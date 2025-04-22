@@ -139,6 +139,7 @@ public class SoundPaymentServiceImpl implements SoundPaymentService{
                     .build();
         }
 
+        musicCartDTO.setStatus("DONE");
         musicCartTransactionRepository.save(musicCartDTO.toTransactionEntity());
         soundsService.addCountDownload(musicId);
 
@@ -151,7 +152,7 @@ public class SoundPaymentServiceImpl implements SoundPaymentService{
     @Transactional
     public ResponseDTO<String> checkSoundTransaction(int userId, int musicId) throws IOException {
         MusicCartTransaction musicCartTransaction = musicCartTransactionRepository.findByUserIdAndMusicId(userId,musicId);
-        fileService.downloadSoundFile(musicCartTransaction.getFilePath());
+//        fileService.downloadSoundFile(musicCartTransaction.getFilePath());
 
         return ResponseDTO.<String>withMessage().message("음원을 다시 다운로드 했습니다.").build();
     }
