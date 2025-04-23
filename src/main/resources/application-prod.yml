@@ -17,7 +17,7 @@ spring:
     debug: true
 
   datasource:
-    url: jdbc:mysql://awseb-e-r2p2bfwpm9-stack-awsebrdsdatabase-g9uubo1wjksq.ct6s00mcadjs.ap-northeast-2.rds.amazonaws.com/soundbrew_test
+    url: jdbc:mysql://db-soundbrew.crkioscw8tn4.us-east-1.rds.amazonaws.com/soundbrew_test
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -109,3 +109,6 @@ public:
     - /fonts/**             # 폰트 파일
     - /hello                # 테스트 엔드포인트
     - /api/help/health
+    - /api/payment/**
+    - /confirm
+    - /api/cart/**
