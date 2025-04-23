@@ -17,7 +17,7 @@ spring:
     debug: true
 
   datasource:
-    url: jdbc:mysql://db-soundbrew.crkioscw8tn4.us-east-1.rds.amazonaws.com/soundbrew_test
+    url: jdbc:mysql://db-soundbrew.crkioscw8tn4.us-east-1.rds.amazonaws.com/soundbrew
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
