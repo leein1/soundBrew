@@ -28,5 +28,5 @@ public class SubscriptionTransaction extends BaseEntity {
     private String paymentKey;        // 선택적 저장
     private int creditAmount;
     private int subscriptionId;
-//    private LocalDateTime createDate;
+
 }

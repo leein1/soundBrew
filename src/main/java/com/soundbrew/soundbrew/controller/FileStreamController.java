@@ -19,7 +19,7 @@ import java.io.IOException;
 public class FileStreamController {
     private final FileService fileService;
 
-    @GetMapping("/sounds/{fileName}")
+    @GetMapping("/media/sounds/{fileName}")
     ResponseEntity<byte[]> streamSound(@RequestHeader(value = HttpHeaders.RANGE, required = false) String rangeHeader, @PathVariable String fileName) throws IOException {
         final long FIXED_RANGE_SIZE = 2 * 1024 * 1024; // 2 MB
         HttpRange range;

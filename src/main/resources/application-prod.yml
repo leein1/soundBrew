@@ -17,7 +17,7 @@ spring:
     debug: true
 
   datasource:
-    url: jdbc:mysql://db-soundbrew.crkioscw8tn4.us-east-1.rds.amazonaws.com/soundbrew
+    url: jdbc:mysql://db-soundbrew.crkioscw8tn4.us-east-1.rds.amazonaws.com/soundbrew_test
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -33,9 +33,9 @@ cloud:
       access-key: ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
     region:
-      static: ap-northeast-2
+      static: us-east-1
     s3:
-      bucket: soundbrew.storage
+      bucket: soundbrew.art
     stack:
       auto: false
     ec2:

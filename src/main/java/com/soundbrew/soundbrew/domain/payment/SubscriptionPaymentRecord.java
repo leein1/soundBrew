@@ -28,37 +28,5 @@ public class SubscriptionPaymentRecord extends BaseEntity {
     private String orderName;      // 주문명
     private int creditAmount;
     private int subscriptionId;
-//    private String paymentKey;
-//    private LocalDateTime CreateDate;
 
-//    private Long userId;
-//    private Long relatedSubscriptionId;
-//
-//    private Boolean discount;
-//    private BigDecimal discountAmount;
-//
-//    private BigDecimal amount;        // 구독 원가
-//    private BigDecimal totalAmount;   // 최종 거래 금액
-//    private BigDecimal creditAmount;  // 지급 크레딧 (선택)
-//
-//    private String status;            // trading, DONE, refund 등
-//    private String paymentKey;
-//    private String orderId;
-//    private LocalDateTime approvedAt;
-
-//    일반 결제의 경우:
-//    READY: 결제 준비
-//    IN_PROGRESS: 결제 진행 중
-//    DONE: 결제 완료
-//    ABORTED: 결제 중단
-//    CANCELED: 결제 취소
-//    PARTIAL_CANCELED: 결제 부분 취소
-//    EXPIRED: 유효 시간 만료
-//
-//    가상계좌의 경우:
-//    READY: 가상계좌 발급
-//    WAITING_FOR_DEPOSIT: 입금 대기
-//    DONE: 입금 완료
-//    CANCELED: 결제 취소
-//    PARTIAL_CANCELED: 결제 부분 취소
 }
