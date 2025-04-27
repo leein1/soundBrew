@@ -67,7 +67,7 @@ public class FileController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping("/sounds/{filename}")
+    @GetMapping("/media/sounds/{filename}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {
         String currentFile = "sounds/" + filename;
         try {
