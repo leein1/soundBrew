@@ -69,7 +69,9 @@ public class FileController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/media/sounds/{filename}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {
-        String currentFile = "sounds/" + filename;
+        String currentFile = "media/sounds/" + filename;
+        log.info(filename);
+        log.info(currentFile);
         try {
             Resource resource = fileService.downloadSoundFile(currentFile);
             // 파일 확장자에 따라 콘텐츠 타입 지정
