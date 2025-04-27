@@ -35,7 +35,7 @@ public class UsersController {
 
         } catch (Exception e) {
 
-            throw new RuntimeException("회원가입 중 예상치 못한 문제가 발생하였습니다. 잠시후 다시 시도 해주세요");
+            throw new RuntimeException("회원가입 중 예상치 못한 문제가 발생하였습니다. 잠시후 다시 시도 해주세요",e);
         }
 
     }
