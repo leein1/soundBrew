@@ -57,9 +57,10 @@
 ## 프로젝트 직접 살펴보기
 <a href="https://soundbrew.art">
   <img src="https://github.com/user-attachments/assets/26bec2d6-c899-4cf6-b0ba-275746615857" alt="Google Chrome" width="20">
-  SoundBrew 프로젝트 웹 페이지 확인하기<br>
-  현재 google smtp를 사용중이므로 존재하지 않는 이메일 입력시 발송이 안되고 있습니다.
+  SoundBrew 프로젝트 웹 페이지 확인하기
 </a>
+<br>
+  현재 google smtp를 사용중이므로 존재하지 않는 이메일 입력시 발송이 안되고 있습니다.
 
 <br>
 <br>
